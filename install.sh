@@ -11,7 +11,7 @@ echo "Copied the template .bash_profile into ~/.bash_profile, edit this file to 
 
 while true
 do
-  read -p "Do you use Jekyll? (If you don't know what Jekyll is, answer 'n') [Y/N] " RESP
+  read -p "Do you use Jekyll? (If you don't know what Jekyll is, answer 'n') [Y/N] " -n 1 RESP
 
   case $RESP
     in
