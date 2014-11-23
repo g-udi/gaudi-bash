@@ -156,7 +156,7 @@ Due to the fact that the original repo's maintenance is not active, i have decid
 ### Themes
 
 - Added colourful theme [screenshot below]
-![bash-it Colourful Theme](http://github.com/ahmadassaf/Configurations/screeshots/bash-it_theme_colourful.png)
+![bash-it Colourful Theme](http://github.com/ahmadassaf/Configurations/screenhots/bash-it_theme_colourful.png)
 
 
 ### Aliases
