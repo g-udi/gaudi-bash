@@ -139,6 +139,8 @@ Due to the fact that the original repo's maintenance is not active, i have decid
     + `escape` UTF-8-encodes a string of Unicode symbols
     + `unidecode` decodes \x{ABCD}-style Unicode escape sequences
 - Updated the `extract.plugin.bash` function
+- git.plugin.bash
+    + `gitio` creates a git.io short URL
 - java.plugin.bash
     + `setjdk` changes the JAVA SDK [More info](http://www.jayway.com/2014/01/15/how-to-switch-jdk-version-on-mac-os-x-maverick/)
 - json.plugin.bash **[NEW]**
