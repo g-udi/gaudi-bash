@@ -145,6 +145,18 @@ Due to the fact that the original repo's maintenance is not active, i have decid
     + `setjdk` changes the JAVA SDK [More info](http://www.jayway.com/2014/01/15/how-to-switch-jdk-version-on-mac-os-x-maverick/)
 - json.plugin.bash **[NEW]**
     + `json` offers syntax-highlight JSON strings or files
+- pyenv.plugin.bash
+    + `mkpvenv` creates a new virtualenv for this directory
+    + `mkpvbranch` creates a new virtualenv for the current branch
+    + `wopvbranch` sets workon branch
+    + `wopvenv` works on the virtualenv for this directory 
+    + `rmpvenv` removes virtualenv for this directory
+    + `rmpvenvbranch` removes virtualenv for this directory
+
+### Themes
+
+    - Added colourful theme [screenshot below]
+    ![bash-it Colourful Theme](http://github.com/ahmadassaf/Configurations/screeshots/bash-it_theme_colourful.png)
 
 ### Aliases
 
