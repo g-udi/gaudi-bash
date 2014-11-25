@@ -162,4 +162,11 @@ Due to the fact that the original repo's maintenance is not active, i have decid
 ### Aliases
 
 - Added a bunch of new aliases to `general.aliases.bash` and `osx.aliases.bash`
+- Added custom alias colors 
+
+For more information about alias coloring, these resources are very helpful:
+
+-[Bash tips: Colors and formatting](http://misc.flogisoft.com/bash/tip_colors_and_formatting) **NOTE** for Mac OSX you have to replace the `e` character with `033` for the styles to work
+- [How to Fix Colors on Mac OSX Terminal](http://it.toolbox.com/blogs/lim/how-to-fix-colors-on-mac-osx-terminal-37214)
+- [Setting LS_COLORS colors of directory listings in bash terminal](http://leocharre.com/articles/setting-ls_colors-colors-of-directory-listings-in-bash-terminal/)
 
