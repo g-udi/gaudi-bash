@@ -1,7 +1,11 @@
 #!/usr/bin/env bash
 
+# Adding needed files for dircoloring
+export PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
+export MANPATH="/usr/local/opt/coreutils/libexec/gnuman:$MANPATH"
+
 export CLICOLOR=1
-export LSCOLORS=GxFxCxDxBxegedabagaced
+export LS_COLORS=Exfxcxdxbxegedabagacad
 
 # colored grep
 export GREP_OPTIONS='--color=auto'
@@ -22,5 +26,8 @@ fi
 
 if [ $(uname) = "Linux" ]
 then
-  alias ls="ls --color=auto"
+  alias ls="ls --color=always"
 fi
+
+# Enabling dircolors coloring
+eval `gdircolors -b ~/.dircolors`
