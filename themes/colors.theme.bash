@@ -45,6 +45,12 @@ function __underline {
   echo "${out:+${out};}4"
 }
 
+function __blink {
+  next=$1 && shift
+  out="$(__$next $@)"
+  echo "${out:+${out};}5"
+}
+
 function __negative {
   next=$1 && shift
   out="$(__$next $@)"
@@ -224,6 +230,8 @@ background_orange="$(color red bg bright)"
 
 normal="$(color reset)"
 reset_color="$(__make_ansi '' 39)"
+
+blinking_red="$(color red blink)"
 
 # These colors are meant to be used with `echo -e`
 echo_black="$(echo_color reset black)"

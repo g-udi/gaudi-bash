@@ -1,7 +1,7 @@
 SCM_THEME_PROMPT_PREFIX=""
 SCM_THEME_PROMPT_SUFFIX=""
 
-SCM_THEME_PROMPT_DIRTY=" ${bold_red}● ${normal}"
+SCM_THEME_PROMPT_DIRTY=" ${blinking_red}● ${normal}"
 SCM_THEME_PROMPT_CLEAN=" ${bold_green}● ${normal}"
 SCM_GIT_CHAR="${bold_green}git${normal}"
 SCM_SVN_CHAR="${bold_cyan}svn${normal}"
