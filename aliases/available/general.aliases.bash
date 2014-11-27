@@ -21,7 +21,6 @@ alias sudo='sudo '
 alias week='date +%V'
 
 alias c='clear'
-alias k='clear'
 alias cls='clear'
 
 alias edit="$EDITOR"
