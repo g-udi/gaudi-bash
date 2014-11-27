@@ -1,6 +1,6 @@
-# Bash it
+# Bash-it
 
-**Bash it** is a mash up of my own bash commands and scripts, other bash stuff I have found and a shameless ripoff of [oh-my-zsh](https://github.com/robbyrussell/oh-my-zsh)
+**Bash-it** is a mash up of my own bash commands and scripts, other bash stuff I have found and a shameless ripoff of [oh-my-zsh](https://github.com/robbyrussell/oh-my-zsh)
 
 Includes autocompletion, themes, aliases, custom functions, a few stolen pieces from Steve Losh, and more.
 
@@ -19,7 +19,7 @@ This is to set up the `.jekyllconfig` file, which stores info necessary to use t
 
 ## Help Screens
 
-```
+```shell
 bash-it show aliases        # shows installed and available aliases
 bash-it show completions    # shows installed and available completions
 bash-it show plugins        # shows installed and available plugins
@@ -38,7 +38,7 @@ For custom scripts, and aliases, just create the following files (they'll be ign
 
 I recommend putting the extra bash configuration in the `lib/custom.bash`, for example my custom configuration is:
 
-```
+```shell
 # Git credentials
 # Not in the repository, to prevent people from accidentally committing under my name
 GIT_AUTHOR_NAME="Ahmad Assaf"
@@ -91,20 +91,20 @@ Anything in the custom directory will be ignored, with the exception of `custom/
 
 ## Themes
 
-There are a few bash it themes.  If you've created your own custom prompts, I'd love it if you shared with everyone else!  Just submit a Pull Request to me (revans).
+There are a few bash-it themes.  If you've created your own custom prompts, I'd love it if you shared with everyone else!  Just submit a Pull Request to me (revans).
 
 You can see the theme screenshots  [here](https://github.com/revans/bash-it/wiki/Themes)
 
 ## Misc
 
 ### Bash Profile Aliases
-Bash it creates a 'reload' alias that makes it convenient to reload
+Bash-it creates a 'reload' alias that makes it convenient to reload
 your bash profile when you make changes. You can use it to reflect any changes you made simply by executing `reload` in the terminal.
 
 ### Prompt Version Control Check
-Bash it provides prompt themes the ability to check and display version control information for the current directory. The information is retrieved for each directory and can slow down the navigation of projects with a large number of files and folders. Turn version control checking off to prevent slow directory navigation within large projects. 
+Bash-it provides prompt themes the ability to check and display version control information for the current directory. The information is retrieved for each directory and can slow down the navigation of projects with a large number of files and folders. Turn version control checking off to prevent slow directory navigation within large projects. 
 
-Bash it provides a flag (`SCM_CHECK`) within the `~/.bash_profile` file that turns off/on version control information checking and display within all themes. Version control checking is on by default unless explicitly turned off. 
+Bash-it provides a flag (`SCM_CHECK`) within the `~/.bash_profile` file that turns off/on version control information checking and display within all themes. Version control checking is on by default unless explicitly turned off. 
 
 Set `SCM_CHECK` to 'false' to **turn off** version control checks for all themes: 
 
@@ -161,7 +161,7 @@ Due to the fact that the original repo's maintenance is not active, i have decid
 
 ### Aliases
 
-- Added a bunch of new aliases to `general.aliases.bash` and `osx.aliases.bash`
+- Added a bunch of new aliases to `general.aliases.bash` and `osx.aliases.bash` and `git.aliases.bash`
 - Added custom alias colors 
 
 For more information about alias coloring, these resources are very helpful:
