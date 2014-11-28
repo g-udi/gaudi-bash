@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 BASH_IT="$HOME/.bash_it"
 
-test -w $HOME/.bash_profile &&
-  cp $HOME/.bash_profile $HOME/.bash_profile.bak &&
-  echo "Your original .bash_profile has been backed up to .bash_profile.bak"
+# test -w $HOME/.bash_profile &&
+#   cp $HOME/.bash_profile $HOME/.bash_profile.bak &&
+#   echo "Your original .bash_profile has been backed up to .bash_profile.bak"
 
 cp $HOME/.bash_it/template/bash_profile.template.bash $HOME/.bash_profile
 
-echo "Copied the template .bash_profile into ~/.bash_profile, edit this file to customize bash-it"
+echo "\nCopied the template \033[31m.bash_profile\033[0m into \033[35m~/.bash_profile\033[0m, edit this file to customize bash-it\n"
 
 while true
 do
@@ -28,6 +28,7 @@ do
   esac
 done
 
+echo "\nStarting the process of activating the \033[31mbash-it\033[0m configurations \033[35m[Plugins | Completions | Aliases]\033[0m\n"
 function load_all() {
   file_type=$1
   [ ! -d "$BASH_IT/$file_type/enabled" ] && mkdir "$BASH_IT/${file_type}/enabled"

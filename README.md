@@ -123,41 +123,69 @@ Due to the fact that the original repo's maintenance is not active, i have decid
 
 ### Plugins
 
-- base.plugin.bash
+- **base.plugin.bash**
     + `fs` determines the size of a file or total size of a directory
     + `o` with no arguments opens the current directory, otherwise opens the given location
     + `tre` is a shorthand for `tree` with hidden files and color enabled.
     + `colors` prints the color palette in the terminal
-- compress.plugin.bash **[NEW]**
+- **compress.plugin.bash [NEW]**
     + `targz` creates a .tar.gz archive, using `zopfli`, `pigz` or `gzip` for compression
     + `gz` compares original and gzipped file size
-- editors.plugin.bash **[NEW]**
+- **editors.plugin.bash [NEW]**
     + `s` with no arguments opens the current directory in Sublime Text, otherwise opens the given location
     + `a` with no arguments opens the current directory in Atom Editor, otherwise opens the given location
     + `v` with no arguments opens the current directory in Vim, otherwise opens the given location
-- encode.plugin.bash **[NEW]**
+- **encode.plugin.bash [NEW]**
     + `escape` UTF-8-encodes a string of Unicode symbols
     + `unidecode` decodes \x{ABCD}-style Unicode escape sequences
 - Updated the `extract.plugin.bash` function
-- git.plugin.bash
+- **git.plugin.bash**
     + `gitio` creates a git.io short URL
-- java.plugin.bash
+- **java.plugin.bash**
     + `setjdk` changes the JAVA SDK [More info](http://www.jayway.com/2014/01/15/how-to-switch-jdk-version-on-mac-os-x-maverick/)
-- json.plugin.bash **[NEW]**
+- **json.plugin.bash [NEW]**
     + `json` offers syntax-highlight JSON strings or files
-- pyenv.plugin.bash
+- **pyenv.plugin.bash**
     + `mkpvenv` creates a new virtualenv for this directory
     + `mkpvbranch` creates a new virtualenv for the current branch
     + `wopvbranch` sets workon branch
     + `wopvenv` works on the virtualenv for this directory 
     + `rmpvenv` removes virtualenv for this directory
     + `rmpvenvbranch` removes virtualenv for this directory
+- **gls.aliases.bash**
+    + This enables the better `ls` command `gls`
+
+## A better `ls` for Bash Terminal
+
+The default `ls` on OS X comes from BSD and compared to the GNU/Linux alternative is slightly lacking when it comes to changing how things look – so what I like to do is replace it with the GNU `ls`
+
+To install that in OS X you can easily do that via the `coreutils` brew recipe (it is included in my `.brefile`). The default `ls` and other tools will have a ‘g’ prefix – i.e. `ls` would be `gls`. But **why ?!**
+
+Well i simply like to have a structured view over directories, so when i do an `ls` i would like to see things grouped by type, so files for each type are underneath each other. For example:
+
+![bash-it structured ls](https://github.com/ahmadassaf/configurations/blob/master/screenshots/bash-it_structured_ls.png)
+
+You can notice how folders are on top, followed by the `.pdf` files and then the `.sparql` and so on. This is done via the `gls -X` parameter.
+
+### Activating type-based `ls` 
+
+I have created a `gls.plugin.bash` alias file. The file contains aliases that convert all of my `ls` aliases into `gls` ones. If you would like to keep them separate then simply do not activate this alias and you will have to call always `gls` instead. 
+This alias is located in the `aliases/available` folder as we want those aliases to **override** the ones defined in the `aliases/` folder in the `general.aliases.bash`. Activating the plugin can be done via:
+
+```shell
+bash-it enable alias gls
+```
+
+## But what about the colors?
+
+Its true that by now, we are able only to group similar types together, but this will not really improve the readability of the result. To make things better, we need to assign different color values for groups of types. For that, we need to use [dircolors](http://github.com/ahmadassaf/dircolors).
+
+The installation is done automatically via this script if you wish so.
 
 ### Themes
 
-- Added colourful theme [screenshot below]
+- Added **colourful** theme [screenshot below]
 ![bash-it Colourful Theme](https://github.com/ahmadassaf/configurations/blob/master/screenshots/bash-it_theme_colourful.png)
-
 
 ### Aliases
 

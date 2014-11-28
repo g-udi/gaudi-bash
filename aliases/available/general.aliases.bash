@@ -1,16 +1,16 @@
-cite about-alias
+cite 'about-alias'
 about-alias 'general aliases'
 
 # List directory contents
 alias sl=ls
 # List all files colorized in long format
-alias ll="ls -lF ${colorflag}"
+alias ll="ls -lF --color"
 # List all files colorized in long format, including dot files
-alias la="ls -laF ${colorflag}"
+alias la="ls -laF --color"
 # List only directories
-alias lsd="ls -lF ${colorflag} | grep --color=never '^d'"
+alias lsd="ls -lF --color | grep --color=never '^d'"
 # Always use color output for `ls`
-alias ls="command ls ${colorflag}"
+alias ls="command ls --color"
 alias l='ls -a'
 alias l1='ls -1'
 
