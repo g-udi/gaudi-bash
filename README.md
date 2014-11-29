@@ -180,7 +180,49 @@ bash-it enable alias gls
 
 Its true that by now, we are able only to group similar types together, but this will not really improve the readability of the result. To make things better, we need to assign different color values for groups of types. For that, we need to use [dircolors](http://github.com/ahmadassaf/dircolors).
 
-The installation is done automatically via this script if you wish so.
+The installation is done automatically via this script if you wish so, but go ahead to the [repo](http://github.com/ahmadassaf/dircolors) and check the readme for manual installation configuration.
+
+## This looks cool, I want more ... 
+
+Well then, behold the [Generic Colouriser](http://kassiopeia.juls.savba.sk/~garabik/software/grc/README.txt). It is a great utility which can be used for colourising many different types of output and log files. If you installed Homebrew , installing grc is as simple as typing:
+
+```shell
+brew install grc
+```
+
+but hey, don't worry too much, it is already included in my [dotfiles](http://github.com/ahmadassaf/dotfiles).
+
+afterwards, you need to add:
+
+```shell
+# If we have grc enabled this is used to add coloring to various commands
+source "`brew --prefix grc`/etc/grc.bashrc"
+```
+
+I have included this line in `lib\appearance.bash`. 
+
+Now when you use certain commands such as traceroute, the output should be colourised:
+
+![bash-it grc](https://github.com/ahmadassaf/configurations/blob/master/screenshots/bash-it_grc.png)
+
+
+## What about normal `ls`
+
+If you don't want all of those fancy settings, then at least you should consider coloring the result of `ls`. This can be done easily as there are some global variables that hold what each type color is. For example, you can specific colors for `directory` `symbolic link` `executable` ... etc.
+
+Enabling `ls` color can be easily enabled with the `-color` parameter in Mac OSX and `-G` in Linux.
+
+`grep` results can be also colored as well by having `export GREP_OPTIONS='--color=auto'`. This is also automatically done in the `lib\appearance.bash`
+
+**NOTE** for Mac OSX you have to replace the `e` character in color codes with `033` for the colors and styles like in [here](http://misc.flogisoft.com/bash/tip_colors_and_formatting) to work.
+
+For more information about alias coloring, these resources are very helpful:
+
+- [Bash tips: Colors and formatting](http://misc.flogisoft.com/bash/tip_colors_and_formatting)
+- [How to Fix Colors on Mac OSX Terminal](http://it.toolbox.com/blogs/lim/how-to-fix-colors-on-mac-osx-terminal-37214)
+- [Setting LS_COLORS colors of directory listings in bash terminal](http://leocharre.com/articles/setting-ls_colors-colors-of-directory-listings-in-bash-terminal/)
+- [OS X Lion Terminal Colours](http://backup.noiseandheat.com/blog/2011/12/os-x-lion-terminal-colours/)
+- [A better ls for Mac OS X](http://hocuspokus.net/2008/01/a-better-ls-for-mac-os-x/)
 
 ### Themes
 
@@ -192,9 +234,5 @@ The installation is done automatically via this script if you wish so.
 - Added a bunch of new aliases to `general.aliases.bash` and `osx.aliases.bash` and `git.aliases.bash`
 - Added custom alias colors 
 
-For more information about alias coloring, these resources are very helpful:
 
--[Bash tips: Colors and formatting](http://misc.flogisoft.com/bash/tip_colors_and_formatting) **NOTE** for Mac OSX you have to replace the `e` character with `033` for the styles to work
-- [How to Fix Colors on Mac OSX Terminal](http://it.toolbox.com/blogs/lim/how-to-fix-colors-on-mac-osx-terminal-37214)
-- [Setting LS_COLORS colors of directory listings in bash terminal](http://leocharre.com/articles/setting-ls_colors-colors-of-directory-listings-in-bash-terminal/)
 
