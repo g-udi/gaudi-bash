@@ -4,8 +4,8 @@ export CLICOLOR=1
 export LS_COLORS=Exfxcxdxbxegedabagacad
 
 # colored grep
-export GREP_OPTIONS='--color=auto'
-export GREP_COLOR='1;33'
+GREP_OPTIONS="--color=auto"
+alias grep="grep $GREP_OPTIONS"
 
 # Load the theme
 if [[ $BASH_IT_THEME ]]; then
