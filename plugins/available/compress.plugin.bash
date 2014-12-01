@@ -1,5 +1,10 @@
-# Create a .tar.gz archive, using `zopfli`, `pigz` or `gzip` for compression
+cite about-plugin
+about-plugin 'Compression tools'
+
 function targz() {
+  about 'Create a .tar.gz archive, using `zopfli`, `pigz` or `gzip` for compression'
+  group 'compress'
+
 	local tmpFile="${@%/}.tar";
 	tar -cvf "${tmpFile}" --exclude=".DS_Store" "${@}" || return 1;
 
@@ -26,8 +31,10 @@ function targz() {
 	echo "${tmpFile}.gz created successfully.";
 }
 
-# Compare original and gzipped file size
 function gz() {
+	about 'Compare original and gzipped file size'
+	group 'compress'
+
 	local origsize=$(wc -c < "$1");
 	local gzipsize=$(gzip -c "$1" | wc -c);
 	local ratio=$(echo "$gzipsize * 100 / $origsize" | bc -l);
