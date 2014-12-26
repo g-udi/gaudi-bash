@@ -78,9 +78,18 @@ function git_prompt_vars {
   SCM_GIT_AHEAD=''
   SCM_GIT_BEHIND=''
   SCM_GIT_STASH=''
+  SCM_GIT_UNTRACKED=''
+  SCM_GIT_UNSTAGED=''
+  SCM_GIT_STAGED=''
   if [[ "$(git config --get bash-it.hide-status)" != "1" ]]; then
     local status="$(git status -b --porcelain 2> /dev/null || git status --porcelain 2> /dev/null)"
     if [[ -n "${status}" ]] && [[ "${status}" != "\n" ]] && [[ -n "$(grep -v ^# <<< "${status}")" ]]; then
+      local untracked_count="$(egrep -c '^\?\? .+' <<< "${status}")"
+      local unstaged_count="$(egrep -c '^.[^ ?#] .+' <<< "${status}")"
+      local staged_count="$(egrep -c '^[^ ?#]. .+' <<< "${status}")"
+      [[ "${untracked_count}" -gt 0 ]] && SCM_GIT_UNTRACKED="${SCM_GIT_UNTRACKED_CHAR}${untracked_count}"
+      [[ "${unstaged_count}" -gt 0 ]] && SCM_GIT_UNSTAGED="${SCM_GIT_UNSTAGED_CHAR}${unstaged_count}"
+      [[ "${staged_count}" -gt 0 ]] && SCM_GIT_STAGED="${SCM_GIT_STAGED_CHAR}${staged_count}"
       SCM_DIRTY=1
       SCM_STATE=${GIT_THEME_PROMPT_DIRTY:-$SCM_THEME_PROMPT_DIRTY}
     else
@@ -107,10 +116,10 @@ function git_prompt_vars {
   SCM_CHANGE=$(git rev-parse HEAD 2>/dev/null)
   local ahead_re='.+ahead ([0-9]+).+'
   local behind_re='.+behind ([0-9]+).+'
-  [[ "${status}" =~ ${ahead_re} ]] && SCM_GIT_AHEAD=" ${SCM_GIT_AHEAD_CHAR}${BASH_REMATCH[1]}"
-  [[ "${status}" =~ ${behind_re} ]] && SCM_GIT_BEHIND=" ${SCM_GIT_BEHIND_CHAR}${BASH_REMATCH[1]}"
+  [[ "${status}" =~ ${ahead_re} ]] && SCM_GIT_AHEAD="${SCM_GIT_AHEAD_CHAR}${BASH_REMATCH[1]}"
+  [[ "${status}" =~ ${behind_re} ]] && SCM_GIT_BEHIND="${SCM_GIT_BEHIND_CHAR}${BASH_REMATCH[1]}"
   local stash_count="$(git stash list 2> /dev/null | wc -l | tr -d ' ')"
-  [[ "${stash_count}" -gt 0 ]] && SCM_GIT_STASH=" {${stash_count}}"
+  [[ "${stash_count}" -gt 0 ]] && SCM_GIT_STASH="{${stash_count}}"
 }
 
 function svn_prompt_vars {
@@ -127,6 +136,26 @@ function svn_prompt_vars {
   SCM_CHANGE=$(svn info 2> /dev/null | sed -ne 's#^Revision: ##p' )
 }
 
+# this functions returns absolute location of .hg directory if one exists
+# It starts in the current directory and moves its way up until it hits /.
+# If we get to / then no Mercurial repository was found.
+# Example:
+# - lets say we cd into ~/Projects/Foo/Bar
+# - .hg is located in ~/Projects/Foo/.hg
+# - get_hg_root starts at ~/Projects/Foo/Bar and sees that there is no .hg directory, so then it goes into ~/Projects/Foo
+function get_hg_root {
+    local CURRENT_DIR=$(pwd)
+
+    while [ "$CURRENT_DIR" != "/" ]; do
+        if [ -d "$CURRENT_DIR/.hg" ]; then
+            echo "$CURRENT_DIR/.hg"
+            return
+        fi
+
+        CURRENT_DIR=$(dirname $CURRENT_DIR)
+    done
+}
+
 function hg_prompt_vars {
     if [[ -n $(hg status 2> /dev/null) ]]; then
       SCM_DIRTY=1
@@ -137,8 +166,22 @@ function hg_prompt_vars {
     fi
     SCM_PREFIX=${HG_THEME_PROMPT_PREFIX:-$SCM_THEME_PROMPT_PREFIX}
     SCM_SUFFIX=${HG_THEME_PROMPT_SUFFIX:-$SCM_THEME_PROMPT_SUFFIX}
-    SCM_BRANCH=$(hg summary 2> /dev/null | grep branch: | awk '{print $2}')
-    SCM_CHANGE=$(hg summary 2> /dev/null | grep parent: | awk '{print $2}')
+
+    HG_ROOT=$(get_hg_root)
+
+    if [ -f $HG_ROOT/branch ]; then
+        # Mercurial holds it's current branch in .hg/branch file
+        SCM_BRANCH=$(cat $HG_ROOT/branch)
+    else
+        SCM_BRANCH=$(hg summary 2> /dev/null | grep branch: | awk '{print $2}')
+    fi
+
+    if [ -f $HG_ROOT/dirstate ]; then
+        # Mercurial holds various information about the working directory in .hg/dirstate file. More on http://mercurial.selenic.com/wiki/DirState
+        SCM_CHANGE=$(hexdump -n 10 -e '1/1 "%02x"' $HG_ROOT/dirstate | cut -c-12)
+    else
+        SCM_CHANGE=$(hg summary 2> /dev/null | grep parent: | awk '{print $2}')
+    fi
 }
 
 function rvm_version_prompt {
@@ -220,8 +263,8 @@ function prompt_char {
 if [ ! -e $BASH_IT/plugins/enabled/battery.plugin.bash ]; then
 # if user has installed battery plugin, skip this...
     function battery_charge (){
-		# no op
-			echo -n
+    # no op
+      echo -n
     }
 fi
 
