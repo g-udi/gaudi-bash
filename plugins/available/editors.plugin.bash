@@ -13,7 +13,7 @@ function s() {
 }
 
 function a() {
-	about '`s` with no arguments opens the current directory in Atom Editor, otherwise opens the given location'
+	about '`a` with no arguments opens the current directory in Atom Editor, otherwise opens the given location'
   group 'editors'
 
 	if [ $# -eq 0 ]; then
@@ -24,7 +24,7 @@ function a() {
 }
 
 function v() {
-	about '`s` with no arguments opens the current directory in Vim, otherwise opens the given location'
+	about '`v` with no arguments opens the current directory in Vim, otherwise opens the given location'
   group 'editors'
 
 	if [ $# -eq 0 ]; then
