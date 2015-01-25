@@ -95,6 +95,8 @@ There are a few bash-it themes.  If you've created your own custom prompts, I'd 
 
 You can see the theme screenshots  [here](https://github.com/revans/bash-it/wiki/Themes)
 
+Alternatively, you can preview the themes in your own shell using `BASH_PREVIEW=true reload`
+
 ## Misc
 
 ### Bash Profile Aliases
@@ -117,6 +119,7 @@ Set `SCM_CHECK` to 'true' (the default value) to **turn on** version control che
 **NOTE:**
 It is possible for themes to ignore the `SCM_CHECK` flag and query specific version control information directly. For example, themes that use functions like `git_prompt_vars` skip the `SCM_CHECK` flag to retrieve and display git prompt information. If you turned version control checking off and you still see version control information  within your prompt, then functions like `git_prompt_vars` are most likely the reason why. 
 
+<<<<<<< HEAD
 ## Changes from [Forked Repo](https://github.com/revans/bash-it)
 
 Due to the fact that the original repo's maintenance is not active, i have decided to host a fork and integrate to it my additional files and also those mentioned in any pull request of the original repo that i find useful. so far the list is:
@@ -249,6 +252,33 @@ set rtp+=/usr/local/lib/python2.7/site-packages/powerline/bindings/vim
  
 This can be change **depending on the path to the `python` directory**
 
+### Git repository info in the prompt
+Bash it can show some information about Git repositories in the shell prompt: the current branch, tag or commit you are at, how many commits the local branch is ahead or behind from the remote branch, and if you have changes stashed.
+
+Additionally, you can view the status of your working copy and get the count of staged, unstaged and untracked files. This feature is controlled through the flag `SCM_GIT_SHOW_DETAILS` as follows:
+
+Set `SCM_GIT_SHOW_DETAILS` to 'true' (the default value) to **show** the working copy details in your prompt:
+
+* `export SCM_GIT_SHOW_DETAILS=true`
+
+Set `SCM_GIT_SHOW_DETAILS` to 'false' to **don't show** it:
+
+* `export SCM_GIT_SHOW_DETAILS=false`
+
+#### pass function renamed to passgen
+
+The Bash it `pass` function has been renamed to `passgen` in order to avoid a naming conflict with the [pass password manager]. In order to minimize the impact on users of the legacy Bash it `pass` function, Bash it will create the alias `pass` that calls the new `passgen` function if the `pass` password manager command is not found on the `PATH` (default behavior).
+
+This behavior can be overridden with the `BASH_IT_LEGACY_PASS` flag as follows:
+
+Set `BASH_IT_LEGACY_PASS` to 'true' to force Bash it to always **create** the `pass` alias to `passgen`:
+
+* `export BASH_IT_LEGACY_PASS=true`
+
+Unset `BASH_IT_LEGACY_PASS` to have Bash it **return to default behavior**:
+
+* `unset BASH_IT_LEGACY_PASS`
+
 ### Themes
 
 - Added **colourful** theme [screenshot below]
@@ -258,6 +288,3 @@ This can be change **depending on the path to the `python` directory**
 
 - Added a bunch of new aliases to `general.aliases.bash` and `osx.aliases.bash` and `git.aliases.bash`
 - Added custom alias colors 
-
-
-
