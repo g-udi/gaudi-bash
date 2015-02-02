@@ -119,7 +119,6 @@ Set `SCM_CHECK` to 'true' (the default value) to **turn on** version control che
 **NOTE:**
 It is possible for themes to ignore the `SCM_CHECK` flag and query specific version control information directly. For example, themes that use functions like `git_prompt_vars` skip the `SCM_CHECK` flag to retrieve and display git prompt information. If you turned version control checking off and you still see version control information  within your prompt, then functions like `git_prompt_vars` are most likely the reason why. 
 
-<<<<<<< HEAD
 ## Changes from [Forked Repo](https://github.com/revans/bash-it)
 
 Due to the fact that the original repo's maintenance is not active, i have decided to host a fork and integrate to it my additional files and also those mentioned in any pull request of the original repo that i find useful. so far the list is:
