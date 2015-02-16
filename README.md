@@ -287,3 +287,32 @@ Unset `BASH_IT_LEGACY_PASS` to have Bash it **return to default behavior**:
 
 - Added a bunch of new aliases to `general.aliases.bash` and `osx.aliases.bash` and `git.aliases.bash`
 - Added custom alias colors 
+- Added the ability to switch between `node` and `iojs`
+
+#### Using Homebrew to manage Node.js and io.js installs on OSX
+
+Having both Node.js and io.js installed with NVM was giving me a load of problems, mainly with npm. The best way is to have them installed via `homebrew`. They are already included in my [`brewfile`](https://github.com/ahmadassaf/dotfiles/blob/master/.brewfile.sh).
+
+So we have both Node.js and io.js installed, however iojs is only linked to the command `iojs` in our PATH.
+
+So, we can unlink node: `brew unlink node`, and link iojs: `brew link --force iojs` this will link io.js to `node` and other commands.
+
+Now when we need to use Node.js rather than io.js, we can just
+
+`$ brew unlink iojs && brew link node`
+
+To go back to io.js
+
+`$ brew unlink node && brew link --force iojs`
+
+And we can alias these (add to .bashrc / .zshrc)
+
+```bash
+alias usenode='brew unlink iojs && brew link node && echo Using Node.js'
+alias useio='brew unlink node && brew link --force iojs && echo Using io.js'
+```
+
+Now we can `$ usenode` when we want to use Node.js, and `$ useio` when we want to use io.js
+
+##### References
+- [Configuring IO.js with Node](https://gist.github.com/phelma/ce4eeeedb8fb9a9e8e63#file-gistfile1-md)
