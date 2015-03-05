@@ -104,20 +104,20 @@ Bash-it creates a 'reload' alias that makes it convenient to reload
 your bash profile when you make changes. You can use it to reflect any changes you made simply by executing `reload` in the terminal.
 
 ### Prompt Version Control Check
-Bash-it provides prompt themes the ability to check and display version control information for the current directory. The information is retrieved for each directory and can slow down the navigation of projects with a large number of files and folders. Turn version control checking off to prevent slow directory navigation within large projects. 
+Bash-it provides prompt themes the ability to check and display version control information for the current directory. The information is retrieved for each directory and can slow down the navigation of projects with a large number of files and folders. Turn version control checking off to prevent slow directory navigation within large projects.
 
-Bash-it provides a flag (`SCM_CHECK`) within the `~/.bash_profile` file that turns off/on version control information checking and display within all themes. Version control checking is on by default unless explicitly turned off. 
+Bash-it provides a flag (`SCM_CHECK`) within the `~/.bash_profile` file that turns off/on version control information checking and display within all themes. Version control checking is on by default unless explicitly turned off.
 
-Set `SCM_CHECK` to 'false' to **turn off** version control checks for all themes: 
+Set `SCM_CHECK` to 'false' to **turn off** version control checks for all themes:
 
 * `export SCM_CHECK=false`
 
-Set `SCM_CHECK` to 'true' (the default value) to **turn on** version control checks for all themes: 
+Set `SCM_CHECK` to 'true' (the default value) to **turn on** version control checks for all themes:
 
 * `export SCM_CHECK=true`
 
 **NOTE:**
-It is possible for themes to ignore the `SCM_CHECK` flag and query specific version control information directly. For example, themes that use functions like `git_prompt_vars` skip the `SCM_CHECK` flag to retrieve and display git prompt information. If you turned version control checking off and you still see version control information  within your prompt, then functions like `git_prompt_vars` are most likely the reason why. 
+It is possible for themes to ignore the `SCM_CHECK` flag and query specific version control information directly. For example, themes that use functions like `git_prompt_vars` skip the `SCM_CHECK` flag to retrieve and display git prompt information. If you turned version control checking off and you still see version control information  within your prompt, then functions like `git_prompt_vars` are most likely the reason why.
 
 ## Changes from [Forked Repo](https://github.com/revans/bash-it)
 
@@ -151,7 +151,7 @@ Due to the fact that the original repo's maintenance is not active, i have decid
     + `mkpvenv` creates a new virtualenv for this directory
     + `mkpvbranch` creates a new virtualenv for the current branch
     + `wopvbranch` sets workon branch
-    + `wopvenv` works on the virtualenv for this directory 
+    + `wopvenv` works on the virtualenv for this directory
     + `rmpvenv` removes virtualenv for this directory
     + `rmpvenvbranch` removes virtualenv for this directory
 - **gls.aliases.bash**
@@ -169,9 +169,9 @@ Well i simply like to have a structured view over directories, so when i do an `
 
 You can notice how folders are on top, followed by the `.pdf` files and then the `.sparql` and so on. This is done via the `gls -X` parameter.
 
-### Activating type-based `ls` 
+### Activating type-based `ls`
 
-I have created a `gls.plugin.bash` alias file. The file contains aliases that convert all of my `ls` aliases into `gls` ones. If you would like to keep them separate then simply do not activate this alias and you will have to call always `gls` instead. 
+I have created a `gls.plugin.bash` alias file. The file contains aliases that convert all of my `ls` aliases into `gls` ones. If you would like to keep them separate then simply do not activate this alias and you will have to call always `gls` instead.
 This alias is located in the `aliases/available` folder as we want those aliases to **override** the ones defined in the `aliases/` folder in the `general.aliases.bash`. Activating the plugin can be done via:
 
 ```shell
@@ -184,7 +184,7 @@ Its true that by now, we are able only to group similar types together, but this
 
 The installation is done automatically via this script if you wish so, but go ahead to the [repo](http://github.com/ahmadassaf/dircolors) and check the readme for manual installation configuration.
 
-## This looks cool, I want more ... 
+## This looks cool, I want more ...
 
 Well then, behold the [Generic Colouriser](http://kassiopeia.juls.savba.sk/~garabik/software/grc/README.txt). It is a great utility which can be used for colourising many different types of output and log files. If you installed Homebrew , installing grc is as simple as typing:
 
@@ -201,7 +201,7 @@ afterwards, you need to add:
 source "`brew --prefix grc`/etc/grc.bashrc"
 ```
 
-I have included this line in `lib\appearance.bash`. 
+I have included this line in `lib\appearance.bash`.
 
 Now when you use certain commands such as `traceroute`, the output should be colourised:
 
@@ -237,7 +237,7 @@ For more information about alias coloring, these resources are very helpful:
 
 For `vim` i have also included the [powerline](https://github.com/Lokaltog/powerline) visual styling which will include a status line.
 
-**Important Notes** 
+**Important Notes**
 
 - I haven't included `powerline` in my main installation script, so if you wish to have it, then please proceed with installing it separately with the fonts dependency.
 - The `--user` parameter should be removed if you got an error while installation especially if you have python installed via Homebrew.
@@ -248,7 +248,7 @@ after installing powerline enable it by adding to the `.vimrc`:
 ```shell
 set rtp+=/usr/local/lib/python2.7/site-packages/powerline/bindings/vim
 ```
- 
+
 This can be change **depending on the path to the `python` directory**
 
 ### Git repository info in the prompt
@@ -286,7 +286,7 @@ Unset `BASH_IT_LEGACY_PASS` to have Bash it **return to default behavior**:
 ### Aliases
 
 - Added a bunch of new aliases to `general.aliases.bash` and `osx.aliases.bash` and `git.aliases.bash`
-- Added custom alias colors 
+- Added custom alias colors
 - Added the ability to switch between `node` and `iojs`
 
 #### Using Homebrew to manage Node.js and io.js installs on OSX
