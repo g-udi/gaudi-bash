@@ -14,7 +14,6 @@ The preferred installation method is using the main script in the [main configur
 2. Run `~/.bash_it/install.sh` (it automatically backs up your `~/.bash_profile`)
 3. Edit your `~/.bash_profile` file in order to customize bash-it.
 
-
 **NOTE:**
 The install script will also prompt you asking if you use [Jekyll](https://github.com/mojombo/jekyll).
 This is to set up the `.jekyllconfig` file, which stores info necessary to use the Jekyll plugin.
@@ -43,6 +42,7 @@ bash-it help plugins        # shows help for installed plugins
 For custom scripts, and aliases, just create the following files (they'll be ignored by the git repo):
 
 * `aliases/custom.aliases.bash`
+* `completion/custom.completion.bash`
 * `lib/custom.bash`
 * `plugins/custom.plugins.bash`
 
