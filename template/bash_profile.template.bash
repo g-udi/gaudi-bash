@@ -1,13 +1,5 @@
 #!/usr/bin/env bash
 
-# Load RVM, if you are using it
-[[ -s $HOME/.rvm/scripts/rvm ]] && source $HOME/.rvm/scripts/rvm
-
-# Add nginx to the path
-PATH=$PATH:/opt/nginx/sbin
-
-export PATH
-
 # Path to the bash it configuration
 export BASH_IT=$HOME/.bash_it
 
@@ -17,9 +9,6 @@ export BASH_IT_THEME='colourful'
 
 # Your place for hosting Git repos. I use this for private repos.
 export GIT_HOSTING='git@git.domain.com'
-
-# Set the path nginx
-export NGINX_PATH='/opt/nginx'
 
 # Don't check mail when opening terminal.
 unset MAILCHECK
