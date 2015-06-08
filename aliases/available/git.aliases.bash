@@ -43,6 +43,10 @@ alias gtl="git tag -l"
 alias gaa="git add --all"
 alias gclean="git gc --aggressive --prune"
 alias glvp='git log --pretty="%Cred%h%Creset [%Cgreen%an %Creset %C(cyan)%ar%Creset]: %Cred%d%Creset %C(yellow)%s%Creset" --graph'
+
+# From http://davidwalsh.name/git-delete-branches-master
+alias gdb="git branch | grep -v 'master' | sed 's/^[ *]*//' | sed 's/^/git branch -d /' | bash"
+
 # From http://blogs.atlassian.com/2014/10/advanced-git-aliases/
 # Show commits since last pull
 alias gnew="git log HEAD@{1}..HEAD@{0}"
