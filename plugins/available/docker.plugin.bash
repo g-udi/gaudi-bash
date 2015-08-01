@@ -1,18 +1,5 @@
 cite about-plugin
-about-plugin 'Helpers to get Docker setup correctly for boot2docker and to more easily work with Docker'
-
-# Note, this might need to be different if you have an older version
-# of boot2docker, or its configured for a different IP
-if [[ `uname -s` == "Darwin" ]]; then
-  export DOCKER_HOST=tcp://192.168.59.103:2376
-  export DOCKER_CERT_PATH=~/.boot2docker/certs/boot2docker-vm
-  export DOCKER_TLS_VERIFY=1
-
-  docker-enter() {
-    boot2docker ssh '[ -f /var/lib/boot2docker/nsenter ] || docker run --rm -v /var/lib/boot2docker/:/target jpetazzo/nsenter'
-    boot2docker ssh -t sudo "/var/lib/boot2docker/docker-enter \"$1\""
-  }
-fi
+about-plugin 'Helpers to more easily work with Docker'
 
 function docker-remove-most-recent-container() {
   about 'attempt to remove the most recent container from docker ps -a'
@@ -24,6 +11,15 @@ function docker-remove-most-recent-image() {
   about 'attempt to remove the most recent image from docker images'
   group 'docker'
   docker images | head -2 | tail -1 | awk '{print $3}' | xargs docker rmi
+}
+
+function docker-enter() {
+  about 'enter the specified docker container using bash'
+  group 'docker'
+  param '1: Name of the container to enter'
+  example 'docker-enter oracle-xe'
+
+  docker exec -it "$@" /bin/bash;
 }
 
 function docker-remove-images() {
