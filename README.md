@@ -18,13 +18,13 @@ The preferred installation method is using the main script in the [main configur
 The install script will also prompt you asking if you use [Jekyll](https://github.com/mojombo/jekyll).
 This is to set up the `.jekyllconfig` file, which stores info necessary to use the Jekyll plugin.
 
+
 **INSTALL OPTIONS:**
 The install script can take the following options:
 
-* `--all`: Enable all aliases, plugins and completions.
-* `--none`: Don't enable any aliases, plugins or completions.
+* `--interactive`: Asks the user which aliases, completions and plugins to enable.
 
-If none of these parameters is provided, the install script will ask the user.
+When run without the `--interactive` switch, Bash it only enables a sane default set of functionality to keep your shell lean and to avoid issues with missing dependencies. Feel free to enable the tools you want to use after the installation.
 
 ## Help Screens
 
