@@ -14,6 +14,7 @@ alias ls="command ls --color"
 alias l='ls -a'
 alias l1='ls -1'
 alias llt="ls -lFt --color"
+alias count="ls -1 | wc -l"
 
 alias _="sudo"
 # Enable aliases to be sudo’ed
