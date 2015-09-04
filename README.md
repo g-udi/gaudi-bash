@@ -179,8 +179,14 @@ Due to the fact that the original repo's maintenance is not active, i have decid
     + `wopvenv` works on the virtualenv for this directory
     + `rmpvenv` removes virtualenv for this directory
     + `rmpvenvbranch` removes virtualenv for this directory
-- **gls.aliases.bash**
-    + This enables the better `ls` command `gls`
+
+### Aliases
+
+- **gls.aliases.bash**: Enables the better `ls` command `gls`
+
+### Completion
+
+- **Bosco.completion.bash [NEW]**: Adds [Bosco](bosco.readme.io) commands completion.
 
 ## A better `ls` for Bash Terminal
 
