@@ -101,9 +101,9 @@ Anything in the custom directory will be ignored, with the exception of `custom/
 
 ## Themes
 
-There are a few bash-it themes.  If you've created your own custom prompts, I'd love it if you shared with everyone else!  Just submit a Pull Request to me (revans).
+There are a few bash it themes. If you've created your own custom prompts, I'd love it if you shared with everyone else! Just submit a Pull Request.
 
-You can see the theme screenshots  [here](https://github.com/revans/bash-it/wiki/Themes)
+You can see the theme screenshots [here](https://github.com/Bash-it/bash-it/wiki/Themes)
 
 Alternatively, you can preview the themes in your own shell using `BASH_PREVIEW=true reload`
 
@@ -142,7 +142,13 @@ Set `SCM_CHECK` to 'true' (the default value) to **turn on** version control che
 * `export SCM_CHECK=true`
 
 **NOTE:**
-It is possible for themes to ignore the `SCM_CHECK` flag and query specific version control information directly. For example, themes that use functions like `git_prompt_vars` skip the `SCM_CHECK` flag to retrieve and display git prompt information. If you turned version control checking off and you still see version control information  within your prompt, then functions like `git_prompt_vars` are most likely the reason why.
+It is possible for themes to ignore the `SCM_CHECK` flag and query specific version control information directly. For example, themes that use functions like `git_prompt_vars` skip the `SCM_CHECK` flag to retrieve and display git prompt information. If you turned version control checking off and you still see version control information within your prompt, then functions like `git_prompt_vars` are most likely the reason why.
+
+### Git prompt
+
+Bash it has some nice features related to Git, continue reading to know more about these features.
+
+#### Repository info in the prompt
 
 ## Changes from [Forked Repo](https://github.com/revans/bash-it)
 
@@ -283,9 +289,10 @@ set rtp+=/usr/local/lib/python2.7/site-packages/powerline/bindings/vim
 This can be change **depending on the path to the `python` directory**
 
 ### Git repository info in the prompt
+
 Bash it can show some information about Git repositories in the shell prompt: the current branch, tag or commit you are at, how many commits the local branch is ahead or behind from the remote branch, and if you have changes stashed.
 
-Additionally, you can view the status of your working copy and get the count of staged, unstaged and untracked files. This feature is controlled through the flag `SCM_GIT_SHOW_DETAILS` as follows:
+Additionally, you can view the status of your working copy and get the count of *staged*, *unstaged* and *untracked* files. This feature is controlled through the flag `SCM_GIT_SHOW_DETAILS` as follows:
 
 Set `SCM_GIT_SHOW_DETAILS` to 'true' (the default value) to **show** the working copy details in your prompt:
 
@@ -295,7 +302,42 @@ Set `SCM_GIT_SHOW_DETAILS` to 'false' to **don't show** it:
 
 * `export SCM_GIT_SHOW_DETAILS=false`
 
-#### Pass function renamed to passgen
+
+#### Remotes and remote branches
+
+In some git workflows you must work with various remotes, for this reason, Bash it can provide some useful information about your remotes and your remote branches, for example, the remote on you are working, or if your local branch is tracking a remote branch.
+
+You can control this feature with the flag `SCM_GIT_SHOW_REMOTE_INFO` as follows:
+
+Set `SCM_GIT_SHOW_REMOTE_INFO` to 'auto' (the default value) to activate it only when more than one remote is configured in the current repo:
+
+* `export SCM_GIT_SHOW_REMOTE_INFO=auto`
+
+Set `SCM_GIT_SHOW_REMOTE_INFO` to 'true' to always activate the feature:
+
+* `export SCM_GIT_SHOW_REMOTE_INFO=true`
+
+Set `SCM_GIT_SHOW_REMOTE_INFO` to 'false' to **disable the feature**:
+
+* `export SCM_GIT_SHOW_REMOTE_INFO=false`
+
+#### Untracked files
+
+By default, `git status` command shows information about *untracked* files, this behavior can be controlled through command line flags or git configuration files, for big repositories, ignoring *untracked* files can make git faster. Bash it uses `git status` to gather the repo information it shows in the prompt, so in some circumstances, can be useful to instruct Bash it to ignore these files. You can control this behavior with the flag `SCM_GIT_IGNORE_UNTRACKED`:
+
+Set `SCM_GIT_IGNORE_UNTRACKED` to 'false' (the default value) to get information about *untracked* files:
+
+* `export SCM_GIT_IGNORE_UNTRACKED=false`
+
+Set `SCM_GIT_IGNORE_UNTRACKED` to 'true' to **ignore** *untracked* files:
+
+* `export SCM_GIT_IGNORE_UNTRACKED=true`
+
+also, with this flag to false, Bash it will not show the repository as dirty when the repo have *untracked* files, and will not display the count of *untracked* files.
+
+**NOTE:** If you set in git configuration file the option to ignore *untracked* files, this flag has no effect, and Bash it will ignore *untracked* files always.
+
+### Pass function renamed to passgen
 
 The Bash it `pass` function has been renamed to `passgen` in order to avoid a naming conflict with the [pass password manager]. In order to minimize the impact on users of the legacy Bash it `pass` function, Bash it will create the alias `pass` that calls the new `passgen` function if the `pass` password manager command is not found on the `PATH` (default behavior).
 
@@ -312,9 +354,10 @@ Unset `BASH_IT_LEGACY_PASS` to have Bash it **return to default behavior**:
 ### Themes
 
 - Added **colourful** theme [screenshot below]
+
 ![bash-it Colourful Theme](https://github.com/ahmadassaf/configurations/blob/master/screenshots/bash-it_theme_colourful.png)
 
-#### Proxy Support
+### Proxy Support
 
 If you are working in a corporate environment where you have to go through a proxy server for internet access, then you know how painful it is to configure the OS proxy variables in the shell, especially if you are switching between environments, e.g. office (with proxy) and home (without proxy).
 
@@ -377,4 +420,6 @@ alias useio='brew unlink node && brew link --force iojs && echo Using io.js'
 Now we can `$ usenode` when we want to use Node.js, and `$ useio` when we want to use io.js
 
 ##### References
+
 - [Configuring IO.js with Node](https://gist.github.com/phelma/ce4eeeedb8fb9a9e8e63#file-gistfile1-md)
+
