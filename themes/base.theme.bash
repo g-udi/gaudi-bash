@@ -8,7 +8,6 @@ SCM_THEME_PROMPT_DIRTY=' ✗'
 SCM_THEME_PROMPT_CLEAN=' ✓'
 SCM_THEME_PROMPT_PREFIX=' |'
 SCM_THEME_PROMPT_SUFFIX='|'
-
 SCM_THEME_BRANCH_PREFIX=''
 SCM_THEME_TAG_PREFIX='tag:'
 SCM_THEME_DETACHED_PREFIX='detached:'
@@ -25,15 +24,12 @@ SCM_GIT_IGNORE_UNTRACKED=${SCM_GIT_IGNORE_UNTRACKED:=false}
 
 SCM_GIT='git'
 SCM_GIT_CHAR='±'
-<<<<<<< HEAD
-=======
 SCM_GIT_DETACHED_CHAR='⌿'
 SCM_GIT_AHEAD_CHAR="↑"
 SCM_GIT_BEHIND_CHAR="↓"
 SCM_GIT_UNTRACKED_CHAR="?:"
 SCM_GIT_UNSTAGED_CHAR="U:"
 SCM_GIT_STAGED_CHAR="S:"
->>>>>>> bad2b9ebac2bc8117c5a05f8182def62fea4b24e
 
 SCM_HG='hg'
 SCM_HG_CHAR='☿'
@@ -57,7 +53,6 @@ RBFU_THEME_PROMPT_PREFIX=' |'
 RBFU_THEME_PROMPT_SUFFIX='|'
 
 function scm {
-
   if [[ "$SCM_CHECK" = false ]]; then SCM=$SCM_NONE
   elif [[ -f .git/HEAD ]]; then SCM=$SCM_GIT
   elif which git &> /dev/null && [[ -n "$(git rev-parse --is-inside-work-tree 2> /dev/null)" ]]; then SCM=$SCM_GIT
@@ -98,49 +93,30 @@ function scm_prompt_info {
 }
 
 function git_prompt_vars {
-  SCM_GIT_AHEAD=''
-  SCM_GIT_BEHIND=''
-  SCM_GIT_STASH=''
-  SCM_GIT_UNTRACKED=''
-  SCM_GIT_UNSTAGED=''
-  SCM_GIT_STAGED=''
+  local details=''
+  SCM_STATE=${GIT_THEME_PROMPT_CLEAN:-$SCM_THEME_PROMPT_CLEAN}
   if [[ "$(git config --get bash-it.hide-status)" != "1" ]]; then
     [[ "${SCM_GIT_IGNORE_UNTRACKED}" = "true" ]] && local git_status_flags='-uno'
     local status="$(git status -b --porcelain ${git_status_flags} 2> /dev/null ||
-		            git status --porcelain ${git_status_flags} 2> /dev/null)"
+                git status --porcelain ${git_status_flags} 2> /dev/null)"
     if [[ -n "${status}" ]] && [[ "${status}" != "\n" ]] && [[ -n "$(grep -v ^# <<< "${status}")" ]]; then
-      local untracked_count="$(egrep -c '^\?\? .+' <<< "${status}")"
-      local unstaged_count="$(egrep -c '^.[^ ?#] .+' <<< "${status}")"
-      local staged_count="$(egrep -c '^[^ ?#]. .+' <<< "${status}")"
-      [[ "${untracked_count}" -gt 0 ]] && SCM_GIT_UNTRACKED="${SCM_GIT_UNTRACKED_CHAR}${untracked_count}"
-      [[ "${unstaged_count}" -gt 0 ]] && SCM_GIT_UNSTAGED="${SCM_GIT_UNSTAGED_CHAR}${unstaged_count}"
-      [[ "${staged_count}" -gt 0 ]] && SCM_GIT_STAGED="${SCM_GIT_STAGED_CHAR}${staged_count}"
       SCM_DIRTY=1
+      if [[ "${SCM_GIT_SHOW_DETAILS}" = "true" ]]; then
+        local untracked_count="$(egrep -c '^\?\? .+' <<< "${status}")"
+        local unstaged_count="$(egrep -c '^.[^ ?#] .+' <<< "${status}")"
+        local staged_count="$(egrep -c '^[^ ?#]. .+' <<< "${status}")"
+        [[ "${staged_count}" -gt 0 ]] && details+=" ${SCM_GIT_STAGED_CHAR}${staged_count}" && SCM_DIRTY=3
+        [[ "${unstaged_count}" -gt 0 ]] && details+=" ${SCM_GIT_UNSTAGED_CHAR}${unstaged_count}" && SCM_DIRTY=2
+        [[ "${untracked_count}" -gt 0 ]] && details+=" ${SCM_GIT_UNTRACKED_CHAR}${untracked_count}" && SCM_DIRTY=1
+      fi
       SCM_STATE=${GIT_THEME_PROMPT_DIRTY:-$SCM_THEME_PROMPT_DIRTY}
-    else
-      SCM_DIRTY=0
-      SCM_STATE=${GIT_THEME_PROMPT_CLEAN:-$SCM_THEME_PROMPT_CLEAN}
     fi
-  else
-    SCM_DIRTY=0
-    SCM_STATE=${GIT_THEME_PROMPT_CLEAN:-$SCM_THEME_PROMPT_CLEAN}
   fi
-  SCM_PREFIX=${GIT_THEME_PROMPT_PREFIX:-$SCM_THEME_PROMPT_PREFIX}
-  SCM_SUFFIX=${GIT_THEME_PROMPT_SUFFIX:-$SCM_THEME_PROMPT_SUFFIX}
 
   SCM_CHANGE=$(git rev-parse --short HEAD 2>/dev/null)
 
   local ref=$(git symbolic-ref -q HEAD 2> /dev/null)
   if [[ -n "$ref" ]]; then
-<<<<<<< HEAD
-    SCM_BRANCH=${ref#refs/heads/}
-    SCM_IS_BRANCH=1
-    SCM_IS_TAG=0
-  else
-    SCM_BRANCH=$(git describe --tags --exact-match 2> /dev/null)
-    SCM_IS_TAG=1
-    SCM_IS_BRANCH=0
-=======
     SCM_BRANCH=${SCM_THEME_BRANCH_PREFIX}${ref#refs/heads/}
     local tracking_info="$(grep "${SCM_BRANCH}..." <<< "${status}")"
     if [[ -n "${tracking_info}" ]]; then
@@ -181,33 +157,29 @@ function git_prompt_vars {
     fi
     SCM_BRANCH=${detached_prefix}${ref}
     SCM_GIT_DETACHED="true"
->>>>>>> bad2b9ebac2bc8117c5a05f8182def62fea4b24e
   fi
-  SCM_CHANGE=$(git rev-parse HEAD 2>/dev/null)
+
   local ahead_re='.+ahead ([0-9]+).+'
   local behind_re='.+behind ([0-9]+).+'
-  [[ "${status}" =~ ${ahead_re} ]] && SCM_GIT_AHEAD="${SCM_GIT_AHEAD_CHAR}${BASH_REMATCH[1]}"
-  [[ "${status}" =~ ${behind_re} ]] && SCM_GIT_BEHIND="${SCM_GIT_BEHIND_CHAR}${BASH_REMATCH[1]}"
+  [[ "${status}" =~ ${ahead_re} ]] && SCM_BRANCH+=" ${SCM_GIT_AHEAD_CHAR}${BASH_REMATCH[1]}"
+  [[ "${status}" =~ ${behind_re} ]] && SCM_BRANCH+=" ${SCM_GIT_BEHIND_CHAR}${BASH_REMATCH[1]}"
+
   local stash_count="$(git stash list 2> /dev/null | wc -l | tr -d ' ')"
-<<<<<<< HEAD
-  [[ "${stash_count}" -gt 0 ]] && SCM_GIT_STASH="{${stash_count}}"
-=======
   [[ "${stash_count}" -gt 0 ]] && SCM_BRANCH+=" {${stash_count}}"
 
   SCM_BRANCH+=${details}
 
   SCM_PREFIX=${GIT_THEME_PROMPT_PREFIX:-$SCM_THEME_PROMPT_PREFIX}
   SCM_SUFFIX=${GIT_THEME_PROMPT_SUFFIX:-$SCM_THEME_PROMPT_SUFFIX}
->>>>>>> bad2b9ebac2bc8117c5a05f8182def62fea4b24e
 }
 
 function svn_prompt_vars {
   if [[ -n $(svn status 2> /dev/null) ]]; then
     SCM_DIRTY=1
-      SCM_STATE=${SVN_THEME_PROMPT_DIRTY:-$SCM_THEME_PROMPT_DIRTY}
+    SCM_STATE=${SVN_THEME_PROMPT_DIRTY:-$SCM_THEME_PROMPT_DIRTY}
   else
     SCM_DIRTY=0
-      SCM_STATE=${SVN_THEME_PROMPT_CLEAN:-$SCM_THEME_PROMPT_CLEAN}
+    SCM_STATE=${SVN_THEME_PROMPT_CLEAN:-$SCM_THEME_PROMPT_CLEAN}
   fi
   SCM_PREFIX=${SVN_THEME_PROMPT_PREFIX:-$SCM_THEME_PROMPT_PREFIX}
   SCM_SUFFIX=${SVN_THEME_PROMPT_SUFFIX:-$SCM_THEME_PROMPT_SUFFIX}
@@ -371,12 +343,12 @@ function battery_char {
 if [ ! -e $BASH_IT/plugins/enabled/battery.plugin.bash ]; then
     # if user has installed battery plugin, skip this...
     function battery_charge (){
-	# no op
-	echo -n
+  # no op
+  echo -n
     }
 
     function battery_char (){
-	# no op
-	echo -n
+  # no op
+  echo -n
     }
 fi
