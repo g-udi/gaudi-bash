@@ -46,6 +46,9 @@ alias -- -="cd -"
 # Shell History
 alias h='history'
 
+# Rapid access to OVH server
+alias ovh='ssh 149.202.53.241'
+
 # Tree
 if [ ! -x "$(which tree 2>/dev/null)" ]
 then

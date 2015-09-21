@@ -2,7 +2,4 @@
 
 # Bosco completion
 
-if command -v bosco &>/dev/null
-then
-  eval "$(bosco --completion=bash)"
-fi
+eval "$(bosco --completion=bash)"
