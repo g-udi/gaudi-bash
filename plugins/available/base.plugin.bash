@@ -197,6 +197,7 @@ function buf ()
     cp -a "${filename}" "${filename}_${filetime}"
 }
 
+<<<<<<< HEAD
 # Determine size of a file or total size of a directory
 function size() {
     if du -b /dev/null > /dev/null 2>&1; then
@@ -236,4 +237,12 @@ function colors() {
         echo -e "$color: \\033[38;5;${color}mhello\\033[48;5;${color}mworld\\033[0m"
         ((color++));
     done
+}
+
+function del() {
+    about 'move files to hidden folder in tmp, that gets cleared on each reboot'
+    param 'file or folder to be deleted'
+    example 'del ./file.txt'
+    group 'base'
+    mkdir -p /tmp/.trash && mv "$@" /tmp/.trash;
 }
