@@ -18,7 +18,6 @@ The preferred installation method is using the main script in the [main configur
 The install script will also prompt you asking if you use [Jekyll](https://github.com/mojombo/jekyll).
 This is to set up the `.jekyllconfig` file, which stores info necessary to use the Jekyll plugin.
 
-
 **INSTALL OPTIONS:**
 The install script can take the following options:
 

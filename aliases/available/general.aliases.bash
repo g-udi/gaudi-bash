@@ -56,8 +56,8 @@ then
 fi
 
 # Directory
-alias	md='mkdir -p'
-alias	rd='rmdir'
+alias md='mkdir -p'
+alias rd='rmdir'
 
 which gshuf &> /dev/null
 if [ $? -eq 0 ]

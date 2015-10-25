@@ -197,7 +197,6 @@ function buf ()
     cp -a "${filename}" "${filename}_${filetime}"
 }
 
-<<<<<<< HEAD
 # Determine size of a file or total size of a directory
 function size() {
     if du -b /dev/null > /dev/null 2>&1; then
