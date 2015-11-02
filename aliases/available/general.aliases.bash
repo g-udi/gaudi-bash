@@ -29,8 +29,12 @@ alias edit="$EDITOR"
 alias pager="$PAGER"
 alias q='exit'
 alias irc="$IRC_CLIENT"
-alias rb='ruby'
 alias screenshot='webkit2png'
+
+# Language aliases
+alias rb='ruby'
+alias py='python'
+alias ipy='ipython'
 
 # Pianobar can be found here: http://github.com/PromyLOPh/pianobar/
 alias piano='pianobar'
@@ -64,3 +68,13 @@ if [ $? -eq 0 ]
 then
   alias shuf=gshuf
 fi
+# Display whatever file is regular file or folder
+catt() {
+  for i in "$@"; do
+    if [ -d "$i" ]; then
+      ls "$i"
+    else
+      cat "$i"
+    fi
+  done
+}
