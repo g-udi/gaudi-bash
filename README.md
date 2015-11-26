@@ -36,7 +36,7 @@ bash-it help completions    # shows help for installed completions
 bash-it help plugins        # shows help for installed plugins
 ```
 
-## Your Custom scripts, aliases, and functions
+## Your Custom scripts, aliases, themes, and functions
 
 For custom scripts, and aliases, just create the following files (they'll be ignored by the git repo):
 
@@ -44,6 +44,7 @@ For custom scripts, and aliases, just create the following files (they'll be ign
 * `completion/custom.completion.bash`
 * `lib/custom.bash`
 * `plugins/custom.plugins.bash`
+* `custom/themes/<custom theme name>/<custom theme name>.theme.bash`
 
 I recommend putting the extra bash configuration in the `lib/custom.bash`, for example my custom configuration is:
 
