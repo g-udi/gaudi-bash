@@ -352,3 +352,11 @@ if [ ! -e $BASH_IT/plugins/enabled/battery.plugin.bash ]; then
   echo -n
     }
 fi
+
+function aws_profile {
+  if [[ $AWS_DEFAULT_PROFILE ]]; then
+    echo -e "${AWS_DEFAULT_PROFILE}"
+  else
+    echo -e "default"
+  fi
+}
