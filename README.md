@@ -118,6 +118,10 @@ cd $BASH_IT
 
 This will restore your previous Bash profile. After the uninstall script finishes, remove the Bash it directory from your machine (`rm -rf $BASH_IT`) and start a new shell.
 
+## Contributing
+
+Please take a look at the [Contribution Guidelines](CONTRIBUTING.md) before reporting a bug or providing a new feature.
+
 ## Misc
 
 ### Bash Profile Aliases
@@ -434,7 +438,6 @@ And we can alias these (add to .bashrc / .zshrc)
 alias usenode='brew unlink iojs && brew link node && echo Using Node.js'
 alias useio='brew unlink node && brew link --force iojs && echo Using io.js'
 ```
-
 Now we can `$ usenode` when we want to use Node.js, and `$ useio` when we want to use io.js
 
 ##### References
