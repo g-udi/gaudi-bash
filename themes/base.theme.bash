@@ -122,7 +122,6 @@ function git_status_summary {
     print untracked "\t" unstaged "\t" staged
   }'
 }
-
 function git_prompt_vars {
   local details=''
   SCM_STATE=${GIT_THEME_PROMPT_CLEAN:-$SCM_THEME_PROMPT_CLEAN}

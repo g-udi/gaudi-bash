@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 USER_INFO_SSH_CHAR=${POWERLINE_USER_INFO_SSH_CHAR:=" "}
-USER_INFO_THEME_PROMPT_COLOR=32
+USER_INFO_THEME_PROMPT_COLOR=19
 USER_INFO_THEME_PROMPT_COLOR_SUDO=202
 
 PYTHON_VENV_CHAR=${POWERLINE_PYTHON_VENV_CHAR:="❲p❳ "}
@@ -26,7 +26,7 @@ RVM_THEME_PROMPT_SUFFIX=""
 RVM_THEME_PROMPT_COLOR=161
 RVM_CHAR=${POWERLINE_RVM_CHAR:="❲r❳ "}
 
-CWD_THEME_PROMPT_COLOR=240
+CWD_THEME_PROMPT_COLOR=19
 
 LAST_STATUS_THEME_PROMPT_COLOR=196
 
@@ -166,7 +166,7 @@ function __powerline_left_segment {
   local OLD_IFS="${IFS}"; IFS="|"
   local params=( $1 )
   IFS="${OLD_IFS}"
-  local separator_char=""
+  local separator_char=""
   local separator=""
 
   if [[ "${SEGMENTS_AT_LEFT}" -gt 0 ]]; then
@@ -181,7 +181,7 @@ function __powerline_right_segment {
   local OLD_IFS="${IFS}"; IFS="|"
   local params=( $1 )
   IFS="${OLD_IFS}"
-  local separator_char=""
+  local separator_char=""
   local padding=2
   local separator_color=""
 
@@ -199,7 +199,7 @@ function __powerline_right_segment {
 
 function __powerline_prompt_command {
   local last_status="$?" ## always the first
-  local separator_char=""
+  local separator_char=""
   local move_cursor_rightmost='\033[500C'
 
   LEFT_PROMPT=""

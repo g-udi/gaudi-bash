@@ -1,156 +1,110 @@
 #!/usr/bin/env bash
 
-THEME_PROMPT_SEPARATOR=""
+__powerline() {
 
-SHELL_SSH_CHAR=" "
-SHELL_THEME_PROMPT_COLOR=32
-SHELL_THEME_PROMPT_COLOR_SUDO=202
+    # Unicode symbols
+    readonly PS_SYMBOL_DARWIN=''
+    readonly PS_SYMBOL_LINUX='$'
+    readonly PS_SYMBOL_OTHER='%'
+    readonly GIT_BRANCH_SYMBOL='⑂ '
+    readonly GIT_BRANCH_CHANGED_SYMBOL='+'
+    readonly GIT_NEED_PUSH_SYMBOL='⇡'
+    readonly GIT_NEED_PULL_SYMBOL='⇣'
 
-VIRTUALENV_CHAR="ⓔ "
-VIRTUALENV_THEME_PROMPT_COLOR=35
+    # Solarized colorscheme
+    readonly FG_BASE03="\[$(tput setaf 8)\]"
+    readonly FG_BASE02="\[$(tput setaf 0)\]"
+    readonly FG_BASE01="\[$(tput setaf 10)\]"
+    readonly FG_BASE00="\[$(tput setaf 11)\]"
+    readonly FG_BASE0="\[$(tput setaf 12)\]"
+    readonly FG_BASE1="\[$(tput setaf 14)\]"
+    readonly FG_BASE2="\[$(tput setaf 7)\]"
+    readonly FG_BASE3="\[$(tput setaf 15)\]"
 
-SCM_NONE_CHAR=""
-SCM_GIT_CHAR=" "
-SCM_GIT_BEHIND_CHAR="↓"
-SCM_GIT_AHEAD_CHAR="↑"
-SCM_GIT_UNTRACKED_CHAR="?:"
-SCM_GIT_UNSTAGED_CHAR="U:"
-SCM_GIT_STAGED_CHAR="S:"
+    readonly BG_BASE03="\[$(tput setab 8)\]"
+    readonly BG_BASE02="\[$(tput setab 0)\]"
+    readonly BG_BASE01="\[$(tput setab 10)\]"
+    readonly BG_BASE00="\[$(tput setab 11)\]"
+    readonly BG_BASE0="\[$(tput setab 12)\]"
+    readonly BG_BASE1="\[$(tput setab 14)\]"
+    readonly BG_BASE2="\[$(tput setab 7)\]"
+    readonly BG_BASE3="\[$(tput setab 15)\]"
 
-if [[ -z "$THEME_SCM_TAG_PREFIX" ]]; then
-    SCM_TAG_PREFIX="tag > "
-else
-    SCM_TAG_PREFIX="$THEME_SCM_TAG_PREFIX"
-fi
+    readonly FG_YELLOW="\[$(tput setaf 3)\]"
+    readonly FG_ORANGE="\[$(tput setaf 9)\]"
+    readonly FG_RED="\[$(tput setaf 1)\]"
+    readonly FG_MAGENTA="\[$(tput setaf 5)\]"
+    readonly FG_VIOLET="\[$(tput setaf 13)\]"
+    readonly FG_BLUE="\[$(tput setaf 4)\]"
+    readonly FG_CYAN="\[$(tput setaf 6)\]"
+    readonly FG_GREEN="\[$(tput setaf 2)\]"
 
-SCM_THEME_PROMPT_CLEAN=""
-SCM_THEME_PROMPT_DIRTY=""
+    readonly BG_YELLOW="\[$(tput setab 3)\]"
+    readonly BG_ORANGE="\[$(tput setab 9)\]"
+    readonly BG_RED="\[$(tput setab 1)\]"
+    readonly BG_MAGENTA="\[$(tput setab 5)\]"
+    readonly BG_VIOLET="\[$(tput setab 13)\]"
+    readonly BG_BLUE="\[$(tput setab 4)\]"
+    readonly BG_CYAN="\[$(tput setab 6)\]"
+    readonly BG_GREEN="\[$(tput setab 2)\]"
 
-SCM_THEME_PROMPT_COLOR=238
-SCM_THEME_PROMPT_CLEAN_COLOR=231
-SCM_THEME_PROMPT_DIRTY_COLOR=196
-SCM_THEME_PROMPT_STAGED_COLOR=220
-SCM_THEME_PROMPT_UNSTAGED_COLOR=166
+    readonly DIM="\[$(tput dim)\]"
+    readonly REVERSE="\[$(tput rev)\]"
+    readonly RESET="\[$(tput sgr0)\]"
+    readonly BOLD="\[$(tput bold)\]"
 
-CWD_THEME_PROMPT_COLOR=240
+    # what OS?
+    case "$(uname)" in
+        Darwin)
+            readonly PS_SYMBOL=$PS_SYMBOL_DARWIN
+            ;;
+        Linux)
+            readonly PS_SYMBOL=$PS_SYMBOL_LINUX
+            ;;
+        *)
+            readonly PS_SYMBOL=$PS_SYMBOL_OTHER
+    esac
 
-LAST_STATUS_THEME_PROMPT_COLOR=52
+    __git_info() {
+        [ -x "$(which git)" ] || return    # git not found
 
-IN_VIM_PROMPT_COLOR=35
-IN_VIM_PROMPT_TEXT="vim"
+        local git_eng="env LANG=C git"   # force git output in English to make our work easier
+        # get current branch name or short SHA1 hash for detached head
+        local branch="$($git_eng symbolic-ref --short HEAD 2>/dev/null || $git_eng describe --tags --always 2>/dev/null)"
+        [ -n "$branch" ] || return  # git branch not found
 
+        local marks
 
-function set_rgb_color {
-    if [[ "${1}" != "-" ]]; then
-        fg="38;5;${1}"
-    fi
-    if [[ "${2}" != "-" ]]; then
-        bg="48;5;${2}"
-        [[ -n "${fg}" ]] && bg=";${bg}"
-    fi
-    echo -e "\[\033[${fg}${bg}m\]"
-}
+        # branch is modified?
+        [ -n "$($git_eng status --porcelain)" ] && marks+=" $GIT_BRANCH_CHANGED_SYMBOL"
 
-function powerline_shell_prompt {
-    SHELL_PROMPT_COLOR=${SHELL_THEME_PROMPT_COLOR}
-    if sudo -n uptime 2>&1 | grep -q "load"; then
-        SHELL_PROMPT_COLOR=${SHELL_THEME_PROMPT_COLOR_SUDO}
-    fi
-    if [[ -n "${SSH_CLIENT}" ]]; then
-        SHELL_PROMPT="${SHELL_SSH_CHAR}\u@\h"
-    else
-        SHELL_PROMPT="\u"
-    fi
-    SHELL_PROMPT="${bold_white}$(set_rgb_color - ${SHELL_PROMPT_COLOR}) ${SHELL_PROMPT} ${normal}"
-    LAST_THEME_COLOR=${SHELL_PROMPT_COLOR}
-}
+        # how many commits local branch is ahead/behind of remote?
+        local stat="$($git_eng status --porcelain --branch | grep '^##' | grep -o '\[.\+\]$')"
+        local aheadN="$(echo $stat | grep -o 'ahead [[:digit:]]\+' | grep -o '[[:digit:]]\+')"
+        local behindN="$(echo $stat | grep -o 'behind [[:digit:]]\+' | grep -o '[[:digit:]]\+')"
+        [ -n "$aheadN" ] && marks+=" $GIT_NEED_PUSH_SYMBOL$aheadN"
+        [ -n "$behindN" ] && marks+=" $GIT_NEED_PULL_SYMBOL$behindN"
 
-function powerline_virtualenv_prompt {
-    local environ=""
+        # print the git branch segment without a trailing newline
+        printf " $GIT_BRANCH_SYMBOL$branch$marks "
+    }
 
-    if [[ -n "$CONDA_DEFAULT_ENV" ]]; then
-        environ="conda: $CONDA_DEFAULT_ENV"
-    elif [[ -n "$VIRTUAL_ENV" ]]; then
-        environ=$(basename "$VIRTUAL_ENV")
-    fi
-
-    if [[ -n "$environ" ]]; then
-        VIRTUALENV_PROMPT="$(set_rgb_color ${LAST_THEME_COLOR} ${VIRTUALENV_THEME_PROMPT_COLOR})${THEME_PROMPT_SEPARATOR}${normal}$(set_rgb_color - ${VIRTUALENV_THEME_PROMPT_COLOR}) ${VIRTUALENV_CHAR}$environ ${normal}"
-        LAST_THEME_COLOR=${VIRTUALENV_THEME_PROMPT_COLOR}
-    else
-        VIRTUALENV_PROMPT=""
-    fi
-}
-
-function powerline_scm_prompt {
-    scm_prompt_vars
-
-    if [[ "${SCM_NONE_CHAR}" != "${SCM_CHAR}" ]]; then
-        if [[ "${SCM_DIRTY}" -eq 1 ]]; then
-            if [[ -n "${SCM_GIT_STAGED}" ]]; then
-                SCM_PROMPT="$(set_rgb_color ${SCM_THEME_PROMPT_STAGED_COLOR} ${SCM_THEME_PROMPT_COLOR})"
-            elif [[ -n "${SCM_GIT_UNSTAGED}" ]]; then
-                SCM_PROMPT="$(set_rgb_color ${SCM_THEME_PROMPT_UNSTAGED_COLOR} ${SCM_THEME_PROMPT_COLOR})"
-            else
-                SCM_PROMPT="$(set_rgb_color ${SCM_THEME_PROMPT_DIRTY_COLOR} ${SCM_THEME_PROMPT_COLOR})"
-            fi
+    ps1() {
+        # Check the exit code of the previous command and display different
+        # colors in the prompt accordingly.
+        if [ $? -eq 0 ]; then
+            local BG_EXIT="$BG_GREEN"
         else
-            SCM_PROMPT="$(set_rgb_color ${SCM_THEME_PROMPT_CLEAN_COLOR} ${SCM_THEME_PROMPT_COLOR})"
+            local BG_EXIT="$BG_RED"
         fi
-        if [[ "${SCM_GIT_CHAR}" == "${SCM_CHAR}" ]]; then
-            local tag=""
-            if [[ $SCM_IS_TAG -eq "1" ]]; then
-                tag=$SCM_TAG_PREFIX
-            fi
-            SCM_PROMPT+=" ${SCM_CHAR}${tag}${SCM_BRANCH}${SCM_STATE} "
-            [[ -n "${SCM_GIT_AHEAD}" ]] && SCM_PROMPT+="${SCM_GIT_AHEAD} "
-            [[ -n "${SCM_GIT_BEHIND}" ]] && SCM_PROMPT+="${SCM_GIT_BEHIND} "
-            [[ -n "${SCM_GIT_STAGED}" ]] && SCM_PROMPT+="${SCM_GIT_STAGED} "
-            [[ -n "${SCM_GIT_UNSTAGED}" ]] && SCM_PROMPT+="${SCM_GIT_UNSTAGED} "
-            [[ -n "${SCM_GIT_UNTRACKED}" ]] && SCM_PROMPT+="${SCM_GIT_UNTRACKED} "
-            [[ -n "${SCM_GIT_STASH}" ]] && SCM_PROMPT+="${SCM_GIT_STASH} "
-        fi
-        SCM_PROMPT="$(set_rgb_color ${LAST_THEME_COLOR} ${SCM_THEME_PROMPT_COLOR})${THEME_PROMPT_SEPARATOR}${normal}${SCM_PROMPT}${normal}"
-        LAST_THEME_COLOR=${SCM_THEME_PROMPT_COLOR}
-    else
-        SCM_PROMPT=""
-    fi
+
+        PS1="$BG_BASE1$FG_BASE3 \w $RESET"
+        PS1+="$BG_BLUE$FG_BASE3$(__git_info)$RESET"
+        PS1+="$BG_EXIT$FG_BASE3 $PS_SYMBOL $RESET "
+    }
+
+    PROMPT_COMMAND=ps1
 }
 
-function powerline_cwd_prompt {
-    CWD_PROMPT="$(set_rgb_color ${LAST_THEME_COLOR} ${CWD_THEME_PROMPT_COLOR})${THEME_PROMPT_SEPARATOR}${normal}$(set_rgb_color - ${CWD_THEME_PROMPT_COLOR}) \w ${normal}$(set_rgb_color ${CWD_THEME_PROMPT_COLOR} -)${normal}"
-    LAST_THEME_COLOR=${CWD_THEME_PROMPT_COLOR}
-}
-
-function powerline_last_status_prompt {
-    if [[ "$1" -eq 0 ]]; then
-        LAST_STATUS_PROMPT="$(set_rgb_color ${LAST_THEME_COLOR} -)${THEME_PROMPT_SEPARATOR}${normal}"
-    else
-        LAST_STATUS_PROMPT="$(set_rgb_color ${LAST_THEME_COLOR} ${LAST_STATUS_THEME_PROMPT_COLOR})${THEME_PROMPT_SEPARATOR}${normal}$(set_rgb_color - ${LAST_STATUS_THEME_PROMPT_COLOR}) ${LAST_STATUS} ${normal}$(set_rgb_color ${LAST_STATUS_THEME_PROMPT_COLOR} -)${THEME_PROMPT_SEPARATOR}${normal}"
-    fi
-}
-
-function powerline_in_vim_prompt {
-  if [ -z "$VIMRUNTIME" ]; then
-    IN_VIM_PROMPT=""
-  else
-    IN_VIM_PROMPT="$(set_rgb_color ${LAST_THEME_COLOR} ${IN_VIM_PROMPT_COLOR})${THEME_PROMPT_SEPARATOR}${normal}$(set_rgb_color - ${IN_VIM_PROMPT_COLOR}) ${IN_VIM_PROMPT_TEXT} ${normal}$(set_rgb_color ${IN_VIM_PROMPT_COLOR} -)${normal}"
-    LAST_THEME_COLOR=${IN_VIM_PROMPT_COLOR}
-  fi
-}
-
-function powerline_prompt_command() {
-    local LAST_STATUS="$?"
-
-    powerline_shell_prompt
-    powerline_in_vim_prompt
-    powerline_virtualenv_prompt
-    powerline_scm_prompt
-    powerline_cwd_prompt
-    powerline_last_status_prompt LAST_STATUS
-
-    PS1="${SHELL_PROMPT}${IN_VIM_PROMPT}${VIRTUALENV_PROMPT}${SCM_PROMPT}${CWD_PROMPT}${LAST_STATUS_PROMPT} "
-}
-
-PROMPT_COMMAND=powerline_prompt_command
-
+__powerline
+unset __powerline
