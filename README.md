@@ -420,7 +420,7 @@ There are many more proxy commands, e.g. for changing the local Git project's pr
 
 Having both Node.js and io.js installed with NVM was giving me a load of problems, mainly with npm. The best way is to have them installed via `homebrew`. They are already included in my [`brewfile`](https://github.com/ahmadassaf/dotfiles/blob/master/.brewfile.sh).
 
-So we have both Node.js and io.js installed, however iojs is only linked to the command `iojs` in our PATH.
+So we have both Node.js and io.js installed, however iojs yis only linked to the command `iojs` in our PATH.
 
 So, we can unlink node: `brew unlink node`, and link iojs: `brew link --force iojs` this will link io.js to `node` and other commands.
 
