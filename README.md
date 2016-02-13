@@ -1,10 +1,8 @@
 # Bash-it
 
-**Bash-it** is a mash up of my own bash commands and scripts, other bash stuff I have found and a shameless ripoff of [oh-my-zsh](https://github.com/robbyrussell/oh-my-zsh)
+**Bash-it** is a mash up of my own bash commands and scripts, other bash stuff I have found and a shameless ripoff of [oh-my-zsh](https://github.com/robbyrussell/oh-my-zsh) includes autocompletion, themes, aliases, custom functions, a few stolen pieces from Steve Losh, and more.
 
-Includes autocompletion, themes, aliases, custom functions, a few stolen pieces from Steve Losh, and more.
-
-Bash it provides a solid framework for using, developing and maintaining shell scripts and custom commands for your daily work. If you're using the _Bourne Again Shell_ (Bash) on a regular basis and have been looking for an easy way on how to keep all of these nice little scripts and aliases under control, then Bash it is for you! Stop polluting your `~/bin` directory and your `.bashrc` file, fork/clone Bash it and start hacking away.
+Bash-it provides a solid framework for using, developing and maintaining shell scripts and custom commands for your daily work. If you're using the _Bourne Again Shell_ (Bash) on a regular basis and have been looking for an easy way on how to keep all of these nice little scripts and aliases under control, then Bash-it is for you! Stop polluting your `~/bin` directory and your `.bashrc` file, fork/clone Bash-it and start hacking away.
 
 ## Install
 
@@ -18,12 +16,33 @@ The preferred installation method is using the main script in the [main configur
 The install script will also prompt you asking if you use [Jekyll](https://github.com/mojombo/jekyll).
 This is to set up the `.jekyllconfig` file, which stores info necessary to use the Jekyll plugin.
 
+
 **INSTALL OPTIONS:**
 The install script can take the following options:
 
 * `--interactive`: Asks the user which aliases, completions and plugins to enable.
 
-When run without the `--interactive` switch, Bash it only enables a sane default set of functionality to keep your shell lean and to avoid issues with missing dependencies. Feel free to enable the tools you want to use after the installation.
+When run without the `--interactive` switch, Bash-it only enables a sane default set of functionality to keep your shell clean and to avoid issues with missing dependencies. Feel free to enable the tools you want to use after the installation.
+
+**NOTE**: Keep in mind how Bash load its configuration files, `.bash_profile` for login shells (and in Mac OS X in terminal emulators like [Termminal.app](http://www.apple.com/osx/apps/) or [iTerm2](https://www.iterm2.com/)) and `.bashrc` for interactive shells (default mode in most of the GNU/Linux terminal emulators), to ensure that Bash-it is loaded correctly. A good "practice" is sourcing `.bashrc` into `.bash_profile` to keep things working in all the scenarios, to achieve this, you can add this snippet in your `.bash_profile`:
+
+```
+if [ -f ~/.bashrc ]; then
+  . ~/.bashrc
+fi
+```
+
+Refer to the official [Bash documention](https://www.gnu.org/software/bash/manual/bashref.html#Bash-Startup-Files) to get more info.
+
+## Update
+
+To update Bash-it, simply run:
+
+```
+bash-it update
+```
+
+that's all.
 
 ## Help Screens
 
@@ -101,22 +120,24 @@ Anything in the custom directory will be ignored, with the exception of `custom/
 
 ## Themes
 
-There are a few bash it themes. If you've created your own custom prompts, I'd love it if you shared with everyone else! Just submit a Pull Request.
+There are a few Bash-it themes. If you've created your own custom prompts, I'd love it if you shared with everyone else! Just submit a Pull Request.
 
-You can see the theme screenshots [here](https://github.com/Bash-it/bash-it/wiki/Themes)
+You can see the theme screenshots [here](https://github.com/Bash-it/bash-it/wiki/Themes).
 
-Alternatively, you can preview the themes in your own shell using `BASH_PREVIEW=true reload`
+Alternatively, you can preview the themes in your own shell using `BASH_PREVIEW=true reload`.
+
+**NOTE**: Bash-it and some themes use UTF-8 characters, so to avoid extrange behaviors in your terminal, set your locale to `LC_ALL=en_US.UTF-8` or the equivalent to your language if isn't American English.
 
 ## Uninstalling
 
-To uninstall Bash it, run the `uninstall.sh` script found in the `$BASH_IT` directory:
+To uninstall Bash-it, run the `uninstall.sh` script found in the `$BASH_IT` directory:
 
 ```
 cd $BASH_IT
 ./uninstall.sh
 ```
 
-This will restore your previous Bash profile. After the uninstall script finishes, remove the Bash it directory from your machine (`rm -rf $BASH_IT`) and start a new shell.
+This will restore your previous Bash profile. After the uninstall script finishes, remove the Bash-it directory from your machine (`rm -rf $BASH_IT`) and start a new shell.
 
 ## Contributing
 
@@ -129,12 +150,11 @@ Please take a look at the [Contribution Guidelines](CONTRIBUTING.md) before repo
 Bash-it creates a 'reload' alias that makes it convenient to reload
 your bash profile when you make changes. You can use it to reflect any changes you made simply by executing `reload` in the terminal.
 
-
 ### Prompt Version Control Check
 
-Bash it provides prompt themes the ability to check and display version control information for the current directory. The information is retrieved for each directory and can slow down the navigation of projects with a large number of files and folders. Turn version control checking off to prevent slow directory navigation within large projects.
+Bash-it provides prompt themes the ability to check and display version control information for the current directory. The information is retrieved for each directory and can slow down the navigation of projects with a large number of files and folders. Turn version control checking off to prevent slow directory navigation within large projects.
 
-Bash it provides a flag (`SCM_CHECK`) within the `~/.bash_profile` file that turns off/on version control information checking and display within all themes. Version control checking is on by default unless explicitly turned off.
+Bash-it provides a flag (`SCM_CHECK`) within the `~/.bash_profile` file that turns off/on version control information checking and display within all themes. Version control checking is on by default unless explicitly turned off.
 
 
 Set `SCM_CHECK` to 'false' to **turn off** version control checks for all themes:
@@ -150,7 +170,7 @@ It is possible for themes to ignore the `SCM_CHECK` flag and query specific vers
 
 ### Git prompt
 
-Bash it has some nice features related to Git, continue reading to know more about these features.
+Bash-it has some nice features related to Git, continue reading to know more about these features.
 
 #### Repository info in the prompt
 
@@ -193,6 +213,9 @@ Due to the fact that the original repo's maintenance is not active, i have decid
 ### Aliases
 
 - **gls.aliases.bash**: Enables the better `ls` command `gls`
+- Added a bunch of new aliases to `general.aliases.bash` and `osx.aliases.bash` and `git.aliases.bash`
+- Added custom alias colors
+- Added the ability to switch between `node` and `iojs`
 
 ### Completion
 
@@ -306,10 +329,9 @@ Set `SCM_GIT_SHOW_DETAILS` to 'false' to **don't show** it:
 
 * `export SCM_GIT_SHOW_DETAILS=false`
 
-
 #### Remotes and remote branches
 
-In some git workflows you must work with various remotes, for this reason, Bash it can provide some useful information about your remotes and your remote branches, for example, the remote on you are working, or if your local branch is tracking a remote branch.
+In some git workflows you must work with various remotes, for this reason, Bash-it can provide some useful information about your remotes and your remote branches, for example, the remote on you are working, or if your local branch is tracking a remote branch.
 
 You can control this feature with the flag `SCM_GIT_SHOW_REMOTE_INFO` as follows:
 
@@ -327,7 +349,7 @@ Set `SCM_GIT_SHOW_REMOTE_INFO` to 'false' to **disable the feature**:
 
 #### Untracked files
 
-By default, `git status` command shows information about *untracked* files, this behavior can be controlled through command line flags or git configuration files, for big repositories, ignoring *untracked* files can make git faster. Bash it uses `git status` to gather the repo information it shows in the prompt, so in some circumstances, can be useful to instruct Bash it to ignore these files. You can control this behavior with the flag `SCM_GIT_IGNORE_UNTRACKED`:
+By default, `git status` command shows information about *untracked* files, this behavior can be controlled through command line flags or git configuration files, for big repositories, ignoring *untracked* files can make git faster. Bash-it uses `git status` to gather the repo information it shows in the prompt, so in some circumstances, can be useful to instruct Bash-it to ignore these files. You can control this behavior with the flag `SCM_GIT_IGNORE_UNTRACKED`:
 
 Set `SCM_GIT_IGNORE_UNTRACKED` to 'false' (the default value) to get information about *untracked* files:
 
@@ -337,13 +359,13 @@ Set `SCM_GIT_IGNORE_UNTRACKED` to 'true' to **ignore** *untracked* files:
 
 * `export SCM_GIT_IGNORE_UNTRACKED=true`
 
-also, with this flag to false, Bash it will not show the repository as dirty when the repo have *untracked* files, and will not display the count of *untracked* files.
+also, with this flag to false, Bash-it will not show the repository as dirty when the repo have *untracked* files, and will not display the count of *untracked* files.
 
-**NOTE:** If you set in git configuration file the option to ignore *untracked* files, this flag has no effect, and Bash it will ignore *untracked* files always.
+**NOTE:** If you set in git configuration file the option to ignore *untracked* files, this flag has no effect, and Bash-it will ignore *untracked* files always.
 
 #### Ignore repo status
 
-When working in repos with a large code base Bash it can slow down your prompt when checking the repo status, to avoid it, there is an option you can set via Git config to disable checking repo status in Bash it.
+When working in repos with a large code base Bash-it can slow down your prompt when checking the repo status, to avoid it, there is an option you can set via Git config to disable checking repo status in Bash-it.
 
 To disable checking the status in the current repo:
 
@@ -361,15 +383,15 @@ setting this flag globally has the same effect that `SCM_CHECK=true` but only fo
 
 ### Pass function renamed to passgen
 
-The Bash it `pass` function has been renamed to `passgen` in order to avoid a naming conflict with the [pass password manager]. In order to minimize the impact on users of the legacy Bash it `pass` function, Bash it will create the alias `pass` that calls the new `passgen` function if the `pass` password manager command is not found on the `PATH` (default behavior).
+The Bash-it `pass` function has been renamed to `passgen` in order to avoid a naming conflict with the [pass password manager]. In order to minimize the impact on users of the legacy Bash-it `pass` function, Bash-it will create the alias `pass` that calls the new `passgen` function if the `pass` password manager command is not found on the `PATH` (default behavior).
 
 This behavior can be overridden with the `BASH_IT_LEGACY_PASS` flag as follows:
 
-Set `BASH_IT_LEGACY_PASS` to 'true' to force Bash it to always **create** the `pass` alias to `passgen`:
+Set `BASH_IT_LEGACY_PASS` to 'true' to force Bash-it to always **create** the `pass` alias to `passgen`:
 
 * `export BASH_IT_LEGACY_PASS=true`
 
-Unset `BASH_IT_LEGACY_PASS` to have Bash it **return to default behavior**:
+Unset `BASH_IT_LEGACY_PASS` to have Bash-it **return to default behavior**:
 
 * `unset BASH_IT_LEGACY_PASS`
 
@@ -390,13 +412,13 @@ The Bash shell (and many shell tools) use the following variables to define the 
 * `ALL_PROXY` (and `all_proxy`): Used by some tools for the same purpose as above
 * `NO_PROXY` (and `no_proxy`): Comma-separated list of hostnames that don't have to go through the proxy
 
-Bash it's `proxy` plugin allows to enable and disable these variables with a simple command. To start using the `proxy` plugin, run the following:
+Bash-it's `proxy` plugin allows to enable and disable these variables with a simple command. To start using the `proxy` plugin, run the following:
 
 ```bash
 bash-it enable plugin proxy
 ```
 
-Bash it also provides support for enabling/disabling proxy settings for various shell tools. The following backends are currently supported (in addition to the shell's environment variables): Git, SVN, npm, ssh. The `proxy` plugin changes the configuration files of these tools to enable or disable the proxy settings.
+Bash-it also provides support for enabling/disabling proxy settings for various shell tools. The following backends are currently supported (in addition to the shell's environment variables): Git, SVN, npm, ssh. The `proxy` plugin changes the configuration files of these tools to enable or disable the proxy settings.
 
 Bash-it uses the following variables to set the shell's proxy settings when you call `enable-proxy`.
 These variables are best defined in a custom script in Bash-it's custom script folder (`$BASH_IT/custom`), e.g. `$BASH_IT/custom/proxy.env.bash`
@@ -409,12 +431,6 @@ Once you have defined these variables (and have run `reload` to load the changes
 * `disable-proxy`: This unsets the shell's proxy environment variables and disables proxy support in your SVN, npm and SSH configuration files.
 
 There are many more proxy commands, e.g. for changing the local Git project's proxy settings. Run `glossary proxy` to show the available proxy functions with a short description.
-
-## Help out
-
-- Added a bunch of new aliases to `general.aliases.bash` and `osx.aliases.bash` and `git.aliases.bash`
-- Added custom alias colors
-- Added the ability to switch between `node` and `iojs`
 
 #### Using Homebrew to manage Node.js and io.js installs on OSX
 
