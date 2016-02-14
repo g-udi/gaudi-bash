@@ -18,13 +18,16 @@ SCM_THEME_PROMPT_DIRTY=""
 SCM_THEME_PROMPT_CLEAN_COLOR=25
 SCM_THEME_PROMPT_DIRTY_COLOR=88
 SCM_THEME_PROMPT_STAGED_COLOR=30
-SCM_THEME_PROMPT_UNSTAGED_COLOR=92
+SCM_THEME_PROMPT_UNSTAGED_COLOR=160
 SCM_THEME_PROMPT_COLOR=${SCM_THEME_PROMPT_CLEAN_COLOR}
 
 RVM_THEME_PROMPT_PREFIX=""
 RVM_THEME_PROMPT_SUFFIX=""
 RVM_THEME_PROMPT_COLOR=161
 RVM_CHAR=${POWERLINE_RVM_CHAR:="❲r❳ "}
+
+NVM_CHAR=" ⬡ "
+NVM_THEME_PROMPT_COLOR=220
 
 CWD_THEME_PROMPT_COLOR=19
 
@@ -197,6 +200,17 @@ function __powerline_right_segment {
   (( SEGMENTS_AT_RIGHT += 1 ))
 }
 
+function __powerline_nvm_prompt {
+  ## NVM Support
+  if test -e "package.json";then
+    [[ $(which nvm) != "nvm not found" ]] || return
+    nvm_prompt=$(node -v 2>/dev/null)
+    [[ "${nvm_prompt}x" == "x" ]] && return
+    nvm_prompt=${nvm_prompt:1}
+    LEFT_PROMPT+="$(set_rgb_color ${NVM_THEME_PROMPT_COLOR} -)${NVM_CHAR}${nvm_prompt}${normal}"
+  fi
+}
+
 function __powerline_prompt_command {
   local last_status="$?" ## always the first
   local separator_char=""
@@ -215,6 +229,8 @@ function __powerline_prompt_command {
     [[ -n "${info}" ]] && __powerline_left_segment "${info}"
   done
   [[ -n "${LEFT_PROMPT}" ]] && LEFT_PROMPT+="$(set_rgb_color ${LAST_SEGMENT_COLOR} -)${separator_char}${normal}"
+
+  __powerline_nvm_prompt
 
   ## right prompt ##
   if [[ -n "${POWERLINE_RIGHT_PROMPT}" ]]; then
