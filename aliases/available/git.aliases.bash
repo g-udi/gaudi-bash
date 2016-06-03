@@ -54,6 +54,10 @@ alias gtl="git tag -l"
 alias gaa="git add --all"
 alias gclean="git gc --aggressive --prune"
 alias glvp='git log --pretty="%Cred%h%Creset [%Cgreen%an %Creset %C(cyan)%ar%Creset]: %Cred%d%Creset %C(yellow)%s%Creset" --graph'
+alias gbranchstats="git for-each-ref --sort='-authordate:iso8601' --format=' %(authordate:relative)%09%(refname:short)' refs/remotes"
+alias glazy="git add --all; git commit -m "$(curl -s http://whatthecommit.com/index.txt)";"
+alias tasks='grep --exclude-dir=.git --exclude-dir=node_modules --exclude-dir=bower_components -rEI "TODO|FIXME" . 2>/dev/null'
+alias ghistory="git reflog show | grep '}: commit' | nl | sort -nr | nl | sort -nr | cut --fields=1,3 | sed s/commit://g | sed -e 's/HEAD*@{[0-9]*}://g'"
 
 # From http://davidwalsh.name/git-delete-branches-master
 alias gdb="git branch | grep -v 'master' | sed 's/^[ *]*//' | sed 's/^/git branch -d /' | bash"
