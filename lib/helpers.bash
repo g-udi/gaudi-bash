@@ -243,6 +243,10 @@ _disable-thing ()
         rm $BASH_IT/$subdirectory/enabled/$(basename $plugin)
     fi
 
+    if [ -n "$BASH_IT_AUTOMATIC_RELOAD_AFTER_CONFIG_CHANGE" ]; then
+        exec ${0/-/}
+    fi
+
     printf '%s\n' "$file_entity disabled."
 }
 
@@ -321,6 +325,10 @@ _enable-thing ()
         ln -s ../available/$plugin $BASH_IT/$subdirectory/enabled/$plugin
     fi
 
+    if [ -n "$BASH_IT_AUTOMATIC_RELOAD_AFTER_CONFIG_CHANGE" ]; then
+        exec ${0/-/}
+    fi
+
     printf '%s\n' "$file_entity enabled."
 }
 
@@ -340,17 +348,31 @@ _help-aliases()
     _example '$ alias-help git'
 
     if [ -n "$1" ]; then
-        cat $BASH_IT/aliases/available/$1.aliases.bash | metafor alias | sed "s/$/'/"
+        case $1 in
+            custom)
+                alias_path='custom.aliases.bash'
+            ;;
+            *)
+                alias_path="available/$1.aliases.bash"
+            ;;
+        esac
+        cat $BASH_IT/aliases/$alias_path | metafor alias | sed "s/$/'/"
     else
         typeset f
         for f in $BASH_IT/aliases/enabled/*
         do
-            typeset file=$(basename $f)
-            printf '\n\n%s:\n' "${file%%.*}"
-            # metafor() strips trailing quotes, restore them with sed..
-            cat $f | metafor alias | sed "s/$/'/"
+            _help-list-aliases $f
         done
+        _help-list-aliases $BASH_IT/aliases/custom.aliases.bash
     fi
+}
+
+_help-list-aliases ()
+{
+    typeset file=$(basename $1)
+    printf '\n\n%s:\n' "${file%%.*}"
+    # metafor() strips trailing quotes, restore them with sed..
+    cat $1 | metafor alias | sed "s/$/'/"
 }
 
 _help-plugins()
@@ -412,7 +434,7 @@ if ! type pathmunge > /dev/null 2>&1
 then
   function pathmunge () {
     about 'prevent duplicate directories in you PATH variable'
-    group 'lib helpers'
+    group 'helpers'
     example 'pathmunge /path/to/dir is equivalent to PATH=/path/to/dir:$PATH'
     example 'pathmunge /path/to/dir after is equivalent to PATH=$PATH:/path/to/dir'
 
