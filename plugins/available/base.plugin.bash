@@ -160,15 +160,6 @@ if [ ! -e "${BASH_IT}/plugins/enabled/todo.plugin.bash" ] && [ ! -e "${BASH_IT}/
     }
 fi
 
-function command_exists ()
-{
-    about 'checks for existence of a command'
-    param '1: command to check'
-    example '$ command_exists ls && echo exists'
-    group 'base'
-    type "$1" &> /dev/null ;
-}
-
 mkiso ()
 {
     about 'creates iso from current dir in the parent dir (unless defined)'
