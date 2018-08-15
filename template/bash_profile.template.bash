@@ -52,7 +52,6 @@ export SCM_CHECK=true
 # export BASH_IT_RELOAD_LEGACY=1
 
 # Load Bash It
-<<<<<<< HEAD
 source $BASH_IT/bash_it.sh
 
 export PATH="$PATH:/usr/local/sbin"
@@ -89,6 +88,3 @@ export HOMEBREW_CASK_OPTS="--appdir=/Applications";
 
 # Add MySQL and MAMPP to path
 export PATH=$PATH:/Applications/MAMP/Library/bin
-=======
-source "$BASH_IT"/bash_it.sh
->>>>>>> e3c99f4d571bc2c92fe21f9f80c6df380cf9ea0e
