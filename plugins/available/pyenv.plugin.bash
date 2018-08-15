@@ -4,6 +4,9 @@ about-plugin 'load pyenv, if you are using it'
 export PYENV_ROOT="$HOME/.pyenv"
 pathmunge "$PYENV_ROOT/bin"
 
+eval "$(pyenv init -)"
+eval "$(pyenv virtualenv-init -)"
+
 [[ `which pyenv` ]] && eval "$(pyenv init -)"
 
 #Load pyenv virtualenv if the virtualenv plugin is installed.

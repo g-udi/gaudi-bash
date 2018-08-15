@@ -27,4 +27,4 @@ export MANPATH="/usr/local/opt/coreutils/libexec/gnuman:$MANPATH"
 eval `gdircolors -b ~/.dircolors`
 
 # If we have grc enabled this is used to add coloring to various commands
-source "`brew --prefix grc`/etc/grc.bashrc"
+source "/usr/local/etc/grc.bashrc"
