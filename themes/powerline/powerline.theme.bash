@@ -106,26 +106,16 @@ __powerline() {
     PROMPT_COMMAND=ps1
 }
 
-function powerline_in_vim_prompt {
-  if [ -z "$VIMRUNTIME" ]; then
-    IN_VIM_PROMPT=""
-  else
-    IN_VIM_PROMPT="$(set_rgb_color ${LAST_THEME_COLOR} ${IN_VIM_PROMPT_COLOR})${THEME_PROMPT_SEPARATOR}${normal}$(set_rgb_color - ${IN_VIM_PROMPT_COLOR}) ${IN_VIM_PROMPT_TEXT} ${normal}$(set_rgb_color ${IN_VIM_PROMPT_COLOR} -)${normal}"
-    LAST_THEME_COLOR=${IN_VIM_PROMPT_COLOR}
-  fi
-}
+BATTERY_AC_CHAR=${BATTERY_AC_CHAR:="⚡"}
+BATTERY_STATUS_THEME_PROMPT_GOOD_COLOR=70
+BATTERY_STATUS_THEME_PROMPT_LOW_COLOR=208
+BATTERY_STATUS_THEME_PROMPT_CRITICAL_COLOR=160
 
-function powerline_prompt_command() {
-    local LAST_STATUS="$?"
+THEME_CLOCK_FORMAT=${THEME_CLOCK_FORMAT:="%H:%M:%S"}
 
-    powerline_shell_prompt
-    powerline_in_vim_prompt
-    powerline_virtualenv_prompt
-    powerline_scm_prompt
-    powerline_cwd_prompt
-    powerline_last_status_prompt LAST_STATUS
+IN_VIM_THEME_PROMPT_COLOR=245
+IN_VIM_THEME_PROMPT_TEXT="vim"
 
-    PS1="${SHELL_PROMPT}${IN_VIM_PROMPT}${VIRTUALENV_PROMPT}${SCM_PROMPT}${CWD_PROMPT}${LAST_STATUS_PROMPT} "
-}
+HOST_THEME_PROMPT_COLOR=0
 
 safe_append_prompt_command powerline_prompt_command

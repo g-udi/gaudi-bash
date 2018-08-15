@@ -1,14 +1,7 @@
-#!/bin/bash
-
-# Set term to 256color mode, if 256color is not supported, colors won't work properly
-if [[ $COLORTERM = gnome-* && $TERM = xterm ]] && infocmp gnome-256color >/dev/null 2>&1; then
-  export TERM=gnome-256color
-elif infocmp xterm-256color >/dev/null 2>&1; then
-  export TERM=xterm-256color
-fi
+#!/usr/bin/env bash
 
 
-# Detect whether a rebbot is required
+# Detect whether a reboot is required
 function show_reboot_required() {
   if [ ! -z "$_bf_prompt_reboot_info" ]; then
     if [ -f /var/run/reboot-required ]; then
@@ -16,7 +9,6 @@ function show_reboot_required() {
     fi
   fi
 }
-
 
 # Set different host color for local and remote sessions
 function set_host_color() {
@@ -27,7 +19,6 @@ function set_host_color() {
     printf "${light_orange}"
   fi
 }
-
 
 # Set different username color for users and root
 function set_user_color() {
@@ -41,7 +32,6 @@ function set_user_color() {
   esac
 }
 
-
 scm_prompt() {
   CHAR=$(scm_char)
   if [ $CHAR = $SCM_NONE_CHAR ]
@@ -51,8 +41,6 @@ scm_prompt() {
       echo "[$(scm_char)$(scm_prompt_info)]"
   fi
 }
-
-
 
 # Define custom colors we need
 # non-printable bytes in PS1 need to be contained within \[ \].
@@ -68,10 +56,12 @@ function set_custom_colors() {
   powder_blue="\[$(tput setaf 153)\]"
 }
 
+__ps_time() {
+  echo "$(clock_prompt)${normal}\n"
+}
 
 function prompt_command() {
   ps_reboot="${bright_yellow}$(show_reboot_required)${normal}\n"
-  ps_time="${dark_grey}\t${normal}\n"
 
   ps_username="$(set_user_color)\u${normal}"
   ps_uh_separator="${dark_grey}@${normal}"
@@ -84,13 +74,13 @@ function prompt_command() {
   ps_user_input="${normal}"
 
   # Set prompt
-  PS1="$ps_reboot$ps_time$ps_username$ps_uh_separator$ps_hostname $ps_path $ps_scm_prompt$ps_user_mark$ps_user_input"
+  PS1="$ps_reboot$(__ps_time)$ps_username$ps_uh_separator$ps_hostname $ps_path $ps_scm_prompt$ps_user_mark$ps_user_input"
 }
-
-
 
 # Initialize custom colors
 set_custom_colors
+
+THEME_CLOCK_COLOR=${THEME_CLOCK_COLOR:-"$dark_grey"}
 
 # scm theming
 SCM_THEME_PROMPT_PREFIX=""

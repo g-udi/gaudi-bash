@@ -9,6 +9,7 @@ function show_usage() {
   echo "--help (-h): Display this help message"
   echo "--silent (-s): Install default settings without prompting for input";
   echo "--interactive (-i): Interactively choose plugins"
+  echo "--no-modify-config (-n): Do not modify existing config file"
   exit 0;
 }
 
@@ -29,16 +30,19 @@ function load_one() {
 # Interactively enable several things
 function load_some() {
   file_type=$1
+  single_type=$(echo "$file_type" | sed -e "s/aliases$/alias/g" | sed -e "s/plugins$/plugin/g")
+  enable_func="_enable-$single_type"
   [ -d "$BASH_IT/$file_type/enabled" ] || mkdir "$BASH_IT/$file_type/enabled"
-  for path in `ls $BASH_IT/${file_type}/available/[^_]*`
+  for path in "$BASH_IT/${file_type}/available/"[^_]*
   do
     file_name=$(basename "$path")
     while true
     do
-      read -e -n 1 -p "Would you like to enable the ${file_name%%.*} $file_type? [y/N] " RESP
+      just_the_name="${file_name%%.*}"
+      read -e -n 1 -p "Would you like to enable the $just_the_name $file_type? [y/N] " RESP
       case $RESP in
       [yY])
-        ln -s "../available/${file_name}" "$BASH_IT/$file_type/enabled"
+        $enable_func $just_the_name
         break
         ;;
       [nN]|"")
@@ -64,20 +68,22 @@ function backup_new() {
 for param in "$@"; do
   shift
   case "$param" in
-    "--help")        set -- "$@" "-h" ;;
-    "--silent")      set -- "$@" "-s" ;;
-    "--interactive") set -- "$@" "-i" ;;
-    *)               set -- "$@" "$param"
+    "--help")               set -- "$@" "-h" ;;
+    "--silent")             set -- "$@" "-s" ;;
+    "--interactive")        set -- "$@" "-i" ;;
+    "--no-modify-config")   set -- "$@" "-n" ;;
+    *)                      set -- "$@" "$param"
   esac
 done
 
 OPTIND=1
-while getopts "hsi" opt
+while getopts "hsin" opt
 do
   case "$opt" in
   "h") show_usage; exit 0 ;;
   "s") silent=true ;;
   "i") interactive=true ;;
+  "n") no_modify_config=true ;;
   "?") show_usage >&2; exit 1 ;;
   esac
 done
@@ -101,51 +107,56 @@ esac
 
 BACKUP_FILE=$CONFIG_FILE.bak
 echo "Installing bash-it"
-if [ -e "$HOME/$BACKUP_FILE" ]; then
-  echo -e "\033[0;33mBackup file already exists. Make sure to backup your .bashrc before running this installation.\033[0m" >&2
-  while ! [ $silent ];  do
-    read -e -n 1 -r -p "Would you like to overwrite the existing backup? This will delete your existing backup file ($HOME/$BACKUP_FILE) [y/N] " RESP
-    case $RESP in
+if ! [[ $silent ]] && ! [[ $no_modify_config ]]; then
+  if [ -e "$HOME/$BACKUP_FILE" ]; then
+    echo -e "\033[0;33mBackup file already exists. Make sure to backup your .bashrc before running this installation.\033[0m" >&2
+    while ! [ $silent ];  do
+      read -e -n 1 -r -p "Would you like to overwrite the existing backup? This will delete your existing backup file ($HOME/$BACKUP_FILE) [y/N] " RESP
+      case $RESP in
+      [yY])
+        break
+        ;;
+      [nN]|"")
+        echo -e "\033[91mInstallation aborted. Please come back soon!\033[m"
+        exit 1
+        ;;
+      *)
+        echo -e "\033[91mPlease choose y or n.\033[m"
+        ;;
+      esac
+    done
+  fi
+
+  while ! [ $silent ]; do
+    read -e -n 1 -r -p "Would you like to keep your $CONFIG_FILE and append bash-it templates at the end? [y/N] " choice
+    case $choice in
     [yY])
+      test -w "$HOME/$CONFIG_FILE" &&
+      cp -aL "$HOME/$CONFIG_FILE" "$HOME/$CONFIG_FILE.bak" &&
+      echo -e "\033[0;32mYour original $CONFIG_FILE has been backed up to $CONFIG_FILE.bak\033[0m"
+
+      (sed "s|{{BASH_IT}}|$BASH_IT|" "$BASH_IT/template/bash_profile.template.bash" | tail -n +2) >> "$HOME/$CONFIG_FILE"
+      echo -e "\033[0;32mBash-it template has been added to your $CONFIG_FILE\033[0m"
       break
       ;;
     [nN]|"")
-      echo -e "\033[91mInstallation aborted. Please come back soon!\033[m"
-      exit 1
+      backup_new
+      break
       ;;
     *)
       echo -e "\033[91mPlease choose y or n.\033[m"
       ;;
     esac
   done
-fi
-
-while ! [ $silent ]; do
-  read -e -n 1 -r -p "Would you like to keep your $CONFIG_FILE and append bash-it templates at the end? [y/N] " choice
-  case $choice in
-  [yY])
-    test -w "$HOME/$CONFIG_FILE" &&
-    cp -aL "$HOME/$CONFIG_FILE" "$HOME/$CONFIG_FILE.bak" &&
-    echo -e "\033[0;32mYour original $CONFIG_FILE has been backed up to $CONFIG_FILE.bak\033[0m"
-
-    (sed "s|{{BASH_IT}}|$BASH_IT|" "$BASH_IT/template/bash_profile.template.bash" | tail -n +2) >> "$HOME/$CONFIG_FILE"
-    echo -e "\033[0;32mBash-it template has been added to your $CONFIG_FILE\033[0m"
-    break
-    ;;
-  [nN]|"")
-    backup_new
-    break
-    ;;
-  *)
-    echo -e "\033[91mPlease choose y or n.\033[m"
-    ;;
-  esac
-done
-
-if [ $silent ]; then
+elif [[ $silent ]] && ! [[ $no_modify_config ]]; then
   # backup/new by default
   backup_new
 fi
+
+# Load dependencies for enabling components
+source "$BASH_IT/lib/composure.bash"
+cite _about _param _example _group _author _version
+source "$BASH_IT/lib/helpers.bash"
 
 if [[ $interactive ]] && ! [[ $silent ]] ;
 then
@@ -156,12 +167,12 @@ then
   done
 else
   echo ""
-  echo -e "\033[0;32mEnabling sane defaults\033[0m"
-  load_one completion bash-it.completion.bash
-  load_one completion system.completion.bash
-  load_one plugins base.plugin.bash
-  load_one plugins alias-completion.plugin.bash
-  load_one aliases general.aliases.bash
+  echo -e "\033[0;32mEnabling reasonable defaults\033[0m"
+  _enable-completion bash-it
+  _enable-completion system
+  _enable-plugin base
+  _enable-plugin alias-completion
+  _enable-alias general
 fi
 
 echo ""

@@ -1,3 +1,8 @@
 #!/usr/bin/env bash
-# Bash completion support for NVM
-[[ -r $NVM_DIR/bash_completion ]] && . $NVM_DIR/bash_completion
+
+# nvm (Node Version Manager) completion
+
+if [ "$NVM_DIR" ] && [ -r "$NVM_DIR"/bash_completion ];
+then
+  . "$NVM_DIR"/bash_completion
+fi
