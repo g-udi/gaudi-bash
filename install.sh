@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # bash-it installer
 
-source lib/colors.bash
-
+source "$BASH_IT/lib/colors.bash"
+echo "========================== $BASH_IT ========================="
 echo -e "\n[INFO] ${YELLOW}Getting bash version .... ${NC}\n"
 bash --version
 # Show how to use this installer
