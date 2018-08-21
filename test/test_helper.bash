@@ -14,8 +14,8 @@ if [ "$BASH_IT_ROOT" != "${BASH_IT_TEST_DIR}/root" ]; then
   export BASH_IT=$BASH_IT_TEST_DIR
 fi
 
-export TEST_MAIN_DIR="${BATS_TEST_DIRNAME}/.."
-export TEST_DEPS_DIR="${TEST_DEPS_DIR-${TEST_MAIN_DIR}/../test_lib}"
+export TEST_MAIN_DIR="${BATS_TEST_DIRNAME}"
+export TEST_DEPS_DIR="${TEST_DEPS_DIR-${TEST_MAIN_DIR}/../bin}"
 
 load "${TEST_DEPS_DIR}/bats-support/load.bash"
 load "${TEST_DEPS_DIR}/bats-assert/load.bash"
