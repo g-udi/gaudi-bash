@@ -2,7 +2,7 @@
 # bash-it installer
 
 source "$BASH_IT/lib/colors.bash"
-echo "========================== $BASH_IT ========================="
+
 echo -e "\n[INFO] ${YELLOW}Getting bash version .... ${NC}\n"
 bash --version
 # Show how to use this installer
@@ -32,7 +32,7 @@ function load_one() {
 
 # Interactively enable several things
 function load_some() {
-  file_type=$1
+  file_type=$173
   single_type=$(echo "$file_type" | sed -e "s/aliases$/alias/g" | sed -e "s/plugins$/plugin/g")
   enable_func="_enable-$single_type"
   [ -d "$BASH_IT/$file_type/enabled" ] || mkdir "$BASH_IT/$file_type/enabled"
@@ -96,8 +96,6 @@ if [[ $silent ]] && [[ $interactive ]]; then
   echo -e "${RED}Options --silent and --interactive are mutually exclusive. Please choose one or the other.${NC}"
   exit 1;
 fi
-
-BASH_IT="$(cd "$(dirname "$0")" && pwd)"
 
 case $OSTYPE in
   darwin*)
