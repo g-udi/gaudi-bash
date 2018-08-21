@@ -18,13 +18,13 @@ esac
 
 BACKUP_FILE=$CONFIG_FILE.bak
 
-echo "${RED}Uninstalling bash-it${NC}"
+echo -e "${RED}Uninstalling bash-it${NC}"
 if [ ! -e "$HOME/$BACKUP_FILE" ]; then
   echo -e "${YELLOW}Backup file $HOME/$BACKUP_FILE not found${NC}" >&2
 
   test -w "$HOME/$CONFIG_FILE" &&
     mv "$HOME/$CONFIG_FILE" "$HOME/$CONFIG_FILE.uninstall" &&
-    echo -e "${WHITE}mMoved your $HOME/$CONFIG_FILE to $HOME/$CONFIG_FILE.uninstall${NC}"
+    echo -e "${WHITE}Moved your $HOME/$CONFIG_FILE to $HOME/$CONFIG_FILE.uninstall${NC}"
 else
   test -w "$HOME/$BACKUP_FILE" &&
     cp -a "$HOME/$BACKUP_FILE" "$HOME/$CONFIG_FILE" &&
