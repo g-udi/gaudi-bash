@@ -97,6 +97,8 @@ if [[ $silent ]] && [[ $interactive ]]; then
   exit 1;
 fi
 
+[ -z "$BASH_IT" ] && BASH_IT="$(cd "$(dirname "$0")" && pwd)"
+
 case $OSTYPE in
   darwin*)
     CONFIG_FILE=.bash_profile
