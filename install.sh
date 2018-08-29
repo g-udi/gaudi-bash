@@ -3,17 +3,17 @@
 
 source "$BASH_IT/lib/colors.bash"
 
-echo "\n[INFO] ${YELLOW}Getting bash version .... ${NC}\n"
+echo -e "\n[INFO] ${YELLOW}Getting bash version .... ${NC}\n"
 bash --version
 # Show how to use this installer
 function show_usage() {
-  echo "${RED}bash-it Help${NC}"
-  echo "${YELLOW}Description: Install bash-it framework\n${NC}"
+  echo -e "${RED}bash-it Help${NC}"
+  echo -e "${YELLOW}Description: Install bash-it framework\n${NC}"
   echo "Arguments:"
-  echo "\t --help (-h): Display this help message"
-  echo "\t --silent (-s): Install default settings without prompting for input";
-  echo "\t --interactive (-i): Interactively choose plugins"
-  echo "\t --no-modify-config (-n): Do not modify existing config file"
+  echo -e "\t --help (-h): Display this help message"
+  echo -e "\t --silent (-s): Install default settings without prompting for input";
+  echo -e "\t --interactive (-i): Interactively choose plugins"
+  echo -e "\t --no-modify-config (-n): Do not modify existing config file"
 }
 
 # enable a thing
@@ -52,7 +52,7 @@ function load_some() {
         break
         ;;
       *)
-        echo "${MAGENTA}Please choose y or n.${NC}"
+        echo -e "${MAGENTA}Please choose y or n.${NC}"
         ;;
       esac
     done
@@ -63,9 +63,9 @@ function load_some() {
 function backup_new() {
   test -w "$HOME/$CONFIG_FILE" &&
   cp -aL "$HOME/$CONFIG_FILE" "$HOME/$CONFIG_FILE.bak" &&
-  echo "${WHITE}Your original $CONFIG_FILE has been backed up to $CONFIG_FILE.bak${NC}"
+  echo -e "${WHITE}Your original $CONFIG_FILE has been backed up to $CONFIG_FILE.bak${NC}"
   sed "s|{{BASH_IT}}|$BASH_IT|" "$BASH_IT/template/bash_profile.template.bash" > "$HOME/$CONFIG_FILE"
-  echo "${WHITE}Copied the template $CONFIG_FILE into ~/$CONFIG_FILE, edit this file to customize bash-it${NC}"
+  echo -e "${WHITE}Copied the template $CONFIG_FILE into ~/$CONFIG_FILE, edit this file to customize bash-it${NC}"
 }
 
 for param in "$@"; do
@@ -93,7 +93,7 @@ done
 shift $(expr $OPTIND - 1)
 
 if [[ $silent ]] && [[ $interactive ]]; then
-  echo "${RED}Options --silent and --interactive are mutually exclusive. Please choose one or the other.${NC}"
+  echo -e "${RED}Options --silent and --interactive are mutually exclusive. Please choose one or the other.${NC}"
   exit 1;
 fi
 
@@ -123,7 +123,7 @@ ${CYAN}Installing bash-it ..${NC}
 "
 if ! [[ $silent ]] && ! [[ $no_modify_config ]]; then
   if [ -e "$HOME/$BACKUP_FILE" ]; then
-    echo "${YELLOW}Backup file already exists. Make sure to backup your .bashrc before running this installation.${NC}" >&2
+    echo -e "${YELLOW}Backup file already exists. Make sure to backup your .bashrc before running this installation.${NC}" >&2
     while ! [ $silent ];  do
       echo "Would you like to overwrite the existing backup?"
       read -e -n 1 -r -p "This will delete your existing backup file ($HOME/$BACKUP_FILE) [y/N] " RESP
@@ -132,11 +132,11 @@ if ! [[ $silent ]] && ! [[ $no_modify_config ]]; then
         break
         ;;
       [nN]|"")
-        echo "${RED}Installation aborted. Please come back soon!${NC}"
+        echo -e "${RED}Installation aborted. Please come back soon!${NC}"
         exit 1
         ;;
       *)
-        echo "${MAGENTA}Please choose y or n.${NC}"
+        echo -e "${MAGENTA}Please choose y or n.${NC}"
         ;;
       esac
     done
@@ -149,10 +149,10 @@ if ! [[ $silent ]] && ! [[ $no_modify_config ]]; then
     [yY])
       test -w "$HOME/$CONFIG_FILE" &&
       cp -aL "$HOME/$CONFIG_FILE" "$HOME/$CONFIG_FILE.bak" &&
-      echo "${WHITE}Your original $CONFIG_FILE has been backed up to $CONFIG_FILE.bak${NC}"
+      echo -e "${WHITE}Your original $CONFIG_FILE has been backed up to $CONFIG_FILE.bak${NC}"
 
       (sed "s|{{BASH_IT}}|$BASH_IT|" "$BASH_IT/template/bash_profile.template.bash" | tail -n +2) >> "$HOME/$CONFIG_FILE"
-      echo "${WHITE}Bash-it template has been added to your $CONFIG_FILE${NC}"
+      echo -e "${WHITE}Bash-it template has been added to your $CONFIG_FILE${NC}"
       break
       ;;
     [nN]|"")
@@ -160,7 +160,7 @@ if ! [[ $silent ]] && ! [[ $no_modify_config ]]; then
       break
       ;;
     *)
-      echo "${MAGENTA}Please choose y or n.${NC}"
+      echo -e "${MAGENTA}Please choose y or n.${NC}"
       ;;
     esac
   done
@@ -178,12 +178,12 @@ if [[ $interactive ]] && ! [[ $silent ]] ;
 then
   for type in "aliases" "plugins" "completion"
   do
-    echo "${GREEN}Enabling $type${NC}"
+    echo -e "${GREEN}Enabling $type${NC}"
     load_some $type
   done
 else
   echo ""
-  echo "${YELLOW}Enabling reasonable defaults${NC}"
+  echo -e "${YELLOW}Enabling reasonable defaults${NC}"
   _enable-completion bash-it
   _enable-completion system
   _enable-plugin base
@@ -192,8 +192,8 @@ else
 fi
 
 echo ""
-echo "${CYAN}Installation finished successfully! Enjoy bash-it!${NC}"
-echo "${CYAN}To start using it, open a new tab or 'source "$HOME/$CONFIG_FILE"'.${NC}"
+echo -e "${CYAN}Installation finished successfully! Enjoy bash-it!${NC}"
+echo -e "${CYAN}To start using it, open a new tab or 'source "$HOME/$CONFIG_FILE"'.${NC}"
 echo ""
 echo "To show the available aliases/completions/plugins, type one of the following:"
 echo "  bash-it show aliases"
