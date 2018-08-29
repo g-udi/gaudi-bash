@@ -58,7 +58,7 @@ function reload_plugins() {
   _load_bash_it_files "plugins"
 }
 
-bash-it ()
+function bash-it ()
 {
     about 'Bash-it help and maintenance'
     param '1: verb [one of: help | show | enable | disable | migrate | update | search | version | reload ] '
