@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 main() {
 
   if [ ! -n "$BASH_IT" ]; then
