@@ -37,7 +37,7 @@ main() {
     exit 1
   }
 
-  . "$BASH_IT/install.sh"
+  /bin/bash "$BASH_IT/install.sh"
 }
 
 main

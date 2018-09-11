@@ -431,8 +431,8 @@ function battery_char {
 if ! _command_exists battery_charge ; then
     # if user has installed battery plugin, skip this...
     function battery_charge (){
-  # no op
-  echo -n
+	# no op
+	echo -n
     }
 fi
 
@@ -440,8 +440,8 @@ fi
 # If battery_percentage is not defined, then define battery_char as a no-op.
 if ! _command_exists battery_percentage ; then
     function battery_char (){
-  # no op
-  echo -n
+	# no op
+	echo -n
     }
 fi
 

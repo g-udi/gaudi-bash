@@ -1,110 +1,40 @@
 #!/usr/bin/env bash
 
-__powerline() {
+. "$BASH_IT/themes/powerline/powerline.base.bash"
 
-    # Unicode symbols
-    readonly PS_SYMBOL_DARWIN=''
-    readonly PS_SYMBOL_LINUX='$'
-    readonly PS_SYMBOL_OTHER='%'
-    readonly GIT_BRANCH_SYMBOL='⑂ '
-    readonly GIT_BRANCH_CHANGED_SYMBOL='+'
-    readonly GIT_NEED_PUSH_SYMBOL='⇡'
-    readonly GIT_NEED_PULL_SYMBOL='⇣'
+PROMPT_CHAR=${POWERLINE_PROMPT_CHAR:=""}
+POWERLINE_LEFT_SEPARATOR=${POWERLINE_LEFT_SEPARATOR:=""}
 
-    # Solarized colorscheme
-    readonly FG_BASE03="\[$(tput setaf 8)\]"
-    readonly FG_BASE02="\[$(tput setaf 0)\]"
-    readonly FG_BASE01="\[$(tput setaf 10)\]"
-    readonly FG_BASE00="\[$(tput setaf 11)\]"
-    readonly FG_BASE0="\[$(tput setaf 12)\]"
-    readonly FG_BASE1="\[$(tput setaf 14)\]"
-    readonly FG_BASE2="\[$(tput setaf 7)\]"
-    readonly FG_BASE3="\[$(tput setaf 15)\]"
+USER_INFO_SSH_CHAR=${POWERLINE_USER_INFO_SSH_CHAR:=" "}
+USER_INFO_THEME_PROMPT_COLOR=32
+USER_INFO_THEME_PROMPT_COLOR_SUDO=202
 
-    readonly BG_BASE03="\[$(tput setab 8)\]"
-    readonly BG_BASE02="\[$(tput setab 0)\]"
-    readonly BG_BASE01="\[$(tput setab 10)\]"
-    readonly BG_BASE00="\[$(tput setab 11)\]"
-    readonly BG_BASE0="\[$(tput setab 12)\]"
-    readonly BG_BASE1="\[$(tput setab 14)\]"
-    readonly BG_BASE2="\[$(tput setab 7)\]"
-    readonly BG_BASE3="\[$(tput setab 15)\]"
+PYTHON_VENV_CHAR=${POWERLINE_PYTHON_VENV_CHAR:="❲p❳ "}
+CONDA_PYTHON_VENV_CHAR=${POWERLINE_CONDA_PYTHON_VENV_CHAR:="❲c❳ "}
+PYTHON_VENV_THEME_PROMPT_COLOR=35
 
-    readonly FG_YELLOW="\[$(tput setaf 3)\]"
-    readonly FG_ORANGE="\[$(tput setaf 9)\]"
-    readonly FG_RED="\[$(tput setaf 1)\]"
-    readonly FG_MAGENTA="\[$(tput setaf 5)\]"
-    readonly FG_VIOLET="\[$(tput setaf 13)\]"
-    readonly FG_BLUE="\[$(tput setaf 4)\]"
-    readonly FG_CYAN="\[$(tput setaf 6)\]"
-    readonly FG_GREEN="\[$(tput setaf 2)\]"
+SCM_NONE_CHAR=""
+SCM_GIT_CHAR=${POWERLINE_SCM_GIT_CHAR:=" "}
+SCM_THEME_PROMPT_CLEAN=""
+SCM_THEME_PROMPT_DIRTY=""
+SCM_THEME_PROMPT_CLEAN_COLOR=25
+SCM_THEME_PROMPT_DIRTY_COLOR=88
+SCM_THEME_PROMPT_STAGED_COLOR=30
+SCM_THEME_PROMPT_UNSTAGED_COLOR=92
+SCM_THEME_PROMPT_COLOR=${SCM_THEME_PROMPT_CLEAN_COLOR}
 
-    readonly BG_YELLOW="\[$(tput setab 3)\]"
-    readonly BG_ORANGE="\[$(tput setab 9)\]"
-    readonly BG_RED="\[$(tput setab 1)\]"
-    readonly BG_MAGENTA="\[$(tput setab 5)\]"
-    readonly BG_VIOLET="\[$(tput setab 13)\]"
-    readonly BG_BLUE="\[$(tput setab 4)\]"
-    readonly BG_CYAN="\[$(tput setab 6)\]"
-    readonly BG_GREEN="\[$(tput setab 2)\]"
+RVM_THEME_PROMPT_PREFIX=""
+RVM_THEME_PROMPT_SUFFIX=""
+RBENV_THEME_PROMPT_PREFIX=""
+RBENV_THEME_PROMPT_SUFFIX=""
+RUBY_THEME_PROMPT_COLOR=161
+RUBY_CHAR=${POWERLINE_RUBY_CHAR:="❲r❳ "}
 
-    readonly DIM="\[$(tput dim)\]"
-    readonly REVERSE="\[$(tput rev)\]"
-    readonly RESET="\[$(tput sgr0)\]"
-    readonly BOLD="\[$(tput bold)\]"
+CWD_THEME_PROMPT_COLOR=240
 
-    # what OS?
-    case "$(uname)" in
-        Darwin)
-            readonly PS_SYMBOL=$PS_SYMBOL_DARWIN
-            ;;
-        Linux)
-            readonly PS_SYMBOL=$PS_SYMBOL_LINUX
-            ;;
-        *)
-            readonly PS_SYMBOL=$PS_SYMBOL_OTHER
-    esac
+LAST_STATUS_THEME_PROMPT_COLOR=52
 
-    __git_info() {
-        [ -x "$(which git)" ] || return    # git not found
-
-        local git_eng="env LANG=C git"   # force git output in English to make our work easier
-        # get current branch name or short SHA1 hash for detached head
-        local branch="$($git_eng symbolic-ref --short HEAD 2>/dev/null || $git_eng describe --tags --always 2>/dev/null)"
-        [ -n "$branch" ] || return  # git branch not found
-
-        local marks
-
-        # branch is modified?
-        [ -n "$($git_eng status --porcelain)" ] && marks+=" $GIT_BRANCH_CHANGED_SYMBOL"
-
-        # how many commits local branch is ahead/behind of remote?
-        local stat="$($git_eng status --porcelain --branch | grep '^##' | grep -o '\[.\+\]$')"
-        local aheadN="$(echo $stat | grep -o 'ahead [[:digit:]]\+' | grep -o '[[:digit:]]\+')"
-        local behindN="$(echo $stat | grep -o 'behind [[:digit:]]\+' | grep -o '[[:digit:]]\+')"
-        [ -n "$aheadN" ] && marks+=" $GIT_NEED_PUSH_SYMBOL$aheadN"
-        [ -n "$behindN" ] && marks+=" $GIT_NEED_PULL_SYMBOL$behindN"
-
-        # print the git branch segment without a trailing newline
-        printf " $GIT_BRANCH_SYMBOL$branch$marks "
-    }
-
-    ps1() {
-        # Check the exit code of the previous command and display different
-        # colors in the prompt accordingly.
-        if [ $? -eq 0 ]; then
-            local BG_EXIT="$BG_GREEN"
-        else
-            local BG_EXIT="$BG_RED"
-        fi
-
-        PS1="$BG_BASE1$FG_BASE3 \w $RESET"
-        PS1+="$BG_BLUE$FG_BASE3$(__git_info)$RESET"
-        PS1+="$BG_EXIT$FG_BASE3 $PS_SYMBOL $RESET "
-    }
-
-    PROMPT_COMMAND=ps1
-}
+CLOCK_THEME_PROMPT_COLOR=240
 
 BATTERY_AC_CHAR=${BATTERY_AC_CHAR:="⚡"}
 BATTERY_STATUS_THEME_PROMPT_GOOD_COLOR=70
@@ -118,4 +48,6 @@ IN_VIM_THEME_PROMPT_TEXT="vim"
 
 HOST_THEME_PROMPT_COLOR=0
 
-safe_append_prompt_command powerline_prompt_command
+POWERLINE_PROMPT=${POWERLINE_PROMPT:="user_info scm python_venv ruby cwd"}
+
+safe_append_prompt_command __powerline_prompt_command
