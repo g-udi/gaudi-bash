@@ -14,6 +14,19 @@ function _command_exists ()
   type "$1" &> /dev/null ;
 }
 
+# Helper function sourcing the .bash_profile or .bashrc files
+_reload ()
+{
+  case $OSTYPE in
+    darwin*)
+      source ~/.bash_profile
+      ;;
+    *)
+      source ~/.bashrc
+      ;;
+  esac
+}
+
 # Helper function loading various enable-able files
 function _load_bash_it_files() {
   subdirectory="$1"
@@ -40,6 +53,30 @@ function _load_global_bash_it_files() {
         source $config_file
       fi
     done
+  fi
+}
+
+# Display seconds in human readable fromat, rounded to a greater unit
+displaytime_short() {
+  local T=$1
+  local D=$((T/60/60/24))
+  local H=$((T/60/60%24))
+  local M=$((T/60%60))
+  local S=$((T%60))
+   if [ $D -gt 0 ]; then
+    printf '%dd ' $D
+  elif [ $H -gt 0 ]; then
+    if [ $M -gt 30 ]; then
+      H=$((H + 1))
+    fi
+    printf '%dh ' $H
+  elif [ $M -gt 0 ]; then
+    if [ $S -gt 30 ]; then
+      M=$((M + 1))
+    fi
+    printf '%dm ' $M
+  else
+    printf '%ds ' $S
   fi
 }
 
@@ -392,7 +429,7 @@ _disable-thing ()
     fi
 
     if [ -n "$BASH_IT_AUTOMATIC_RELOAD_AFTER_CONFIG_CHANGE" ]; then
-        exec ${0/-/}
+        _reload
     fi
 
     printf '%s\n' "$file_entity disabled."
@@ -487,7 +524,7 @@ _enable-thing ()
     fi
 
     if [ -n "$BASH_IT_AUTOMATIC_RELOAD_AFTER_CONFIG_CHANGE" ]; then
-        exec ${0/-/}
+        _reload
     fi
 
     printf '%s\n' "$file_entity enabled with priority $use_load_priority."

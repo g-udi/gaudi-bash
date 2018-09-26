@@ -120,13 +120,19 @@ function local-ignore() {
 
 # get a quick overview for your git repo
 function git_info() {
+
+    GIT_COMMIT_TIME_THRESHOLD_LOW="${GIT_COMMIT_TIME_THRESHOLD_LOW=30}" # in minutes
+    GIT_COMMIT_TIME_THRESHOLD_HIGH="${GIT_COMMIT_TIME_THRESHOLD_HIGH=240}" # in minutes
+
     about 'overview for your git repo'
     group 'git'
 
     if [ -n "$(git symbolic-ref HEAD 2> /dev/null)" ]; then
+        
         # print informations
-        echo "git repo overview"
-        echo "-----------------"
+        echo
+        echo -e "\\uf1d2 Git Repo Overview"
+        echo "====================="
         echo
 
         # print all remotes and thier details
@@ -146,10 +152,30 @@ function git_info() {
 
         # print at least 5 last log entries
         echo
-        echo "log:"
-        git log -5 --oneline
+        echo "Git Log"
+        echo "=========="
+        git log --oneline -10
         echo
 
+        # Get last commit
+        last_commit=$(git log --pretty=format:'%at' -1 2> /dev/null)
+
+        # Compute times
+        now=$(date +%s)
+        commit_age=$((now-last_commit))
+        minutes=$((commit_age / 60))
+
+        if [ "$minutes" -gt $GIT_COMMIT_TIME_THRESHOLD_HIGH ]; then
+          COLOR="$RED"
+        elif [ "$minutes" -gt $GIT_COMMIT_TIME_THRESHOLD_LOW ]; then
+          COLOR="$YELLOW"
+        else
+          COLOR="$GREEN"
+        fi
+
+        echo
+        echo -e "Last commit: ${COLOR}$(displaytime_short $commit_age) ago${NC}"
+        echo
     else
         echo "you're currently not in a git repository"
 

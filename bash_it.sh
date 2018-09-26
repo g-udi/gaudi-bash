@@ -46,16 +46,6 @@ do
   _load_bash_it_files $file_type
 done
 
-# Load colors and helpers first so they can be used in base theme
-# shellcheck source=./themes/colors.theme.bash
-source "${BASH_IT}/themes/colors.theme.bash"
-# shellcheck source=./themes/githelpers.theme.bash
-source "${BASH_IT}/themes/githelpers.theme.bash"
-# shellcheck source=./themes/p4helpers.theme.bash
-source "${BASH_IT}/themes/p4helpers.theme.bash"
-# shellcheck source=./themes/base.theme.bash
-source "${BASH_IT}/themes/base.theme.bash"
-
 # appearance (themes) now, after all dependencies
 # shellcheck source=./lib/appearance.bash
 source "$APPEARANCE_LIB"
@@ -104,7 +94,7 @@ then
 fi
 
 # BASH_IT_RELOAD_LEGACY is set.
-if ! command -v reload &>/dev/null && [ -n "$BASH_IT_RELOAD_LEGACY" ]; then
+if ! command -v reload &>/dev/null; then
   case $OSTYPE in
     darwin*)
       alias reload='source ~/.bash_profile'
