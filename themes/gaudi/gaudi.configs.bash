@@ -45,7 +45,7 @@ GAUDI_PROMPT_LEFT=(
 )
 
 GAUDI_PROMPT_RIGHT=(
-  system
+  system        # System stats segment
   battery       # Battery level and status
   time          # Time stampts segment
   user          # Username segment

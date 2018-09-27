@@ -39,12 +39,12 @@ gaudi::section() {
     # Why are wrapping the cariables with "" you say ?
     # To pass a whole string containing whitespaces as a single argument, enclose it in double quotes
     # Like every other program, echo or printf interprets strings separated by whitespace as different arguments
-    echo -ne "$color"    # Print out any coloring needed for the section with order of <font_color><background_color>
-    echo -ne "$prefix"   # Print the prefix before the content .. default prefix is a space 
-    echo -ne "$symbol"   # Print the symbol if exists which is the icon to show before the segment
-    echo -ne "$content"  # Print the actual content to display in the prompt
-    echo -ne "$suffix"   # Print the suffix before the content .. default prefix is a space 
-    echo -ne "$NC"       # Reset the coloring set in the $color
+    echo -n "$color"    # Print out any coloring needed for the section with order of <font_color><background_color>
+    echo -n "$prefix"   # Print the prefix before the content .. default prefix is a space 
+    echo -n "$symbol"   # Print the symbol if exists which is the icon to show before the segment
+    echo -n "$content"  # Print the actual content to display in the prompt
+    echo -n "$suffix"   # Print the suffix before the content .. default prefix is a space 
+    echo -n "$NC"       # Reset the coloring set in the $color
 }
 
 # Kill all background gaudi::render_async that are running in the wrong context
@@ -70,7 +70,7 @@ gaudi::render_prompt() {
       local info="$(gaudi_$segment)"
       [[ -n "${info}" ]] && _prompt+="$info"
     done
-    echo "$_prompt"
+    printf "%s" "$_prompt"
     unset GAUDI_SYMBOL_ALT
   fi;
 }
