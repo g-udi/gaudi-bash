@@ -29,6 +29,7 @@ gaudi::prompt() {
   # Must be the very first line in all entry prompt functions, or the value
   # will be overridden by a different command execution - do not move this line!
   RETVAL=$?
+  [[ $GAUDI_FIRST_RUN == true ]] && RETVAL=0
   
   # Terminal runs something like login -pfl your-username /bin/bash -c exec -la bash <bash path> 
   # when you create a new shell which lacks the -q flag. The problem is that when opening a new tab 
