@@ -21,8 +21,8 @@ GAUDI_CHAR_COLOR_CLEAR="${GAUDI_CHAR_COLOR_CLEAR="\\[\\033[0m\\]"}"
 # Paint $PROMPT_SYMBOL in red if previous command was fail and paint in green if everything was OK
 gaudi_char() {
   local 'color'
-
-  if [[ $RETVAL -eq 0 ]]; then
+  
+  if [[ $RETVAL == 0 ]]; then
     color="$GAUDI_CHAR_COLOR_SUCCESS"
   else
     color="$GAUDI_CHAR_COLOR_FAILURE"

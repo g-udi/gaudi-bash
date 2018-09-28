@@ -20,7 +20,7 @@ GAUDI_USER_SHOW="${GAUDI_USER_SHOW=always}"
 GAUDI_USER_PREFIX="${GAUDI_USER_PREFIX=""}"
 GAUDI_USER_SUFFIX="${GAUDI_USER_SUFFIX="$GAUDI_PROMPT_DEFAULT_SUFFIX"}"
 GAUDI_USER_COLOR="${GAUDI_USER_COLOR="$WHITE$BACKGROUND_GREEN"}"
-GAUDI_USER_COLOR_ROOT="${GAUDI_USER_COLOR_ROOT="$BLACK$BACKGROUND_RED"}"
+GAUDI_USER_COLOR_ROOT="${GAUDI_USER_COLOR_ROOT="$WHITE$BACKGROUND_RED"}"
 
 # ------------------------------------------------------------------------------
 # Section
@@ -34,10 +34,11 @@ gaudi_user() {
   || [[ $UID == 0 ]] \
   || [[ $GAUDI_USER_SHOW == true && -n $SSH_CONNECTION ]]
   then
-    local 'user_color'
+    local user_color user_symbol
 
     if [[ $USER == 'root' ]]; then
       user_color=$GAUDI_USER_COLOR_ROOT
+      user_symbol=" \\uf83d"
     else
       user_color="$GAUDI_USER_COLOR"
     fi
@@ -45,7 +46,7 @@ gaudi_user() {
     gaudi::section \
       "$user_color" \
       "$GAUDI_USER_PREFIX" \
-      "$GAUDI_USER_PREFIX" \
+      "$user_symbol" \
       "$USER" \
       "$GAUDI_USER_SUFFIX"
   fi

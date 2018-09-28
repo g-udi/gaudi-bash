@@ -51,7 +51,7 @@ gaudi::prompt() {
   source "$GAUDI_ROOT/segments/char.bash"
   
   local PROMPT_CHAR="$(gaudi_char)"
-  local COMPENSATE=98
+  local COMPENSATE=100
 
   local LEFT_PROMPT="$(gaudi::render_prompt GAUDI_PROMPT_LEFT[@])"
   local RIGHT_PROMPT="$(gaudi::render_prompt GAUDI_PROMPT_RIGHT[@])"
@@ -65,7 +65,7 @@ gaudi::prompt() {
       COMPENSATE=45
     fi
     [[ $GAUDI_SPLIT_PROMPT_TWO_LINES == true ]] && line_separator="\n" || line_separator="\r"
-    PS1=$(printf "\n%*b%s%b\n\n%b\n" "$(($(tput cols) + $COMPENSATE))" "$RIGHT_PROMPT" "$line_separator" "$LEFT_PROMPT" "$PROMPT_CHAR")
+    PS1=$(printf "\n%*b%s%b\n\n%b" "$(($(tput cols) + $COMPENSATE))" "$RIGHT_PROMPT" "$line_separator" "$LEFT_PROMPT" "$PROMPT_CHAR")
   fi;
 
   # Render the async part of the prompt .. lazy lazy
