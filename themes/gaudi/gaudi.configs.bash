@@ -7,6 +7,7 @@ GAUDI_PROMPT_DEFAULT_PREFIX=" "
 GAUDI_PROMPT_DEFAULT_SUFFIX=" "
 
 GAUDI_PROMPT_ASYNC=(
+  scm           # code management segment (git, mercurial, perforce, etc.)
   dockercompose # Docker Compose segment
   aws           # Amazon WebServices (AWS) segment
   kubecontext   # Kubectl context segment
@@ -39,13 +40,10 @@ GAUDI_PROMPT_ASYNC=(
 GAUDI_PROMPT_LEFT=(
   jobs          # Background jobs indicator
   vpn           # VPN section
-  scm           # code management segment (git, mercurial, perforce, etc.)
   cwd           # Current working directory
-  elapsed
 )
 
 GAUDI_PROMPT_RIGHT=(
-  system        # System stats segment
   battery       # Battery level and status
   time          # Time stampts segment
   user          # Username segment

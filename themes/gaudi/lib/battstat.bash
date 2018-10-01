@@ -17,9 +17,6 @@
 
 battstat() {
 
-    charging_icon="\\uf240"
-    discharging_icon="\\uf241"
-
     exit_no_battery() {
         return
     }

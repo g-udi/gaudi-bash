@@ -3,22 +3,14 @@
 # Battery
 #
 
-# ------------------------------------------------------------------------------
-# Configuration
-# ------------------------------------------------------------------------------
-
-# ------------------------------------------------------------------------------
-# | GAUDI_BATTERY_SHOW | below threshold | above threshold | fully charged |
-# |------------------------+-----------------+-----------------+---------------|
-# | false                  | hidden          | hidden          | hidden        |
-# | always                 | shown           | shown           | shown         |
-# | true                   | shown           | hidden          | hidden        |
-# | charged                | shown           | hidden          | shown         |
-# ------------------------------------------------------------------------------
-
 source "$GAUDI_ROOT/lib/battstat.bash"
 
+GAUDI_BATTERY_SHOW="${GAUDI_BATTERY_SHOW=true}"
 GAUDI_BATTERY_THRESHOLD="${GAUDI_BATTERY_THRESHOLD=10}"
+GAUDI_BATTERY_PREFIX="${GAUDI_BATTERY_PREFIX=""}"
+GAUDI_BATTERY_SUFFIX="${GAUDI_BATTERY_SUFFIX=""}"
+GAUDI_BATTERY_SYMBOL_CHARGING="${GAUDI_BATTERY_SYMBOL_CHARGING="\\uf240"}"
+GAUDI_BATTERY_SYMBOL_DISCHARGING="${GAUDI_BATTERY_SYMBOL_DISCHARGING="\\uf241"}"
 
 # ------------------------------------------------------------------------------
 # Section
@@ -33,7 +25,12 @@ gaudi_battery() {
   
   [[ $GAUDI_BATTERY_SHOW == false ]] && return
 
-  BATTERY=$(battstat -t $GAUDI_BATTERY_THRESHOLD {b} {i} {p})
+  BATTERY="$(battstat -t $GAUDI_BATTERY_THRESHOLD -d $GAUDI_BATTERY_SYMBOL_DISCHARGING -c $GAUDI_BATTERY_SYMBOL_CHARGING {b} {i} {p})"
   
-  printf "%b%b" "$BATTERY" "$NC"
+  gaudi::section \
+    "" \
+    "$GAUDI_EXEC_TIME_PREFIX" \
+    "" \
+    "$BATTERY" \
+    "$GAUDI_EXEC_TIME_SUFFIX"
 }

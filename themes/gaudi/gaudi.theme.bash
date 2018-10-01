@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
+GAUDI_FIRST_RUN=${GAUDI_FIRST_RUN:=true}
 GAUDI_ROOT="${HOME}/.bash_it/themes/gaudi"
-GAUDI_FIRST_RUN=true
 
 source "$GAUDI_ROOT/gaudi.configs.bash"
 source "$GAUDI_ROOT/lib/utils.bash"
@@ -39,7 +39,7 @@ gaudi::prompt() {
   # This checks if we are using the MacOSX Terminal app and clear the screen before that
   if [[ $TERM_PROGRAM == "Apple_Terminal" ]]  && [[ $GAUDI_FIRST_RUN == true ]] && [[ $GAUDI_ENABLE_HUSHLOGIN == true ]]; then
     # Clears and reset the lines printed in the terminal
-    printf '\033\143'
+    # printf '\033\143'
     unset GAUDI_FIRST_RUN
   fi
 
@@ -52,7 +52,7 @@ gaudi::prompt() {
   source "$GAUDI_ROOT/segments/char.bash"
   
   local PROMPT_CHAR="$(gaudi_char)"
-  local COMPENSATE=100
+  local COMPENSATE=58
 
   local LEFT_PROMPT="$(gaudi::render_prompt GAUDI_PROMPT_LEFT[@])"
   local RIGHT_PROMPT="$(gaudi::render_prompt GAUDI_PROMPT_RIGHT[@])"
