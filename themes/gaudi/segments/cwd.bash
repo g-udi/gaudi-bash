@@ -10,6 +10,7 @@
 
 GAUDI_CWD_SHOW="${GAUDI_CWD_SHOW=true}"
 GAUDI_CWD_SHORTEN="${GAUDI_CWD_SHORTEN=true}"
+GAUDI_CWD_SUMMARY="${GAUDI_CWD_SUMMARY=false}"
 GAUDI_CWD_PREFIX="${GAUDI_CWD_PREFIX=""}"
 GAUDI_CWD_SUFFIX="${GAUDI_CWD_SUFFIX="$GAUDI_PROMPT_DEFAULT_SUFFIX"}"
 GAUDI_CWD_COLOR="${GAUDI_CWD_COLOR="$BACKGROUND_BLUE"}"
@@ -45,6 +46,7 @@ gaudi_cwd() {
   }
 
   [ $GAUDI_CWD_SHORTEN == true ] && GAUDI_CWD=$(reduce-path) || GAUDI_CWD=$(pwd | sed "s|^${HOME}|~|")
+  [ $GAUDI_CWD_SUMMARY == true ] && GAUDI_CWD+=" [$(ls -1 | wc -l | sed 's: ::g') Files, $(ls -lah | grep -m 1 total | sed 's/total //')]"
   
   gaudi::section \
     "$color" \
