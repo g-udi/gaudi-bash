@@ -2,8 +2,6 @@ cite 'about-alias'
 about-alias 'osx-specific aliases'
 
 # Desktop Programs
-alias fireworks="open -a '/Applications/Adobe Fireworks CS3/Adobe Fireworks CS3.app'"
-alias photoshop="open -a '/Applications/Adobe Photoshop CS3/Adobe Photoshop.app'"
 alias preview="open -a '$PREVIEW'"
 alias xcode="open -a '/Applications/XCode.app'"
 alias filemerge="open -a '/Developer/Applications/Utilities/FileMerge.app'"
@@ -13,12 +11,12 @@ alias chrome="open -a google\ chrome"
 alias chromium="open -a chromium"
 alias dashcode="open -a dashcode"
 alias f='open -a Finder '
-alias fh='open -a Finder .'
 alias textedit='open -a TextEdit'
 alias hex='open -a "Hex Fiend"'
 alias skype='open -a Skype'
 alias mou='open -a Mou'
-alias subl='open -a Sublime\ Text'
+alias sublime='open -a Sublime\ Text'
+alias code='open -a Visual\ Studio\ Code'
 
 if [ -s /usr/bin/firefox ] ; then
   unalias firefox
@@ -28,7 +26,7 @@ fi
 alias grnot='growlnotify -s -t Terminal -m "Done"'
 
 # Get rid of those pesky .DS_Store files recursively
-alias dsclean='find . -type f -name .DS_Store -delete'
+alias dsclean='find . -type f -name *.DS_Store -delete'
 
 # Track who is listening to your iTunes music
 alias whotunes='lsof -r 2 -n -P -F n -c iTunes -a -i TCP@`hostname`:3689'
@@ -52,7 +50,7 @@ alias localip="ipconfig getifaddr en0"
 alias ips="ifconfig -a | grep -o 'inet6\? \(addr:\)\?\s\?\(\(\([0-9]\+\.\)\{3\}[0-9]\+\)\|[a-fA-F0-9:]\+\)' | awk '{ sub(/inet6? (addr:)? ?/, \"\"); print }'"
 
 # Flush Directory Service cache
-alias flush="dscacheutil -flushcache && killall -HUP mDNSResponder"
+alias flushdns="dscacheutil -flushcache && killall -HUP mDNSResponder"
 
 # Clean up LaunchServices to remove duplicates in the “Open With” menu
 alias lscleanup="/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -kill -r -domain local -domain system -domain user && killall Finder"
@@ -77,9 +75,6 @@ unset jscbin;
 
 # Trim new lines and copy to clipboard
 alias c="tr -d '\n' | pbcopy"
-
-# Recursively delete `.DS_Store` files
-alias cleanup="find . -type f -name '*.DS_Store' -ls -delete"
 
 # Empty the Trash on all mounted volumes and the main HDD
 # Also, clear Apple’s System Logs to improve shell startup speed
@@ -131,7 +126,7 @@ alias pumpitup="osascript -e 'set volume 7'"
 
 # Kill all the tabs in Chrome to free up memory
 # [C] explained: http://www.commandlinefu.com/commands/view/402/exclude-grep-from-your-grepped-output-of-ps-alias-included-in-description
-alias chromekill="ps ux | grep '[C]hrome Helper --type=renderer' | grep -v extension-process | tr -s ' ' | cut -d ' ' -f2 | xargs kill"
+alias killchrome="ps ux | grep '[C]hrome Helper --type=renderer' | grep -v extension-process | tr -s ' ' | cut -d ' ' -f2 | xargs kill"
 
 # Lock the screen (when going AFK)
 alias afk="/System/Library/CoreServices/Menu\ Extras/User.menu/Contents/Resources/CGSession -suspend"
