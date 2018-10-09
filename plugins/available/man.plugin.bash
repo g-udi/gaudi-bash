@@ -1,6 +1,7 @@
 cite about-plugin
 about-plugin 'Fancify your man pages with some goodies'
 
+<<<<<<< Updated upstream
 export LESS_TERMCAP_mb=$(tput bold; tput setaf 2) # green
 export LESS_TERMCAP_md=$(tput bold; tput setaf 6) # cyan
 export LESS_TERMCAP_me=$(tput sgr0)
@@ -23,3 +24,6 @@ export LESS="--RAW-CONTROL-CHARS"
 
 # Display your percentage into the document
 export MANPAGER='less -s -M +Gg'
+=======
+export LESS_TERMCAP_md=$(tput bold; tput setaf 1)
+>>>>>>> Stashed changes
