@@ -1,1 +1,0 @@
-/Users/ahmadassaf/.beamery/bash-it/beamery.plugin.bash

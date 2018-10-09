@@ -5,8 +5,8 @@ about-plugin 'go environment variables & path configuration'
 
 [ ! command -v go &>/dev/null ] && return
 
-[ -d "$HOME/Applications/Go" ] && mkdir -p "$HOME/Applications/Go"
-export GOPATH="$HOME/Applications/Go"
+# Check if the directories for GOPATH are not there and create them
+[ -d "$GOPATH" ] && mkdir -p "$GOPATH"
 
 export GOROOT=${GOROOT:-$(go env | grep GOROOT | cut -d'"' -f2)}
 pathmunge "${GOROOT}/bin"
