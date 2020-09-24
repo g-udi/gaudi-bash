@@ -146,3 +146,56 @@ else
     export BACKGROUND_INTENSE_WHITE=""
 
 fi
+
+__make_ansi () {
+  next=$1; shift
+  echo "\[\e[$(__$next $@)m\]"
+}
+
+__make_echo () {
+  next=$1; shift
+  echo "\033[$(__$next $@)m"
+}
+
+
+__reset () {
+  next=$1; shift
+  out="$(__$next $@)"
+  echo "0${out:+;${out}}"
+}
+
+__bold () {
+  next=$1; shift
+  out="$(__$next $@)"
+  echo "${out:+${out};}1"
+}
+
+__faint () {
+  next=$1; shift
+  out="$(__$next $@)"
+  echo "${out:+${out};}2"
+}
+
+__italic () {
+  next=$1; shift
+  out="$(__$next $@)"
+  echo "${out:+${out};}3"
+}
+
+__underline () {
+  next=$1; shift
+  out="$(__$next $@)"
+  echo "${out:+${out};}4"
+}
+
+__negative () {
+  next=$1; shift
+  out="$(__$next $@)"
+  echo "${out:+${out};}7"
+}
+
+__crossed () {
+  next=$1; shift
+  out="$(__$next $@)"
+  echo "${out:+${out};}8"
+}

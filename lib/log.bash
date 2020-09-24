@@ -23,7 +23,7 @@ _log_general()
   group 'log'
 
   message=$2${BASH_IT_LOG_PREFIX}$3
-  _has_colors && echo -e "$1${message}${echo_normal}" || echo -e "${message}"
+  _has_colors && echo -e "$1${message}${NC}" || echo -e "${message}"
 }
 
 _log_debug()
@@ -34,7 +34,7 @@ _log_debug()
   group 'log'
 
   [[ "$BASH_IT_LOG_LEVEL" -ge $BASH_IT_LOG_LEVEL_ALL ]] || return 0
-  _log_general "${echo_green}" "DEBUG: " "$1"
+  _log_general "${GREEN}" "DEBUG: " "$1"
 }
 
 _log_warning()
@@ -45,7 +45,7 @@ _log_warning()
   group 'log'
 
   [[ "$BASH_IT_LOG_LEVEL" -ge $BASH_IT_LOG_LEVEL_WARNING ]] || return 0
-  _log_general "${echo_yellow}" " WARN: " "$1"
+  _log_general "${YELLOW}" " WARN: " "$1"
 }
 
 _log_error()
@@ -56,5 +56,5 @@ _log_error()
   group 'log'
 
   [[ "$BASH_IT_LOG_LEVEL" -ge $BASH_IT_LOG_LEVEL_ERROR ]] || return 0
-  _log_general "${echo_red}" "ERROR: " "$1"
+  _log_general "${RED}" "ERROR: " "$1"
 }

@@ -89,8 +89,8 @@ _bash-it-search () {
 }
 
 _bash-it-search-help () {
-  printf "${echo_normal}
-${echo_underline_yellow}USAGE${echo_normal}
+  printf "${NC}
+${YELLOW}USAGE${NC}
 
    bash-it search [-|@]term1 [-|@]term2 ... \\
      [ --enable   | -e ] \\
@@ -99,9 +99,9 @@ ${echo_underline_yellow}USAGE${echo_normal}
      [ --refresh  | -r ] \\
      [ --help     | -h ]
 
-${echo_underline_yellow}DESCRIPTION${echo_normal}
+${YELLOW}DESCRIPTION${NC}
 
-   Use ${echo_bold_green}search${echo_normal} bash-it command to search for a list of terms or term negations
+   Use ${GREEN}search${NC} bash-it command to search for a list of terms or term negations
    across all components: aliases, completions and plugins. Components that are
    enabled are shown in green (or with a check box if --no-color option is used).
 
@@ -118,42 +118,42 @@ ${echo_underline_yellow}DESCRIPTION${echo_normal}
       * To perform an exact match, use character '@' in front of the term,
         eg. '@git' would only match aliases, plugins and completions named 'git'.
 
-${echo_underline_yellow}FLAGS${echo_normal}
-   --enable   | -e    ${echo_purple}Enable all matching componenents.${echo_normal}
-   --disable  | -d    ${echo_purple}Disable all matching componenents.${echo_normal}
-   --help     | -h    ${echo_purple}Print this help.${echo_normal}
-   --refresh  | -r    ${echo_purple}Force a refresh of the search cache.${echo_normal}
-   --no-color | -c    ${echo_purple}Disable color output and use monochrome text.${echo_normal}
+${YELLOW}FLAGS${NC}
+   --enable   | -e    ${MAGENTA}Enable all matching componenents.${NC}
+   --disable  | -d    ${MAGENTA}Disable all matching componenents.${NC}
+   --help     | -h    ${MAGENTA}Print this help.${NC}
+   --refresh  | -r    ${MAGENTA}Force a refresh of the search cache.${NC}
+   --no-color | -c    ${MAGENTA}Disable color output and use monochrome text.${NC}
 
-${echo_underline_yellow}EXAMPLES${echo_normal}
+${YELLOW}EXAMPLES${NC}
 
-   For example, ${echo_bold_green}bash-it search git${echo_normal} would match any alias, completion
+   For example, ${GREEN}bash-it search git${NC} would match any alias, completion
    or plugin that has the word 'git' in either the module name or
    it's description. You should see something like this when you run this
    command:
 
-         ${echo_bold_green}❯ bash-it search git${echo_bold_blue}
-               ${echo_bold_yellow}aliases:  ${echo_bold_green}git ${echo_normal}gitsvn
-               ${echo_bold_yellow}plugins:  ${echo_normal}autojump ${echo_bold_green}git ${echo_normal}git-subrepo jgitflow jump
-           ${echo_bold_yellow}completions:  ${echo_bold_green}git ${echo_normal}git_flow git_flow_avh${echo_normal}
+         ${GREEN}❯ bash-it search git${BLUE}
+               ${YELLOW}aliases:  ${GREEN}git ${NC}gitsvn
+               ${YELLOW}plugins:  ${NC}autojump ${GREEN}git ${NC}git-subrepo jgitflow jump
+           ${YELLOW}completions:  ${GREEN}git ${NC}git_flow git_flow_avh${NC}
 
    You can exclude some terms by prefixing a term with a minus, eg:
 
-         ${echo_bold_green}❯ bash-it search git -flow -svn${echo_bold_blue}
-               ${echo_bold_yellow}aliases:  ${echo_normal}git
-               ${echo_bold_yellow}plugins:  ${echo_normal}autojump git git-subrepo jump
-           ${echo_bold_yellow}completions:  ${echo_normal}git${echo_normal}
+         ${GREEN}❯ bash-it search git -flow -svn${BLUE}
+               ${YELLOW}aliases:  ${NC}git
+               ${YELLOW}plugins:  ${NC}autojump git git-subrepo jump
+           ${YELLOW}completions:  ${NC}git${NC}
 
    Finally, if you prefix a term with '@' symbol, that indicates an exact
    match. Note, that we also pass the '--enable' flag, which would ensure
    that all matches are automatically enabled. The example is below:
 
-         ${echo_bold_green}❯ bash-it search @git --enable${echo_bold_blue}
-               ${echo_bold_yellow}aliases:  ${echo_normal}git
-               ${echo_bold_yellow}plugins:  ${echo_normal}git
-           ${echo_bold_yellow}completions:  ${echo_normal}git${echo_normal}
+         ${GREEN}❯ bash-it search @git --enable${BLUE}
+               ${YELLOW}aliases:  ${NC}git
+               ${YELLOW}plugins:  ${NC}git
+           ${YELLOW}completions:  ${NC}git${NC}
 
-${echo_underline_yellow}SUMMARY${echo_normal}
+${YELLOW}SUMMARY${NC}
 
    Take advantage of the search functionality to discover what Bash-It can do
    for you. Try searching for partial term matches, mix and match with the
@@ -343,7 +343,7 @@ _bash-it-flash-term () {
   local delay=0.1
   local color
 
-  for color in ${text_black} ${echo_bold_blue} ${bold_yellow} ${bold_red} ${echo_bold_green} ; do
+  for color in ${text_black} ${BLUE} ${bold_yellow} ${bold_red} ${GREEN} ; do
     sleep ${delay}
     _bash-it-rewind "${len}"
     printf "${color}${match}"

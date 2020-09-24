@@ -35,7 +35,7 @@ myip () {
         fi
     done
     res=$(echo "$res" | grep -Eo '[0-9\.]+')
-    echo -e "Your public IP is: ${echo_bold_green} $res ${echo_normal}"
+    echo -e "Your public IP is: ${GREEN} $res ${NC}"
 }
 
 pickfrom () {
