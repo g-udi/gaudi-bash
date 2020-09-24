@@ -15,20 +15,20 @@
 #     {p}    display percent
 # Note: There must be a space between each format token
 
-battstat() {
+battstat () {
 
-    exit_no_battery() {
+    exit_no_battery () {
         return
     }
 
-    get_darwin_details() {
+    get_darwin_details () {
         battery_details=$(pmset -g batt)
 
         # Exit if no battery exists.
         if ! echo "$battery_details" | grep -q InternalBattery; then
             exit_no_battery
         fi
-        
+
         charged=$(echo "$battery_details" | grep -w 'charged')
         charging=$(echo "$battery_details" | grep -w 'AC Power')
         discharging=$(echo "$battery_details" | grep -w 'Battery Power')
@@ -36,19 +36,19 @@ battstat() {
         percent=$(echo "$battery_details" | grep -o "[0-9]*"%)
     }
 
-    get_linux_details() {
+    get_linux_details () {
         battery_details=$(LC_ALL=en_US.UTF-8 upower -i $(upower -e | grep 'BAT'))
-        
+
         # Exit if no batery exists.
         if [ -z "$battery_details" ]; then
             exit_no_battery
         fi
-        
+
         charged=$(echo "$battery_details" | grep 'state' | grep -w 'fully-charged')
         charging=$(echo "$battery_details" | grep 'state' | grep -w 'charging')
         discharging=$(echo "$battery_details" | grep 'state' | grep -w 'discharging')
         percent=$(echo "$battery_details"| grep 'percentage' | awk '{print $2}')
-        
+
         case $(echo "$battery_details" | grep 'time' | awk '{print $5}') in
         "hours")
             hours=$(echo "$battery_details" | grep 'time' | awk '{print $4}' | cut -d . -f1)
@@ -69,11 +69,11 @@ battstat() {
         if [ ${#minutes} -eq '1' ]; then
             minutes="0$minutes"
         fi
-        
+
         time=$hours:$minutes
     }
 
-    get_openbsd_details() {
+    get_openbsd_details () {
         battery_details=$(apm)
 
         # Exit if no battery exists.
@@ -90,7 +90,7 @@ battstat() {
         if [ ! -z "$charging" ] && [ $percent = "100%" ]; then
             charged="charged"
         fi
-    
+
         # Only compute time when available
         if [ ! -z "$full_minutes" ]; then
             hours=$(($full_minutes/60))
@@ -100,18 +100,18 @@ battstat() {
             if [ ${#minutes} -eq '1' ]; then
             minutes="0$minutes"
             fi
-            
+
             time=$hours:$minutes
         fi
     }
 
-    hide_percent_until_charged() {
+    hide_percent_until_charged () {
         if [ -z "$charged" ]; then
             percent=""
         fi
-    }   
+    }
 
-    print_icon() {
+    print_icon () {
         if [ ! -z "$charging" ] || [ ! -z "$charged" ]; then
             icon=$charging_icon
         elif [ ! -z "$discharging" ]; then
@@ -121,7 +121,7 @@ battstat() {
         [ $GAUDI_ENABLE_SYMBOLS == true ] && echo -e -n " $icon "
     }
 
-    print_time() {
+    print_time () {
         # Display "calc..." when calculating time remaining.
         if [ -z "$time" ] || [ $time = "0:00" ]; then
           time="calculating..."
@@ -131,14 +131,14 @@ battstat() {
         if [ ! -z "$charged" ]; then
             time=""
         fi
-        
+
         if [ ! -z "$time" ]; then
             printf " %s " $time
         fi
 
     }
 
-    print_background() {
+    print_background () {
         # Remove trailing % and symbols for comparison
         battery_percent="$(echo $percent | tr -d '%[,;]')"
         # Change color based on battery percentage
@@ -151,7 +151,7 @@ battstat() {
         fi
     }
 
-    print_percent() {
+    print_percent () {
         if [ ! -z "$percent" ]; then
             printf " %s " $percent
         fi
@@ -204,7 +204,7 @@ battstat() {
         {b})
             print_background
             shift
-            ;;         
+            ;;
         {i})
             print_icon
             shift

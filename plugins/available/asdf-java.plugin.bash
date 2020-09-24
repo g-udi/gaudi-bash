@@ -1,7 +1,7 @@
 cite about-plugin
 about-plugin 'Enable asdf java plugin If you want or need JAVA_HOME set'
 
-asdf_update_java_home() {
+asdf_update_java_home () {
   local current
   if current=$(asdf current java); then
     local version=$(echo $current | sed -s 's|\(.*\) \?(.*|\1|g')

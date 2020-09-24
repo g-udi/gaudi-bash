@@ -12,7 +12,7 @@ about-plugin 'video to gif, gif to WebM helper functions'
 # Optional: if lossy is not important, Ubuntu has gifsicle packaged for apt-get, instead of giflossy
 # Optional: gifski (from `brew install gifski` or github.com/ImageOptim/gifski)
 #           for high quality huge files.
-function v2gif {
+v2gif () {
   about 'Converts a .mov/.avi/.mp4 file into an into an animated GIF.'
   group 'gif'
   param '1: MOV/AVI/MP4 file name(s)'
@@ -188,7 +188,7 @@ function v2gif {
   echo "$(tput setaf 2)Done.$(tput sgr 0)"
 }
 
-function any2webm() {
+any2webm () {
   about 'Converts an movies and Animated GIF files into an into a modern quality WebM video.'
   group 'gif'
   param '1: GIF/video file name(s)'

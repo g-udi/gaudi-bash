@@ -1,7 +1,7 @@
 cite about-plugin
 about-plugin 'Add a gw command to use gradle wrapper if present, else use system gradle'
 
-function gw() {
+gw () {
   local file="gradlew"
   local curr_path="${PWD}"
   local result="gradle"

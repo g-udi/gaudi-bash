@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-main() {
+main () {
 
   if [ ! -n "$BASH_IT" ]; then
     BASH_IT=~/.BASH_IT

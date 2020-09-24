@@ -18,7 +18,7 @@ GAUDI_HOST_COLOR_SSH="${GAUDI_HOST_COLOR_SSH="$BLACK$BACKGROUND_YELLOW"}"
 # ------------------------------------------------------------------------------
 
 # If there is an ssh connections, current machine name.
-gaudi_host() {
+gaudi_host () {
   [[ $GAUDI_HOST_SHOW == false ]] && return
 
   if [[ $GAUDI_HOST_SHOW == 'always' ]] || [[ -n $SSH_CONNECTION ]]; then
@@ -30,7 +30,7 @@ gaudi_host() {
     else
       host_color=$GAUDI_HOST_COLOR
     fi
-  
+
     gaudi::section \
       "$host_color" \
       "$GAUDI_HOST_PREFIX" \

@@ -20,7 +20,7 @@ GAUDI_JULIA_COLOR="${GAUDI_JULIA_COLOR=""}"
 # ------------------------------------------------------------------------------
 
 # Show current version of Julia
-gaudi_julia() {
+gaudi_julia () {
   [[ $GAUDI_JULIA_SHOW == false ]] && return
 
   # If there are julia files in current directory

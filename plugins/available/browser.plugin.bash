@@ -3,7 +3,7 @@
 cite about-plugin
 about-plugin 'render commandline output in your browser'
 
-function browser() {
+browser () {
     about 'pipe html to a browser'
     example '$ echo "<h1>hi mom!</h1>" | browser'
     example '$ ron -5 man/rip.5.ron | browser'
@@ -24,7 +24,7 @@ function browser() {
 }
 
 
-function wmate() {
+wmate () {
     about 'pipe hot spicy interwebs into textmate and cleanup!'
     example '$ wmate google.com'
     group 'browser'
@@ -33,7 +33,7 @@ function wmate() {
         if [ -n "$1" ]; then
             wget -qO- $1 | /usr/bin/mate
 
-TIDY=`/usr/bin/osascript << EOT
+TIDY=`/usr/bin/osascript` << EOT
 tell application "TextMate"
 	activate
 end tell
@@ -53,7 +53,7 @@ tell application "System Events"
 		end tell
 	end tell
 end tell
-EOT`
+EOT
 
         else
             reference wmate
@@ -61,7 +61,7 @@ EOT`
     fi
 }
 
-function raw() {
+raw () {
     about 'write wget into a temp file and pump it into your browser'
     example '$ raw google.com'
     group 'browser'

@@ -9,7 +9,7 @@ cite _about _param _example _group _author _version
 load ../../lib/helpers
 load ../../themes/base.theme
 
-function local_setup {
+local_setup () {
   setup_test_fixture
 
   # Copy the test fixture to the bash-it folder
@@ -25,12 +25,12 @@ function local_setup {
   export OLD_PATH="$PATH"
 }
 
-function local_teardown {
+local_teardown () {
   export PATH="$OLD_PATH"
   unset OLD_PATH
 }
 
-function setup_repo {
+setup_repo () {
   upstream="$(mktemp -d)"
   pushd "$upstream" > /dev/null
   # Create a dummy SVN folder - this will not work with an actual `svn` command,
@@ -40,7 +40,7 @@ function setup_repo {
   echo "$upstream"
 }
 
-function setup_svn_path {
+setup_svn_path () {
   local svn_path="$1"
 
   # Make sure that the requested SVN script is available

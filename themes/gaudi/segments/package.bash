@@ -20,7 +20,7 @@ GAUDI_PACKAGE_COLOR="${GAUDI_PACKAGE_COLOR=""}"
 # Section
 # ------------------------------------------------------------------------------
 
-gaudi_package() {
+gaudi_package () {
   [[ $GAUDI_PACKAGE_SHOW == false ]] && return
 
   # Show package version only when repository is a package

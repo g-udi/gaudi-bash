@@ -11,9 +11,9 @@ MVIM=$(command -v mvim)
 # http://stackoverflow.com/questions/936501/let-gvim-always-run-a-single-instancek
 case $OSTYPE in
   darwin*)
-	[[ -n $MVIM ]] && function mvimt { command mvim --remote-tab-silent "$@" || command mvim "$@"; }
+	[[ -n $MVIM ]] && mvimt () { command mvim --remote-tab-silent "$@" || command mvim "$@"; }
     ;;
   *)
-    [[ -n $GVIM ]] && function gvimt { command gvim --remote-tab-silent "$@" || command gvim "$@"; }
+    [[ -n $GVIM ]] && gvimt () { command gvim --remote-tab-silent "$@" || command gvim "$@"; }
     ;;
 esac

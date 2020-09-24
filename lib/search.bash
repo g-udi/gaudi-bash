@@ -47,7 +47,7 @@
 #      completions:  git
 #
 
-_bash-it-search() {
+_bash-it-search () {
   _about 'searches for given terms amongst bash-it plugins, aliases and completions'
   _param '1: term1'
   _param '2: [ term2 ]...'
@@ -88,7 +88,7 @@ _bash-it-search() {
   return 0
 }
 
-_bash-it-search-help() {
+_bash-it-search-help () {
   printf "${echo_normal}
 ${echo_underline_yellow}USAGE${echo_normal}
 
@@ -165,13 +165,13 @@ ${echo_underline_yellow}SUMMARY${echo_normal}
 "
 }
 
-_bash-it-is-partial-match() {
+_bash-it-is-partial-match () {
   local component="$1"
   local term="$2"
   _bash-it-component-help "${component}" | $(_bash-it-grep) -E -i -q -- "${term}"
 }
 
-_bash-it-component-term-matches-negation() {
+_bash-it-component-term-matches-negation () {
   local match="$1"; shift
   local negative
   for negative in "$@"; do
@@ -181,7 +181,7 @@ _bash-it-component-term-matches-negation() {
   return 1
 }
 
-_bash-it-search-component() {
+_bash-it-search-component () {
   local component="$1"
   shift
 
@@ -251,7 +251,7 @@ _bash-it-search-component() {
   unset matches final_matches terms
 }
 
-_bash-it-search-result() {
+_bash-it-search-result () {
   local component="$1"; shift
   local action="$1"; shift
   local action_func="$1"; shift
@@ -332,12 +332,12 @@ _bash-it-search-result() {
   fi
 }
 
-_bash-it-rewind() {
+_bash-it-rewind () {
   local len="$1"
   printf "\033[${len}D"
 }
 
-_bash-it-flash-term() {
+_bash-it-flash-term () {
   local len="$1"
   local match="$2"
   local delay=0.1
@@ -350,7 +350,7 @@ _bash-it-flash-term() {
   done
 }
 
-_bash-it-erase-term() {
+_bash-it-erase-term () {
   local len="$1"
   _bash-it-rewind ${len}
   for a in {0..30}; do

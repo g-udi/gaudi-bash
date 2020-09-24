@@ -13,7 +13,7 @@ case $OSTYPE in
     ;;
 esac
 
-function local_setup {
+local_setup () {
   setup_test_fixture
 }
 

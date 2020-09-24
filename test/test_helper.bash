@@ -7,8 +7,9 @@ unset SCM_CHECK
 unset BASH_IT_AUTOMATIC_RELOAD_AFTER_CONFIG_CHANGE
 
 export TEST_MAIN_DIR="${BATS_TEST_DIRNAME}"
+echo "TEST_MAIN_DIR: ${TEST_MAIN_DIR}"
 export TEST_DEPS_DIR="${TEST_DEPS_DIR-${TEST_MAIN_DIR}/../bin}"
-
+echo "TEST_DEPS_DIR: ${TEST_DEPS_DIR}"
 # be independent of git's system configuration
 export GIT_CONFIG_NOSYSTEM
 
@@ -16,11 +17,11 @@ load "${TEST_DEPS_DIR}/bats-support/load.bash"
 load "${TEST_DEPS_DIR}/bats-assert/load.bash"
 load "${TEST_DEPS_DIR}/bats-file/load.bash"
 
-local_setup() {
+local_setup () {
   true
 }
 
-local_teardown() {
+local_teardown () {
   true
 }
 
@@ -28,10 +29,10 @@ local_teardown() {
 # fresh and isolated Bash-it directory. This is done to avoid
 # messing with your own Bash-it source directory.
 # If you need this, call it in your .bats file's `local_setup` function.
-setup_test_fixture() {
+setup_test_fixture () {
   mkdir -p "$BASH_IT"
   lib_directory="$(cd "$(dirname "$0")" && pwd)"
-  
+
   local src_topdir="$lib_directory/../../../.."
 
   if command -v rsync &> /dev/null
@@ -62,7 +63,7 @@ setup_test_fixture() {
   export BASH_IT_TEST_HOME="$TEST_TEMP_DIR"
 }
 
-setup() {
+setup () {
   # The `temp_make` function from "bats-file" requires the tralston/bats-file fork,
   # since the original ztombol/bats-file's `temp_make` does not work on macOS.
   TEST_TEMP_DIR="$(temp_make --prefix 'bash-it-test-')"
@@ -92,7 +93,7 @@ setup() {
   local_setup
 }
 
-teardown() {
+teardown () {
   local_teardown
 
   rm -rf "${BASH_IT_TEST_DIR}"

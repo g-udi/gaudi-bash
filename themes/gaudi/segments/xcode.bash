@@ -21,7 +21,7 @@ GAUDI_XCODE_COLOR="${GAUDI_XCODE_COLOR=""}"
 # ------------------------------------------------------------------------------
 
 # Show current version of Xcode
-gaudi_xcode() {
+gaudi_xcode () {
   gaudi::exists xcenv || return
 
   local 'xcode_path'

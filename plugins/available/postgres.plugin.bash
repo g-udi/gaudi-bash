@@ -11,7 +11,7 @@ do
    if [ -f "$possible/pg_hba.conf" ]
    then
        # echo "PGDATA: $possible"
-       export PGDATA=$possible    
+       export PGDATA=$possible
    fi
 done
 
@@ -19,27 +19,27 @@ done
 
 
 
-function postgres_start {
+postgres_start () {
   about 'Starts PostgreSQL server'
   group 'postgres'
 
-  echo 'Starting PostgreSQL....'; 
+  echo 'Starting PostgreSQL....';
   $POSTGRES_BIN/pg_ctl -D $PGDATA -l $PGDATA/logfile  start
 }
 
-function postgres_stop {
+postgres_stop () {
   about 'Stops PostgreSQL server'
   group 'postgres'
 
-  echo 'Stopping PostgreSQL....'; 
+  echo 'Stopping PostgreSQL....';
   $POSTGRES_BIN/pg_ctl -D $PGDATA -l $PGDATA/logfile stop -s -m fast
 }
 
-function postgres_status {
+postgres_status () {
   about 'Returns status of PostgreSQL server'
   group 'postgres'
 
-  # $POSTGRES_BIN/pg_ctl -D $PGDATA status  
+  # $POSTGRES_BIN/pg_ctl -D $PGDATA status
   if [[ $(is_postgres_running) == "no server running" ]]
   then
     echo "PostgreSQL service [STOPPED]"
@@ -49,27 +49,27 @@ function postgres_status {
 }
 
 
-function is_postgres_running {
+is_postgres_running () {
   $POSTGRES_BIN/pg_ctl -D $PGDATA status | egrep -o "no server running"
 }
 
 
-function postgres_restart {
+postgres_restart () {
   about 'Restarts status of PostgreSQL server'
   group 'postgres'
 
-  echo 'Restarting PostgreSQL....'; 
+  echo 'Restarting PostgreSQL....';
   $POSTGRES_BIN/pg_ctl -D $PGDATA restart
 }
 
-function postgres_logfile {
+postgres_logfile () {
   about 'View the last 500 lines from logfile'
   group 'postgres'
 
   tail -500 $PGDATA/logfile | less
 }
 
-function postgres_serverlog {
+postgres_serverlog () {
   about 'View the last 500 lines from server.log'
   group 'postgres'
 

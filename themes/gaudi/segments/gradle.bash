@@ -20,17 +20,17 @@ GAUDI_GRADLE_COLOR="${GAUDI_GRADLE_COLOR=""}"
 # ------------------------------------------------------------------------------
 
 # Shows selected AWS-cli profile.
-gaudi_gradle() {
+gaudi_gradle () {
   [[ $GAUDI_GRADLE_SHOW == false ]] && return
-  
+
   # Check if local ./gradlew first or system gradle is available
   gaudi::exists gradle || return
-  
+
   # Check if gradle project
   [[ -f build.gradle || -f build.gradle.kts ]] || return
 
   local gradle_version=$(gradle --version 2>&1 | grep '^Gradle' | awk -F ' ' '{print $2}')
-  
+
   gaudi::section \
     "$GAUDI_GRADLE_COLOR" \
     "$GAUDI_GRADLE_PREFIX" \

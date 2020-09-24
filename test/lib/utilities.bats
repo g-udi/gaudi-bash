@@ -8,19 +8,19 @@ load ../../lib/search
 
 cite _about _param _example _group _author _version
 
-function local_setup {
+local_setup () {
   setup_test_fixture
 }
 
-function has_match() {
+has_match () {
   $(_bash-it-array-contains-element ${@}) && echo "has" "$1"
 }
 
-function item_enabled() {
+item_enabled () {
   $(_bash-it-component-item-is-enabled ${@}) && echo "$1" "$2" "is enabled"
 }
 
-function item_disabled() {
+item_disabled () {
   $(_bash-it-component-item-is-disabled ${@}) && echo "$1" "$2" "is disabled"
 }
 

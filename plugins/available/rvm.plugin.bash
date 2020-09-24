@@ -24,7 +24,7 @@ then
       rvm wrapper $1 textmate
     }
 
-    function rvm_version () {
+    rvm_version () {
       ruby --version
     }
 

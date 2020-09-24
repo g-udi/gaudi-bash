@@ -4,7 +4,7 @@ _is_function _init_completion ||
 _is_function _rl_enabled ||
   _log_error '_rl_enabled not found. Ensure bash-completion 2.0 or newer is installed and configured properly.'
 
-_pj() {
+_pj () {
   _is_function _init_completion || return
   _is_function _rl_enabled || return
   [ -n "$PROJECT_PATHS" ] || return

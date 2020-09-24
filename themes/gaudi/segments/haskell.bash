@@ -20,7 +20,7 @@ GAUDI_HASKELL_COLOR="${GAUDI_HASKELL_COLOR=""$MAGENTA""}"
 # ------------------------------------------------------------------------------
 
 # Show current version of Haskell Tool Stack.
-gaudi_haskell() {
+gaudi_haskell () {
   [[ $GAUDI_HASKELL_SHOW == false ]] && return
 
   # If there are stack files in current directory
@@ -37,5 +37,5 @@ gaudi_haskell() {
     "$GAUDI_HASKELL_SYMBOL" \
     "$haskell_version" \
     "$GAUDI_HASKELL_SUFFIX"
-    
+
 }

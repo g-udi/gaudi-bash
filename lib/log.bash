@@ -4,7 +4,7 @@ export BASH_IT_LOG_LEVEL_ERROR=1
 export BASH_IT_LOG_LEVEL_WARNING=2
 export BASH_IT_LOG_LEVEL_ALL=3
 
-function _has_colors()
+_has_colors()
 {
   # Check that stdout is a terminal
   test -t 1 || return 1
@@ -14,9 +14,9 @@ function _has_colors()
   return 0
 }
 
-function _log_general()
+_log_general()
 {
-  about 'Internal function used for logging, uses BASH_IT_LOG_PREFIX as a prefix'
+  about 'Internal used for logging, uses BASH_IT_LOG_PREFIX as a prefix'
   param '1: color of the message'
   param '2: log level to print before the prefix'
   param '3: message to log'
@@ -26,7 +26,7 @@ function _log_general()
   _has_colors && echo -e "$1${message}${echo_normal}" || echo -e "${message}"
 }
 
-function _log_debug()
+_log_debug()
 {
   about 'log a debug message by echoing to the screen. needs BASH_IT_LOG_LEVEL >= BASH_IT_LOG_LEVEL_ALL'
   param '1: message to log'
@@ -37,7 +37,7 @@ function _log_debug()
   _log_general "${echo_green}" "DEBUG: " "$1"
 }
 
-function _log_warning()
+_log_warning()
 {
   about 'log a message by echoing to the screen. needs BASH_IT_LOG_LEVEL >= BASH_IT_LOG_LEVEL_WARNING'
   param '1: message to log'
@@ -48,7 +48,7 @@ function _log_warning()
   _log_general "${echo_yellow}" " WARN: " "$1"
 }
 
-function _log_error()
+_log_error()
 {
   about 'log a message by echoing to the screen. needs BASH_IT_LOG_LEVEL >= BASH_IT_LOG_LEVEL_ERROR'
   param '1: message to log'

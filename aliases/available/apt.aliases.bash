@@ -6,8 +6,7 @@ cite 'about-alias'
 about-alias 'Apt and dpkg aliases for Ubuntu and Debian distros.'
 
 # set apt aliases
-function _set_pkg_aliases()
-{
+_set_pkg_aliases () {
 	if [ -x $(which apt) ]; then
 		alias apts='apt-cache search'
 		alias aptshow='apt-cache show'

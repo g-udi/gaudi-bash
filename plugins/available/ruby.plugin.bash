@@ -7,7 +7,7 @@ if which ruby >/dev/null && which gem >/dev/null; then
   pathmunge "$(ruby -e 'print Gem.user_dir')/bin" after
 fi
 
-function remove_gem {
+remove_gem () {
   about 'removes installed gem'
   param '1: installed gem name'
   group 'ruby'

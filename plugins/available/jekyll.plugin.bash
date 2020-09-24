@@ -1,7 +1,7 @@
 cite about-plugin
 about-plugin 'manage your jekyll site'
 
-editpost() {
+editpost () {
   about 'edit a post'
   param '1: site directory'
   group 'jekyll'
@@ -54,7 +54,7 @@ editpost() {
   fi
 }
 
-newpost() {
+newpost () {
   about 'create a new post'
   param '1: site directory'
   group 'jekyll'
@@ -265,7 +265,7 @@ newpost() {
   "$JEKYLL_EDITOR" $FNAME
 }
 
-function testsite() {
+testsite () {
   about 'launches local jekyll server'
   param '1: site directory'
   group 'jekyll'
@@ -297,7 +297,7 @@ function testsite() {
   jekyll --server --auto
 }
 
-function buildsite() {
+buildsite () {
   about 'builds site'
   param '1: site directory'
   group 'jekyll'
@@ -330,7 +330,7 @@ function buildsite() {
   jekyll --no-server
 }
 
-function deploysite() {
+deploysite () {
   about 'rsyncs site to remote host'
   param '1: site directory'
   group 'jekyll'

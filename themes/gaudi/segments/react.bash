@@ -20,7 +20,7 @@ GAUDI_REACT_COLOR="${GAUDI_REACT_COLOR="$CYAN"}"
 # ------------------------------------------------------------------------------
 
 # Show current version of Ember, exception system.
-gaudi_react() {
+gaudi_react () {
   [[ $GAUDI_REACT_SHOW == false ]] && return
 
   [[ -f node_modules/react/package.json ]] || return

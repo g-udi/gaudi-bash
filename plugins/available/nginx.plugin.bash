@@ -4,7 +4,7 @@ about-plugin 'manage your nginx service'
 export NGINX_PATH='/opt/nginx'
 pathmunge $NGINX_PATH/sbin after
 
-function nginx_reload() {
+nginx_reload () {
   about 'reload your nginx config'
   group 'nginx'
 
@@ -19,7 +19,7 @@ function nginx_reload() {
   fi
 }
 
-function nginx_stop() {
+nginx_stop () {
   about 'stop nginx'
   group 'nginx'
 
@@ -34,7 +34,7 @@ function nginx_stop() {
   fi
 }
 
-function nginx_start() {
+nginx_start () {
   about 'start nginx'
   group 'nginx'
 
@@ -47,7 +47,7 @@ function nginx_start() {
   fi
 }
 
-function nginx_restart() {
+nginx_restart () {
   about 'restart nginx'
   group 'nginx'
 

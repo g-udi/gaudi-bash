@@ -21,13 +21,13 @@ GAUDI_ELIXIR_COLOR="${GAUDI_ELIXIR_COLOR="$MAGENTA"}"
 # ------------------------------------------------------------------------------
 
 # Show current version of Elixir
-gaudi_elixir() {
+gaudi_elixir () {
   [[ $GAUDI_ELIXIR_SHOW == false ]] && return
 
   # Show versions only for Elixir-specific folders
-  [[ -f mix.exs || 
-     -n $(find . -not -path '*/\.*' -maxdepth 1 -name "*.ex") || 
-     -n $(find . -not -path '*/\.*' -maxdepth 1 -name "*.exs") 
+  [[ -f mix.exs ||
+     -n $(find . -not -path '*/\.*' -maxdepth 1 -name "*.ex") ||
+     -n $(find . -not -path '*/\.*' -maxdepth 1 -name "*.exs")
   ]] || return
 
   local 'elixir_version'

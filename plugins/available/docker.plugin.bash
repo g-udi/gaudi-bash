@@ -1,26 +1,26 @@
 cite about-plugin
 about-plugin 'Helpers to more easily work with Docker'
 
-function docker-remove-most-recent-container() {
+docker-remove-most-recent-container () {
   about 'attempt to remove the most recent container from docker ps -a'
   group 'docker'
   docker ps -ql | xargs docker rm
 }
 
-function docker-remove-most-recent-image() {
+docker-remove-most-recent-image () {
   about 'attempt to remove the most recent image from docker images'
   group 'docker'
   docker images -q | head -1 | xargs docker rmi
 }
 
-function docker-remove-stale-assets() {
+docker-remove-stale-assets () {
   about 'attempt to remove exited containers and dangling images'
   group 'docker'
   docker ps --filter status=exited -q | xargs docker rm --volumes
   docker images --filter dangling=true -q | xargs docker rmi
 }
 
-function docker-enter() {
+docker-enter () {
   about 'enter the specified docker container using bash'
   group 'docker'
   param '1: Name of the container to enter'
@@ -29,7 +29,7 @@ function docker-enter() {
   docker exec -it "$@" /bin/bash;
 }
 
-function docker-remove-images() {
+docker-remove-images () {
   about 'attempt to remove images with supplied tags or all if no tags are supplied'
   group 'docker'
   if [ -z "$1" ]; then
@@ -44,7 +44,7 @@ function docker-remove-images() {
  fi
 }
 
-function docker-image-dependencies() {
+docker-image-dependencies () {
   about 'attempt to create a Graphiz image of the supplied image ID dependencies'
   group 'docker'
   if hash dot 2>/dev/null; then
@@ -63,13 +63,13 @@ function docker-image-dependencies() {
   fi
 }
 
-function docker-runtime-environment() {
+docker-runtime-environment () {
   about 'attempt to list the environmental variables of the supplied image ID'
   group 'docker'
   docker run "$@" env
 }
 
-function docker-archive-content() {
+docker-archive-content () {
   about 'show the content of the provided Docker image archive'
   group 'docker'
   param '1: image archive name'

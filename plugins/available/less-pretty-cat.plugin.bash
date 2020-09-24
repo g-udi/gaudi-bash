@@ -10,7 +10,7 @@ if $(command -v pygmentize &> /dev/null) ; then
 
   # pigmentize cat and less outputs - call them ccat and cless to avoid that
   # especially cat'ed output in scripts gets mangled with pygemtized meta characters
-  function ccat()
+  ccat()
   {
       about 'runs either pygmentize or cat on each file passed in'
       param '*: files to concatenate (as normally passed to cat)'
@@ -21,7 +21,7 @@ if $(command -v pygmentize &> /dev/null) ; then
       done
   }
 
-  function cless()
+  cless()
   {
       about 'it pigments the file passed in and passes it to less for pagination'
       param '$1: the file to paginate with less'

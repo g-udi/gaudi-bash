@@ -20,7 +20,7 @@ GAUDI_CONDA_COLOR="${GAUDI_CONDA_COLOR="$BLUE"}"
 # ------------------------------------------------------------------------------
 
 # Show current conda virtual environment
-gaudi_conda() {
+gaudi_conda () {
   [[ $GAUDI_CONDA_SHOW == false ]] && return
 
   # Check if running via conda virtualenv

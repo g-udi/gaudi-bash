@@ -3,7 +3,7 @@
 load ../test_helper
 load ../../lib/composure
 
-function local_setup {
+local_setup () {
   setup_test_fixture
 
   # Copy the test fixture to the bash-it folder

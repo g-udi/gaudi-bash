@@ -22,17 +22,17 @@ GAUDI_MULTIPLEXER_COLOR="${GAUDI_MULTIPLEXER_COLOR=""}"
 # ------------------------------------------------------------------------------
 
 # Show current Maven version
-gaudi_multiplexer() {
+gaudi_multiplexer () {
   [[ $GAUDI_MULTIPLEXER_SHOW == false ]] && return
 
   # Check if tmux or scren are installed
   ! gaudi::exists tmux && ! gaudi::exists screen && return
 
   local multiplexers
-  
+
   detached_tmux_sessions=$(tmux list-sessions 2> /dev/null | \grep -cv 'attached')
   detached_screen_sessions=$(screen -ls 2> /dev/null | \grep -c '[Dd]etach[^)]*)$')
-  
+
   [ $detached_tmux_sessions == 0 ] && [ $detached_screen_sessions == 0 ] && return
 
   [ $detached_tmux_sessions != 0 ] && multiplexers=" T:$detached_tmux_sessions"

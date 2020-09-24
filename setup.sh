@@ -7,7 +7,7 @@ echo -e "\n[INFO] ${YELLOW}Getting bash version .... ${NC}\n"
 bash --version
 
 # Show how to use this installer
-function show_usage() {
+show_usage () {
   echo -e "\n$0 : Install bash-it"
   echo -e "Usage:\n$0 [arguments] \n"
   echo "Arguments:"
@@ -19,7 +19,7 @@ function show_usage() {
 }
 
 # enable a thing
-function load_one() {
+load_one () {
   file_type=$1
   file_to_enable=$2
   mkdir -p "$BASH_IT/${file_type}/enabled"
@@ -33,7 +33,7 @@ function load_one() {
 }
 
 # Interactively enable several things
-function load_some() {
+load_some () {
   file_type=$1
   single_type=$(echo "$file_type" | sed -e "s/aliases$/alias/g" | sed -e "s/plugins$/plugin/g")
   enable_func="_enable-$single_type"
@@ -62,7 +62,7 @@ function load_some() {
 }
 
 # Back up existing profile and create new one for bash-it
-function backup_new() {
+backup_new () {
   test -w "$HOME/$CONFIG_FILE" &&
   cp -aL "$HOME/$CONFIG_FILE" "$HOME/$CONFIG_FILE.bak" &&
   echo -e "${GREEN}Your original $CONFIG_FILE has been backed up to $CONFIG_FILE.bak${NC}"

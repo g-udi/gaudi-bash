@@ -21,15 +21,15 @@ GAUDI_KUBECONTEXT_COLOR="${GAUDI_KUBECONTEXT_COLOR="$MAGENTA"}"
 # ------------------------------------------------------------------------------
 
 # Show current context in kubectl
-gaudi_kubecontext() {
+gaudi_kubecontext () {
   [[ $GAUDI_KUBECONTEXT_SHOW == false ]] && return
 
   gaudi::exists kubectl || return
 
   local kube_context="$(kubectl config current-context 2>/dev/null)"
-  
+
   local kube_namespace=$(kubectl config view -o jsonpath="{.contexts[?(@.name == \"${kube_context}\")].context.namespace}")
-  
+
   if [[ -z $kube_namespace ]]; then
     kube_namespace="default"
   fi

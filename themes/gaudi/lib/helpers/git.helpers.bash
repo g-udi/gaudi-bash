@@ -17,7 +17,7 @@ GAUDI_SCM_GIT_STAGED_CHAR="S:"
 GAUDI_SCM_GIT_STASH_CHAR='\uf5e1'
 GAUDI_SCM_GIT_SHA_CHAR='\uf417'
 
-function _git-symbolic-ref {
+_git-symbolic-ref () {
  git symbolic-ref -q HEAD 2> /dev/null
 }
 
@@ -25,38 +25,38 @@ function _git-symbolic-ref {
 # but this can be different when two branches are pointing to the
 # same commit. _git-branch is used to explicitly choose the checked-out
 # branch.
-function _git-branch {
+_git-branch () {
  git symbolic-ref -q --short HEAD 2> /dev/null || return 1
 }
 
-function _git-tag {
+_git-tag () {
   git describe --tags --exact-match 2> /dev/null
 }
 
-function _git-commit-description {
+_git-commit-description () {
   git describe --contains --all 2> /dev/null
 }
 
-function _git-short-sha {
+_git-short-sha () {
   git rev-parse --short HEAD
 }
 
 # Try the checked-out branch first to avoid collision with branches pointing to the same ref.
-function _git-friendly-ref {
+_git-friendly-ref () {
   _git-branch || _git-tag || _git-commit-description || _git-short-sha
 }
 
-function _git-num-remotes {
+_git-num-remotes () {
   git remote | wc -l
 }
 
-function _git-upstream {
+_git-upstream () {
   local ref
   ref="$(_git-symbolic-ref)" || return 1
   git for-each-ref --format="%(upstream:short)" "${ref}"
 }
 
-function _git-upstream-remote {
+_git-upstream-remote () {
   local upstream
   upstream="$(_git-upstream)" || return 1
 
@@ -65,7 +65,7 @@ function _git-upstream-remote {
   echo -e -n "${upstream%"/${branch}"}"
 }
 
-function _git-upstream-branch {
+_git-upstream-branch () {
   local ref
   ref="$(_git-symbolic-ref)" || return 1
 
@@ -75,25 +75,25 @@ function _git-upstream-branch {
   git for-each-ref --format="%(upstream:strip=3)" "${ref}" 2> /dev/null || git for-each-ref --format="%(upstream)" "${ref}" | sed -e "s/.*\/.*\/.*\///"
 }
 
-function _git-upstream-behind-ahead {
+_git-upstream-behind-ahead () {
   git rev-list --left-right --count "$(_git-upstream)...HEAD" 2> /dev/null
 }
 
-function _git-upstream-branch-gone {
+_git-upstream-branch-gone () {
   [[ "$(git status -s -b | sed -e 's/.* //')" == "[gone]" ]]
 }
 
-function _git-hide-status {
+_git-hide-status () {
   [[ "$(git config --get bash-it.hide-status)" == "1" ]]
 }
 
-function _git-status {
+_git-status () {
   local git_status_flags=
   [[ "${GAUDI_SCM_GIT_IGNORE_UNTRACKED}" = "true" ]] && git_status_flags='-uno'
   git status --porcelain ${git_status_flags} 2> /dev/null
 }
 
-function _git-status-counts {
+_git-status-counts () {
   _git-status | awk '
   BEGIN {
     untracked=0;
@@ -117,7 +117,7 @@ function _git-status-counts {
   }'
 }
 
-function _git-remote-info {
+_git-remote-info () {
   [[ "$(_git-upstream)" == "" ]] && return
 
   local same_branch_name=
@@ -138,7 +138,7 @@ function _git-remote-info {
 }
 
 # Unused by bash-it, present for API compatibility
-function git_status_summary {
+git_status_summary () {
   awk '
   BEGIN {
     untracked=0;
@@ -169,7 +169,7 @@ function git_status_summary {
   }'
 }
 
-function git_user_info {
+git_user_info () {
   # support two or more initials, set by 'git pair' plugin
   GAUDI_SCM_CURRENT_USER=$(git config user.initials | sed 's% %+%')
   # if `user.initials` weren't set, attempt to extract initials from `user.name`
@@ -177,12 +177,12 @@ function git_user_info {
   [[ -n "${GAUDI_SCM_CURRENT_USER}" ]] && printf "%b" "$GAUDI_SCM_GIT_USER_CHAR $GAUDI_SCM_CURRENT_USER"
 }
 
-function git_prompt_minimal_info {
-  
+git_prompt_minimal_info () {
+
   GAUDI_SCM_STATE=${GAUDI_SCM_THEME_PROMPT_CLEAN}
 
   _git-hide-status && return
-  
+
   GAUDI_SCM_BRANCH="$(_git-friendly-ref)"
 
   if [[ -n "$(_git-status | tail -n1)" ]]; then
@@ -194,7 +194,7 @@ function git_prompt_minimal_info {
   echo -e -n "${GAUDI_SCM_BRANCH}${GAUDI_SCM_STATE}"
 }
 
-function git_prompt_vars {
+git_prompt_vars () {
   # Make sure we do a fetch to get all the information needed form the upstream
   [ $GAUDI_SCM_FETCH == true ] && git fetch &> /dev/null;
 

@@ -20,14 +20,14 @@ GAUDI_EMBER_COLOR="${GAUDI_EMBER_COLOR=""}"
 # ------------------------------------------------------------------------------
 
 # Show current version of Ember, exception system.
-gaudi_ember() {
+gaudi_ember () {
   [[ $GAUDI_EMBER_SHOW == false ]] && return
 
   # Show EMBER status only for folders w/ ember-cli-build.js files
   [[ -f ember-cli-build.js && -f node_modules/ember-cli/package.json ]] || return
 
   local ember_version=$(grep '"version":' ./node_modules/ember-cli/package.json | cut -d\" -f4)
-  
+
   [[ $ember_version == "system" || $ember_version == "ember" ]] && return
 
   gaudi::section \

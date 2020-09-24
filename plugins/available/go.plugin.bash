@@ -5,7 +5,7 @@ about-plugin 'go environment variables & path configuration'
 
 command -v go &>/dev/null || return
 
-function _go_pathmunge_wrap() {
+_go_pathmunge_wrap () {
   IFS=':' local -a 'a=($1)'
   local i=${#a[@]}
   while [ $i -gt 0 ] ; do

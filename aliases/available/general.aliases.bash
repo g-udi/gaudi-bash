@@ -86,7 +86,7 @@ alias svim="sudo vim"
 alias snano="sudo nano"
 
 # Display whatever file is regular file or folder
-catt() {
+catt () {
   for i in "$@"; do
     if [ -d "$i" ]; then
       ls "$i"

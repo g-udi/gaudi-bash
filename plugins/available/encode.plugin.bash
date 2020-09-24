@@ -1,7 +1,7 @@
 cite about-plugin
 about-plugin 'Encoding and decoding functions'
 
-function escape() {
+escape () {
     about 'UTF-8-encode a string of Unicode symbols'
     group 'encode'
 
@@ -12,7 +12,7 @@ function escape() {
     fi;
 }
 
-function unidecode() {
+unidecode () {
     about 'Decode \x{ABCD}-style Unicode escape sequences'
     group 'encode'
 

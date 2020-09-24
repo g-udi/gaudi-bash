@@ -16,22 +16,22 @@
 
 # --- helper functions -------------------------------------------------------
 
-_docker_machine_q() {
+_docker_machine_q () {
     docker-machine 2>/dev/null "$@"
 }
 
 # suppresses trailing whitespace
-_docker_machine_nospace() {
+_docker_machine_nospace () {
     # compopt is not available in ancient bash versions (OSX)
     # so only call it if it's available
     type compopt &>/dev/null && compopt -o nospace
 }
 
-_docker_machine_machines() {
+_docker_machine_machines () {
     _docker_machine_q ls --format '{{.Name}}' "$@"
 }
 
-_docker_machine_drivers() {
+_docker_machine_drivers () {
     local drivers=(
         amazonec2
         azure
@@ -51,7 +51,7 @@ _docker_machine_drivers() {
     echo "${drivers[@]}"
 }
 
-_docker_machine_value_of_option() {
+_docker_machine_value_of_option () {
     local pattern="$1"
     for (( i=2; i < ${cword}; ++i)); do
         if [[ ${words[$i]} =~ ^($pattern)$ ]] ; then
@@ -64,7 +64,7 @@ _docker_machine_value_of_option() {
 # Returns `key` if we are currently completing the value of a map option
 # (`key=value`) which matches the glob passed in as an argument.
 # This function is needed for key-specific argument completions.
-_docker_machine_map_key_of_current_option() {
+_docker_machine_map_key_of_current_option () {
     local glob="$1"
 
     local key glob_pos
@@ -90,7 +90,7 @@ _docker_machine_map_key_of_current_option() {
 # If there are options that require arguments, you need to pass a glob describing
 # those options, e.g. "--option1|-o|--option2".
 # Use this function to restrict completions to exact positions after the options.
-_docker_machine_pos_first_nonflag() {
+_docker_machine_pos_first_nonflag () {
     local argument_flags=$1
 
     local counter=$((${subcommand_pos:-${command_pos}} + 1))
@@ -122,7 +122,7 @@ _docker_machine_pos_first_nonflag() {
 }
 # --- completion functions ---------------------------------------------------
 
-_docker_machine_active() {
+_docker_machine_active () {
     case "${prev}" in
         --timeout|-t)
             return
@@ -134,7 +134,7 @@ _docker_machine_active() {
     fi
 }
 
-_docker_machine_config() {
+_docker_machine_config () {
     if [[ "${cur}" == -* ]]; then
         COMPREPLY=($(compgen -W "--help --swarm" -- "${cur}"))
     else
@@ -142,7 +142,7 @@ _docker_machine_config() {
     fi
 }
 
-_docker_machine_create() {
+_docker_machine_create () {
     case "${prev}" in
         --driver|-d)
             COMPREPLY=($(compgen -W "$(_docker_machine_drivers)" -- "${cur}"))
@@ -159,7 +159,7 @@ _docker_machine_create() {
     fi
 }
 
-_docker_machine_env() {
+_docker_machine_env () {
     case "${prev}" in
         --shell)
             COMPREPLY=($(compgen -W "cmd emacs fish powershell tcsh" -- "${cur}"))
@@ -175,7 +175,7 @@ _docker_machine_env() {
 }
 
 # See docker-machine-wrapper.bash for the use command
-_docker_machine_use() {
+_docker_machine_use () {
     if [[ "${cur}" == -* ]]; then
         COMPREPLY=($(compgen -W "--help --swarm --unset" -- "${cur}"))
     else
@@ -183,7 +183,7 @@ _docker_machine_use() {
     fi
 }
 
-_docker_machine_inspect() {
+_docker_machine_inspect () {
     case "${prev}" in
         --format|-f)
             return
@@ -197,7 +197,7 @@ _docker_machine_inspect() {
     fi
 }
 
-_docker_machine_ip() {
+_docker_machine_ip () {
     if [[ "${cur}" == -* ]]; then
         COMPREPLY=($(compgen -W "--help" -- "${cur}"))
     else
@@ -205,7 +205,7 @@ _docker_machine_ip() {
     fi
 }
 
-_docker_machine_kill() {
+_docker_machine_kill () {
     if [[ "${cur}" == -* ]]; then
         COMPREPLY=($(compgen -W "--help" -- "${cur}"))
     else
@@ -213,7 +213,7 @@ _docker_machine_kill() {
     fi
 }
 
-_docker_machine_ls() {
+_docker_machine_ls () {
     local key=$(_docker_machine_map_key_of_current_option '--filter')
     case "$key" in
         driver)
@@ -242,7 +242,7 @@ _docker_machine_ls() {
     fi
 }
 
-_docker_machine_mount() {
+_docker_machine_mount () {
     if [[ "${cur}" == -* ]]; then
         COMPREPLY=($(compgen -W "--help --unmount -u" -- "${cur}"))
     else
@@ -257,7 +257,7 @@ _docker_machine_mount() {
     fi
 }
 
-_docker_machine_provision() {
+_docker_machine_provision () {
     if [[ "${cur}" == -* ]]; then
         COMPREPLY=($(compgen -W "--help" -- "${cur}"))
     else
@@ -265,7 +265,7 @@ _docker_machine_provision() {
     fi
 }
 
-_docker_machine_regenerate_certs() {
+_docker_machine_regenerate_certs () {
     if [[ "${cur}" == -* ]]; then
         COMPREPLY=($(compgen -W "--client-certs --force -f --help" -- "${cur}"))
     else
@@ -273,7 +273,7 @@ _docker_machine_regenerate_certs() {
     fi
 }
 
-_docker_machine_restart() {
+_docker_machine_restart () {
     if [[ "${cur}" == -* ]]; then
         COMPREPLY=($(compgen -W "--help" -- "${cur}"))
     else
@@ -281,7 +281,7 @@ _docker_machine_restart() {
     fi
 }
 
-_docker_machine_rm() {
+_docker_machine_rm () {
     if [[ "${cur}" == -* ]]; then
         COMPREPLY=($(compgen -W "--force -f --help -y" -- "${cur}"))
     else
@@ -289,7 +289,7 @@ _docker_machine_rm() {
     fi
 }
 
-_docker_machine_ssh() {
+_docker_machine_ssh () {
     if [[ "${cur}" == -* ]]; then
         COMPREPLY=($(compgen -W "--help" -- "${cur}"))
     else
@@ -297,7 +297,7 @@ _docker_machine_ssh() {
     fi
 }
 
-_docker_machine_scp() {
+_docker_machine_scp () {
     if [[ "${cur}" == -* ]]; then
         COMPREPLY=($(compgen -W "--delta -d --help --quiet -q --recursive -r" -- "${cur}"))
     else
@@ -308,7 +308,7 @@ _docker_machine_scp() {
     fi
 }
 
-_docker_machine_start() {
+_docker_machine_start () {
     if [[ "${cur}" == -* ]]; then
         COMPREPLY=($(compgen -W "--help" -- "${cur}"))
     else
@@ -316,7 +316,7 @@ _docker_machine_start() {
     fi
 }
 
-_docker_machine_status() {
+_docker_machine_status () {
     if [[ "${cur}" == -* ]]; then
         COMPREPLY=($(compgen -W "--help" -- "${cur}"))
     else
@@ -324,7 +324,7 @@ _docker_machine_status() {
     fi
 }
 
-_docker_machine_stop() {
+_docker_machine_stop () {
     if [[ "${cur}" == -* ]]; then
         COMPREPLY=($(compgen -W "--help" -- "${cur}"))
     else
@@ -332,7 +332,7 @@ _docker_machine_stop() {
     fi
 }
 
-_docker_machine_upgrade() {
+_docker_machine_upgrade () {
     if [[ "${cur}" == -* ]]; then
         COMPREPLY=($(compgen -W "--help" -- "${cur}"))
     else
@@ -340,7 +340,7 @@ _docker_machine_upgrade() {
     fi
 }
 
-_docker_machine_url() {
+_docker_machine_url () {
     if [[ "${cur}" == -* ]]; then
         COMPREPLY=($(compgen -W "--help" -- "${cur}"))
     else
@@ -348,7 +348,7 @@ _docker_machine_url() {
     fi
 }
 
-_docker_machine_version() {
+_docker_machine_version () {
     if [[ "${cur}" == -* ]]; then
         COMPREPLY=($(compgen -W "--help" -- "${cur}"))
     else
@@ -356,7 +356,7 @@ _docker_machine_version() {
     fi
 }
 
-_docker_machine_help() {
+_docker_machine_help () {
     if [[ "${cur}" == -* ]]; then
         COMPREPLY=($(compgen -W "--help" -- "${cur}"))
     else
@@ -364,7 +364,7 @@ _docker_machine_help() {
     fi
 }
 
-_docker_machine_docker_machine() {
+_docker_machine_docker_machine () {
     if [[ " ${wants_file[*]} " =~ " ${prev} " ]]; then
         _filedir
     elif [[ " ${wants_dir[*]} " =~ " ${prev} " ]]; then
@@ -376,7 +376,7 @@ _docker_machine_docker_machine() {
     fi
 }
 
-_docker_machine() {
+_docker_machine () {
     COMPREPLY=()
     local commands=(active config create env inspect ip kill ls mount provision regenerate-certs restart rm ssh scp start status stop upgrade url version help)
 

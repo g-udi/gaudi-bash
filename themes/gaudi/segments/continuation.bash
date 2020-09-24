@@ -17,8 +17,8 @@ GAUDI_CHAR_COLOR="${GAUDI_CHAR_COLOR_SUCCESS="$YELLOW"}"
 # ------------------------------------------------------------------------------
 
 # Paint PS2 – Continuation interactive prompt
-gaudi_continuation() {
-  
+gaudi_continuation () {
+
   gaudi::section \
     "$GAUDI_CHAR_COLOR" \
     "$GAUDI_CHAR_PREFIX" \

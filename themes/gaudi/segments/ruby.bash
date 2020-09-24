@@ -20,8 +20,8 @@ GAUDI_RUBY_COLOR="${GAUDI_RUBY_COLOR="$RED"}"
 # ------------------------------------------------------------------------------
 
 # Show current version of Ruby
-gaudi_ruby() {
-  
+gaudi_ruby () {
+
   shopt -s nullglob
 
   [[ $GAUDI_RUBY_SHOW == false ]] && return

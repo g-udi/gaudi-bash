@@ -10,7 +10,7 @@ GAUDI_SCM_HG_CHAR='\uf223'
 # - lets say we cd into ~/Projects/Foo/Bar
 # - .hg is located in ~/Projects/Foo/.hg
 # - get_hg_root starts at ~/Projects/Foo/Bar and sees that there is no .hg directory, so then it goes into ~/Projects/Foo
-function get_hg_root {
+get_hg_root () {
     local CURRENT_DIR=$(pwd)
 
     while [ "$CURRENT_DIR" != "/" ]; do
@@ -23,7 +23,7 @@ function get_hg_root {
     done
 }
 
-function hg_prompt_vars {
+hg_prompt_vars () {
     if [[ -n $(hg status 2> /dev/null) ]]; then
       GAUDI_SCM_DIRTY=1
         GAUDI_SCM_STATE=${HG_THEME_PROMPT_DIRTY:-$GAUDI_SCM_THEME_PROMPT_DIRTY}

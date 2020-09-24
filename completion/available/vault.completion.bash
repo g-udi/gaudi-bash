@@ -6,7 +6,7 @@
 # see https://github.com/iljaweis/vault-bash-completion
 # ---------------------------------------------------------------------------
 
-function _vault_mounts() {
+_vault_mounts () {
   (
     set -euo pipefail
     if ! vault mounts 2> /dev/null | awk 'NR > 1 {print $1}'; then
@@ -15,7 +15,7 @@ function _vault_mounts() {
   )
 }
 
-function _vault() {
+_vault () {
   local VAULT_COMMANDS=$(vault 2>&1 | egrep '^ +' | awk '{print $1}')
 
   local cur

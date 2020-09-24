@@ -21,12 +21,12 @@ GAUDI_BATTERY_SYMBOL_DISCHARGING="${GAUDI_BATTERY_SYMBOL_DISCHARGING="\\uf241"}"
 # - battery percentage is below the given limit (default: 10%)
 # - Battery is fully charged
 # Escape % for display since it's a special character in zsh prompt expansion
-gaudi_battery() {
-  
+gaudi_battery () {
+
   [[ $GAUDI_BATTERY_SHOW == false ]] && return
 
   BATTERY="$(battstat -t $GAUDI_BATTERY_THRESHOLD -d $GAUDI_BATTERY_SYMBOL_DISCHARGING -c $GAUDI_BATTERY_SYMBOL_CHARGING {b} {i} {p})"
-  
+
   gaudi::section \
     "" \
     "$GAUDI_EXEC_TIME_PREFIX" \

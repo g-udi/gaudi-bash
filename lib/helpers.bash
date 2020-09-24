@@ -15,7 +15,7 @@ case "$(uname)" in
   Darwin*) BASH_IT_SED_I_PARAMETERS=(-i "")
 esac
 
-function _command_exists ()
+_command_exists ()
 {
   _about 'checks for existence of a command'
   _param '1: command to check'
@@ -26,7 +26,7 @@ function _command_exists ()
   type "$1" &> /dev/null || (_log_warning "$msg" && return 1) ;
 }
 
-function _make_reload_alias() {
+_make_reload_alias () {
   echo "source \${BASH_IT}/scripts/reloader.bash ${1} ${2}"
 }
 
@@ -91,11 +91,11 @@ bash-it ()
     esac
 
     # pluralize component if necessary
-    if ! _is_function $func; then
-        if _is_function ${func}s; then
+    if ! _is_$func; then
+        if _is_${func}s; then
             func=${func}s
         else
-            if _is_function ${func}es; then
+            if _is_${func}es; then
                 func=${func}es
             else
                 echo "oops! $component is not a valid option!"
@@ -118,7 +118,7 @@ bash-it ()
     fi
 }
 
-_is_function ()
+_is_()
 {
     _about 'sets $? to true if parameter is the name of a function'
     _param '1: name of alleged function'
@@ -150,7 +150,7 @@ _bash-it-plugins ()
     _bash-it-describe "plugins" "a" "plugin" "Plugin"
 }
 
-_bash-it_update() {
+_bash-it_update () {
   _about 'updates bash-it'
   _group 'lib'
 
@@ -208,7 +208,7 @@ _bash-it_update() {
   cd "${old_pwd}" &> /dev/null || return
 }
 
-_bash-it-migrate() {
+_bash-it-migrate () {
   _about 'migrates bash-it configuration from a previous format to the current one'
   _group 'lib'
 
@@ -244,7 +244,7 @@ _bash-it-migrate() {
   fi
 }
 
-_bash-it-version() {
+_bash-it-version () {
   _about 'shows current bash-it version'
   _group 'lib'
 
@@ -267,7 +267,7 @@ _bash-it-version() {
   cd - &> /dev/null || return
 }
 
-_bash-it-doctor() {
+_bash-it-doctor () {
   _about 'reloads a profile file with a BASH_IT_LOG_LEVEL set'
   _param '1: BASH_IT_LOG_LEVEL argument: "errors" "warnings" "all"'
   _group 'lib'
@@ -277,35 +277,35 @@ _bash-it-doctor() {
   unset BASH_IT_LOG_LEVEL
 }
 
-_bash-it-doctor-all() {
+_bash-it-doctor-all () {
   _about 'reloads a profile file with error, warning and debug logs'
   _group 'lib'
 
   _bash-it-doctor $BASH_IT_LOG_LEVEL_ALL
 }
 
-_bash-it-doctor-warnings() {
+_bash-it-doctor-warnings () {
   _about 'reloads a profile file with error and warning logs'
   _group 'lib'
 
   _bash-it-doctor $BASH_IT_LOG_LEVEL_WARNING
 }
 
-_bash-it-doctor-errors() {
+_bash-it-doctor-errors () {
   _about 'reloads a profile file with error logs'
   _group 'lib'
 
   _bash-it-doctor $BASH_IT_LOG_LEVEL_ERROR
 }
 
-_bash-it-doctor-() {
+_bash-it-doctor- () {
   _about 'default bash-it doctor behavior, behaves like bash-it doctor all'
   _group 'lib'
 
   _bash-it-doctor-all
 }
 
-_bash-it-reload() {
+_bash-it-reload () {
   _about 'reloads a profile file'
   _group 'lib'
 
@@ -673,7 +673,7 @@ all_groups ()
 
 if ! type pathmunge > /dev/null 2>&1
 then
-  function pathmunge () {
+  pathmunge () {
     about 'prevent duplicate directories in you PATH variable'
     group 'helpers'
     example 'pathmunge /path/to/dir is equivalent to PATH=/path/to/dir:$PATH'

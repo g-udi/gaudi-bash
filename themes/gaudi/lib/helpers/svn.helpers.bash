@@ -3,7 +3,7 @@
 GAUDI_SCM_SVN='svn'
 GAUDI_SCM_SVN_CHAR='⑆'
 
-function svn_prompt_vars {
+svn_prompt_vars () {
   if [[ -n $(svn status 2> /dev/null) ]]; then
     GAUDI_SCM_DIRTY=1
     GAUDI_SCM_STATE=${SVN_THEME_PROMPT_DIRTY:-$GAUDI_SCM_THEME_PROMPT_DIRTY}

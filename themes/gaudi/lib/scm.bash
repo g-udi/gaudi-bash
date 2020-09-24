@@ -19,7 +19,7 @@ GAUDI_SCM_THEME_CHAR_SUFFIX=''
 GAUDI_SCM_NONE='NONE'
 GAUDI_SCM_NONE_CHAR='○'
 
-function scm {
+scm () {
   if [[ "$SCM_CHECK" = false ]]; then SCM=$GAUDI_SCM_NONE
   elif [[ -f .git/HEAD ]] && which git &> /dev/null; then SCM=$GAUDI_SCM_GIT
   elif which git &> /dev/null && [[ -n "$(git rev-parse --is-inside-work-tree 2> /dev/null)" ]]; then SCM=$GAUDI_SCM_GIT
@@ -31,7 +31,7 @@ function scm {
   fi
 }
 
-function scm_prompt_char {
+scm_prompt_char () {
   if [[ -z $SCM ]]; then scm; fi
   if [[ $SCM == $GAUDI_SCM_GIT ]]; then GAUDI_SCM_CHAR=$GAUDI_SCM_GIT_CHAR
   elif [[ $SCM == $GAUDI_SCM_P4 ]]; then GAUDI_SCM_CHAR=$GAUDI_SCM_P4_CHAR
@@ -41,7 +41,7 @@ function scm_prompt_char {
   fi
 }
 
-function scm_prompt_vars {
+scm_prompt_vars () {
   scm
   scm_prompt_char
   GAUDI_SCM_DIRTY=0
@@ -52,19 +52,19 @@ function scm_prompt_vars {
   [[ $SCM == $GAUDI_SCM_SVN ]] && svn_prompt_vars && return
 }
 
-function scm_prompt_info {
+scm_prompt_info () {
   scm
   scm_prompt_char
   scm_prompt_info_common
 }
 
-function scm_prompt_char_info {
+scm_prompt_char_info () {
   scm_prompt_char
   echo -ne "${GAUDI_SCM_THEME_CHAR_PREFIX}${GAUDI_SCM_CHAR}${GAUDI_SCM_THEME_CHAR_SUFFIX}"
   scm_prompt_info_common
 }
 
-function scm_prompt_info_common {
+scm_prompt_info_common () {
   GAUDI_SCM_DIRTY=0
   GAUDI_SCM_STATE=''
 
@@ -86,28 +86,28 @@ function scm_prompt_info_common {
 }
 
 # backwards-compatibility
-function git_prompt_info {
+git_prompt_info () {
   _git-hide-status && return
   git_prompt_vars
   echo -e "${GAUDI_SCM_BRANCH}${GAUDI_SCM_STATE}"
 }
 
-function p4_prompt_info() {
+p4_prompt_info () {
   p4_prompt_vars
   echo -e "${GAUDI_SCM_BRANCH}:${GAUDI_SCM_CHANGE}${GAUDI_SCM_STATE}"
 }
 
-function svn_prompt_info {
+svn_prompt_info () {
   svn_prompt_vars
   echo -e "${GAUDI_SCM_BRANCH}${GAUDI_SCM_STATE}"
 }
 
-function hg_prompt_info() {
+hg_prompt_info () {
   hg_prompt_vars
   echo -e "${GAUDI_SCM_BRANCH}:${GAUDI_SCM_CHANGE#*:}${GAUDI_SCM_STATE}"
 }
 
-function scm_char {
+scm_char () {
   scm_prompt_char
   echo -e "${GAUDI_SCM_THEME_CHAR_PREFIX}${GAUDI_SCM_CHAR}${GAUDI_SCM_THEME_CHAR_SUFFIX}"
 }

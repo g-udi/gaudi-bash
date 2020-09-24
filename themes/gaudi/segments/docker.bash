@@ -21,7 +21,7 @@ GAUDI_DOCKER_VERBOSE="${GAUDI_DOCKER_VERBOSE=false}"
 # ------------------------------------------------------------------------------
 
 # Show current Docker version and connected machine
-gaudi_docker() {
+gaudi_docker () {
   [[ $GAUDI_DOCKER_SHOW == false ]] && return
 
   gaudi::exists docker || return

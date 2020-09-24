@@ -18,11 +18,11 @@ GAUDI_VPN_COLOR="${GAUDI_VPN_COLOR="$WHITE$BACKGROUND_ORANGE"}"
 # Section
 # ------------------------------------------------------------------------------
 
-gaudi_vpn() {
+gaudi_vpn () {
   [[ $GAUDI_VPN_SHOW == false ]] && return
 
   ifconfig ipsec0 &> /dev/null && ifconfig ipsec0 &> /dev/null && vpn_active=true
-	
+
 	[[ -z $vpn_active ]] && return
 
 	gaudi::section \

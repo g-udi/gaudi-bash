@@ -21,7 +21,7 @@ GAUDI_SWIFT_COLOR="${GAUDI_SWIFT_COLOR=""}"
 # ------------------------------------------------------------------------------
 
 # Show current version of Swift
-gaudi_swift() {
+gaudi_swift () {
   gaudi::exists swiftenv || return
 
   local 'swift_version'

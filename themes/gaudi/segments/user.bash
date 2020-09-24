@@ -26,7 +26,7 @@ GAUDI_USER_COLOR_ROOT="${GAUDI_USER_COLOR_ROOT="$WHITE$BACKGROUND_RED"}"
 # Section
 # ------------------------------------------------------------------------------
 
-gaudi_user() {
+gaudi_user () {
   [[ $GAUDI_USER_SHOW == false ]] && return
 
   if [[ $GAUDI_USER_SHOW == 'always' ]] \

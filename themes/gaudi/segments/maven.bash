@@ -18,7 +18,7 @@ GAUDI_MAVEN_COLOR="${GAUDI_MAVEN_COLOR="$YELLOW"}"
 # ------------------------------------------------------------------------------
 
 # Show current Maven version
-gaudi_maven() {
+gaudi_maven () {
   [[ $GAUDI_MAVEN_SHOW == false ]] && return
 
   # Check if local ./mvnw first or system mvn is available

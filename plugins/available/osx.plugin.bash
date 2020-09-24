@@ -13,7 +13,7 @@ if [ $(uname) = "Darwin" ]; then
   fi
 fi
 
-function tab() {
+tab () {
   about 'opens a new terminal tab'
   group 'osx'
 
@@ -29,18 +29,18 @@ EOF
 }
 
 # renames the current os x terminal tab title
-function tabname {
+tabname () {
   printf "\e]1;$1\a"
 }
 
 # renames the current os x terminal window title
-function winname {
+winname () {
   printf "\e]2;$1\a"
 }
 
 # this one switches your os x dock between 2d and 3d
 # thanks to savier.zwetschge.org
-function dock-switch() {
+dock-switch () {
     about 'switch dock between 2d and 3d'
     param '1: "2d" or "3d"'
     example '$ dock-switch 2d'
@@ -66,8 +66,7 @@ function dock-switch() {
     fi
 }
 
-function pman ()
-{
+pman () {
     about 'view man documentation in Preview'
     param '1: man page to view'
     example '$ pman bash'
@@ -75,8 +74,7 @@ function pman ()
     man -t "${1}" | open -fa $PREVIEW
 }
 
-function pri ()
-{
+pri () {
     about 'display information about Ruby classes, modules, or methods, in Preview'
     param '1: Ruby method, module, or class'
     example '$ pri Array'
@@ -85,20 +83,20 @@ function pri ()
 }
 
 # Download a file and open it in Preview
-function prevcurl() {
+prevcurl () {
   about 'download a file and open it in Preview'
   param '1: url'
   group 'osx'
 
   if [ ! $(uname) = "Darwin" ]
   then
-    echo "This function only works with Mac OS X"
+    echo "This only works with Mac OS X"
     return 1
   fi
   curl "$*" | open -fa $PREVIEW
 }
 
-function refresh-launchpad() {
+refresh-launchpad () {
   about 'Reset launchpad layout in macOS'
   example '$ refresh-launchpad'
   group 'osx'
@@ -111,7 +109,7 @@ function refresh-launchpad() {
   fi
 }
 
-function list-jvms(){
+list-jvms(){
   about 'List java virtual machines and their states in macOS'
   example 'list-jvms'
   group 'osx'
@@ -131,11 +129,11 @@ function list-jvms(){
   done
 }
 
-function pick-default-jvm(){
+pick-default-jvm (){
   about 'Pick the default Java Virtual Machines in system-wide scope in macOS'
   example 'pick-default-jvm'
 
-  # Call function for listing
+  # Call for listing
   list-jvms
 
   # Declare variables

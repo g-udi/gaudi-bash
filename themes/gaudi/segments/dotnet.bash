@@ -22,14 +22,14 @@ GAUDI_DOTNET_COLOR="${GAUDI_DOTNET_COLOR="$MAGENTA"}"
 # ------------------------------------------------------------------------------
 
 # Show current version of .NET SDK
-gaudi_dotnet() {
+gaudi_dotnet () {
   [[ $GAUDI_DOTNET_SHOW == false ]] && return
 
   # Show DOTNET status only for folders containing project.json, global.json, .csproj, .xproj or .sln files
-  [[ -f project.json || -f global.json || 
-     -n $(find . -not -path '*/\.*' -maxdepth 1 -name "*.csproj") || 
-     -n $(find . -not -path '*/\.*' -maxdepth 1 -name "*.xproj")  || 
-     -n $(find . -maxdepth 1 -name "*.sln") 
+  [[ -f project.json || -f global.json ||
+     -n $(find . -not -path '*/\.*' -maxdepth 1 -name "*.csproj") ||
+     -n $(find . -not -path '*/\.*' -maxdepth 1 -name "*.xproj")  ||
+     -n $(find . -maxdepth 1 -name "*.sln")
   ]] || return
 
   gaudi::exists dotnet || return

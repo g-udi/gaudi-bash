@@ -10,7 +10,7 @@ else
 fi
 
 
-function mkvenv {
+mkvenv () {
   about 'create a new virtualenv for this directory'
   group 'virtualenv'
 
@@ -19,21 +19,21 @@ function mkvenv {
 }
 
 
-function mkvbranch {
+mkvbranch () {
   about 'create a new virtualenv for the current branch'
   group 'virtualenv'
 
   mkvirtualenv --distribute "$(basename `pwd`)@$SCM_BRANCH"
 }
 
-function wovbranch {
+wovbranch () {
   about 'sets workon branch'
   group 'virtualenv'
 
   workon "$(basename `pwd`)@$SCM_BRANCH"
 }
 
-function wovenv {
+wovenv () {
   about 'works on the virtualenv for this directory'
   group 'virtualenv'
 

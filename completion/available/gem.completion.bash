@@ -1,27 +1,27 @@
 #!/usr/bin/env bash
 # Completion for gem
 
-_installcomp() {
+_installcomp () {
   if [ -z "$REMOTE_GEMS" ]
   then
     REMOTE_GEMS=( $(gem list --remote --no-versions | tr '\n' ' ') )
   fi
-  
+
   local cur=${COMP_WORDS[COMP_CWORD]}
   COMPREPLY=( $(compgen -W "${REMOTE_GEMS[*]}" -- $cur) )
 }
 
-_uninstallcomp() {
+_uninstallcomp () {
   if [ -z "$LOCAL_GEMS" ]
   then
     LOCAL_GEMS=( $(gem list --no-versions | sed 's/\*\*\* LOCAL GEMS \*\*\*//' | tr '\n' ' ') )
   fi
-  
+
   local cur=${COMP_WORDS[COMP_CWORD]}
   COMPREPLY=( $(compgen -W "${LOCAL_GEMS[*]}" -- $cur) )
 }
 
-_gem() {
+_gem () {
   local cur=${COMP_WORDS[COMP_CWORD]}
   local prev=${COMP_WORDS[COMP_CWORD-1]}
   case $prev in

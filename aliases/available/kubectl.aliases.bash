@@ -5,8 +5,7 @@
 cite 'about-alias'
 about-alias 'kubectl aliases'
 
-function _set_pkg_aliases()
-{
+_set_pkg_aliases () {
   if _command_exists kubectl; then
     alias kc='kubectl'
     alias kcgp='kubectl get pods'

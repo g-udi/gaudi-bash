@@ -1,11 +1,11 @@
 cite about-plugin
-about-plugin 'AWS helper functions'
+() '
 
 AWS_CONFIG_FILE="${AWS_CONFIG_FILE:-$HOME/.aws/config}"
 AWS_SHARED_CREDENTIALS_FILE="${AWS_SHARED_CREDENTIALS_FILE:-$HOME/.aws/credentials}"
 
-function awskeys {
-    about 'helper function for AWS credentials file'
+awskeys () {
+    for AWS credentials file() '
     group 'aws'
 
     if [[ ! -f "${AWS_SHARED_CREDENTIALS_FILE}" ]]; then
@@ -26,7 +26,7 @@ function awskeys {
     fi
 }
 
-function __awskeys_help {
+__awskeys_help () {
     echo -e "Usage: awskeys [COMMAND] [profile]\n"
     echo -e "Helper to AWS credentials file.\n"
     echo -e "Commands:\n"
@@ -37,7 +37,7 @@ function __awskeys_help {
     echo "   unset   Unset the AWS keys variables from the environment"
 }
 
-function __awskeys_get {
+__awskeys_get () {
     local ln=$(grep -n "\[ *$1 *\]" "${AWS_SHARED_CREDENTIALS_FILE}" | cut -d ":" -f 1)
     if [[ -n "${ln}" ]]; then
         tail -n +${ln} "${AWS_SHARED_CREDENTIALS_FILE}" | egrep -m 2 "aws_access_key_id|aws_secret_access_key"
@@ -45,8 +45,8 @@ function __awskeys_get {
     fi
 }
 
-function __awskeys_list {
-    local credentials_list="$((egrep '^\[ *[a-zA-Z0-9_-]+ *\]$' "${AWS_SHARED_CREDENTIALS_FILE}"; grep "\[profile" "${AWS_CONFIG_FILE}" | sed "s|\[profile |\[|g") | sort | uniq)"
+__awskeys_list () {
+    local credentials_list='$((egrep '^\[ *[a-zA-Z0-9_-]+ *\]$' "${AWS_SHARED_CREDENTIALS_FILE}"; grep "\[profile" "${AWS_CONFIG_FILE}" | sed "s|\[profile |\[|g") | sort | uniq)'
     if [[ -n $"{credentials_list}" ]]; then
         echo -e "Available credentials profiles:\n"
         for profile in ${credentials_list}; do
@@ -58,7 +58,7 @@ function __awskeys_list {
     fi
 }
 
-function __awskeys_show {
+__awskeys_show () {
     local p_keys="$(__awskeys_get $1)"
     if [[ -n "${p_keys}" ]]; then
         echo "${p_keys}"
@@ -67,7 +67,7 @@ function __awskeys_show {
     fi
 }
 
-function __awskeys_export {
+__awskeys_export () {
     if [[ $(__awskeys_list) == *"$1"* ]]; then
         local p_keys=( $(__awskeys_get $1 | tr -d " ") )
         if [[ -n "${p_keys}" ]]; then
@@ -82,11 +82,11 @@ function __awskeys_export {
     fi
 }
 
-function __awskeys_unset {
+__awskeys_unset () {
     unset AWS_PROFILE AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_SESSION_TOKEN
 }
 
-function __awskeys_comp {
+__awskeys_comp () {
     local cur prev opts prevprev
     COMPREPLY=()
     cur="${COMP_WORDS[COMP_CWORD]}"

@@ -12,7 +12,7 @@ about-plugin 'Search&Select history with percol'
 # Usage
 ## C-r to search&select from history
 
-_replace_by_history() {
+_replace_by_history () {
     if command -v tac>/dev/null; then
         alias _tac=tac
     else

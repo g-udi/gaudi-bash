@@ -1,7 +1,7 @@
 cite about-plugin
 about-plugin 'quickly navigate configured paths with `pj` and `pjo`. example: "export PROJECT_PATHS=~/projects:~/work/projects"'
 
-function pj {
+pj () {
 about 'navigate quickly to your various project directories'
 group 'projects'
 

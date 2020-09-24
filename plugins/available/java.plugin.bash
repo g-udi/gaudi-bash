@@ -1,7 +1,7 @@
 cite about-plugin
 about-plugin 'Java and JAR helper functions'
 
-function jar_manifest {
+jar_manifest () {
   about "extracts the specified JAR file's MANIFEST file and prints it to stdout"
   group 'java'
   param '1: JAR file to extract the MANIFEST from'
@@ -10,7 +10,7 @@ function jar_manifest {
   unzip -c $1 META-INF/MANIFEST.MF
 }
 
-function setjdk() {
+setjdk () {
   about "Change the JAVA SDK http://www.jayway.com/2014/01/15/how-to-switch-jdk-version-on-mac-os-x-maverick/"
   group 'java'
 
@@ -23,6 +23,7 @@ function setjdk() {
    export PATH=$JAVA_HOME/bin:$PATH
   fi
  }
- function removeFromPath() {
+
+removeFromPath () {
   export PATH=$(echo $PATH | sed -E -e "s;:$1;;" -e "s;$1:?;;")
  }

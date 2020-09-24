@@ -2,7 +2,7 @@
 # Avoid inaccurate completions for subproject tasks
 COMP_WORDBREAKS=$(echo "$COMP_WORDBREAKS" | sed -e 's/://g')
 
-__gradle-set-project-root-dir() {
+__gradle-set-project-root-dir () {
     local dir=`pwd`
     project_root_dir=`pwd`
     while [[ $dir != '/' ]]; do
@@ -15,12 +15,12 @@ __gradle-set-project-root-dir() {
     return 1
 }
 
-__gradle-init-cache-dir() {
+__gradle-init-cache-dir () {
     cache_dir="$HOME/.gradle/completion"
     mkdir -p $cache_dir
 }
 
-__gradle-set-build-file() {
+__gradle-set-build-file () {
     # Look for default build script in the settings file (settings.gradle by default)
     # Otherwise, default is the file 'build.gradle' in the current directory.
     gradle_build_file="$project_root_dir/build.gradle"
@@ -31,12 +31,12 @@ __gradle-set-build-file() {
     fi
 }
 
-__gradle-set-cache-name() {
+__gradle-set-cache-name () {
     # Cache name is constructed from the absolute path of the build file.
     cache_name=$(echo $gradle_build_file | sed -e 's/\//_/g')
 }
 
-__gradle-set-files-checksum() {
+__gradle-set-files-checksum () {
     # Cache MD5 sum of all Gradle scripts and modified timestamps
     if builtin command -v md5 > /dev/null; then
         gradle_files_checksum=$(md5 -q -s "$(cat "$cache_dir/$cache_name" | xargs ls -o 2>/dev/null)")
@@ -47,7 +47,7 @@ __gradle-set-files-checksum() {
     fi
 }
 
-__gradle-generate-script-cache() {
+__gradle-generate-script-cache () {
     # Invalidate cache after 3 weeks by default
     local cache_ttl_mins=${GRADLE_CACHE_TTL_MINUTES:-30240}
     local script_exclude_pattern=${GRADLE_COMPLETION_EXCLUDE_PATTERN:-"/(build|integTest|out)/"}
@@ -59,7 +59,7 @@ __gradle-generate-script-cache() {
     fi
 }
 
-__gradle-long-options() {
+__gradle-long-options () {
     local args="--build-cache           - Enables the Gradle build cache
 --build-file            - Specifies the build file
 --configure-on-demand   - Only relevant projects are configured
@@ -104,7 +104,7 @@ __gradle-long-options() {
     COMPREPLY=( $(compgen -W "$args" -- "${COMP_WORDS[COMP_CWORD]}") )
 }
 
-__gradle-properties() {
+__gradle-properties () {
     local args="-Dorg.gradle.cache.reserved.mb=   - Reserve Gradle Daemon memory for operations
 -Dorg.gradle.caching=             - Set true to enable Gradle build cache
 -Dorg.gradle.daemon.debug=        - Set true to debug Gradle Daemon
@@ -120,7 +120,7 @@ __gradle-properties() {
     return 0
 }
 
-__gradle-short-options() {
+__gradle-short-options () {
     local args="-?                      - Shows a help message
 -a                      - Do not rebuild project dependencies
 -b                      - Specifies the build file
@@ -145,7 +145,7 @@ __gradle-short-options() {
     COMPREPLY=( $(compgen -W "$args" -- "${COMP_WORDS[COMP_CWORD]}") )
 }
 
-__gradle-notify-tasks-cache-build() {
+__gradle-notify-tasks-cache-build () {
     # Notify user of cache rebuild
     echo -e " (Building completion cache. Please wait)\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\c"
     __gradle-generate-tasks-cache
@@ -153,7 +153,7 @@ __gradle-notify-tasks-cache-build() {
     echo -e "                                         \b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\c"
 }
 
-__gradle-generate-tasks-cache() {
+__gradle-generate-tasks-cache () {
     __gradle-set-files-checksum
 
     # Use Gradle wrapper when it exists.
@@ -203,7 +203,7 @@ __gradle-generate-tasks-cache() {
     echo $gradle_files_checksum > $cache_dir/$cache_name.md5
 }
 
-__gradle-completion-init() {
+__gradle-completion-init () {
     local cache_dir cache_name gradle_build_file gradle_files_checksum project_root_dir
 
     local OLDIFS="$IFS"
@@ -224,7 +224,7 @@ __gradle-completion-init() {
     return 0
 }
 
-_gradle() {
+_gradle () {
     local cache_dir cache_name gradle_build_file gradle_files_checksum project_root_dir
     local cur=${COMP_WORDS[COMP_CWORD]}
     # Set bash internal field separator to '\n'

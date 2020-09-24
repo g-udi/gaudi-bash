@@ -11,7 +11,7 @@ cite _about _param _example _group _author _version
 
 load ../../lib/helpers
 
-function local_setup {
+local_setup () {
   setup_test_fixture
 }
 
@@ -19,22 +19,22 @@ function local_setup {
 # TODO Create global __get_base_name function
 # TODO Create global __get_enabled_name function
 
-@test "helpers: _command_exists function exists" {
+@test "helpers: _command_exists exists" {
   run type -a _command_exists &> /dev/null
   assert_success
 }
 
-@test "helpers: _command_exists function positive test ls" {
+@test "helpers: _command_exists positive test ls" {
   run _command_exists ls
   assert_success
 }
 
-@test "helpers: _command_exists function positive test bash-it" {
+@test "helpers: _command_exists positive test bash-it" {
   run _command_exists bash-it
   assert_success
 }
 
-@test "helpers: _command_exists function negative test" {
+@test "helpers: _command_exists negative test" {
   run _command_exists __addfkds_dfdsjdf
   assert_failure
 }
@@ -342,7 +342,7 @@ function local_setup {
   assert_link_exist "$BASH_IT/enabled/250---ssh.plugin.bash"
 }
 
-function __migrate_all_components() {
+__migrate_all_components () {
   subdirectory="$1"
   one_type="$2"
   priority="$3"

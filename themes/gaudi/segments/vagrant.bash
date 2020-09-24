@@ -20,7 +20,7 @@ GAUDI_VAGRANT_COLOR="${GAUDI_VAGRANT_COLOR="$CYAN"}"
 # ------------------------------------------------------------------------------
 
 # Show current Vagrant status
-gaudi_vagrant() {
+gaudi_vagrant () {
   [[ $GAUDI_VAGRANT_SHOW == false ]] && return
 
   gaudi::exists vagrant || return

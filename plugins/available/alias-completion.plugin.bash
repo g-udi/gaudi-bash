@@ -16,7 +16,7 @@ about-plugin 'Automatic completion of aliases'
 # 4) Custom scripts
 
 # Automatically add completion for all aliases to commands having completion functions
-function alias_completion {
+alias_completion () {
     local namespace="alias_completion"
 
     # parse function based completion definitions, where capture group 2 => function and 3 => trigger

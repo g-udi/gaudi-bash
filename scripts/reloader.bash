@@ -2,7 +2,7 @@
 BASH_IT_LOG_PREFIX="core: reloader: "
 pushd "${BASH_IT}" >/dev/null || exit 1
 
-function _set-prefix-based-on-path()
+_set-prefix-based-on-path()
 {
   filename=$(_bash-it-get-component-name-from-path "$1")
   extension=$(_bash-it-get-component-type-from-path "$1")

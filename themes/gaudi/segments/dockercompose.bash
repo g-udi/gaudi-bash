@@ -28,12 +28,12 @@ GAUDI_DOCKERCOMPOSE_PARTIAL_COLOR="${GAUDI_DOCKERCOMPOSE_PARTIAL_COLOR:="${BACKG
 # ------------------------------------------------------------------------------
 
 # Show current docker-compose status
-gaudi_dockercompose() {
+gaudi_dockercompose () {
   [[ $GAUDI_DOCKERCOMPOSE_SHOW == false ]] && return
-   
+
   # Show Docker-compose status when docker-compose file exists
   gaudi::exists docker-compose || return
-  
+
   [[ -f docker-compose.yml ]] || return
 
 	local dockercompose_status color
@@ -50,25 +50,25 @@ gaudi_dockercompose() {
 
 			if [[ -z ${!_CONTAINER_SYMBOL} || $GAUDI_DOCKERCOMPOSE_SHOW_SYMBOLS == false ]]; then
 				CONTAINER_SYMBOL=$CONTAINER_LETTER
-			else 
+			else
 				CONTAINER_SYMBOL=${!_CONTAINER_SYMBOL}
 			fi
-			
-			if [[ $line == *"Up"* ]]; then		
-				((up_containers++))		
+
+			if [[ $line == *"Up"* ]]; then
+				((up_containers++))
 				dockercompose_status_up+="$GAUDI_DOCKERCOMPOSE_SYMBOL_UP $CONTAINER_SYMBOL "
 			else
 				dockercompose_status_down+="$GAUDI_DOCKERCOMPOSE_SYMBOL_DOWN $CONTAINER_SYMBOL "
 			fi
 		echo -e "$up_containers|$dockercompose_status_up::$dockercompose_status_down"
 	done | tail -1)
-	
+
 	_dockercompose_details="${dockercompose_details%%::*}"
 	total_containers=$(docker-compose ps | tail -n +3 | wc -l)
 	up_containers="${dockercompose_details%%|*}"
 	dockercompose_status_up="${_dockercompose_details#*|}"
 	dockercompose_status_down="${dockercompose_details#*::}"
-	
+
 	if [[ $up_containers == $total_containers ]]; then
 		color=$GAUDI_DOCKERCOMPOSE_COLOR
 	elif [[ -z $up_containers ]]; then
@@ -76,7 +76,7 @@ gaudi_dockercompose() {
 	else
 		color=$GAUDI_DOCKERCOMPOSE_PARTIAL_COLOR
 	fi
-	
+
 	dockercompose_status="$GAUDI_DOCKERCOMPOSE_TEXT_COLOR_UP$dockercompose_status_up$GAUDI_DOCKERCOMPOSE_TEXT_COLOR_DOWN$dockercompose_status_down"
 
   gaudi::section \

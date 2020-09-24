@@ -1,7 +1,7 @@
 cite about-plugin
 about-plugin 'git helper functions'
 
-function git_remote {
+git_remote () {
   about 'adds remote $GIT_HOSTING:$1 to current repo'
   group 'git'
 
@@ -9,7 +9,7 @@ function git_remote {
   git remote add origin $GIT_HOSTING:$1.git
 }
 
-function git_first_push {
+git_first_push () {
   about 'push into origin refs/heads/master'
   group 'git'
 
@@ -17,7 +17,7 @@ function git_first_push {
   git push origin master:refs/heads/master
 }
 
-function git_pub() {
+git_pub () {
   about 'publishes current branch to remote origin'
   group 'git'
   BRANCH=$(git rev-parse --abbrev-ref HEAD)
@@ -26,7 +26,7 @@ function git_pub() {
   git push -u origin $BRANCH
 }
 
-function git_revert() {
+git_revert () {
   about 'applies changes to HEAD that revert all changes after this commit'
   group 'git'
 
@@ -36,18 +36,18 @@ function git_revert() {
   git reset --hard
 }
 
-function git_rollback() {
+git_rollback () {
   about 'resets the current HEAD to this commit'
   group 'git'
 
-  function is_clean() {
+  is_clean () {
     if [[ $(git diff --shortstat 2> /dev/null | tail -n1) != "" ]]; then
       echo "Your branch is dirty, please commit your changes"
       kill -INT $$
     fi
   }
 
-  function commit_exists() {
+  commit_exists () {
     git rev-list --quiet $1
     status=$?
     if [ $status -ne 0 ]; then
@@ -56,7 +56,7 @@ function git_rollback() {
     fi
   }
 
-  function keep_changes() {
+  keep_changes () {
     while true
     do
       read -p "Do you want to keep all changes from rolled back revisions in your working tree? [Y/N]" RESP
@@ -103,7 +103,7 @@ function git_rollback() {
   fi
 }
 
-function git_remove_missing_files() {
+git_remove_missing_files () {
   about "git rm's missing files"
   group 'git'
 
@@ -111,7 +111,7 @@ function git_remove_missing_files() {
 }
 
 # Adds files to git's exclude file (same as .gitignore)
-function local-ignore() {
+local-ignore () {
   about 'adds file or path to git exclude file'
   param '1: file or path fragment to ignore'
   group 'git'
@@ -119,7 +119,7 @@ function local-ignore() {
 }
 
 # get a quick overview for your git repo
-function git_info() {
+git_info () {
     about 'overview for your git repo'
     group 'git'
 
@@ -156,7 +156,7 @@ function git_info() {
     fi
 }
 
-function git_stats {
+git_stats () {
     about 'display stats per author'
     group 'git'
 
@@ -198,7 +198,7 @@ else
 fi
 }
 
-function gittowork() {
+gittowork () {
   about 'Places the latest .gitignore file for a given project type in the current directory, or concatenates onto an existing .gitignore'
   group 'git'
   param '1: the language/type of the project, used for determining the contents of the .gitignore file'
@@ -221,13 +221,13 @@ function gittowork() {
   fi
 }
 
-function gitignore-reload() {
+gitignore-reload () {
   about 'Empties the git cache, and readds all files not blacklisted by .gitignore'
   group 'git'
   example '$ gitignore-reload'
 
     # The .gitignore file should not be reloaded if there are uncommited changes.
-  # Firstly, require a clean work tree. The function require_clean_work_tree() 
+  # Firstly, require a clean work tree. The require_clean_work_tree()
   # was stolen with love from https://www.spinics.net/lists/git/msg142043.html
 
   # Begin require_clean_work_tree()

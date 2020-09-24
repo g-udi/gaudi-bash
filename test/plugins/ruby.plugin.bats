@@ -5,14 +5,14 @@ load ../../lib/helpers
 load ../../lib/composure
 load ../../plugins/available/ruby.plugin
 
-function local_setup {
+local_setup () {
   setup_test_fixture
 
   export OLD_PATH="$PATH"
   export PATH="/usr/bin:/bin:/usr/sbin"
 }
 
-function local_teardown {
+local_teardown () {
   export PATH="$OLD_PATH"
   unset OLD_PATH
 }

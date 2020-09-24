@@ -33,7 +33,7 @@ shopt -s extglob
 
 # look for value associated to key from stdin in K/V hash file format
 # val=$(_svn_read_hashfile svn:realmstring < some/file)
-function _svn_read_hashfile()
+_svn_read_hashfile()
 {
   local tkey=$1 key= val=
   while true; do
@@ -60,7 +60,7 @@ function _svn_read_hashfile()
 
 # _svn_grcut shell-regular-expression
 # extract filenames from 'svn status' output
-function _svn_grcut()
+_svn_grcut()
 {
     local re=$1 line= old_IFS
     # fix IFS, so that leading spaces are not ignored by next read.
@@ -75,7 +75,7 @@ function _svn_grcut()
 
 # extract stuff from svn info output
 # _svn_info (URL|Repository Root)
-function _svn_info()
+_svn_info()
 {
   local what=$1 line=
   LANG=C LC_MESSAGES=C svn info --non-interactive 2> /dev/null | \
@@ -87,7 +87,7 @@ function _svn_info()
 # _svn_lls (dir|file|all) files...
 # list svn-managed files from list
 # some 'svn status --all-files' would be welcome here?
-function _svn_lls()
+_svn_lls()
 {
     local opt=$1 f=
     shift

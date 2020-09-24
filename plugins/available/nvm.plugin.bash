@@ -18,7 +18,7 @@ fi
 
 if ! command -v nvm &>/dev/null
 then
-  function nvm() {
+  nvm () {
     echo "Bash-it no longer bundles the nvm script. Please install the latest version from"
     echo ""
     echo "https://github.com/creationix/nvm.git"

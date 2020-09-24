@@ -9,7 +9,7 @@
 # Ensure drush is available.
 which drush &> /dev/null || alias drush &> /dev/null || return
 
-__drush_ps1() {
+__drush_ps1 () {
   f="${TMPDIR:-/tmp/}/drush-env/drush-drupal-site-$$"
   if [ -f $f ]
   then
@@ -23,7 +23,7 @@ __drush_ps1() {
 
 # Completion function, uses the "drush complete" command to retrieve
 # completions for a specific command line COMP_WORDS.
-_drush_completion() {
+_drush_completion () {
   # Set IFS to newline (locally), since we only use newline separators, and
   # need to retain spaces (or not) after completions.
   local IFS=$'\n'

@@ -2,7 +2,7 @@
 cite about-plugin
 about-plugin 'sshagent helper functions'
 
-function _get_sshagent_pid_from_env_file() {
+_get_sshagent_pid_from_env_file () {
   local env_file="${1}"
   [[ -r "${env_file}" ]] || {
     echo "";
@@ -13,7 +13,7 @@ function _get_sshagent_pid_from_env_file() {
   | cut -d';' -f1
 }
 
-function _get_process_status_field() {
+_get_process_status_field () {
   # uses /proc filesystem
   local \
     pid \
@@ -32,7 +32,7 @@ function _get_process_status_field() {
   | cut -d'(' -f1
 }
 
-function _is_item_in_list() {
+_is_item_in_list () {
   local item
   for item in "${@:1}"; do
     if [[ "${item}" == "${1}" ]]; then
@@ -43,7 +43,7 @@ function _is_item_in_list() {
 }
 
 
-function _is_proc_alive_at_pid() {
+_is_proc_alive_at_pid () {
   local \
     pid \
     expected_name \
@@ -62,7 +62,7 @@ function _is_proc_alive_at_pid() {
 }
 
 
-function _ensure_valid_sshagent_env() {
+_ensure_valid_sshagent_env () {
   local \
     agent_pid \
     tmp_res
@@ -99,7 +99,7 @@ function _ensure_valid_sshagent_env() {
 }
 
 
-function _ensure_sshagent_dead() {
+_ensure_sshagent_dead () {
   [[ -r "${SSH_AGENT_ENV}" ]] \
   || return ## no agent file - no problems
   ## ensure the file indeed points to a really running agent:
@@ -120,7 +120,7 @@ function _ensure_sshagent_dead() {
 }
 
 
-function sshagent() {
+sshagent () {
   about 'ensures ssh-agent is up and running'
   param '1: on|off '
   example '$ sshagent on'

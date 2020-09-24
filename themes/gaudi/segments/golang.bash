@@ -20,13 +20,13 @@ GAUDI_GOLANG_COLOR="${GAUDI_GOLANG_COLOR="$CYAN"}"
 # Section
 # ------------------------------------------------------------------------------
 
-gaudi_golang() {
+gaudi_golang () {
   [[ $GAUDI_GOLANG_SHOW == false ]] && return
 
   # If there are Go-specific files in current directory, or current directory is under the GOPATH
-  [[ -d Godeps || -f glide.yaml || -f Gopkg.yml || -f Gopkg.lock || 
-     ( $GOPATH && $PWD =~ $GOPATH ) || 
-     -n $(find . -not -path '*/\.*' -maxdepth 1 -name "*.go") 
+  [[ -d Godeps || -f glide.yaml || -f Gopkg.yml || -f Gopkg.lock ||
+     ( $GOPATH && $PWD =~ $GOPATH ) ||
+     -n $(find . -not -path '*/\.*' -maxdepth 1 -name "*.go")
   ]] || return
 
   gaudi::exists go || return

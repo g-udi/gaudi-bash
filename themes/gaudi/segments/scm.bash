@@ -22,10 +22,10 @@ GAUDI_THEME_PROMPT_COLOR=${GAUDI_THEME_PROMPT_CLEAN_COLOR}
 # Section
 # ------------------------------------------------------------------------------
 
-gaudi_scm() {
-  
+gaudi_scm () {
+
   [[ $GAUDI_SCM_SHOW == false ]] && return
-  
+
   local color scm_prompt
 
   scm_prompt_vars
@@ -40,9 +40,9 @@ gaudi_scm() {
     else
       color=${GAUDI_THEME_PROMPT_CLEAN_COLOR}
     fi
-    
+
     scm_prompt+="${GAUDI_SCM_BRANCH}${GAUDI_SCM_STATE}"
-    
+
     gaudi::section \
       "$color" \
       "$GAUDI_SCM_PREFIX" \

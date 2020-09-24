@@ -9,7 +9,7 @@ load ../../lib/helpers
 load ../../themes/githelpers.theme
 load ../../themes/base.theme
 
-add_commit() {
+add_commit () {
   local file_name="general-${RANDOM}"
   touch "${file_name}"
   echo "" >> "${file_name}"
@@ -17,12 +17,12 @@ add_commit() {
   git commit -m"message"
 }
 
-enter_new_git_repo() {
+enter_new_git_repo () {
   repo="$(setup_repo)"
   pushd "${repo}"
 }
 
-setup_repo() {
+setup_repo () {
   upstream="$(mktemp -d)"
   pushd "$upstream" > /dev/null
   git init . > /dev/null
@@ -30,7 +30,7 @@ setup_repo() {
   echo "$upstream"
 }
 
-setup_repo_with_upstream() {
+setup_repo_with_upstream () {
   upstream="$(setup_repo)"
   pushd "$upstream" > /dev/null
   add_commit > /dev/null

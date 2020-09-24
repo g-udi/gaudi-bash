@@ -13,7 +13,7 @@ if declare -F _git > /dev/null && ! declare -F __git_list_all_commands_without_h
         sed 's/__git_list_all_commands/__git_list_all_commands_without_hub/')"
 
   # Wrap the 'list_all_commands' function with extra hub commands
-  __git_list_all_commands() {
+  __git_list_all_commands () {
     cat <<-EOF
 alias
 pull-request
@@ -39,7 +39,7 @@ EOF
   ##########################
 
   # hub alias [-s] [SHELL]
-  _git_alias() {
+  _git_alias () {
     local i c=2 s=-s sh shells="bash zsh sh ksh csh fish"
     while [ $c -lt $cword ]; do
       i="${words[c]}"
@@ -62,7 +62,7 @@ EOF
   }
 
   # hub browse [-u] [--|[USER/]REPOSITORY] [SUBPAGE]
-  _git_browse() {
+  _git_browse () {
     local i c=2 u=-u repo subpage
     local subpages_="commits issues tree wiki pulls branches stargazers
       contributors network network/ graphs graphs/"
@@ -103,7 +103,7 @@ EOF
   }
 
   # hub compare [-u] [USER[/REPOSITORY]] [[START...]END]
-  _git_compare() {
+  _git_compare () {
     local i c=$((cword - 1)) u=-u user remote owner repo arg_repo rev
     while [ $c -gt 1 ]; do
       i="${words[c]}"
@@ -187,7 +187,7 @@ EOF
   }
 
   # hub create [NAME] [-p] [-d DESCRIPTION] [-h HOMEPAGE]
-  _git_create() {
+  _git_create () {
     local i c=2 name repo flags="-p -d -h"
     while [ $c -lt $cword ]; do
       i="${words[c]}"
@@ -219,7 +219,7 @@ EOF
   }
 
   # hub fork [--no-remote] [--remote-name REMOTE] [--org ORGANIZATION]
-  _git_fork() {
+  _git_fork () {
     local i c=2 flags="--no-remote --remote-name --org"
     while [ $c -lt $cword ]; do
       i="${words[c]}"
@@ -251,7 +251,7 @@ EOF
   }
 
   # hub pull-request [-f] [-m <MESSAGE>|-F <FILE>|-i <ISSUE>|<ISSUE-URL>] [-b <BASE>] [-h <HEAD>] [-a <USER>] [-M <MILESTONE>] [-l <LABELS>]
-  _git_pull_request() {
+  _git_pull_request () {
     local i c=2 flags="-f -m -F -i -b -h -a -M -l"
     while [ $c -lt $cword ]; do
       i="${words[c]}"
@@ -293,7 +293,7 @@ EOF
   # __hub_github_user [HOST]
   # Return $GITHUB_USER or the default github user defined in hub config
   # HOST - Host to be looked-up in hub config. Default is "github.com"
-  __hub_github_user() {
+  __hub_github_user () {
     if [ -n "$GITHUB_USER" ]; then
       echo $GITHUB_USER
       return
@@ -331,7 +331,7 @@ EOF
   #   \o  owner
   #   escaped characters (\n, \t ...etc) work
   # If omitted, prints all github repos in the format of "remote:owner/repo"
-  __hub_github_repos() {
+  __hub_github_repos () {
     local f format=$1
     if [ -z "$(__gitdir)" ]; then
       return
@@ -350,7 +350,7 @@ EOF
 
   # __hub_heads
   # List all local "branch", and remote "owner/repo:branch"
-  __hub_heads() {
+  __hub_heads () {
     local i remote repo branch dir=$(__gitdir)
     if [ -d "$dir" ]; then
       command git --git-dir="$dir" for-each-ref --format='%(refname:short)' \
@@ -369,7 +369,7 @@ EOF
   # __hub_revlist [REMOTE]
   # List all tags, and branches under REMOTE, without the "remote/" prefix
   # REMOTE - Remote name to search branches from. Default is "origin"
-  __hub_revlist() {
+  __hub_revlist () {
     local i remote=${1:-origin} dir=$(__gitdir)
     if [ -d "$dir" ]; then
       command git --git-dir="$dir" for-each-ref --format='%(refname:short)' \

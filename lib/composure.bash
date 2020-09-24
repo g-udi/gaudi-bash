@@ -115,7 +115,7 @@ typeset_functions ()
 # bootstrap metadata keywords for porcelain functions
 for f in $(composure_keywords)
 do
-    eval "$f() { :; }"
+    eval "$f () { :; }"
 done
 unset f
 
@@ -152,7 +152,7 @@ cite ()
 
     typeset keyword
     for keyword in $*; do
-        eval "$keyword() { :; }"
+        eval "$keyword () { :; }"
     done
 }
 
@@ -195,7 +195,7 @@ draft ()
         # parse command from history line number
         cmd=$(eval "history | grep '^[[:blank:]]*$num' | head -1" | sed 's/^[[:blank:][:digit:]]*//')
     fi
-    eval "$func() { $cmd; }"
+    eval "$func () { $cmd; }"
     typeset file=$(mktemp -t draft.XXXX)
     typeset -f $func > $file
     transcribe $func $file draft
@@ -347,7 +347,7 @@ write ()
 cat <<END
 for f in $(composure_keywords)
 do
-    eval "\$f() { :; }"
+    eval "\$f () { :; }"
 done
 unset f
 END

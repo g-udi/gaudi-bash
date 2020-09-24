@@ -31,7 +31,7 @@ alias pu="pushd"
 # Pop current location
 alias po="popd"
 
-function dirs-help() {
+dirs-help () {
   about 'directory navigation alias usage'
   group 'dirs'
 

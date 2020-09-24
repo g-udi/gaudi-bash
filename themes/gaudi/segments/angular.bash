@@ -20,15 +20,15 @@ GAUDI_ANGULAR_COLOR="${GAUDI_ANGULAR_COLOR="$RED"}"
 # ------------------------------------------------------------------------------
 
 # Show current version of Ember, exception system.
-gaudi_angular() {
+gaudi_angular () {
   [[ $GAUDI_ANGULAR_SHOW == false ]] && return
 
   [[ -f node_modules/angular/package.json ]] || return
 
   local angular_version=$(grep '"version":' ./node_modules/angular/package.json | cut -d\" -f4)
-  
+
   [[ $angular_version == "system" || $angular_version == "angular" ]] && return
-  
+
   gaudi::section \
     "$GAUDI_ANGULAR_COLOR" \
     "$GAUDI_ANGULAR_PREFIX" \

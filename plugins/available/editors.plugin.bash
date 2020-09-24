@@ -1,7 +1,7 @@
 cite about-plugin
 about-plugin 'Custom Text Editors'
 
-function s() {
+s () {
 	about '`s` with no arguments opens the current directory in Sublime Text, otherwise opens the given location'
   group 'editors'
 
@@ -12,7 +12,7 @@ function s() {
 	fi;
 }
 
-function a() {
+a () {
 	about '`a` with no arguments opens the current directory in Atom Editor, otherwise opens the given location'
   group 'editors'
 
@@ -23,7 +23,7 @@ function a() {
 	fi;
 }
 
-function v() {
+v () {
 	about '`v` with no arguments opens the current directory in Vim, otherwise opens the given location'
   group 'editors'
 

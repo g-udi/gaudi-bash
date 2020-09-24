@@ -19,8 +19,8 @@ GAUDI_TIME_COLOR="${GAUDI_TIME_COLOR="$GREEN"}"
 # Section
 # ------------------------------------------------------------------------------
 
-gaudi_time() {
-    
+gaudi_time () {
+
   [[ $GAUDI_TIME_SHOW == false ]] && return
 
   local 'time_str'

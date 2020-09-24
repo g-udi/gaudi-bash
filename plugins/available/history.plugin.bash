@@ -59,14 +59,14 @@ HISTSIZE=9000
 HISTFILESIZE=$HISTSIZE
 HISTCONTROL=ignorespace:ignoredups
 
-_bash_history_sync() {
+_bash_history_sync () {
   builtin history -a         #1
   HISTFILESIZE=$HISTSIZE     #2
   builtin history -c         #3
   builtin history -r         #4
 }
 
-history() {                  #5
+history () {                  #5
   _bash_history_sync
   builtin history "$@"
 }

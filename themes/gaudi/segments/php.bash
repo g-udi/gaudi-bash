@@ -20,7 +20,7 @@ GAUDI_PHP_COLOR="${GAUDI_PHP_COLOR=""}"
 # ------------------------------------------------------------------------------
 
 # Show current version of PHP
-gaudi_php() {
+gaudi_php () {
   [[ $GAUDI_PHP_SHOW == false ]] && return
 
   # Show only if php files or composer.json exist in current directory

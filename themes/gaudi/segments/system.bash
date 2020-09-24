@@ -23,7 +23,7 @@ GAUDI_SYSTEM_HDD_COLOR="${GAUDI_SYSTEM_HDD_COLOR="$CYAN"}"
 # Section
 # ------------------------------------------------------------------------------
 
-gaudi_system() {
+gaudi_system () {
   [[ $GAUDI_SYSTEM_SHOW == false ]] && return
 
   local system

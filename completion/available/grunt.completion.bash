@@ -15,7 +15,7 @@
 # eval "$(grunt --completion=bash)"
 
 # Search the current directory and all parent directories for a gruntfile.
-function _grunt_gruntfile() {
+_grunt_gruntfile () {
   local curpath="$PWD"
   while [[ "$curpath" ]]; do
     for gruntfile in "$curpath/"{G,g}runtfile.{js,coffee}; do
@@ -30,7 +30,7 @@ function _grunt_gruntfile() {
 }
 
 # Enable bash autocompletion.
-function _grunt_completions() {
+_grunt_completions () {
   # The currently-being-completed word.
   local cur="${COMP_WORDS[COMP_CWORD]}"
   # The current gruntfile, if it exists.

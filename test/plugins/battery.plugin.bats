@@ -19,10 +19,10 @@ load ../../plugins/available/battery.plugin
 #
 # It's cool that Bash allows to define functions within functions, works almost like
 # a closure in JavaScript.
-function setup_command_exists {
+setup_command_exists () {
   success_command="$1"
 
-  function _command_exists {
+  _command_exists () {
     case "$1" in
       "${success_command}")
         true
@@ -53,10 +53,10 @@ function setup_command_exists {
 
 # Creates a `pmset` function that simulates output like the real `pmset` command.
 # The passed in parameter is used for the remaining battery percentage.
-function setup_pmset {
+setup_pmset () {
   percent="$1"
 
-  function pmset {
+  pmset () {
     printf "\-InternalBattery-0 (id=12345)	%s; discharging; 16:00 remaining present: true" "${percent}"
   }
 }
@@ -115,11 +115,11 @@ function setup_pmset {
 # The passed in parameters are used for
 # 1) the remaining battery percentage.
 # 2) the battery status
-function setup_acpi {
+setup_acpi () {
   percent="$1"
   status="$2"
 
-  function acpi {
+  acpi () {
     printf "Battery 0: %s, %s, 01:02:48 until charged" "${status}" "${percent}"
   }
 }
@@ -194,10 +194,10 @@ function setup_acpi {
 
 # Creates a `upower` function that simulates output like the real `upower` command.
 # The passed in parameter is used for the remaining battery percentage.
-function setup_upower {
+setup_upower () {
   percent="$1"
 
-  function upower {
+  upower () {
     printf "voltage:             12.191 V\n    time to full:        57.3 minutes\n    percentage:          %s\n    capacity:            84.6964" "${percent}"
   }
 }
@@ -254,10 +254,10 @@ function setup_upower {
 
 # Creates a `ioreg` function that simulates output like the real `ioreg` command.
 # The passed in parameter is used for the remaining battery percentage.
-function setup_ioreg {
+setup_ioreg () {
   percent="$1"
 
-  function ioreg {
+  ioreg () {
     printf "\"MaxCapacity\" = 100\n\"CurrentCapacity\" = %s" "${percent}"
   }
 }
@@ -302,7 +302,7 @@ function setup_ioreg {
   setup_command_exists "ioreg"
 
   # Simulate that no battery is present
-  function ioreg {
+  ioreg () {
     printf ""
   }
 
@@ -317,10 +317,10 @@ function setup_ioreg {
 
 # Creates a `WMIC` function that simulates output like the real `WMIC` command.
 # The passed in parameter is used for the remaining battery percentage.
-function setup_WMIC {
+setup_WMIC () {
   percent="$1"
 
-  function WMIC {
+  WMIC () {
     printf "Charge: %s" "${percent}"
   }
 }

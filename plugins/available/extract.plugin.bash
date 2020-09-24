@@ -2,7 +2,7 @@ cite about-plugin
 about-plugin 'one command to extract them all...'
 
 # extract file(s) from compressed status
-extract() {
+extract () {
     local opt
     local OPTIND=1
     while getopts "hv" opt; do

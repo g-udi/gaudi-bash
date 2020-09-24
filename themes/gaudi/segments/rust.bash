@@ -22,7 +22,7 @@ GAUDI_RUST_COLOR="${GAUDI_RUST_COLOR=$(tput setaf 075)}"
 # ------------------------------------------------------------------------------
 
 # Show current version of Rust
-gaudi_rust() {
+gaudi_rust () {
   [[ $GAUDI_RUST_SHOW == false ]] && return
 
   # If there are Rust-specific files in current directory

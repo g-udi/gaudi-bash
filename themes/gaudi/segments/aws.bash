@@ -20,7 +20,7 @@ GAUDI_AWS_COLOR="${GAUDI_AWS_COLOR="$YELLOW"}"
 # ------------------------------------------------------------------------------
 
 # Shows selected AWS-cli profile.
-gaudi_aws() {
+gaudi_aws () {
   [[ $GAUDI_AWS_SHOW == false ]] && return
 
   # Check if the AWS-cli is installed

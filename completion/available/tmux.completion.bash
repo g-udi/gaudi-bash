@@ -31,17 +31,17 @@ _tmux_filedir ()
     COMPREPLY=(${COMPREPLY[@]} $( eval compgen -f -- \"$cur\" ))
 }
 
-function _tmux_complete_client() {
+_tmux_complete_client () {
     local IFS=$'\n'
     local cur="${1}"
     COMPREPLY=( ${COMPREPLY[@]:-} $(compgen -W "$(tmux -q list-clients 2>/dev/null | cut -f 1 -d ':')" -- "${cur}") )
 }
-function _tmux_complete_session() {
+_tmux_complete_session () {
     local IFS=$'\n'
     local cur="${1}"
     COMPREPLY=( ${COMPREPLY[@]:-} $(compgen -W "$(tmux -q list-sessions 2>/dev/null | cut -f 1 -d ':')" -- "${cur}") )
 }
-function _tmux_complete_window() {
+_tmux_complete_window () {
     local IFS=$'\n'
     local cur="${1}"
     local session_name="$(echo "${cur}" | sed 's/\\//g' | cut -d ':' -f 1)"
@@ -57,7 +57,7 @@ function _tmux_complete_window() {
     COMPREPLY=( ${COMPREPLY[@]:-} $(compgen -W "${sessions}" -- "${cur}") )
 }
 
-_tmux() {
+_tmux () {
     local cur prev
     local i cmd cmd_index option option_index
     local opts=""

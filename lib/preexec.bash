@@ -2,9 +2,9 @@
 # http://www.twistedmatrix.com/users/glyph/preexec.bash.txt
 # preexec.bash -- Bash support for ZSH-like 'preexec' and 'precmd' functions.
 
-# The 'preexec' function is executed before each interactive command is
+# The 'preexec' is executed before each interactive command is
 # executed, with the interactive command as its argument.  The 'precmd'
-# function is executed before each prompt is displayed.
+# is executed before each prompt is displayed.
 
 # To use, in order:
 
@@ -38,29 +38,29 @@ fi
 preexec_interactive_mode=""
 
 # Default do-nothing implementation of preexec.
-function preexec () {
+preexec () {
     true
 }
 
 # Default do-nothing implementation of precmd.
-function precmd () {
+precmd () {
     true
 }
 
-# This function is installed as the PROMPT_COMMAND; it is invoked before each
+# This is installed as the PROMPT_COMMAND; it is invoked before each
 # interactive prompt display.  It sets a variable to indicate that the prompt
 # was just displayed, to allow the DEBUG trap, below, to know that the next
 # command is likely interactive.
-function preexec_invoke_cmd () {
+preexec_invoke_cmd () {
     precmd
     preexec_interactive_mode="yes"
 }
 
-# This function is installed as the DEBUG trap.  It is invoked before each
+# This is installed as the DEBUG trap.  It is invoked before each
 # interactive prompt display.  Its purpose is to inspect the current
 # environment to attempt to detect if the current command is being invoked
 # interactively, and invoke 'preexec' if so.
-function preexec_invoke_exec () {
+preexec_invoke_exec () {
     if [[ -n "$COMP_LINE" ]]
     then
         # We're in the middle of a completer.  This obviously can't be
@@ -110,7 +110,7 @@ function preexec_invoke_exec () {
 }
 
 # Execute this to set up preexec and precmd execution.
-function preexec_install () {
+preexec_install () {
 
     # *BOTH* of these options need to be set for the DEBUG trap to be invoked
     # in ( ) subshells.  This smells like a bug in bash to me.  The null stderr
@@ -134,12 +134,12 @@ function preexec_install () {
 # pre-exec hook anyway, we'll include it in this module.
 
 # Change the title of the xterm.
-function preexec_xterm_title () {
+preexec_xterm_title () {
     local title="$1"
     echo -ne "\033]0;$title\007" > /dev/stderr
 }
 
-function preexec_screen_title () {
+preexec_screen_title () {
     local title="$1"
     echo -ne "\033k$1\033\\" > /dev/stderr
 }
@@ -147,7 +147,7 @@ function preexec_screen_title () {
 # Abbreviate the "user@host" string as much as possible to preserve space in
 # screen titles.  Elide the host if the host is the same, elide the user if the
 # user is the same.
-function preexec_screen_user_at_host () {
+preexec_screen_user_at_host () {
     local RESULT=""
     if [[ "$SCREEN_RUN_HOST" == "$SCREEN_HOST" ]]
     then
@@ -162,10 +162,10 @@ function preexec_screen_user_at_host () {
     fi
 }
 
-function preexec_xterm_title_install () {
+preexec_xterm_title_install () {
     # These functions are defined here because they only make sense with the
     # preexec_install below.
-    function precmd () {
+    precmd () {
         preexec_xterm_title "${TERM} - ${USER}@${SCREEN_HOST} `dirs -0` $PROMPTCHAR"
         if [[ "${TERM}" == screen ]]
         then
@@ -173,7 +173,7 @@ function preexec_xterm_title_install () {
         fi
     }
 
-    function preexec () {
+    preexec () {
         preexec_xterm_title "${TERM} - $1 {`dirs -0`} (${USER}@${SCREEN_HOST})"
         if [[ "${TERM}" == screen ]]
         then

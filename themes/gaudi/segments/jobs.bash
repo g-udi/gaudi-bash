@@ -21,7 +21,7 @@ GAUDI_JOBS_AMOUNT_THRESHOLD="${GAUDI_JOBS_AMOUNT_THRESHOLD=1}"
 # ------------------------------------------------------------------------------
 
 # Show icon if there's a working jobs in the background
-gaudi_jobs() {
+gaudi_jobs () {
   [[ $GAUDI_JOBS_SHOW == false ]] && return
 
   local jobs_amount=$( jobs -r | awk '!/wd/' | wc -l | tr -d " ")

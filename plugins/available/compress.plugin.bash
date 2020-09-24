@@ -1,7 +1,7 @@
 cite about-plugin
 about-plugin 'Compression tools'
 
-function targz() {
+targz () {
   about 'Create a .tar.gz archive, using `zopfli`, `pigz` or `gzip` for compression'
   group 'compress'
 
@@ -31,7 +31,7 @@ function targz() {
 	echo "${tmpFile}.gz created successfully.";
 }
 
-function gz() {
+gz () {
 	about 'Compare original and gzipped file size'
 	group 'compress'
 

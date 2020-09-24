@@ -54,7 +54,7 @@ esac
 #
 # Get time of last fab cache file modification as seconds since Epoch
 #
-function __fab_chache_mtime() {
+__fab_chache_mtime () {
     ${__FAB_COMPLETION_MTIME_COMMAND} \
         $FAB_COMPLETION_CACHED_TASKS_FILENAME | xargs -n 1 expr
 }
@@ -63,7 +63,7 @@ function __fab_chache_mtime() {
 #
 # Get time of last fabfile file/module modification as seconds since Epoch
 #
-function __fab_fabfile_mtime() {
+__fab_fabfile_mtime () {
     local f="fabfile"
     if [[ -e "$f.py" ]]; then
         ${__FAB_COMPLETION_MTIME_COMMAND} "$f.py" | xargs -n 1 expr
@@ -78,7 +78,7 @@ function __fab_fabfile_mtime() {
 #
 # Completion for "fab" command
 #
-function __fab_completion() {
+__fab_completion () {
     # Return if "fab" command doesn't exists
     [[ -e `which fab 2> /dev/null` ]] || return 0
 

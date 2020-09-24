@@ -20,7 +20,7 @@ GAUDI_JAVA_COLOR="${GAUDI_JAVA_COLOR="$ORANGE"}"
 # ------------------------------------------------------------------------------
 
 # Show current version of java
-gaudi_java() {
+gaudi_java () {
   [[ $GAUDI_JAVA_SHOW == false ]] && return
 
 	# Show only if .java or .jar exist in current directory
@@ -37,7 +37,7 @@ gaudi_java() {
 
 	if [[ "$_java" ]]; then
 			java_version=$("$_java" -version 2>&1 | awk -F '"' '/version/ {print $2}' | cut -f1 -d"_")
-	else 
+	else
 		return
 	fi
 

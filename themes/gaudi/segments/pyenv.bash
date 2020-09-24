@@ -20,7 +20,7 @@ GAUDI_PYENV_COLOR="${GAUDI_PYENV_COLOR="$BLUE"}"
 # ------------------------------------------------------------------------------
 
 # Show current version of pyenv Python, including system.
-gaudi_pyenv() {
+gaudi_pyenv () {
   [[ $GAUDI_PYENV_SHOW == false ]] && return
 
   # Show pyenv python version only for Python-specific folders
@@ -37,7 +37,7 @@ gaudi_pyenv() {
   else
     return
   fi
-  
+
   gaudi::section \
     "$GAUDI_PYENV_COLOR" \
     "$GAUDI_PYENV_PREFIX" \

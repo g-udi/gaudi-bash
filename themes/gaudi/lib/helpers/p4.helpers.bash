@@ -6,11 +6,11 @@ GAUDI_SCM_P4_CHANGES_CHAR='C:'
 GAUDI_SCM_P4_DEFAULT_CHAR='D:'
 GAUDI_SCM_P4_OPENED_CHAR='O:'
 
-function _p4-opened {
+_p4-opened () {
   timeout 2.0s p4 opened -s 2> /dev/null
 }
 
-function _p4-opened-counts {
+_p4-opened-counts () {
   # Return the following counts seperated by tabs:
   #  - count of opened files
   #  - count of pending changesets (other than defaults)
@@ -50,7 +50,7 @@ function _p4-opened-counts {
 '
 }
 
-function p4_prompt_vars {
+p4_prompt_vars () {
   IFS=$'\t' read -r \
      opened_count non_default_changes default_count \
      add_file_count edit_file_count delete_file_count \

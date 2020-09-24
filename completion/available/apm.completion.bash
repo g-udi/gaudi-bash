@@ -30,7 +30,7 @@ __apm(){
     fi
     COMPREPLY=($(compgen -W "$options" -- "$cur"))
 }
-__apm_get_command() {
+__apm_get_command () {
     local i
     for ((i=1; i < $COMP_CWORD; ++i)); do
         local arg=${COMP_WORDS[$i]}

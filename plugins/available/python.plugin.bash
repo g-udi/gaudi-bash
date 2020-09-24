@@ -8,7 +8,7 @@ else
   alias shttp='python -m SimpleHTTPServer'
 fi
 
-function pyedit() {
+pyedit () {
     about 'opens python module in your EDITOR'
     param '1: python module to open'
     example '$ pyedit requests'

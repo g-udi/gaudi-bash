@@ -1,7 +1,7 @@
 # Invoke (pyinvoke.org) tab-completion script to be sourced with Bash shell.
 # https://github.com/pyinvoke/invoke/blob/master/completion/bash
 
-_complete_invoke() {
+_complete_invoke () {
     local candidates
 
     # COMP_WORDS contains the entire command string up til now (including

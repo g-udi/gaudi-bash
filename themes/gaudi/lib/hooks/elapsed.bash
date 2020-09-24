@@ -18,19 +18,19 @@ GAUDI_EXEC_TIME_ELAPSED_THRESHOLD="2"
 # Section
 # ------------------------------------------------------------------------------
 
-gaudi_elapsed() {
+gaudi_elapsed () {
 
     local _GAUDI_TIMER
-    
+
     [[ $GAUDI_EXEC_TIME_SHOW == false ]] && return
 
     [[ "$BASH_COMMAND" != "$PROMPT_COMMAND" ]] || return
 
-    _gaudi::timer_start() {
+    _gaudi::timer_start () {
         _GAUDI_TIMER=${_GAUDI_TIMER:-$SECONDS}
     }
 
-    _gaudi::timer_stop() {
+    _gaudi::timer_stop () {
         GAUDI_TIMER=$(($SECONDS - $_GAUDI_TIMER))
         if [[ $GAUDI_TIMER -ge $GAUDI_EXEC_TIME_ELAPSED_THRESHOLD ]]; then
             echo -e "\n$(gaudi::section \
@@ -42,7 +42,7 @@ gaudi_elapsed() {
         fi
         unset _GAUDI_TIMER
     }
-    
+
     trap '_gaudi::timer_start' DEBUG
 
     if [ "$PROMPT_COMMAND" == "" ]; then

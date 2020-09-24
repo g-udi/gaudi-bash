@@ -21,17 +21,17 @@ GAUDI_NODE_COLOR="${GAUDI_NODE_COLOR="$YELLOW"}"
 # ------------------------------------------------------------------------------
 
 # Show current version of node, exception system.
-gaudi_node() {
-  
+gaudi_node () {
+
   shopt -s nullglob
 
   [[ $GAUDI_NODE_SHOW == false ]] && return
 
   # Show NODE status only for JS-specific folders
-  [[ -f package.json || -d node_modules || 
-     -n $(find . -not -path '*/\.*' -maxdepth 1 -name "*.js") 
+  [[ -f package.json || -d node_modules ||
+     -n $(find . -not -path '*/\.*' -maxdepth 1 -name "*.js")
   ]] || return
-  
+
   local 'node_version'
 
   if gaudi::exists nvm; then

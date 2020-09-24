@@ -1,10 +1,10 @@
 #!/usr/bin/bash
-_vboxmanage_realopts() {
+_vboxmanage_realopts () {
     echo $(vboxmanage|grep -i vboxmanage|cut -d' ' -f2|grep '\['|tr -s '[\[\|\]\n' ' ')
     echo " "
 }
 
-__vboxmanage_startvm() {
+__vboxmanage_startvm () {
     RUNNING=$(vboxmanage list runningvms | cut -d' ' -f1 | tr -d '"')
     TOTAL=$(vboxmanage list vms | cut -d' ' -f1 | tr -d '"')
 
@@ -21,18 +21,18 @@ __vboxmanage_startvm() {
     echo $AVAILABLE
 }
 
-__vboxmanage_list() {
+__vboxmanage_list () {
     INPUT=$(vboxmanage list | tr -s '[\[\]\|\n]' ' ' | cut -d' ' -f4-)
-    
+
     PRUNED=""
     if [ "$1" == "long" ]; then
 	for WORD in $INPUT; do
 	    [ "$WORD" == "-l" ] && continue;
 	    [ "$WORD" == "--long" ] && continue;
-	    
+
 	    PRUNED="$PRUNED $WORD"
 	done
-    else 
+    else
 	PRUNED=$INPUT
     fi
 
@@ -40,14 +40,14 @@ __vboxmanage_list() {
 }
 
 
-__vboxmanage_list_vms() {
+__vboxmanage_list_vms () {
     VMS=""
     if [ "x$1" == "x" ]; then
 	SEPARATOR=" "
     else
 	SEPARATOR=$1
     fi
-    
+
     for VM in $(vboxmanage list vms | cut -d' ' -f1 | tr -d '"'); do
 	[ "$VMS" != "" ] && VMS="${VMS}${SEPARATOR}"
 	VMS="${VMS}${VM}"
@@ -56,14 +56,14 @@ __vboxmanage_list_vms() {
     echo $VMS
 }
 
-__vboxmanage_list_runningvms() {
+__vboxmanage_list_runningvms () {
     VMS=""
     if [ "$1" == "" ]; then
 	SEPARATOR=" "
     else
 	SEPARATOR=$1
     fi
-    
+
     for VM in $(vboxmanage list runningvms | cut -d' ' -f1 | tr -d '"'); do
 	[ "$VMS" != "" ] && VMS="${VMS}${SEPARATOR}"
 	VMS="${VMS}${VM}"
@@ -73,7 +73,7 @@ __vboxmanage_list_runningvms() {
 
 }
 
-__vboxmanage_controlvm() {
+__vboxmanage_controlvm () {
     echo "pause resume reset poweroff savestate acpipowerbutton"
     echo "acpisleepbutton keyboardputscancode guestmemoryballoon"
     echo "gueststatisticsinterval usbattach usbdetach vrde vrdeport"
@@ -81,7 +81,7 @@ __vboxmanage_controlvm() {
     echo "screenshotpng setcredentials teleport plugcpu unplugcpu"
     echo "cpuexecutioncap"
 
-# setlinkstate<1-N> 
+# setlinkstate<1-N>
 # nic<1-N> null|nat|bridged|intnet|hostonly|generic
 #                                      [<devicename>] |
                           # nictrace<1-N> on|off
@@ -93,7 +93,7 @@ __vboxmanage_controlvm() {
 
 }
 
-__vboxmanage_default() {
+__vboxmanage_default () {
     realopts=$(_vboxmanage_realopts)
     opts=$realopts$(vboxmanage | grep -i vboxmanage | cut -d' ' -f2 | grep -v '\[' | sort | uniq)
     pruned=""
@@ -136,15 +136,15 @@ __vboxmanage_default() {
 	done
 	(( $MATCH == 1 )) && continue;
 	pruned="$pruned $WORD"
-	
+
     done
-    
+
     # COMPREPLY=($(compgen -W "${pruned}" -- ${cur}))
     echo $pruned
     return 0
 }
 
-_vboxmanage() {
+_vboxmanage () {
     # vboxmanage | grep -i vboxmanage | cut -d' ' -f2 | sort | uniq
     local cur p1 p2 p3 p4 opts
     COMPREPLY=()
@@ -156,13 +156,13 @@ _vboxmanage() {
 
     # In case current is complete command
     case $cur in
-	startvm|list|controlvm)	    
+	startvm|list|controlvm)
 	    COMPREPLY=($(compgen -W "$cur "))
 	    return 0
 	    ;;
     esac
 
-    case $prev in 
+    case $prev in
 	-v|--version)
 	    return 0
 	    ;;
@@ -170,13 +170,13 @@ _vboxmanage() {
 	-l|--long)
 	    opts=$(__vboxmanage_list "long")
 	    COMPREPLY=($(compgen -W "${opts}" -- ${cur}))
-	    return 0	    
+	    return 0
 	    ;;
 	startvm|list)
 	    opts=$(__vboxmanage_$prev)
 	    COMPREPLY=($(compgen -W "${opts}" -- ${cur}))
-	    return 0	    
-	    ;;	
+	    return 0
+	    ;;
 	--type)
 	    COMPREPLY=($(compgen -W "gui headless" -- ${cur}))
 	    return 0
@@ -204,7 +204,7 @@ _vboxmanage() {
 	    # echo "previous: $pprev"
 	    case $pprev in
 		startvm)
- 		    opts="--type"	    
+ 		    opts="--type"
 		    COMPREPLY=($(compgen -W "${opts}" -- ${cur}))
 		    return 0
 		    ;;

@@ -16,7 +16,7 @@ if [ -z ${FZF_DEFAULT_COMMAND+x}  ] && _command_exists fd ; then
   export FZF_DEFAULT_COMMAND='fd --type f'
 fi
 
-fe() {
+fe () {
   about "Open the selected file in the default editor"
   group "fzf"
   param "1: Search term"
@@ -28,7 +28,7 @@ fe() {
   [[ -n "$files" ]] && ${EDITOR:-vim} "${files[@]}"
 }
 
-fcd() {
+fcd () {
   about "cd to the selected directory"
   group "fzf"
   param "1: Directory to browse, or . if omitted"

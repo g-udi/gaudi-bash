@@ -4,16 +4,16 @@ load ../test_helper
 load ../../lib/composure
 load ../../completion/available/bash-it.completion
 
-function local_setup {
+local_setup () {
   setup_test_fixture
 }
 
-@test "completion bash-it: ensure that the _bash-it-comp function is available" {
+@test "completion bash-it: ensure that the _bash-it-comp is available" {
   type -a _bash-it-comp &> /dev/null
   assert_success
 }
 
-function __check_completion () {
+__check_completion () {
   # Get the parameters as a single value
   COMP_LINE=$*
 

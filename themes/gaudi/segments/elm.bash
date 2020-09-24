@@ -20,12 +20,12 @@ GAUDI_ELM_COLOR="${GAUDI_ELM_COLOR="$BLUE"}"
 # ------------------------------------------------------------------------------
 
 # Shows selected AWS-cli profile.
-gaudi_elm() {
+gaudi_elm () {
   [[ $GAUDI_ELM_SHOW == false ]] && return
-   
+
    # Show ELM status only if elm is installed in the system
   gaudi::exists elm || return
-   
+
    # Show ELM status only for folders w/ elm-package.json file
   [[ -f elm-package.json ]] || return
 
