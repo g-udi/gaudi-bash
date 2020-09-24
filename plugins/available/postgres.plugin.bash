@@ -23,7 +23,7 @@ function postgres_start {
   about 'Starts PostgreSQL server'
   group 'postgres'
 
-  echo 'Starting Postgres....'; 
+  echo 'Starting PostgreSQL....'; 
   $POSTGRES_BIN/pg_ctl -D $PGDATA -l $PGDATA/logfile  start
 }
 
@@ -31,7 +31,7 @@ function postgres_stop {
   about 'Stops PostgreSQL server'
   group 'postgres'
 
-  echo 'Stopping Postgres....'; 
+  echo 'Stopping PostgreSQL....'; 
   $POSTGRES_BIN/pg_ctl -D $PGDATA -l $PGDATA/logfile stop -s -m fast
 }
 
@@ -42,9 +42,9 @@ function postgres_status {
   # $POSTGRES_BIN/pg_ctl -D $PGDATA status  
   if [[ $(is_postgres_running) == "no server running" ]]
   then
-    echo "Postgres service [STOPPED]"
+    echo "PostgreSQL service [STOPPED]"
   else
-    echo "Postgres service [RUNNING]"
+    echo "PostgreSQL service [RUNNING]"
   fi
 }
 
@@ -58,7 +58,7 @@ function postgres_restart {
   about 'Restarts status of PostgreSQL server'
   group 'postgres'
 
-  echo 'Restarting Postgres....'; 
+  echo 'Restarting PostgreSQL....'; 
   $POSTGRES_BIN/pg_ctl -D $PGDATA restart
 }
 
@@ -75,13 +75,4 @@ function postgres_serverlog {
 
   tail -500 $PGDATA/server.log | less
 }
-
-
-# function postgres_syslog {
-#   about 'View the last 500 lines from syslog'
-#   group 'postgres'
-#
-#   tail -500 $PGDATA/pg_log/`ls -Art $PGDATA/pg_log | tail -n 1` | less
-# }
-#
 
