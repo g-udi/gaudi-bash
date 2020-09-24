@@ -19,22 +19,22 @@ local_setup () {
 # TODO Create global __get_base_name function
 # TODO Create global __get_enabled_name function
 
-@test "helpers: _command_exists exists" {
+@test "helpers: _command_exists function exists" {
   run type -a _command_exists &> /dev/null
   assert_success
 }
 
-@test "helpers: _command_exists positive test ls" {
+@test "helpers: _command_exists function positive test ls" {
   run _command_exists ls
   assert_success
 }
 
-@test "helpers: _command_exists positive test bash-it" {
+@test "helpers: _command_exists function positive test bash-it" {
   run _command_exists bash-it
   assert_success
 }
 
-@test "helpers: _command_exists negative test" {
+@test "helpers: _command_exists function negative test" {
   run _command_exists __addfkds_dfdsjdf
   assert_failure
 }

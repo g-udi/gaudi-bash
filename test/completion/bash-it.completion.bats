@@ -8,8 +8,8 @@ local_setup () {
   setup_test_fixture
 }
 
-@test "completion bash-it: ensure that the _bash-it-comp is available" {
-  type -a _bash-it-comp &> /dev/null
+@test "completion bash-it: ensure that the _bash-it-comp function is available" {
+  run type -a _bash-it-comp &> /dev/null
   assert_success
 }
 
@@ -36,7 +36,7 @@ __check_completion () {
   # Word index of the last word
   COMP_CWORD=$(( ${#COMP_WORDS[@]} - 1 ))
 
-  # Run the bash-it completion function
+  # Run the Bash-it completion function
   _bash-it-comp
 
   # Return the completion output
@@ -60,7 +60,7 @@ __check_completion () {
 
 @test "completion bash-it: update - show no options" {
   run __check_completion 'bash-it update '
-  assert_line -n 0 ""
+  assert_line -n 0 "Bash-it is up to date, nothing to do!"
 }
 
 @test "completion bash-it: search - show no options" {

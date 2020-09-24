@@ -8,14 +8,14 @@ BASH_IT_LOAD_PRIORITY_SEPARATOR="---"
 # Handle the different ways of running `sed` without generating a backup file based on OS
 # - GNU sed (Linux) uses `-i`
 # - BSD sed (macOS) uses `-i ''`
-# To use this in bash-it for inline replacements with `sed`, use the following syntax:
+# To use this in Bash-it for inline replacements with `sed`, use the following syntax:
 # sed "${BASH_IT_SED_I_PARAMETERS[@]}" -e "..." file
 BASH_IT_SED_I_PARAMETERS=(-i)
 case "$(uname)" in
   Darwin*) BASH_IT_SED_I_PARAMETERS=(-i "")
 esac
 
-_command_exists ()
+function _command_exists ()
 {
   _about 'checks for existence of a command'
   _param '1: command to check'
@@ -26,7 +26,7 @@ _command_exists ()
   type "$1" &> /dev/null || (_log_warning "$msg" && return 1) ;
 }
 
-_make_reload_alias () {
+function _make_reload_alias() {
   echo "source \${BASH_IT}/scripts/reloader.bash ${1} ${2}"
 }
 
@@ -44,7 +44,7 @@ alias reload_plugins="$(_make_reload_alias plugin plugins)"
 
 bash-it ()
 {
-    about 'bash-it help and maintenance'
+    about 'Bash-it help and maintenance'
     param '1: verb [one of: help | show | enable | disable | migrate | update | search | version | reload | doctor ] '
     param '2: component type [one of: alias(es) | completion(s) | plugin(s) ] or search term(s)'
     param '3: specific component [optional]'
@@ -63,6 +63,7 @@ bash-it ()
     typeset component=${1:-}
     shift
     typeset func
+
     case $verb in
       show)
         func=_bash-it-$component;;
@@ -91,11 +92,11 @@ bash-it ()
     esac
 
     # pluralize component if necessary
-    if ! _is_$func; then
-        if _is_${func}s; then
+    if ! _is_function $func; then
+        if _is_function ${func}s; then
             func=${func}s
         else
-            if _is_${func}es; then
+            if _is_function ${func}es; then
                 func=${func}es
             else
                 echo "oops! $component is not a valid option!"
@@ -118,7 +119,7 @@ bash-it ()
     fi
 }
 
-_is_()
+_is_function ()
 {
     _about 'sets $? to true if parameter is the name of a function'
     _param '1: name of alleged function'
@@ -150,8 +151,8 @@ _bash-it-plugins ()
     _bash-it-describe "plugins" "a" "plugin" "Plugin"
 }
 
-_bash-it_update () {
-  _about 'updates bash-it'
+_bash-it_update() {
+  _about 'updates Bash-it'
   _group 'lib'
 
   local old_pwd="${PWD}"
@@ -179,12 +180,12 @@ _bash-it_update () {
       git log --format="%h: $description (%an)" -1 $i
     done
     echo ""
-    read -e -n 1 -p "Would you like to update to $(git log -1 --format=%h origin/master)? [Y/N] " RESP
+    read -e -n 1 -p "Would you like to update to $(git log -1 --format=%h origin/master)? [Y/n] " RESP
     case $RESP in
       [yY]|"")
         git pull --rebase &> /dev/null
         if [[ $? -eq 0 ]]; then
-          echo "bash-it successfully updated."
+          echo "Bash-it successfully updated."
           echo ""
           echo "Migrating your installation to the latest version now..."
           _bash-it-migrate
@@ -192,24 +193,24 @@ _bash-it_update () {
           echo "All done, enjoy!"
           bash-it reload
         else
-          echo "Error updating bash-it, please, check if your bash-it installation folder (${BASH_IT}) is clean."
+          echo "Error updating Bash-it, please, check if your Bash-it installation folder (${BASH_IT}) is clean."
         fi
         ;;
       [nN])
         echo "Not upgrading…"
         ;;
       *)
-        echo -e "Please choose y or n"
+        echo -e "\033[91mPlease choose y or n.\033[m"
         ;;
       esac
   else
-    echo "bash-it is up to date, nothing to do!"
+    echo "Bash-it is up to date, nothing to do!"
   fi
   cd "${old_pwd}" &> /dev/null || return
 }
 
-_bash-it-migrate () {
-  _about 'migrates bash-it configuration from a previous format to the current one'
+_bash-it-migrate() {
+  _about 'migrates Bash-it configuration from a previous format to the current one'
   _group 'lib'
 
   declare migrated_something
@@ -244,8 +245,8 @@ _bash-it-migrate () {
   fi
 }
 
-_bash-it-version () {
-  _about 'shows current bash-it version'
+_bash-it-version() {
+  _about 'shows current Bash-it version'
   _group 'lib'
 
   cd "${BASH_IT}" || return
@@ -267,7 +268,7 @@ _bash-it-version () {
   cd - &> /dev/null || return
 }
 
-_bash-it-doctor () {
+_bash-it-doctor() {
   _about 'reloads a profile file with a BASH_IT_LOG_LEVEL set'
   _param '1: BASH_IT_LOG_LEVEL argument: "errors" "warnings" "all"'
   _group 'lib'
@@ -277,35 +278,35 @@ _bash-it-doctor () {
   unset BASH_IT_LOG_LEVEL
 }
 
-_bash-it-doctor-all () {
+_bash-it-doctor-all() {
   _about 'reloads a profile file with error, warning and debug logs'
   _group 'lib'
 
   _bash-it-doctor $BASH_IT_LOG_LEVEL_ALL
 }
 
-_bash-it-doctor-warnings () {
+_bash-it-doctor-warnings() {
   _about 'reloads a profile file with error and warning logs'
   _group 'lib'
 
   _bash-it-doctor $BASH_IT_LOG_LEVEL_WARNING
 }
 
-_bash-it-doctor-errors () {
+_bash-it-doctor-errors() {
   _about 'reloads a profile file with error logs'
   _group 'lib'
 
   _bash-it-doctor $BASH_IT_LOG_LEVEL_ERROR
 }
 
-_bash-it-doctor- () {
+_bash-it-doctor-() {
   _about 'default bash-it doctor behavior, behaves like bash-it doctor all'
   _group 'lib'
 
   _bash-it-doctor-all
 }
 
-_bash-it-reload () {
+_bash-it-reload() {
   _about 'reloads a profile file'
   _group 'lib'
 
@@ -645,14 +646,14 @@ _help-update () {
   _about 'help message for update command'
   _group 'lib'
 
-  echo "Check for a new version of bash-it and update it."
+  echo "Check for a new version of Bash-it and update it."
 }
 
 _help-migrate () {
   _about 'help message for migrate command'
   _group 'lib'
 
-  echo "Migrates internal bash-it structure to the latest version in case of changes."
+  echo "Migrates internal Bash-it structure to the latest version in case of changes."
   echo "The 'migrate' command is run automatically when calling 'update', 'enable' or 'disable'."
 }
 
@@ -673,7 +674,7 @@ all_groups ()
 
 if ! type pathmunge > /dev/null 2>&1
 then
-  pathmunge () {
+  function pathmunge () {
     about 'prevent duplicate directories in you PATH variable'
     group 'helpers'
     example 'pathmunge /path/to/dir is equivalent to PATH=/path/to/dir:$PATH'
