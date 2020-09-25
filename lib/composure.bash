@@ -1,1 +1,1 @@
-source ${BASH_IT}/bin/composure/composure.sh
+source "${BASH_IT}"/bin/composure/composure.sh

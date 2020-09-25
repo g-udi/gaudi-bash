@@ -95,12 +95,3 @@ catt () {
     fi
   done
 }
-
-# The bash-it aliases were moved to the `bash-it.aliases.bash` file. The intent of this
-# is to keep the script readable and less bloated. If you don't need to use
-# the `general` aliases, but you want the bash-it aliases, you can disable the `general`
-# aliases and enable just the ones for bash-it explicitly:
-# bash-it disable alias general
-# bash-it enable alias bash-it
-# shellcheck source=./bash-it.aliases.bash
-source "$BASH_IT/aliases/available/bash-it.aliases.bash"

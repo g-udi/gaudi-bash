@@ -88,83 +88,6 @@ _bash-it-search () {
   return 0
 }
 
-_bash-it-search-help () {
-  printf "${NC}
-${YELLOW}USAGE${NC}
-
-   bash-it search [-|@]term1 [-|@]term2 ... \\
-     [ --enable   | -e ] \\
-     [ --disable  | -d ] \\
-     [ --no-color | -c ] \\
-     [ --refresh  | -r ] \\
-     [ --help     | -h ]
-
-${YELLOW}DESCRIPTION${NC}
-
-   Use ${GREEN}search${NC} bash-it command to search for a list of terms or term negations
-   across all components: aliases, completions and plugins. Components that are
-   enabled are shown in green (or with a check box if --no-color option is used).
-
-   In addition to simply finding the right component, you can use the results
-   of the search to enable or disable all components that the search returns.
-
-   When search is used to enable/disable components it becomes clear that
-   you must be able to perform not just a partial match, but an exact match,
-   as well as be able to exclude some components.
-
-      * To exclude a component (or all components matching a substring) use
-        a search term with minus as a prefix, eg '-flow'
-
-      * To perform an exact match, use character '@' in front of the term,
-        eg. '@git' would only match aliases, plugins and completions named 'git'.
-
-${YELLOW}FLAGS${NC}
-   --enable   | -e    ${MAGENTA}Enable all matching componenents.${NC}
-   --disable  | -d    ${MAGENTA}Disable all matching componenents.${NC}
-   --help     | -h    ${MAGENTA}Print this help.${NC}
-   --refresh  | -r    ${MAGENTA}Force a refresh of the search cache.${NC}
-   --no-color | -c    ${MAGENTA}Disable color output and use monochrome text.${NC}
-
-${YELLOW}EXAMPLES${NC}
-
-   For example, ${GREEN}bash-it search git${NC} would match any alias, completion
-   or plugin that has the word 'git' in either the module name or
-   it's description. You should see something like this when you run this
-   command:
-
-         ${GREEN}❯ bash-it search git${BLUE}
-               ${YELLOW}aliases:  ${GREEN}git ${NC}gitsvn
-               ${YELLOW}plugins:  ${NC}autojump ${GREEN}git ${NC}git-subrepo jgitflow jump
-           ${YELLOW}completions:  ${GREEN}git ${NC}git_flow git_flow_avh${NC}
-
-   You can exclude some terms by prefixing a term with a minus, eg:
-
-         ${GREEN}❯ bash-it search git -flow -svn${BLUE}
-               ${YELLOW}aliases:  ${NC}git
-               ${YELLOW}plugins:  ${NC}autojump git git-subrepo jump
-           ${YELLOW}completions:  ${NC}git${NC}
-
-   Finally, if you prefix a term with '@' symbol, that indicates an exact
-   match. Note, that we also pass the '--enable' flag, which would ensure
-   that all matches are automatically enabled. The example is below:
-
-         ${GREEN}❯ bash-it search @git --enable${BLUE}
-               ${YELLOW}aliases:  ${NC}git
-               ${YELLOW}plugins:  ${NC}git
-           ${YELLOW}completions:  ${NC}git${NC}
-
-${YELLOW}SUMMARY${NC}
-
-   Take advantage of the search functionality to discover what Bash-It can do
-   for you. Try searching for partial term matches, mix and match with the
-   negative terms, or specify an exact matches of any number of terms. Once
-   you created the search command that returns ONLY the modules you need,
-   simply append '--enable' or '--disable' at the end to activate/deactivate
-   each module.
-
-"
-}
-
 _bash-it-is-partial-match () {
   local component="$1"
   local term="$2"
@@ -358,4 +281,81 @@ _bash-it-erase-term () {
     printf "%.*s" $a " "
     sleep 0.05
   done
+}
+
+_bash-it-search-help () {
+  printf "${NC}
+${YELLOW}USAGE${NC}
+
+   bash-it search [-|@]term1 [-|@]term2 ... \\
+     [ --enable   | -e ] \\
+     [ --disable  | -d ] \\
+     [ --no-color | -c ] \\
+     [ --refresh  | -r ] \\
+     [ --help     | -h ]
+
+${YELLOW}DESCRIPTION${NC}
+
+   Use ${GREEN}search${NC} bash-it command to search for a list of terms or term negations
+   across all components: aliases, completions and plugins. Components that are
+   enabled are shown in green (or with a check box if --no-color option is used).
+
+   In addition to simply finding the right component, you can use the results
+   of the search to enable or disable all components that the search returns.
+
+   When search is used to enable/disable components it becomes clear that
+   you must be able to perform not just a partial match, but an exact match,
+   as well as be able to exclude some components.
+
+      * To exclude a component (or all components matching a substring) use
+        a search term with minus as a prefix, eg '-flow'
+
+      * To perform an exact match, use character '@' in front of the term,
+        eg. '@git' would only match aliases, plugins and completions named 'git'.
+
+${YELLOW}FLAGS${NC}
+   --enable   | -e    ${MAGENTA}Enable all matching componenents.${NC}
+   --disable  | -d    ${MAGENTA}Disable all matching componenents.${NC}
+   --help     | -h    ${MAGENTA}Print this help.${NC}
+   --refresh  | -r    ${MAGENTA}Force a refresh of the search cache.${NC}
+   --no-color | -c    ${MAGENTA}Disable color output and use monochrome text.${NC}
+
+${YELLOW}EXAMPLES${NC}
+
+   For example, ${GREEN}bash-it search git${NC} would match any alias, completion
+   or plugin that has the word 'git' in either the module name or
+   it's description. You should see something like this when you run this
+   command:
+
+         ${GREEN}❯ bash-it search git${BLUE}
+               ${YELLOW}aliases:  ${GREEN}git ${NC}gitsvn
+               ${YELLOW}plugins:  ${NC}autojump ${GREEN}git ${NC}git-subrepo jgitflow jump
+           ${YELLOW}completions:  ${GREEN}git ${NC}git_flow git_flow_avh${NC}
+
+   You can exclude some terms by prefixing a term with a minus, eg:
+
+         ${GREEN}❯ bash-it search git -flow -svn${BLUE}
+               ${YELLOW}aliases:  ${NC}git
+               ${YELLOW}plugins:  ${NC}autojump git git-subrepo jump
+           ${YELLOW}completions:  ${NC}git${NC}
+
+   Finally, if you prefix a term with '@' symbol, that indicates an exact
+   match. Note, that we also pass the '--enable' flag, which would ensure
+   that all matches are automatically enabled. The example is below:
+
+         ${GREEN}❯ bash-it search @git --enable${BLUE}
+               ${YELLOW}aliases:  ${NC}git
+               ${YELLOW}plugins:  ${NC}git
+           ${YELLOW}completions:  ${NC}git${NC}
+
+${YELLOW}SUMMARY${NC}
+
+   Take advantage of the search functionality to discover what Bash-It can do
+   for you. Try searching for partial term matches, mix and match with the
+   negative terms, or specify an exact matches of any number of terms. Once
+   you created the search command that returns ONLY the modules you need,
+   simply append '--enable' or '--disable' at the end to activate/deactivate
+   each module.
+
+"
 }

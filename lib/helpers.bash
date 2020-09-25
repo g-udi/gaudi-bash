@@ -5,116 +5,40 @@ BASH_IT_LOAD_PRIORITY_DEFAULT_PLUGIN=${BASH_IT_LOAD_PRIORITY_DEFAULT_PLUGIN:-250
 BASH_IT_LOAD_PRIORITY_DEFAULT_COMPLETION=${BASH_IT_LOAD_PRIORITY_DEFAULT_COMPLETION:-350}
 BASH_IT_LOAD_PRIORITY_SEPARATOR="---"
 
+_make_reload_alias() {
+  echo "source \${BASH_IT}/scripts/reloader.bash ${1} ${2}"
+}
+
+# Alias for reloading aliases
+alias reload_aliases="$(_make_reload_alias alias aliases)"
+
+# Alias for reloading auto-completion
+alias reload_completion="$(_make_reload_alias completion completion)"
+
+# Alias for reloading plugins
+alias reload_plugins="$(_make_reload_alias plugin plugins)"
+
+
 # Handle the different ways of running `sed` without generating a backup file based on OS
 # - GNU sed (Linux) uses `-i`
 # - BSD sed (macOS) uses `-i ''`
-# To use this in Bash-it for inline replacements with `sed`, use the following syntax:
+#
+# To use this in bash-it for inline replacements with `sed`, use the following syntax:
 # sed "${BASH_IT_SED_I_PARAMETERS[@]}" -e "..." file
 BASH_IT_SED_I_PARAMETERS=(-i)
 case "$(uname)" in
   Darwin*) BASH_IT_SED_I_PARAMETERS=(-i "")
 esac
 
-function _command_exists () {
+_command_exists () {
   _about 'checks for existence of a command'
   _param '1: command to check'
   _param '2: (optional) log message to include when command not found'
   _example '$ _command_exists ls && echo exists'
   _group 'lib'
+
   local msg="${2:-Command '$1' does not exist!}"
   type "$1" &> /dev/null || (_log_warning "$msg" && return 1) ;
-}
-
-function _make_reload_alias() {
-  echo "source \${BASH_IT}/scripts/reloader.bash ${1} ${2}"
-}
-
-# Alias for reloading aliases
-# shellcheck disable=SC2139
-alias reload_aliases="$(_make_reload_alias alias aliases)"
-
-# Alias for reloading auto-completion
-# shellcheck disable=SC2139
-alias reload_completion="$(_make_reload_alias completion completion)"
-
-# Alias for reloading plugins
-# shellcheck disable=SC2139
-alias reload_plugins="$(_make_reload_alias plugin plugins)"
-
-bash-it () {
-    about 'Bash-it help and maintenance'
-    param '1: verb [one of: help | show | enable | disable | migrate | update | search | version | reload | doctor ] '
-    param '2: component type [one of: alias(es) | completion(s) | plugin(s) ] or search term(s)'
-    param '3: specific component [optional]'
-    example '$ bash-it show plugins'
-    example '$ bash-it help aliases'
-    example '$ bash-it enable plugin git [tmux]...'
-    example '$ bash-it disable alias hg [tmux]...'
-    example '$ bash-it migrate'
-    example '$ bash-it update'
-    example '$ bash-it search [-|@]term1 [-|@]term2 ... [ -e/--enable ] [ -d/--disable ] [ -r/--refresh ] [ -c/--no-color ]'
-    example '$ bash-it version'
-    example '$ bash-it reload'
-    example '$ bash-it doctor errors|warnings|all'
-    typeset verb=${1:-}
-    shift
-    typeset component=${1:-}
-    shift
-    typeset func
-
-    case $verb in
-      show)
-        func=_bash-it-$component;;
-      enable)
-        func=_enable-$component;;
-      disable)
-        func=_disable-$component;;
-      help)
-        func=_help-$component;;
-      doctor)
-        func=_bash-it-doctor-$component;;
-      search)
-        _bash-it-search $component "$@"
-        return;;
-      update)
-        func=_bash-it_update;;
-      migrate)
-        func=_bash-it-migrate;;
-      version)
-        func=_bash-it-version;;
-      reload)
-        func=_bash-it-reload;;
-      *)
-        reference bash-it
-        return;;
-    esac
-
-    # pluralize component if necessary
-    if ! _is_function $func; then
-        if _is_function ${func}s; then
-            func=${func}s
-        else
-            if _is_function ${func}es; then
-                func=${func}es
-            else
-                echo "oops! $component is not a valid option!"
-                reference bash-it
-                return
-            fi
-        fi
-    fi
-
-    if [ x"$verb" == x"enable" ] || [ x"$verb" == x"disable" ]; then
-        # Automatically run a migration if required
-        _bash-it-migrate
-
-        for arg in "$@"
-        do
-            $func $arg
-        done
-    else
-        $func "$@"
-    fi
 }
 
 _is_function () {
@@ -146,7 +70,7 @@ _bash-it-plugins () {
 }
 
 _bash-it_update() {
-  _about 'updates Bash-it'
+  _about 'updates bash-it'
   _group 'lib'
 
   local old_pwd="${PWD}"
@@ -179,7 +103,7 @@ _bash-it_update() {
       [yY]|"")
         git pull --rebase &> /dev/null
         if [[ $? -eq 0 ]]; then
-          echo "Bash-it successfully updated."
+          echo "bash-it successfully updated."
           echo ""
           echo "Migrating your installation to the latest version now..."
           _bash-it-migrate
@@ -187,7 +111,7 @@ _bash-it_update() {
           echo "All done, enjoy!"
           bash-it reload
         else
-          echo "Error updating Bash-it, please, check if your Bash-it installation folder (${BASH_IT}) is clean."
+          echo "Error updating bash-it, please, check if your bash-it installation folder (${BASH_IT}) is clean."
         fi
         ;;
       [nN])
@@ -198,13 +122,13 @@ _bash-it_update() {
         ;;
       esac
   else
-    echo "Bash-it is up to date, nothing to do!"
+    echo "bash-it is up to date, nothing to do!"
   fi
   cd "${old_pwd}" &> /dev/null || return
 }
 
 _bash-it-migrate() {
-  _about 'migrates Bash-it configuration from a previous format to the current one'
+  _about 'migrates bash-it configuration from a previous format to the current one'
   _group 'lib'
 
   declare migrated_something
@@ -240,7 +164,7 @@ _bash-it-migrate() {
 }
 
 _bash-it-version() {
-  _about 'shows current Bash-it version'
+  _about 'shows current bash-it version'
   _group 'lib'
 
   cd "${BASH_IT}" || return
@@ -255,9 +179,9 @@ _bash-it-version() {
   BASH_IT_GIT_VERSION_INFO="$(git log --pretty=format:'%h on %aI' -n 1)"
   BASH_IT_GIT_SHA=${BASH_IT_GIT_VERSION_INFO%% *}
 
-  echo "Current git SHA: $BASH_IT_GIT_VERSION_INFO"
-  echo "$BASH_IT_GIT_URL/commit/$BASH_IT_GIT_SHA"
-  echo "Compare to latest: $BASH_IT_GIT_URL/compare/$BASH_IT_GIT_SHA...master"
+  echo "Current git SHA: ${GREEN}$BASH_IT_GIT_VERSION_INFO${NC}"
+  echo "${MAGENTA}$BASH_IT_GIT_URL/commit/$BASH_IT_GIT_SHA${NC}"
+  echo "Compare to latest: ${YELLOW}$BASH_IT_GIT_URL/compare/$BASH_IT_GIT_SHA...master${NC}"
 
   cd - &> /dev/null || return
 }
@@ -444,7 +368,7 @@ _disable-thing () {
     _bash-it-clean-component-cache "${file_type}"
 
     if [ -n "$BASH_IT_AUTOMATIC_RELOAD_AFTER_CONFIG_CHANGE" ]; then
-        exec ${0/-/}
+      _bash-it-reload
     fi
 
     printf '%s\n' "$file_entity disabled."
@@ -540,7 +464,7 @@ _enable-thing () {
     _bash-it-clean-component-cache "${file_type}"
 
     if [ -n "$BASH_IT_AUTOMATIC_RELOAD_AFTER_CONFIG_CHANGE" ]; then
-        exec ${0/-/}
+      _bash-it-reload
     fi
 
     printf '%s\n' "$file_entity enabled with priority $use_load_priority."
@@ -626,14 +550,14 @@ _help-update () {
   _about 'help message for update command'
   _group 'lib'
 
-  echo "Check for a new version of Bash-it and update it."
+  echo "Check for a new version of bash-it and update it."
 }
 
 _help-migrate () {
   _about 'help message for migrate command'
   _group 'lib'
 
-  echo "Migrates internal Bash-it structure to the latest version in case of changes."
+  echo "Migrates internal bash-it structure to the latest version in case of changes."
   echo "The 'migrate' command is run automatically when calling 'update', 'enable' or 'disable'."
 }
 
@@ -668,3 +592,79 @@ then
     fi
   }
 fi
+
+bash-it () {
+    about 'bash-it help and maintenance'
+    param '1: verb [one of: help | show | enable | disable | migrate | update | search | version | reload | doctor ] '
+    param '2: component type [one of: alias(es) | completion(s) | plugin(s) ] or search term(s)'
+    param '3: specific component [optional]'
+    example '$ bash-it show plugins'
+    example '$ bash-it help aliases'
+    example '$ bash-it enable plugin git [tmux]...'
+    example '$ bash-it disable alias hg [tmux]...'
+    example '$ bash-it migrate'
+    example '$ bash-it update'
+    example '$ bash-it search [-|@]term1 [-|@]term2 ... [ -e/--enable ] [ -d/--disable ] [ -r/--refresh ] [ -c/--no-color ]'
+    example '$ bash-it version'
+    example '$ bash-it reload'
+    example '$ bash-it doctor errors|warnings|all'
+    typeset verb=${1:-}
+    shift
+    typeset component=${1:-}
+    shift
+    typeset func
+
+    case $verb in
+      show)
+        func=_bash-it-$component;;
+      enable)
+        func=_enable-$component;;
+      disable)
+        func=_disable-$component;;
+      help)
+        func=_help-$component;;
+      doctor)
+        func=_bash-it-doctor-$component;;
+      search)
+        _bash-it-search $component "$@"
+        return;;
+      update)
+        func=_bash-it_update;;
+      migrate)
+        func=_bash-it-migrate;;
+      version)
+        func=_bash-it-version;;
+      reload)
+        func=_bash-it-reload;;
+      *)
+        reference bash-it
+        return;;
+    esac
+
+    # pluralize component if necessary
+    if ! _is_function $func; then
+        if _is_function ${func}s; then
+            func=${func}s
+        else
+            if _is_function ${func}es; then
+                func=${func}es
+            else
+                echo "oops! $component is not a valid option!"
+                reference bash-it
+                return
+            fi
+        fi
+    fi
+
+    if [ x"$verb" == x"enable" ] || [ x"$verb" == x"disable" ]; then
+        # Automatically run a migration if required
+        _bash-it-migrate
+
+        for arg in "$@"
+        do
+            $func $arg
+        done
+    else
+        $func "$@"
+    fi
+}

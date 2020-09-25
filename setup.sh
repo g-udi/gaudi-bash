@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # bash-it installer
 
-source "$BASH_IT/lib/colors.bash"
+source "./lib/colors.bash"
 
 echo -e "\n[INFO] ${YELLOW}Getting bash version .... ${NC}\n"
 bash --version
@@ -111,7 +111,18 @@ case $OSTYPE in
 esac
 
 BACKUP_FILE=$CONFIG_FILE.bak
-echo "Installing bash-it"
+printf "
+
+██████╗  █████╗ ███████╗██╗  ██╗      ██╗████████╗
+██╔══██╗██╔══██╗██╔════╝██║  ██║      ██║╚══██╔══╝
+██████╔╝███████║███████╗███████║█████╗██║   ██║
+██╔══██╗██╔══██║╚════██║██╔══██║╚════╝██║   ██║
+██████╔╝██║  ██║███████║██║  ██║      ██║   ██║
+╚═════╝ ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝      ╚═╝   ╚═╝
+
+${CYAN}Installing bash-it ..${NC}
+\n
+"
 if ! [[ $silent ]] && ! [[ $no_modify_config ]]; then
   if [ -e "$HOME/$BACKUP_FILE" ]; then
     echo -e "${YELLOW}Backup file already exists. Make sure to backup your .bashrc before running this installation.${NC}" >&2

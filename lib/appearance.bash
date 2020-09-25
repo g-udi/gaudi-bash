@@ -113,7 +113,7 @@ export LSCOLORS='cxfxdxgxbxegedabagacad'
 
 # colored grep
 GREP_OPTIONS="--color=auto"
-alias grep="grep $GREP_OPTIONS"
+alias grep='grep $GREP_OPTIONS'
 
 # Load the theme
 if [[ $BASH_IT_THEME ]]; then

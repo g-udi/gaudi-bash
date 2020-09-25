@@ -114,15 +114,7 @@ elif [ -s /Applications/Preview.app ]; then
   PREVIEW="/Applications/Preview.app"
 fi
 
-# Load all the Jekyll stuff
-
-if [ -e "$HOME/.jekyllconfig" ]
-then
-  # shellcheck disable=SC1090
-  . "$HOME/.jekyllconfig"
-fi
-
-# BASH_IT_RELOAD_LEGACY is set.
+# BASH_IT_RELOAD_LEGACY is set
 if ! command -v reload &>/dev/null && [ -n "$BASH_IT_RELOAD_LEGACY" ]; then
   case $OSTYPE in
     darwin*)

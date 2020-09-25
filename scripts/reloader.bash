@@ -35,7 +35,6 @@ if [ ! -z "${2}" ] && [[ "${2}" =~ ^(aliases|completion|plugins)$ ]] && [ -d "${
     if [ -e "$_bash_it_config_file" ]; then
       _set-prefix-based-on-path "${_bash_it_config_file}"
       _log_debug "Loading component..."
-      # shellcheck source=/dev/null
       source "$_bash_it_config_file"
     else
       echo "Unable to locate ${_bash_it_config_file}" > /dev/stderr

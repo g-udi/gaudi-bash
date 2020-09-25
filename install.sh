@@ -15,7 +15,7 @@ if [ -d "$BASH_IT" ]; then
     done
     if [[ $REPLY =~ ^[yY]$ ]]; then
         rm -rf $BASH_IT
-        
+
         # Prevent the cloned repository from having insecure permissions. Failing to do
         # so causes compinit() calls to fail with "command not found: compdef" errors
         # for users with insecure umasks (e.g., "002", allowing group writability). Note
@@ -28,7 +28,7 @@ if [ -d "$BASH_IT" ]; then
             exit 1
         }
 
-        sh "$BASH_IT/setup.sh"
+        bash "$BASH_IT/setup.sh"
     else
         echo "Running a bash-it update to pull latest changes ..."
         git -C $BASH_IT pull
