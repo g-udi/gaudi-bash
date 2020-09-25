@@ -4,8 +4,7 @@ export BASH_IT_LOG_LEVEL_ERROR=1
 export BASH_IT_LOG_LEVEL_WARNING=2
 export BASH_IT_LOG_LEVEL_ALL=3
 
-_has_colors()
-{
+_has_colors() {
   # Check that stdout is a terminal
   test -t 1 || return 1
 
@@ -14,9 +13,8 @@ _has_colors()
   return 0
 }
 
-_log_general()
-{
-  about 'Internal used for logging, uses BASH_IT_LOG_PREFIX as a prefix'
+_log_general() {
+  about 'Internal function used for logging, uses BASH_IT_LOG_PREFIX as a prefix'
   param '1: color of the message'
   param '2: log level to print before the prefix'
   param '3: message to log'
@@ -26,8 +24,7 @@ _log_general()
   _has_colors && echo -e "$1${message}${NC}" || echo -e "${message}"
 }
 
-_log_debug()
-{
+_log_debug() {
   about 'log a debug message by echoing to the screen. needs BASH_IT_LOG_LEVEL >= BASH_IT_LOG_LEVEL_ALL'
   param '1: message to log'
   example '$ _log_debug "Loading plugin git..."'
@@ -37,8 +34,7 @@ _log_debug()
   _log_general "${GREEN}" "DEBUG: " "$1"
 }
 
-_log_warning()
-{
+_log_warning() {
   about 'log a message by echoing to the screen. needs BASH_IT_LOG_LEVEL >= BASH_IT_LOG_LEVEL_WARNING'
   param '1: message to log'
   example '$ _log_warning "git binary not found, disabling git plugin..."'
@@ -48,8 +44,7 @@ _log_warning()
   _log_general "${YELLOW}" " WARN: " "$1"
 }
 
-_log_error()
-{
+_log_error() {
   about 'log a message by echoing to the screen. needs BASH_IT_LOG_LEVEL >= BASH_IT_LOG_LEVEL_ERROR'
   param '1: message to log'
   example '$ _log_error "Failed to load git plugin..."'

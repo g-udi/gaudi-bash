@@ -8,13 +8,11 @@
 
 # 'plumbing' functions
 
-composure_keywords ()
-{
+composure_keywords () {
     echo "about author example group param version"
 }
 
-letterpress ()
-{
+letterpress () {
     typeset rightcol="$1" leftcol="${2:- }"
 
     if [ -z "$rightcol" ]; then
@@ -24,8 +22,7 @@ letterpress ()
     printf "%-20s%s\n" "$leftcol" "$rightcol"
 }
 
-transcribe ()
-{
+transcribe () {
     typeset func=$1
     typeset file=$2
     typeset operation="$3"
@@ -82,8 +79,7 @@ transcribe ()
     fi
 }
 
-typeset_functions ()
-{
+typeset_functions () {
     # unfortunately, there does not seem to be a easy, portable way to list just the
     # names of the defined shell functions...
 
@@ -122,8 +118,7 @@ unset f
 
 # 'porcelain' functions
 
-cite ()
-{
+cite () {
     about creates one or more meta keywords for use in your functions
     param one or more keywords
     example '$ cite url username'
@@ -156,8 +151,7 @@ cite ()
     done
 }
 
-draft ()
-{
+draft () {
     about wraps command from history into a new function, default is last command
     param 1: name to give function
     param 2: optional history line number
@@ -202,8 +196,7 @@ draft ()
     rm $file 2>/dev/null
 }
 
-glossary ()
-{
+glossary () {
     about displays help summary for all functions, or summary for a group of functions
     param 1: optional, group name
     example '$ glossary'
@@ -224,8 +217,7 @@ glossary ()
     done
 }
 
-metafor ()
-{
+metafor () {
     about prints function metadata associated with keyword
     param 1: meta keyword
     example '$ typeset -f glossary | metafor example'
@@ -246,8 +238,7 @@ metafor ()
     sed -n "/$keyword / s/['\";]*$//;s/^[ 	]*$keyword ['\"]*\([^([].*\)*$/\1/p"
 }
 
-reference ()
-{
+reference () {
     about displays apidoc help for a specific function
     param 1: function name
     example '$ reference revise'
@@ -292,8 +283,7 @@ reference ()
     fi
 }
 
-revise ()
-{
+revise () {
     about loads function into editor for revision
     param 1: name of function
     example '$ revise myfunction'
@@ -329,8 +319,7 @@ revise ()
     rm $temp
 }
 
-write ()
-{
+write () {
     about writes one or more composed function definitions to stdout
     param one or more function names
     example '$ write finddown foo'

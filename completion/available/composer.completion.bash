@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
-_composer()
-{
+_composer() {
     local cur script coms opts com
     COMPREPLY=()
     _get_comp_words_by_ref -n : cur words

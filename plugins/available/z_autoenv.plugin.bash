@@ -6,8 +6,7 @@ then __array_offset=0
 else __array_offset=1
 fi
 
-autoenv_init()
-{
+autoenv_init() {
   typeset target home _file
   typeset -a _files
   target=$1
@@ -32,8 +31,7 @@ autoenv_init()
   done
 }
 
-cd()
-{
+cd() {
   if builtin cd "$@"
   then
     autoenv_init

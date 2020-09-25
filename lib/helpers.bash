@@ -15,8 +15,7 @@ case "$(uname)" in
   Darwin*) BASH_IT_SED_I_PARAMETERS=(-i "")
 esac
 
-function _command_exists ()
-{
+function _command_exists () {
   _about 'checks for existence of a command'
   _param '1: command to check'
   _param '2: (optional) log message to include when command not found'
@@ -42,8 +41,7 @@ alias reload_completion="$(_make_reload_alias completion completion)"
 # shellcheck disable=SC2139
 alias reload_plugins="$(_make_reload_alias plugin plugins)"
 
-bash-it ()
-{
+bash-it () {
     about 'Bash-it help and maintenance'
     param '1: verb [one of: help | show | enable | disable | migrate | update | search | version | reload | doctor ] '
     param '2: component type [one of: alias(es) | completion(s) | plugin(s) ] or search term(s)'
@@ -119,32 +117,28 @@ bash-it ()
     fi
 }
 
-_is_function ()
-{
+_is_function () {
     _about 'sets $? to true if parameter is the name of a function'
     _param '1: name of alleged function'
     _group 'lib'
     [ -n "$(LANG=C type -t $1 2>/dev/null | grep 'function')" ]
 }
 
-_bash-it-aliases ()
-{
+_bash-it-aliases () {
     _about 'summarizes available bash_it aliases'
     _group 'lib'
 
     _bash-it-describe "aliases" "an" "alias" "Alias"
 }
 
-_bash-it-completions ()
-{
+_bash-it-completions () {
     _about 'summarizes available bash_it completions'
     _group 'lib'
 
     _bash-it-describe "completion" "a" "completion" "Completion"
 }
 
-_bash-it-plugins ()
-{
+_bash-it-plugins () {
     _about 'summarizes available bash_it plugins'
     _group 'lib'
 
@@ -324,8 +318,7 @@ _bash-it-reload() {
   popd &> /dev/null || return
 }
 
-_bash-it-describe ()
-{
+_bash-it-describe () {
     _about 'summarizes available bash_it components'
     _param '1: subdirectory'
     _param '2: preposition'
@@ -361,8 +354,7 @@ _bash-it-describe ()
     printf '%s\n' "$ bash-it disable $file_type <$file_type name> [$file_type name]... -or- $ bash-it disable $file_type all"
 }
 
-_on-disable-callback()
-{
+_on-disable-callback() {
     _about 'Calls the disabled plugin destructor, if present'
     _param '1: plugin name'
     _example '$ _on-disable-callback gitstatus'
@@ -372,8 +364,7 @@ _on-disable-callback()
     _command_exists $callback && $callback
 }
 
-_disable-plugin ()
-{
+_disable-plugin () {
     _about 'disables bash_it plugin'
     _param '1: plugin name'
     _example '$ disable-plugin rvm'
@@ -383,8 +374,7 @@ _disable-plugin ()
     _on-disable-callback $1
 }
 
-_disable-alias ()
-{
+_disable-alias () {
     _about 'disables bash_it alias'
     _param '1: alias name'
     _example '$ disable-alias git'
@@ -393,8 +383,7 @@ _disable-alias ()
     _disable-thing "aliases" "alias" $1
 }
 
-_disable-completion ()
-{
+_disable-completion () {
     _about 'disables bash_it completion'
     _param '1: completion name'
     _example '$ disable-completion git'
@@ -403,8 +392,7 @@ _disable-completion ()
     _disable-thing "completion" "completion" $1
 }
 
-_disable-thing ()
-{
+_disable-thing () {
     _about 'disables a bash_it component'
     _param '1: subdirectory'
     _param '2: file_type'
@@ -462,8 +450,7 @@ _disable-thing ()
     printf '%s\n' "$file_entity disabled."
 }
 
-_enable-plugin ()
-{
+_enable-plugin () {
     _about 'enables bash_it plugin'
     _param '1: plugin name'
     _example '$ enable-plugin rvm'
@@ -472,8 +459,7 @@ _enable-plugin ()
     _enable-thing "plugins" "plugin" $1 $BASH_IT_LOAD_PRIORITY_DEFAULT_PLUGIN
 }
 
-_enable-alias ()
-{
+_enable-alias () {
     _about 'enables bash_it alias'
     _param '1: alias name'
     _example '$ enable-alias git'
@@ -482,8 +468,7 @@ _enable-alias ()
     _enable-thing "aliases" "alias" $1 $BASH_IT_LOAD_PRIORITY_DEFAULT_ALIAS
 }
 
-_enable-completion ()
-{
+_enable-completion () {
     _about 'enables bash_it completion'
     _param '1: completion name'
     _example '$ enable-completion git'
@@ -492,8 +477,7 @@ _enable-completion ()
     _enable-thing "completion" "completion" $1 $BASH_IT_LOAD_PRIORITY_DEFAULT_COMPLETION
 }
 
-_enable-thing ()
-{
+_enable-thing () {
     cite _about _param _example
     _about 'enables a bash_it component'
     _param '1: subdirectory'
@@ -562,16 +546,14 @@ _enable-thing ()
     printf '%s\n' "$file_entity enabled with priority $use_load_priority."
 }
 
-_help-completions()
-{
+_help-completions() {
   _about 'summarize all completions available in bash-it'
   _group 'lib'
 
   _bash-it-completions
 }
 
-_help-aliases()
-{
+_help-aliases() {
     _about 'shows help for all aliases, or a specific alias group'
     _param '1: optional alias group'
     _example '$ alias-help'
@@ -601,16 +583,14 @@ _help-aliases()
     fi
 }
 
-_help-list-aliases ()
-{
+_help-list-aliases () {
     typeset file=$(basename $1 | sed -e 's/[0-9]*[-]*\(.*\)\.aliases\.bash/\1/g')
     printf '\n\n%s:\n' "${file}"
     # metafor() strips trailing quotes, restore them with sed..
     cat $1 | metafor alias | sed "s/$/'/"
 }
 
-_help-plugins()
-{
+_help-plugins() {
     _about 'summarize all functions defined by enabled bash-it plugins'
     _group 'lib'
 
@@ -657,8 +637,7 @@ _help-migrate () {
   echo "The 'migrate' command is run automatically when calling 'update', 'enable' or 'disable'."
 }
 
-all_groups ()
-{
+all_groups () {
     about 'displays all unique metadata groups'
     group 'lib'
 

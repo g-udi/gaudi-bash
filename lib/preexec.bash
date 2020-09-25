@@ -2,9 +2,9 @@
 # http://www.twistedmatrix.com/users/glyph/preexec.bash.txt
 # preexec.bash -- Bash support for ZSH-like 'preexec' and 'precmd' functions.
 
-# The 'preexec' is executed before each interactive command is
+# The 'preexec' function is executed before each interactive command is
 # executed, with the interactive command as its argument.  The 'precmd'
-# is executed before each prompt is displayed.
+# function is executed before each prompt is displayed.
 
 # To use, in order:
 
@@ -47,7 +47,7 @@ precmd () {
     true
 }
 
-# This is installed as the PROMPT_COMMAND; it is invoked before each
+# This function is installed as the PROMPT_COMMAND; it is invoked before each
 # interactive prompt display.  It sets a variable to indicate that the prompt
 # was just displayed, to allow the DEBUG trap, below, to know that the next
 # command is likely interactive.
@@ -56,7 +56,7 @@ preexec_invoke_cmd () {
     preexec_interactive_mode="yes"
 }
 
-# This is installed as the DEBUG trap.  It is invoked before each
+# This function is installed as the DEBUG trap.  It is invoked before each
 # interactive prompt display.  Its purpose is to inspect the current
 # environment to attempt to detect if the current command is being invoked
 # interactively, and invoke 'preexec' if so.

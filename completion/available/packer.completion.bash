@@ -32,8 +32,7 @@
 # It accepts 2 arguments though the second is optional:
 # 1: List of possible completion words.
 # 2: Generate possible completion matches for this word (optional).
-__packercomp ()
-{
+__packercomp () {
     local cur_="${2-$cur}"
 
     case "$cur_" in
@@ -55,16 +54,14 @@ __packercomp ()
 }
 
 # Generates completion reply for template files in cwd.
-__packercomp_template_file ()
-{
+__packercomp_template_file () {
     local IFS=$'\n'
 
     COMPREPLY=($(compgen -S " " -A file -X '!*.json' -- "${cur}"))
 }
 
 # Generates completion for the build command.
-__packer_build ()
-{
+__packer_build () {
     local builders="
         amazon-ebs amazon-instance amazon-chroot digitalocean docker
         googlecompute openstack parallels-iso parallels-pvm qemu
@@ -94,14 +91,12 @@ __packer_build ()
 }
 
 # Generates completion for the fix command.
-__packer_fix ()
-{
+__packer_fix () {
     __packercomp_template_file
 }
 
 # Generates completion for the inspect command.
-__packer_inspect ()
-{
+__packer_inspect () {
     case "$cur" in
         -*)
             __packercomp "-machine-readable"
@@ -114,8 +109,7 @@ __packer_inspect ()
 }
 
 # Generates completion for the validate command.
-__packer_validate ()
-{
+__packer_validate () {
     __packercomp_template_file
 }
 
@@ -124,8 +118,7 @@ __packer_validate ()
 # Searches for a command in $COMP_WORDS. If one is found
 # the appropriate function from above is called, if not
 # completion for global options is done.
-_packer_completion ()
-{
+_packer_completion () {
     cur=${COMP_WORDS[COMP_CWORD]}
     # Words containing an equal sign get split into tokens in bash > 4, which
     # doesn't come in handy here.

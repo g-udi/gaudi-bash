@@ -3,8 +3,7 @@
 # The homebrew bash completion script was used as inspiration.
 # Originally from https://github.com/liborw/homesick-completion
 
-_homesick_complete()
-{
+_homesick_complete() {
     local cur="${COMP_WORDS[COMP_CWORD]}"
     local options="--skip --force --pretend --quiet"
     local actions="cd clone commit destroy diff generate help list open pull push rc show_path status symlink track unlink version"

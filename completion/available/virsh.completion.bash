@@ -6,11 +6,10 @@
 
 
 
-_contain_cmd()
-{
+_contain_cmd() {
     local e f
     local array1=($1) array2=($2)
-    
+
     for e in "${array1[@]}"
     do
         for f in "${array2[@]}"
@@ -26,8 +25,7 @@ _contain_cmd()
     return
 }
 
-_virsh_list_networks()
-{
+_virsh_list_networks() {
     local flag_all=$1 flags
 
     if [ "$flag_all" -eq 1 ]; then
@@ -38,8 +36,7 @@ _virsh_list_networks()
     virsh -q net-list $flags | cut -d\  -f2 | awk '{print $1}'
 }
 
-_virsh_list_domains()
-{
+_virsh_list_domains() {
     local flag_all=$1 flags
 
     if [ "$flag_all" -eq 1 ]; then
@@ -50,8 +47,7 @@ _virsh_list_domains()
     virsh -q list $flags | cut -d\  -f7 | awk '{print $1}'
 }
 
-_virsh_list_pools()
-{
+_virsh_list_pools() {
     local flag_all=$1 flags
 
     if [ "$flag_all" -eq 1 ]; then
@@ -62,8 +58,7 @@ _virsh_list_pools()
     virsh -q pool-list $flags | cut -d\  -f2 | awk '{print $1}'
 }
 
-_virsh_list_ifaces()
-{
+_virsh_list_ifaces() {
     local flag_all=$1 flags
 
     if [ "$flag_all" -eq 1 ]; then
@@ -74,14 +69,12 @@ _virsh_list_ifaces()
     virsh -q iface-list $flags | cut -d\  -f2 | awk '{print $1}'
 }
 
-_virsh_list_nwfilters()
-{
+_virsh_list_nwfilters() {
 
     virsh -q nwfilter-list | cut -d\  -f4 | awk '{print $1}'
 }
 
-_virsh() 
-{
+_virsh()  {
     local cur prev cmds doms options nets pools cmds_help
     local flag_all=1 array ret a b ifaces nwfilters files
 

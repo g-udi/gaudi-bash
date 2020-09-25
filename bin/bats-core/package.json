@@ -1,6 +1,6 @@
 {
   "name": "bats",
-  "version": "1.2.1",
+  "version": "1.2.0",
   "description": "Bash Automated Testing System",
   "homepage": "https://github.com/bats-core/bats-core#readme",
   "license": "MIT",
@@ -10,7 +10,6 @@
   "files": [
     "bin",
     "libexec",
-    "lib",
     "man"
   ],
   "directories": {

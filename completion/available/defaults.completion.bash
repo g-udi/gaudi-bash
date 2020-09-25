@@ -7,8 +7,7 @@
 # Version 1.0 (2006-11-08)
 
 
-_defaults_domains()
-{
+_defaults_domains() {
     local cur
     COMPREPLY=()
     cur=${COMP_WORDS[COMP_CWORD]}
@@ -24,8 +23,7 @@ _defaults_domains()
 }
 
 
-_defaults()
-{
+_defaults() {
 	local cur prev host_opts cmds cmd domain keys key_index
     cur=${COMP_WORDS[COMP_CWORD]}
     prev=${COMP_WORDS[COMP_CWORD-1]}

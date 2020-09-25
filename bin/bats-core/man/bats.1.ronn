@@ -5,11 +5,11 @@ bats(1) -- Bash Automated Testing System
 SYNOPSIS
 --------
 
-Usage: bats [OPTIONS] <tests>
-       bats [-h | -v]
+bats [-cr] [-f <regex>] [-p | -t] <test>...<br/>
+bats [-h | -v]
 
-  <tests> is the path to a Bats test file, or the path to a directory
-  containing Bats test files (ending with ".bats")
+<test> is the path to a Bats test file, or the path to a directory containing
+Bats test files (ending with ".bats").
 
 
 DESCRIPTION
@@ -49,30 +49,16 @@ OPTIONS
 
   * `-c`, `--count`:
     Count the number of test cases without running any tests
-  * `-f`, `--filter <regex>`:
+  * `-f`, `--filter`:
     Filter test cases by names matching the regular expression
-  * `-F`, `--formatter <type>`:
-    Switch between formatters: pretty (default), tap (default w/o term), tap13, junit
   * `-h`, `--help`:
-    Display this help message
-  * `-j`, `--jobs <jobs>`:
-    Number of parallel jobs (requires GNU parallel)
-  * `--no-tempdir-cleanup`:
-    Preserve test output temporary directory
-  * `--no-parallelize-across-files`
-    Serialize test file execution instead of running them in parallel (requires --jobs >1)
-  * `--no-parallelize-within-files`
-    Serialize test execution within files instead of running them in parallel (requires --jobs >1)
-  * `-o`, `--output <dir>`:
-    Directory to write report files
+    Display help message
   * `-p`, `--pretty`:
-    Shorthand for "--formatter pretty"
+    Show results in pretty format (default for terminals)
   * `-r`, `--recursive`:
     Include tests in subdirectories
   * `-t`, `--tap`:
-    Shorthand for "--formatter tap"
-  * `-T`, `--timing`:
-    Add timing information to tests
+    Show results in TAP format
   * `-v`, `--version`:
     Display the version number
 

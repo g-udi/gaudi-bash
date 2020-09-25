@@ -3,11 +3,6 @@
 load test_helper
 fixtures bats
 
-teardown() {
-  # cleanup the test local tmpdir to avoid cleaning up all tests' at once
-  test_helper::cleanup_tmpdir "$BATS_TEST_NAME"
-}
-
 @test "no arguments prints message and usage instructions" {
   run bats
   [ $status -eq 1 ]
@@ -66,7 +61,7 @@ teardown() {
 }
 
 @test "tap passing and skipping tests" {
-  run filter_control_sequences bats --formatter tap "$FIXTURE_ROOT/passing_and_skipping.bats"
+  run filter_control_sequences bats --tap "$FIXTURE_ROOT/passing_and_skipping.bats"
   [ $status -eq 0 ]
   [ "${lines[0]}" = "1..3" ]
   [ "${lines[1]}" = "ok 1 a passing test" ]
@@ -87,7 +82,7 @@ teardown() {
 }
 
 @test "tap passing, failing and skipping tests" {
-  run filter_control_sequences bats --formatter tap "$FIXTURE_ROOT/passing_failing_and_skipping.bats"
+  run filter_control_sequences bats --tap "$FIXTURE_ROOT/passing_failing_and_skipping.bats"
   [ $status -eq 0 ]
   [ "${lines[0]}" = "1..3" ]
   [ "${lines[1]}" = "ok 1 a passing test" ]
@@ -142,7 +137,7 @@ teardown() {
 }
 
 @test "setup is run once before each test" {
-  make_bats_test_suite_tmpdir "$BATS_TEST_NAME"
+  make_bats_test_suite_tmpdir
   run bats "$FIXTURE_ROOT/setup.bats"
   [ $status -eq 0 ]
   run cat "$BATS_TEST_SUITE_TMPDIR/setup.log"
@@ -150,7 +145,7 @@ teardown() {
 }
 
 @test "teardown is run once after each test, even if it fails" {
-  make_bats_test_suite_tmpdir "$BATS_TEST_NAME"
+  make_bats_test_suite_tmpdir
   run bats "$FIXTURE_ROOT/teardown.bats"
   [ $status -eq 1 ]
   run cat "$BATS_TEST_SUITE_TMPDIR/teardown.log"
@@ -168,7 +163,6 @@ teardown() {
 @test "passing test with teardown failure" {
   PASS=1 run bats "$FIXTURE_ROOT/failing_teardown.bats"
   [ $status -eq 1 ]
-  echo "$output"
   [ "${lines[1]}" = 'not ok 1 truth' ]
   [ "${lines[2]}" = "# (from function \`teardown' in test file $RELATIVE_FIXTURE_ROOT/failing_teardown.bats, line 2)" ]
   [ "${lines[3]}" = "#   \`eval \"( exit \${STATUS:-1} )\"' failed" ]
@@ -189,7 +183,7 @@ teardown() {
 }
 
 @test "failing test file outside of BATS_CWD" {
-  make_bats_test_suite_tmpdir "$BATS_TEST_NAME"
+  make_bats_test_suite_tmpdir
   cd "$BATS_TEST_SUITE_TMPDIR"
   run bats "$FIXTURE_ROOT/failing.bats"
   [ $status -eq 1 ]
@@ -198,11 +192,6 @@ teardown() {
 
 @test "load sources scripts relative to the current test file" {
   run bats "$FIXTURE_ROOT/load.bats"
-  [ $status -eq 0 ]
-}
-
-@test "load sources relative scripts with filename extension" {
-  HELPER_NAME="test_helper.bash" run bats "$FIXTURE_ROOT/load.bats"
   [ $status -eq 0 ]
 }
 
@@ -219,55 +208,6 @@ teardown() {
 @test "load aborts if the script, specified by an absolute path, does not exist" {
   HELPER_NAME="${FIXTURE_ROOT}/nonexistent" run bats "$FIXTURE_ROOT/load.bats"
   [ $status -eq 1 ]
-}
-
-@test "load relative script with ambiguous name" {
-  HELPER_NAME="ambiguous" run bats "$FIXTURE_ROOT/load.bats"
-  [ $status -eq 0 ]
-}
-
-@test "load supports scripts on the PATH" {
-  path_dir="$BATS_TMPNAME/path"
-  mkdir -p "$path_dir"
-  cp "${FIXTURE_ROOT}/test_helper.bash" "${path_dir}/on_path"
-  PATH="${path_dir}:$PATH"  HELPER_NAME="on_path" run bats "$FIXTURE_ROOT/load.bats"
-  [ $status -eq 0 ]
-}
-
-@test "load supports plain symbols" {
-  local -r helper="${BATS_TMPDIR}/load_helper_plain"
-  {
-    echo "plain_variable='value of plain variable'"
-    echo "plain_array=(test me hard)"
-  } > "${helper}"
-
-  load "${helper}"
-
-  [ "${plain_variable}" = 'value of plain variable' ]
-  [ "${plain_array[2]}" = 'hard' ]
-
-  rm "${helper}"
-}
-
-@test "load doesn't support _declare_d symbols" {
-  local -r helper="${BATS_TMPDIR}/load_helper_declared"
-  {
-    echo "declare declared_variable='value of declared variable'"
-    echo "declare -r a_constant='constant value'"
-    echo "declare -i an_integer=0x7e4"
-    echo "declare -a an_array=(test me hard)"
-    echo "declare -x exported_variable='value of exported variable'"
-  } > "${helper}"
-
-  load "${helper}"
-
-  ! [ "${declared_variable:-}" = 'value of declared variable' ]
-  ! [ "${a_constant:-}" = 'constant value' ]
-  ! (( "${an_integer:-2019}" == 2020 ))
-  ! [ "${an_array[2]:-}" = 'hard' ]
-  ! [ "${exported_variable:-}" = 'value of exported variable' ]
-
-  rm "${helper}"
 }
 
 @test "output is discarded for passing tests and printed for failing tests" {
@@ -325,40 +265,15 @@ teardown() {
 @test "extended syntax" {
   emulate_bats_env
   run bats-exec-suite -x "$FIXTURE_ROOT/failing_and_passing.bats"
-  echo "$output"
   [ $status -eq 1 ]
-  [ "${lines[1]}" = 'suite failing_and_passing.bats' ]
-  [ "${lines[2]}" = 'begin 1 a failing test' ]
-  [ "${lines[3]}" = 'not ok 1 a failing test' ]
-  [ "${lines[6]}" = 'begin 2 a passing test' ]
-  [ "${lines[7]}" = 'ok 2 a passing test' ]
-}
-
-@test "timing syntax" {
-  run bats -T "$FIXTURE_ROOT/failing_and_passing.bats"
-  echo "$output"
-  [ $status -eq 1 ]
-  regex='not ok 1 a failing test in [0-9]+ms'
-  [[ "${lines[1]}" =~ $regex ]]
-  regex='ok 2 a passing test in [0-9]+ms'
-  [[ "${lines[4]}" =~ $regex ]]
-}
-
-@test "extended timing syntax" {
-  emulate_bats_env
-  run bats-exec-suite -x -T "$FIXTURE_ROOT/failing_and_passing.bats"
-  echo "$output"
-  [ $status -eq 1 ]
-  regex="not ok 1 a failing test in [0-9]+ms"
-  [ "${lines[2]}" = 'begin 1 a failing test' ]
-  [[ "${lines[3]}" =~ $regex ]]
-  [ "${lines[6]}" = 'begin 2 a passing test' ]
-  regex="ok 2 a passing test in [0-9]+ms"
-  [[ "${lines[7]}" =~ $regex ]]
+  [ "${lines[1]}" = 'begin 1 a failing test' ]
+  [ "${lines[2]}" = 'not ok 1 a failing test' ]
+  [ "${lines[5]}" = 'begin 2 a passing test' ]
+  [ "${lines[6]}" = 'ok 2 a passing test' ]
 }
 
 @test "pretty and tap formats" {
-  run bats --formatter tap "$FIXTURE_ROOT/passing.bats"
+  run bats --tap "$FIXTURE_ROOT/passing.bats"
   tap_output="$output"
   [ $status -eq 0 ]
 
@@ -370,10 +285,10 @@ teardown() {
 }
 
 @test "pretty formatter bails on invalid tap" {
-  run bats-format-pretty < <(printf "This isn't TAP!\nGood day to you\n")
-  [ $status -eq 0 ]
-  [ "${lines[0]}" = "This isn't TAP!" ]
-  [ "${lines[1]}" = "Good day to you" ]
+  run bats-format-tap-stream < <(printf "This isn't TAP.\nGood day to you.\n")
+  [ "$status" -eq 0 ]
+  [ "${lines[0]}" = "This isn't TAP." ]
+  [ "${lines[1]}" = "Good day to you." ]
 }
 
 @test "single-line tests" {
@@ -464,19 +379,19 @@ END_OF_ERR_MSG
   [ "${lines[11]}" = 'ok 11 ' ]   # empty name from single quote
 }
 
-@test "duplicate tests error and generate a warning on stderr" {
-  run bats --tap "$FIXTURE_ROOT/duplicate-tests.bats"
+@test "duplicate tests cause a warning on stderr" {
+  run bats "$FIXTURE_ROOT/duplicate-tests.bats"
   [ $status -eq 1 ]
 
-  local expected='Error: Duplicate test name(s) in file '
-  expected+="\"${FIXTURE_ROOT}/duplicate-tests.bats\": test_gizmo_test"
+  local expected='bats warning: duplicate test name(s) in '
+  expected+="$FIXTURE_ROOT/duplicate-tests.bats: test_gizmo_test"
 
   printf 'expected: "%s"\n' "$expected" >&2
   printf 'actual:   "%s"\n' "${lines[0]}" >&2
   [ "${lines[0]}" = "$expected" ]
 
   printf 'num lines: %d\n' "${#lines[*]}" >&2
-  [ "${#lines[*]}" = "1" ]
+  [ "${#lines[*]}" = "7" ]
 }
 
 @test "sourcing a nonexistent file in setup produces error output" {
@@ -553,6 +468,22 @@ END_OF_ERR_MSG
   [ "${lines[6]}" = '# baz' ]
 }
 
+@test "parallel test execution with --jobs" {
+  type -p parallel &>/dev/null || skip "--jobs requires GNU parallel"
+
+  SECONDS=0
+  run bats --jobs 10 "$FIXTURE_ROOT/parallel.bats"
+  duration="$SECONDS"
+  [ "$status" -eq 0 ]
+  # Make sure the lines are in-order.
+  [[ "${lines[0]}" == "1..10" ]]
+  for t in {1..10}; do
+    [[ "${lines[$t]}" == "ok $t slow test $t" ]]
+  done
+  # In theory it should take 3s, but let's give it bit of extra time instead.
+  [[ "$duration" -lt 20 ]]
+}
+
 @test "run tests which consume stdin (see #197)" {
   run bats "$FIXTURE_ROOT/read_from_stdin.bats"
   [ "$status" -eq 0 ]
@@ -563,7 +494,7 @@ END_OF_ERR_MSG
 }
 
 @test "report correct line on unset variables" {
-  LANG=C run bats "$FIXTURE_ROOT/unbound_variable.bats"
+  run bats "$FIXTURE_ROOT/unbound_variable.bats"
   [ "$status" -eq 1 ]
   [ "${#lines[@]}" -eq 9 ]
   [ "${lines[1]}" = 'not ok 1 access unbound variable' ]
@@ -603,80 +534,4 @@ END_OF_ERR_MSG
     outputOffset=$((outputOffset + 3))
     currentErrorLine=$((currentErrorLine + linesPerTest))
   done
-}
-
-@test "test count validator catches mismatch and returns non zero" {
-  source "$BATS_ROOT/lib/bats-core/validator.bash"
-  export -f bats_test_count_validator
-  run bash -c "echo $'1..1\n' | bats_test_count_validator"
-  [[ $status -ne 0 ]]
-
-  run bash -c "echo $'1..1\nok 1\nok 2' | bats_test_count_validator"
-  [[ $status -ne 0 ]]
-
-  run bash -c "echo $'1..1\nok 1' | bats_test_count_validator"
-  [[ $status -eq 0 ]]
-}
-
-@test "running the same file twice runs its tests twice without errors" {
-  run bats "$FIXTURE_ROOT/passing.bats" "$FIXTURE_ROOT/passing.bats"
-  echo "$output"
-  [[ $status -eq 0 ]]
-  [[ "${lines[0]}" == "1..2" ]] # got 2x1 tests
-}
-
-@test "Don't use unbound variables inside bats (issue #340)" {
-  run bats "$FIXTURE_ROOT/set_-eu_in_setup_and_teardown.bats"
-  echo "$output"
-  [[ "${lines[0]}" == "1..4" ]]
-  [[ "${lines[1]}" == "ok 1 skipped test # skip" ]]
-  [[ "${lines[2]}" == "ok 2 skipped test with reason # skip reason" ]]
-  [[ "${lines[3]}" == "ok 3 passing test" ]]
-  [[ "${lines[4]}" == "not ok 4 failing test" ]]
-  [[ "${lines[5]}" == "# (in test file $RELATIVE_FIXTURE_ROOT/set_-eu_in_setup_and_teardown.bats, line 22)" ]]
-  [[ "${lines[6]}" == "#   \`false' failed" ]]
-  [[ "${#lines[@]}" -eq 7 ]]
-}
-
-@test "filenames with tab can be used" {
-  [[ "$OSTYPE" == "linux"* ]] || skip "FS cannot deal with tabs in filenames"
-
-  cp "$FIXTURE_ROOT/tab in filename.bats" "$FIXTURE_ROOT/tab"$'\t'"in filename.bats"
-  bats "$FIXTURE_ROOT/tab"$'\t'"in filename.bats"
-}
-
-@test "each file is evaluated n+1 times" {
-  make_bats_test_suite_tmpdir
-  export TEMPFILE="$BATS_TEST_SUITE_TMPDIR/$BATS_TEST_NAME.log"
-  run bats "$FIXTURE_ROOT/evaluation_count/"
-
-  cat "$TEMPFILE"
-
-  run grep "file1" "$TEMPFILE"
-  [[ ${#lines[@]} -eq 2 ]]
-
-  run grep "file2" "$TEMPFILE"
-  [[ ${#lines[@]} -eq 3 ]]
-}
-
-@test "Don't hang on CTRL-C (issue #353)" {
-  # guarantee that background processes get their own process group -> pid=pgid
-  set -m
-  run bats "$FIXTURE_ROOT/run_long_command.bats" & # don't block execution, or we cannot send signals
-  echo "$output"
-  SUBPROCESS_PID=$!
-
-  sleep 1 # wait for the background process to start on slow systems
-
-  # emulate CTRL-C by sending SIGINT to the whole process group
-  kill -SIGINT -- -$SUBPROCESS_PID
-
-  sleep 1 # wait for the signal to be acted upon
-
-  # when the process is gone, we cannot deliver a signal anymore, getting non-zero from kill
-  run kill -0 -- -$SUBPROCESS_PID
-  [[ $status -ne 0 ]] \
-    || (kill -9 -- -$SUBPROCESS_PID; false)
-    #   ^ kill the process for good when SIGINT failed,
-    #     to avoid waiting endlessly for stuck children to finish
 }
