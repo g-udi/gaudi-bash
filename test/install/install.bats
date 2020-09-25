@@ -1,6 +1,6 @@
 #!/usr/bin/env bats
 
-load ../test_helper
+load ../helper
 load ../../lib/composure
 
 # Determine which config file to use based on OS.

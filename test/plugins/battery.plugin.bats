@@ -1,6 +1,6 @@
 #!/usr/bin/env bats
 
-load ../test_helper
+load ../helper
 load ../../lib/composure
 
 cite _about _param _example _group _author _version

@@ -1,6 +1,6 @@
 #!/usr/bin/env bats
 
-load ../test_helper
+load ../helper
 load ../../lib/composure
 
 @test "lib composure: composure_keywords()" {

@@ -36,5 +36,5 @@ This can speed up test execution significantly.
 ## Writing Tests
 
 When adding or modifying tests, please stick to the format and conventions of the existing test cases.
-The `test_helper.bash` script provides a couple of reusable helper functions that you should use when writing a test case,
+The `helper.bash` script provides a couple of reusable helper functions that you should use when writing a test case,
 for example for setting up an isolated test environment.
