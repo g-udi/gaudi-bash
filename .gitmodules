@@ -17,3 +17,6 @@
 [submodule "bin/composure"]
 	path = bin/composure
 	url = git@github.com:erichs/composure.git
+[submodule "bin/preexec"]
+	path = bin/preexec
+	url = https://github.com/rcaloras/bash-preexec
