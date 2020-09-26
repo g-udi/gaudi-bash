@@ -1,4 +1,4 @@
-cite 'about-alias'
+cite about-alias
 about-alias 'laravel artisan abbreviations'
 
 # A list of useful laravel aliases

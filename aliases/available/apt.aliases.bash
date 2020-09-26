@@ -2,7 +2,7 @@
 #
 # -binaryanomaly
 
-cite 'about-alias'
+cite about-alias
 about-alias 'Apt and dpkg aliases for Ubuntu and Debian distros.'
 
 # set apt aliases

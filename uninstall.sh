@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-
 if [ -z "$BASH_IT" ];
 then
   BASH_IT="$HOME/.bash_it"
@@ -29,7 +28,7 @@ else
     echo -e "${GREEN}Your original $CONFIG_FILE has been restored.${NC}"
 fi
 
-rm -rf $BASH_IT 
+rm -rf $BASH_IT
 
 echo ""
 echo -e "${GREEN}Uninstallation finished successfully! Sorry to see you go!${NC}"

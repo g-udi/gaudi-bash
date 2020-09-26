@@ -1,4 +1,4 @@
-cite 'about-alias'
+cite about-alias
 about-alias 'osx-specific aliases'
 
 # Desktop Programs

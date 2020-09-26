@@ -47,7 +47,6 @@ __vboxmanage_list_vms () {
     else
 	SEPARATOR=$1
     fi
-
     for VM in $(vboxmanage list vms | cut -d' ' -f1 | tr -d '"'); do
 	[ "$VMS" != "" ] && VMS="${VMS}${SEPARATOR}"
 	VMS="${VMS}${VM}"
@@ -63,7 +62,6 @@ __vboxmanage_list_runningvms () {
     else
 	SEPARATOR=$1
     fi
-
     for VM in $(vboxmanage list runningvms | cut -d' ' -f1 | tr -d '"'); do
 	[ "$VMS" != "" ] && VMS="${VMS}${SEPARATOR}"
 	VMS="${VMS}${VM}"

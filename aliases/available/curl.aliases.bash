@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cite 'about-alias'
+cite about-alias
 about-alias 'Curl aliases for convenience.'
 
 # set apt aliases

@@ -1,6 +1,6 @@
 # Some aliases for Homebrew
 
-cite 'about-alias'
+cite about-alias
 about-alias 'homebrew abbreviations'
 
 alias bup='brew update && brew upgrade'

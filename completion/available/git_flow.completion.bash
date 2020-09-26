@@ -122,7 +122,6 @@ __git_flow_release () {
 		__gitcomp "$subcommands"
 		return
 	fi
-
 	case "$subcommand" in
 	finish)
 		__gitcomp "$(__git_flow_list_releases)"

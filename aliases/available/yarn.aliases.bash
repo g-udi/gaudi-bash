@@ -1,4 +1,4 @@
-cite 'about-alias'
+cite about-alias
 about-alias 'yarn package manager aliases'
 
 # Aliases

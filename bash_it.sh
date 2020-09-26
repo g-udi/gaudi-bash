@@ -13,10 +13,8 @@ then
 fi
 
 # Load composure first, so we support function metadata
-# shellcheck source=./lib/composure.bash
 source "${BASH_IT}/lib/composure.bash"
 # We need to load logging module first as well in order to be able to log
-# shellcheck source=./lib/log.bash
 source "${BASH_IT}/lib/log.bash"
 
 # We can only log it now
@@ -44,20 +42,17 @@ do
     filename=${filename%.bash}
     BASH_IT_LOG_PREFIX="lib: ${filename}: "
     _log_debug "Loading library file..."
-    # shellcheck disable=SC1090
     source "$_bash_it_config_file"
   fi
 done
 
 # Load the global "enabled" directory
 # "family" param is empty so that files get sources in glob order
-# shellcheck source=./scripts/reloader.bash
 source "${BASH_IT}/scripts/reloader.bash"
 
 # Load enabled aliases, completion, plugins
 for file_type in "aliases" "plugins" "completion"
 do
-  # shellcheck source=./scripts/reloader.bash
   source "${BASH_IT}/scripts/reloader.bash" "skip" "$file_type"
 done
 
@@ -78,7 +73,6 @@ do
   then
     BASH_IT_LOG_PREFIX="${file_type}: custom: "
     _log_debug "Loading component..."
-    # shellcheck disable=SC1090
     source "${BASH_IT}/${file_type}/custom.${file_type}.bash"
   fi
 done
@@ -110,7 +104,6 @@ PREVIEW="less"
 if [ -s /usr/bin/gloobus-preview ]; then
   PREVIEW="gloobus-preview"
 elif [ -s /Applications/Preview.app ]; then
-  # shellcheck disable=SC2034
   PREVIEW="/Applications/Preview.app"
 fi
 

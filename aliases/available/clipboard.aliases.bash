@@ -1,4 +1,4 @@
-cite 'about-alias'
+cite about-alias
 about-alias 'pbcopy and pbpaste shortcuts to linux'
 
 case $OSTYPE in
@@ -7,7 +7,7 @@ case $OSTYPE in
     [[ $XCLIP ]] && \
     alias pbcopy="$XCLIP -selection clipboard" && \
     alias pbpaste="$XCLIP -selection clipboard -o"
-    ;;   
+    ;;
 esac
 
 # to use it just install xclip on your distribution and it would work like:

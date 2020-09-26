@@ -1,4 +1,4 @@
-cite 'about-alias'
+cite about-alias
 about-alias 'vim abbreviations'
 
 VIM=$(command -v vim)

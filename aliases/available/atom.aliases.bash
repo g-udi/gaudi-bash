@@ -1,4 +1,4 @@
-cite 'about-alias'
+cite about-alias
 about-alias 'Atom.io editor abbreviations'
 
 alias a='atom'

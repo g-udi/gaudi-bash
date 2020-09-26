@@ -1,4 +1,4 @@
-cite 'about-alias'
+cite about-alias
 about-alias 'maven abbreviations'
 
 alias mci='mvn clean install'

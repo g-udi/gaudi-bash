@@ -1,6 +1,6 @@
 # Some aliases for Homebrew Cask
 
-cite 'about-alias'
+cite about-alias
 about-alias 'homebrew-cask abbreviations'
 
 alias bcin='brew cask install'

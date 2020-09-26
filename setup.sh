@@ -6,6 +6,19 @@ source "./lib/colors.bash"
 echo -e "\n[INFO] ${YELLOW}Getting bash version .... ${NC}\n"
 bash --version
 
+printf "
+
+██████╗  █████╗ ███████╗██╗  ██╗      ██╗████████╗
+██╔══██╗██╔══██╗██╔════╝██║  ██║      ██║╚══██╔══╝
+██████╔╝███████║███████╗███████║█████╗██║   ██║
+██╔══██╗██╔══██║╚════██║██╔══██║╚════╝██║   ██║
+██████╔╝██║  ██║███████║██║  ██║      ██║   ██║
+╚═════╝ ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝      ╚═╝   ╚═╝
+
+${CYAN}Installing bash-it ..${NC}
+
+"
+
 # Show how to use this installer
 show_usage () {
   echo -e "\n$0 : Install bash-it"
@@ -111,18 +124,7 @@ case $OSTYPE in
 esac
 
 BACKUP_FILE=$CONFIG_FILE.bak
-printf "
 
-██████╗  █████╗ ███████╗██╗  ██╗      ██╗████████╗
-██╔══██╗██╔══██╗██╔════╝██║  ██║      ██║╚══██╔══╝
-██████╔╝███████║███████╗███████║█████╗██║   ██║
-██╔══██╗██╔══██║╚════██║██╔══██║╚════╝██║   ██║
-██████╔╝██║  ██║███████║██║  ██║      ██║   ██║
-╚═════╝ ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝      ╚═╝   ╚═╝
-
-${CYAN}Installing bash-it ..${NC}
-\n
-"
 if ! [[ $silent ]] && ! [[ $no_modify_config ]]; then
   if [ -e "$HOME/$BACKUP_FILE" ]; then
     echo -e "${YELLOW}Backup file already exists. Make sure to backup your .bashrc before running this installation.${NC}" >&2
