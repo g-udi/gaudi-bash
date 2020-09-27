@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #
 # Search by Konstantin Gredeskoul «github.com/kigster»
-#———————————————————————————————————————————————————————————————————————————————
+#
 # This function returns list of aliases, plugins and completions in bash-it,
 # whose name or description matches one of the search terms provided as arguments.
 #
@@ -40,7 +40,7 @@
 #          plugins:  ruby
 #
 # Examples of using exact match:
-
+#
 #    ❯ bash-it search @git @ruby
 #          aliases:  git
 #          plugins:  git ruby
@@ -91,12 +91,14 @@ _bash-it-search () {
 _bash-it-is-partial-match () {
   local component="$1"
   local term="$2"
+
   _bash-it-component-help "${component}" | $(_bash-it-grep) -E -i -q -- "${term}"
 }
 
 _bash-it-component-term-matches-negation () {
   local match="$1"; shift
   local negative
+
   for negative in "$@"; do
     [[ "${match}" =~ "${negative}" ]] && return 0
   done
@@ -106,6 +108,7 @@ _bash-it-component-term-matches-negation () {
 
 _bash-it-search-component () {
   local component="$1"
+
   shift
 
   _about 'searches for given terms amongst a given component'
@@ -114,15 +117,16 @@ _bash-it-search-component () {
   _param '3: [-]term4 [-]term5 ...'
   _example '$ _bash-it-search-component aliases @git rake bundler -chruby'
 
-  # if one of the search terms is --enable or --disable, we will apply
-  # this action to the matches further  ` down.
+  # if one of the search terms is --enable or --disable, we will apply this action to the matches further down.
   local component_singular action action_func
   local -a search_commands=(enable disable)
+
   for search_command in "${search_commands[@]}"; do
     if $(_bash-it-array-contains-element "--${search_command}" "$@"); then
       component_singular=${component}
-      component_singular=${component_singular/es/}  # aliases -> alias
-      component_singular=${component_singular/ns/n} # plugins -> plugin
+      # handle aliases -> alias and plugins -> plugin
+      component_singular=${component_singular/es/}
+      component_singular=${component_singular/ns/n}
 
       action="${search_command}"
       action_func="_${action}-${component_singular}"
@@ -130,15 +134,19 @@ _bash-it-search-component () {
     fi
   done
 
-  local -a terms=($@)           # passed on the command line
+   # passed on the command line
+  local -a terms=($@)
 
   unset exact_terms
   unset partial_terms
   unset negative_terms
 
-  local -a exact_terms=()       # terms that should be included only if they match exactly
-  local -a partial_terms=()     # terms that should be included if they match partially
-  local -a negative_terms=()    # negated partial terms that should be excluded
+  # terms that should be included only if they match exactly
+  local -a exact_terms=()
+  # terms that should be included if they match partially
+  local -a partial_terms=()
+  # negated partial terms that should be excluded
+  local -a negative_terms=()
 
   unset component_list
   local -a component_list=( $(_bash-it-component-list "${component}") )
@@ -146,6 +154,7 @@ _bash-it-search-component () {
 
   for term in "${terms[@]}"; do
     local search_term="${term:1}"
+
     if [[ "${term:0:2}" == "--" ]] ; then
       continue
     elif [[ "${term:0:1}" == "-"  ]] ; then
@@ -165,6 +174,7 @@ _bash-it-search-component () {
   declare -a matches=()
   for match in ${total_matches[@]}; do
     local include_match=true
+
     if  [[ ${#negative_terms[@]} -gt 0 ]]; then
       ( _bash-it-component-term-matches-negation "${match}" "${negative_terms[@]}" ) && include_match=false
     fi
@@ -179,7 +189,6 @@ _bash-it-search-result () {
   local action="$1"; shift
   local action_func="$1"; shift
   local -a matches=($@)
-
   local color_component color_enable color_disable color_off
 
   color_sep=':'
@@ -210,6 +219,7 @@ _bash-it-search-result () {
 
     for match in "${matches[@]}"; do
       local enabled=0
+
       ( _bash-it-component-item-is-enabled "${component}" "${match}" ) && enabled=1
 
       local match_color compatible_action suffix opposite_suffix
@@ -232,7 +242,7 @@ _bash-it-search-result () {
       local len
       len=${#m}
 
-      printf " ${match_color}${match}${suffix}"  # print current state
+      printf " ${match_color}${match}${suffix}"
       if [[ "${action}" == "${compatible_action}" ]]; then
         if [[ ${action} == "enable" && ${BASH_IT_SEARCH_USE_COLOR} == false ]]; then
           _bash-it-flash-term ${len} "${match}${suffix}"
@@ -242,6 +252,7 @@ _bash-it-search-result () {
         modified=1
         result=$(${action_func} ${match})
         local temp="color_${compatible_action}"
+
         match_color=${!temp}
         _bash-it-rewind ${len}
         printf "${match_color}${match}${opposite_suffix}"
@@ -257,6 +268,7 @@ _bash-it-search-result () {
 
 _bash-it-rewind () {
   local len="$1"
+
   printf "\033[${len}D"
 }
 

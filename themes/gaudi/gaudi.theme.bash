@@ -50,11 +50,16 @@ gaudi::prompt () {
   # Source the prompt char configuration
   source "$GAUDI_ROOT/segments/char.bash"
 
-  local PROMPT_CHAR="$(gaudi_char)"
-  local COMPENSATE=58
+  local PROMPT_CHAR
+  local COMPENSATE
+  local LEFT_PROMPT
+  local RIGHT_PROMPT
 
-  local LEFT_PROMPT="$(gaudi::render_prompt GAUDI_PROMPT_LEFT[@])"
-  local RIGHT_PROMPT="$(gaudi::render_prompt GAUDI_PROMPT_RIGHT[@])"
+  PROMPT_CHAR="$(gaudi_char)"
+  COMPENSATE=58
+
+  LEFT_PROMPT="$(gaudi::render_prompt GAUDI_PROMPT_LEFT[@])"
+  RIGHT_PROMPT="$(gaudi::render_prompt GAUDI_PROMPT_RIGHT[@])"
   # Check if we need to activate the two side theme split (LEFT_PROMPT ------ RIGHT RIGHT)
   # Or we need to have the whole prompt in one line where (RIGHT_PROMPT LEFT_PROMPT)
   if [[ $GAUDI_SPLIT_PROMPT == false ]]; then
@@ -70,8 +75,9 @@ gaudi::prompt () {
 
   # Render the async part of the prompt .. lazy lazy
   gaudi::render_async () {
+    local ASYNC_PROMPT
 
-    local ASYNC_PROMPT="$(gaudi::render_prompt GAUDI_PROMPT_ASYNC[@])"
+    ASYNC_PROMPT="$(gaudi::render_prompt GAUDI_PROMPT_ASYNC[@])"
 
     tput sc && tput cuu1 && tput cuu1
     if [[ $GAUDI_SPLIT_PROMPT == false ]]; then
@@ -100,4 +106,4 @@ gaudi::prompt () {
   unset LEFT_PROMPT RIGHT_PROMPT ASYNC_PROMPT
 }
 
-gaudi::safe_append_prompt_command gaudi::prompt
+PROMPT_COMMAND=gaudi::prompt

@@ -1,1 +1,1 @@
-source "${BASH_IT}"/bin/preexec/bash-preexec.sh
+source "${BASH_IT}/bin/preexec/bash-preexec.sh"

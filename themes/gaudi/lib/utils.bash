@@ -1,15 +1,10 @@
 #!/usr/bin/env bash
 
-# ------------------------------------------------------------------------------
-# UTILS
-# Utils for common used actions
-# ------------------------------------------------------------------------------
-
 # Check if command exists in $PATH
 # USAGE:
 #   gaudi::exists <command>
 gaudi::exists () {
-  command -v $1 > /dev/null 2>&1
+  command -v "$1" > /dev/null 2>&1
 }
 
 # Check if function is defined
@@ -55,6 +50,8 @@ gaudi::kill_outdated_asyncRender () {
   joblist="$(jobs | grep 'render_async.*wd:' | cut -d "[" -f2 | cut -d "]" -f1 | tr '\n' ' ')"
   IFS=' '
   for job in $joblist; do kill "%$job"; done
+  # reset IFS as it can break the function of many others
+  unset IFS
 }
 
 # Render a prompt section by getting the segments from the segments definitions array
@@ -64,10 +61,11 @@ gaudi::render_prompt () {
   local _prompt=""
   declare -a _segments=("${!1}")
   if [[ -n "${_segments}" ]]; then
-    for segment in ${_segments[@]}; do
+    for segment in "${_segments[@]}"; do
+      local info
       source "$GAUDI_ROOT/segments/$segment.bash"
       export GAUDI_SYMBOL_ALT=$segment
-      local info="$(gaudi_$segment)"
+      info="$(gaudi_$segment)"
       [[ -n "${info}" ]] && _prompt+="$info"
     done
     printf "%s" "$_prompt"
@@ -75,45 +73,17 @@ gaudi::render_prompt () {
   fi;
 }
 
-# Append the prompt "safely"
+# Check usage of bash-preexec
 # USAGE:
-#   gaudi::safe_append_prompt_command <command>
-gaudi::safe_append_prompt_command () {
-    local prompt_re
-
-    __check_precmd_conflict () {
-        local f
-        for f in "${precmd_functions[@]}"; do
-            if [[ "${f}" == "${1}" ]]; then
-                return 0
-            fi
-        done
-        return 1
-    }
-
-    if [ "${__bp_imported}" == "defined" ]; then
-        # We are using bash-preexec
-        if ! __check_precmd_conflict "${1}" ; then
-            precmd_functions+=("${1}")
+#   gaudi::__check_precmd_conflict <command>
+gaudi::check_precmd_conflict() {
+    local f
+    for f in "${precmd_functions[@]}"; do
+        if [[ "${f}" == "${1}" ]]; then
+            return 0
         fi
-    else
-        # Set OS dependent exact match regular expression
-        if [[ ${OSTYPE} == darwin* ]]; then
-          # macOS
-          prompt_re="[[:<:]]${1}[[:>:]]"
-        else
-          # Linux, FreeBSD, etc.
-          prompt_re="\<${1}\>"
-        fi
-
-        if [[ ${PROMPT_COMMAND} =~ ${prompt_re} ]]; then
-          return
-        elif [[ -z ${PROMPT_COMMAND} ]]; then
-          PROMPT_COMMAND="${1}"
-        else
-          PROMPT_COMMAND="${1};${PROMPT_COMMAND}"
-        fi
-    fi
+    done
+    return 1
 }
 
 # Display seconds in human readable fromat
@@ -126,8 +96,8 @@ gaudi::displaytime () {
   local H=$((T/60/60%24))
   local M=$((T/60%60))
   local S=$((T%60))
-  [[ $D > 0 ]] && printf '%dd ' $D
-  [[ $H > 0 ]] && printf '%dh ' $H
-  [[ $M > 0 ]] && printf '%dm ' $M
+  [[ $D -gt 0 ]] && printf '%dd ' $D
+  [[ $H -gt 0 ]] && printf '%dh ' $H
+  [[ $M -gt 0 ]] && printf '%dm ' $M
   printf '%ds' $S
 }

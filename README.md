@@ -187,8 +187,6 @@ export BASH_IT_THEME="/home/foo/my_theme/my_theme.theme.bash"
 export BASH_IT_THEME=""
 ```
 
-You can easily preview the themes in your own shell using `BASH_PREVIEW=true bash-it reload`.
-
 **NOTE**: bash-it and some themes use UTF-8 characters, so to avoid strange behavior in your terminal, set your locale to `LC_ALL=en_US.UTF-8` or the equivalent to your language if it isn't American English.
 
 ## Uninstalling
