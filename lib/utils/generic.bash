@@ -18,3 +18,14 @@ _command_exists () {
   local msg="${2:-Command '$1' does not exist!}"
   type "$1" &> /dev/null || (_log_warning "$msg" && return 1) ;
 }
+
+# Handle the different ways of running `sed` without generating a backup file based on OS
+# - GNU sed (Linux) uses `-i`
+# - BSD sed (macOS) uses `-i ''`
+#
+# To use this in bash-it for inline replacements with `sed`, use the following syntax:
+# sed "${BASH_IT_SED_I_PARAMETERS[@]}" -e "..." file
+BASH_IT_SED_I_PARAMETERS=(-i)
+case "$(uname)" in
+  Darwin*) BASH_IT_SED_I_PARAMETERS=(-i "")
+esac

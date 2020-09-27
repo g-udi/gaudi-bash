@@ -9,17 +9,6 @@ source "${BASH_IT}/lib/helpers/help.bash"
 source "${BASH_IT}/lib/helpers/enabler.bash"
 source "${BASH_IT}/lib/helpers/disabler.bash"
 
-# Handle the different ways of running `sed` without generating a backup file based on OS
-# - GNU sed (Linux) uses `-i`
-# - BSD sed (macOS) uses `-i ''`
-#
-# To use this in bash-it for inline replacements with `sed`, use the following syntax:
-# sed "${BASH_IT_SED_I_PARAMETERS[@]}" -e "..." file
-BASH_IT_SED_I_PARAMETERS=(-i)
-case "$(uname)" in
-  Darwin*) BASH_IT_SED_I_PARAMETERS=(-i "")
-esac
-
 _bash-it-aliases () {
     _about 'summarizes available bash_it aliases'
     _group 'lib'
