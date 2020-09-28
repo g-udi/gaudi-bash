@@ -1,11 +1,13 @@
 cite 'uuid-alias'
 about-alias 'uuidgen aliases'
 
-if _command_exists uuid; then # Linux
+# Linux
+if _command_exists uuid; then
   alias uuidu="uuid | tr '[:lower:]' '[:upper:]'"
   alias uuidl=uuid
-elif _command_exists uuidgen; then # macOS/BSD
+# macOS/BSD
+elif _command_exists uuidgen; then
   alias uuidu="uuidgen"
-  alias uuid="uuidgen | tr '[:upper:]' '[:lower:]'" # because upper case is like YELLING
+  alias uuid="uuidgen | tr '[:upper:]' '[:lower:]'"
   alias uuidl=uuid
 fi

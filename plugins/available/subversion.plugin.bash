@@ -1,7 +1,7 @@
 cite about-plugin
 about-plugin 'svn helper functions'
 
-rm_svn(){
+rm_svn () {
   about 'remove ".svn" files from directory'
   param '1: directory to search for files'
   group 'svn'
@@ -13,7 +13,7 @@ rm_svn(){
   find $1 -name .svn -print0 | xargs -0 rm -rf
 }
 
-svn_add(){
+svn_add () {
     about 'add to svn repo'
     group 'svn'
 

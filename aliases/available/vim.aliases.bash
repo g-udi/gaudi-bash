@@ -5,7 +5,7 @@ VIM=$(command -v vim)
 GVIM=$(command -v gvim)
 MVIM=$(command -v mvim)
 
-[[ -n $VIM ]] && alias v=$VIM
+[[ -n $VIM ]] && alias v="\$VIM"
 
 # open vim in new tab is taken from
 # http://stackoverflow.com/questions/936501/let-gvim-always-run-a-single-instancek

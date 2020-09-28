@@ -1,7 +1,3 @@
-#!/bin/bash
-#
-# -binaryanomaly
-
 cite about-alias
 about-alias 'kubectl aliases'
 

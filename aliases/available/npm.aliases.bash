@@ -1,9 +1,6 @@
 cite about-alias
 about-alias 'common npm abbreviations'
 
-# Aliases
-
-# npm
 alias ni='npm install'
 alias nis='npm install --save'
 alias nid='npm install --save-dev'
@@ -23,7 +20,6 @@ alias nr='npm run'
 alias nls='npm list --depth=0 2>/dev/null'
 alias nlsg='npm list -g --depth=0 2>/dev/null'
 
-# npx
 alias nx='npx'
 alias nxplease='npx $(fc -ln -1)'
 alias nxn='npx --no-install '

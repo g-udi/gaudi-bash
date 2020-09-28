@@ -109,7 +109,7 @@ refresh-launchpad () {
   fi
 }
 
-list-jvms(){
+list-jvms () {
   about 'List java virtual machines and their states in macOS'
   example 'list-jvms'
   group 'osx'
@@ -129,7 +129,7 @@ list-jvms(){
   done
 }
 
-pick-default-jvm (){
+pick-default-jvm  () {
   about 'Pick the default Java Virtual Machines in system-wide scope in macOS'
   example 'pick-default-jvm'
 
@@ -172,3 +172,8 @@ pick-default-jvm (){
 
 # Make this backwards compatible
 alias pcurl='prevcurl'
+
+# From http://apple.stackexchange.com/questions/110343/copy-last-command-in-terminal
+copyLastCmd () {
+  fc -ln -1 | awk '{$1=$1}1' | pbcopy
+}

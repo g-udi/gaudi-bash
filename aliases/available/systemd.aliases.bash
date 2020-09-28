@@ -1,5 +1,5 @@
 cite about-alias
-about-alias 'systemd service'
+about-alias 'systemd service aliases'
 
 case $OSTYPE in
     linux*)

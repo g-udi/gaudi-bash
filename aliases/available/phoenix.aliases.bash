@@ -1,7 +1,6 @@
 cite about-alias
-about-alias 'phoenix abbreviations'
+about-alias 'phoenix aliases'
 
-# Phoenix Commands
 alias i='iex'
 alias ips='iex -S mix phx.server'
 alias ism='iex -S mix'

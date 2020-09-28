@@ -1,7 +1,6 @@
 cite about-alias
-about-alias 'rails abbreviations'
+about-alias 'rails aliases'
 
-# Rails Commands
 alias r='rails'
 alias rg='rails g'
 alias rs='rails s'
@@ -14,9 +13,9 @@ alias rd='rails destroy'
 alias dbm='rake db:migrate'
 
 alias ss='script/server'
-alias ts="thin start"     # thin server
+alias ts="thin start"
 alias sc='script/console'
 alias restartapp='touch tmp/restart.txt'
-alias restart='touch tmp/restart.txt'  # restart passenger
+alias restart='touch tmp/restart.txt'
 alias devlog='tail -f log/development.log'
-alias taild='tail -f log/development.log' # tail dev log
+alias taild='tail -f log/development.log'

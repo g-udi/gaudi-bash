@@ -1,5 +1,3 @@
-# Some aliases for Homebrew Cask
-
 cite about-alias
 about-alias 'homebrew-cask abbreviations'
 

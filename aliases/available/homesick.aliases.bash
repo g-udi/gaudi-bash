@@ -1,7 +1,6 @@
 cite about-alias
 about-alias 'homesick aliases'
 
-# Aliases
 alias sikhm="homesick cd dotfiles"
 alias sikclone="homesick clone"
 alias sikcomt="homesick commit dotfiles"
@@ -19,6 +18,6 @@ alias sikpsh="homesick push dotfiles"
 alias sikrc="homesick rc dotfiles"
 alias sikpth="homesick show_path dotfiles"
 alias sikst="homesick status dotfiles"
-alias siktrk="homesick track $1 dotfiles"
+alias siktrk="homesick track dotfiles"
 alias sikulnk="homesick unlink dotfiles"
 alias sikv="homesick version"

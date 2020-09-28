@@ -1,5 +1,3 @@
-# Some aliases for Homebrew
-
 cite about-alias
 about-alias 'homebrew abbreviations'
 

@@ -1,5 +1,5 @@
 cite about-alias
-about-alias 'Tmux terminal multiplexer'
+about-alias 'tmux terminal multiplexer aliases'
 
 alias txl='tmux ls'
 alias txn='tmux new -s'

@@ -1,16 +1,11 @@
 cite about-alias
 about-alias 'common git abbreviations'
 
-# Aliases
 alias gcl='git clone'
 alias ga='git add'
 alias grm='git rm'
 alias gap='git add -p'
 alias gall='git add -A'
-alias gf='git fetch --all --prune'
-alias gft='git fetch --all --prune --tags'
-alias gfv='git fetch --all --prune --verbose'
-alias gftv='git fetch --all --prune --tags --verbose'
 alias gus='git reset HEAD'
 alias gpristine='git reset --hard && git clean -dfx'
 alias gclean='git clean -fd'
@@ -21,17 +16,25 @@ alias get='git'
 alias gs='git status'
 alias gss='git status -s'
 alias gsu='git submodule update --init --recursive'
+
+alias gf='git fetch --all --prune'
+alias gft='git fetch --all --prune --tags'
+alias gfv='git fetch --all --prune --verbose'
+alias gftv='git fetch --all --prune --tags --verbose'
+
 alias gl='git pull'
 alias glum='git pull upstream master'
 alias gpr='git pull --rebase'
 alias gpp='git pull && git push'
 alias gup='git fetch && git rebase'
+
 alias gp='git push'
 alias gpo='git push origin HEAD'
 alias gpu='git push --set-upstream'
 alias gpuo='git push --set-upstream origin'
 alias gpuoc='git push --set-upstream origin $(git symbolic-ref --short HEAD)'
 alias gpom='git push origin master'
+
 alias gr='git remote'
 alias grv='git remote -v'
 alias gra='git remote add'
@@ -41,13 +44,14 @@ alias grmi='git rebase master -i'
 alias gd='git diff'
 alias gds='git diff --staged'
 alias gdt='git difftool'
-alias gdv='git diff -w "$@" | vim -R -'
+
 alias gc='git commit -v'
 alias gca='git commit -v -a'
 alias gcm='git commit -v -m'
 alias gcam="git commit -v -am"
 alias gci='git commit --interactive'
 alias gcamd='git commit --amend'
+
 alias gb='git branch'
 alias gba='git branch -a'
 alias gbt='git branch --track'

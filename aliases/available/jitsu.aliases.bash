@@ -1,7 +1,6 @@
 cite about-alias
 about-alias 'jitsu task abbreviations'
 
-# jitsu
 alias j='jitsu'
 alias jl='jitsu login'
 alias jo='jitsu logout'

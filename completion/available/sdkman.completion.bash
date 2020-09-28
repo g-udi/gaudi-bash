@@ -42,7 +42,7 @@ _sdkman_complete() {
   return 0
 }
 
-_sdkman_candidate_versions(){
+_sdkman_candidate_versions () {
 
   CANDIDATE_LOCAL_VERSIONS=$(__sdkman_cleanup_local_versions $1)
   if [ "$SDKMAN_OFFLINE_MODE" = "true" ]; then
@@ -54,7 +54,7 @@ _sdkman_candidate_versions(){
 
 }
 
-_sdkman_candidate_not_installed_versions(){
+_sdkman_candidate_not_installed_versions () {
   CANDIDATE_LOCAL_VERSIONS=$(__sdkman_cleanup_local_versions $1)
   if [ "$SDKMAN_OFFLINE_MODE" = "false" ]; then
     CANDIDATE_ONLINE_VERSIONS="$(__sdkman_list_versions $1 | grep " " | grep "\." | cut -c 6-)"
@@ -62,7 +62,7 @@ _sdkman_candidate_not_installed_versions(){
   fi
 }
 
-__sdkman_cleanup_local_versions(){
+__sdkman_cleanup_local_versions () {
 
   __sdkman_build_version_csv $1 | tr ',' ' '
 
