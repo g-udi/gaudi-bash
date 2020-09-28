@@ -68,13 +68,14 @@ _log_error() {
 _log_component() {
   about 'log a component loading message by echoing to the screen the name and type'
   param '1: message to log'
+  param '2: component type e.g., custom or builtin (default: builtin) '
   example '$ _log_component "Failed to load git plugin..."'
   group 'log'
 
   filename=$(_bash-it-get-component-name-from-path "$1")
   extension=$(_bash-it-get-component-type-from-path "$1")
-
+  component_type=${2:-"${extension/es/}"}
   [[ "$BASH_IT_LOG_LEVEL" -ge $BASH_IT_LOG_LEVEL_ERROR ]] || return 0
-  _log_general "${GREEN}" " [DEBUG] " "Loading component ${MAGENTA}[${extension/es/}]${NC} ${BLUE}$filename${NC}"
+  _log_general "${GREEN}" " [DEBUG] " "Loading $component_type ${BLUE}$filename${NC}"
 
 }

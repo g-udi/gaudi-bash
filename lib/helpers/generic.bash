@@ -7,7 +7,7 @@ _is_function () {
     _about 'sets $? to true if parameter is the name of a function'
     _param '1: name of alleged function'
     _group 'lib'
-    [ -n "$(LANG=C type -t "$1" 2>/dev/null | grep 'function')" ]
+    [ -n "$(LANG=C type -t $1 2>/dev/null | grep 'function')" ]
 }
 
 _command_exists () {
@@ -16,8 +16,8 @@ _command_exists () {
   _param '2: (optional) log message to include when command not found'
   _example '$ _command_exists ls && echo exists'
   _group 'lib'
-  local msg="${2:-Command "$1" does not exist!}"
-  type "$1" &> /dev/null || (_log_warning "$msg" && return 1) ;
+  local msg="${2:-Command '$1' does not exist!}"
+  type $1 &> /dev/null || (_log_warning "$msg" && return 1) ;
 }
 
 # Handle the different ways of running `sed` without generating a backup file based on OS

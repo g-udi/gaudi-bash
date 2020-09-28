@@ -90,5 +90,5 @@ _disable-thing () {
       _bash-it-reload
     fi
 
-    printf '%s\n' "$file_entity disabled."
+    printf "${RED}%s${NC} %s\n" "[DISABLED]" "$subdirectory: $file_entity"
 }
