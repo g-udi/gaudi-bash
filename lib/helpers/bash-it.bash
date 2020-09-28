@@ -2,24 +2,6 @@
 
 # A collection of reusable bash-it functions
 
-_bash-it-get-component-name-from-path() {
-  # filename without path
-  filename=${1##*/}
-  # filename without path or priority
-  filename=${filename##*---}
-  # filename without path, priority or extension
-  echo ${filename%.*.bash}
-}
-
-_bash-it-get-component-type-from-path() {
-  # filename without path
-  filename=${1##*/}
-  # filename without path or priority
-  filename=${filename##*---}
-  # extension
-  echo ${filename} | cut -d '.' -f 2
-}
-
 # This function searches an array for an exact match against the term passed
 # as the first argument to the function. This function exits as soon as
 # a match is found.
@@ -56,7 +38,8 @@ _bash-it-array-dedup() {
 # Outputs a full path of the grep found on the filesystem
 _bash-it-grep() {
   if [[ -z "${BASH_IT_GREP}" ]] ; then
-    export BASH_IT_GREP="$(which egrep || which grep || '/usr/bin/grep')"
+    BASH_IT_GREP="$(which egrep || which grep || '/usr/bin/grep')"
+    export BASH_IT_GREP
   fi
   printf "%s " "${BASH_IT_GREP}"
 }

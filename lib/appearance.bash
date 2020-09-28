@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# shellcheck disable=SC1090
 
 # LSCOLORS
 
@@ -118,4 +119,8 @@ alias grep='grep $GREP_OPTIONS'
 # Load the theme
 if [[ -n $BASH_IT_THEME ]]; then
   source "$BASH_IT/themes/$BASH_IT_THEME/$BASH_IT_THEME.theme.bash"
+fi
+
+if [[ $PROMPT ]]; then
+  export PS1="\[""$PROMPT""\]"
 fi

@@ -4,24 +4,35 @@ export BASH_IT_LOG_LEVEL_ERROR=1
 export BASH_IT_LOG_LEVEL_WARNING=2
 export BASH_IT_LOG_LEVEL_ALL=3
 
-_has_colors() {
-  # Check that stdout is a terminal
-  test -t 1 || return 1
+_bash-it-get-component-name-from-path() {
+  # filename without path
+  filename=${1##*/}
+  # filename without path or priority
+  filename=${filename##*---}
+  # filename without path, priority or extension
+  echo ${filename%.*.bash}
+}
 
-  ncolors=$(tput colors)
-  test -n "$ncolors" && test "$ncolors" -ge 8 || return 1
-  return 0
+_bash-it-get-component-type-from-path() {
+  # filename without path
+  filename=${1##*/}
+  # filename without path or priority
+  filename=${filename##*---}
+  # extension
+  echo ${filename} | cut -d '.' -f 2
 }
 
 _log_general() {
   about 'Internal function used for logging, uses BASH_IT_LOG_PREFIX as a prefix'
-  param '1: color of the message'
-  param '2: log level to print before the prefix'
+  param '1: color of the log level'
+  param '2: log type to print before the prefix'
   param '3: message to log'
   group 'log'
 
-  message=$2${BASH_IT_LOG_PREFIX}$3
-  _has_colors && echo -e "$1${message}${NC}" || echo -e "${message}"
+  # if no BASH_IT_LOG_PREFIX is defined fallback to [CORE]
+  BASH_IT_LOG_PREFIX=${BASH_IT_LOG_PREFIX:-"[CORE]"}
+
+  echo -e "$1$2${YELLOW}${BASH_IT_LOG_PREFIX}${NC} $3"
 }
 
 _log_debug() {
@@ -31,7 +42,7 @@ _log_debug() {
   group 'log'
 
   [[ "$BASH_IT_LOG_LEVEL" -ge $BASH_IT_LOG_LEVEL_ALL ]] || return 0
-  _log_general "${GREEN}" "DEBUG: " "$1"
+  _log_general "${GREEN}" " [DEBUG] " "$1"
 }
 
 _log_warning() {
@@ -41,7 +52,7 @@ _log_warning() {
   group 'log'
 
   [[ "$BASH_IT_LOG_LEVEL" -ge $BASH_IT_LOG_LEVEL_WARNING ]] || return 0
-  _log_general "${YELLOW}" " WARN: " "$1"
+  _log_general "${YELLOW}" " [WARN] " "$1"
 }
 
 _log_error() {
@@ -51,5 +62,19 @@ _log_error() {
   group 'log'
 
   [[ "$BASH_IT_LOG_LEVEL" -ge $BASH_IT_LOG_LEVEL_ERROR ]] || return 0
-  _log_general "${RED}" "ERROR: " "$1"
+  _log_general "${RED}" " [ERROR] " "$1"
+}
+
+_log_component() {
+  about 'log a component loading message by echoing to the screen the name and type'
+  param '1: message to log'
+  example '$ _log_component "Failed to load git plugin..."'
+  group 'log'
+
+  filename=$(_bash-it-get-component-name-from-path "$1")
+  extension=$(_bash-it-get-component-type-from-path "$1")
+
+  [[ "$BASH_IT_LOG_LEVEL" -ge $BASH_IT_LOG_LEVEL_ERROR ]] || return 0
+  _log_general "${GREEN}" " [DEBUG] " "Loading component ${MAGENTA}[${extension/es/}]${NC} ${BLUE}$filename${NC}"
+
 }

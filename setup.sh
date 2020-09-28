@@ -1,23 +1,19 @@
 #!/usr/bin/env bash
-# bash-it installer
+# shellcheck disable=SC1090
 
 source "./lib/colors.bash"
 
 echo -e "\n[INFO] ${YELLOW}Getting bash version .... ${NC}\n"
 bash --version
 
-printf "
-
+printf "\n%s${CYAN}%s\n${NC}\n" "
 ██████╗  █████╗ ███████╗██╗  ██╗      ██╗████████╗
 ██╔══██╗██╔══██╗██╔════╝██║  ██║      ██║╚══██╔══╝
 ██████╔╝███████║███████╗███████║█████╗██║   ██║
 ██╔══██╗██╔══██║╚════██║██╔══██║╚════╝██║   ██║
 ██████╔╝██║  ██║███████║██║  ██║      ██║   ██║
 ╚═════╝ ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝      ╚═╝   ╚═╝
-
-${CYAN}Installing bash-it ..${NC}
-
-"
+" "Installing bash-it .."
 
 # Show how to use this installer
 show_usage () {
@@ -105,7 +101,7 @@ do
   "?") show_usage >&2; exit 1 ;;
   esac
 done
-shift $(expr $OPTIND - 1)
+shift "$(expr $OPTIND - 1)"
 
 if [[ $silent ]] && [[ $interactive ]]; then
   echo -e "Options --silent and --interactive are mutually exclusive. Please choose one or the other"

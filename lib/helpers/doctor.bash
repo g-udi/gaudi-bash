@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# shellcheck disable=SC2034
 
 _bash-it-doctor() {
   _about 'reloads a profile file with a BASH_IT_LOG_LEVEL set'

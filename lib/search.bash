@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# shellcheck disable=SC2034,SC1090,SC2091,SC2207
 #
 # Search by Konstantin Gredeskoul «github.com/kigster»
 #
@@ -66,7 +67,7 @@ _bash-it-search () {
   fi
 
   local -a args=()
-  for word in $@; do
+  for word in "$@"; do
     if [[ ${word} == "--help" || ${word} == "-h" ]]; then
       _bash-it-search-help
       return 0
@@ -75,7 +76,7 @@ _bash-it-search () {
     elif [[ ${word} == "--no-color" || ${word} == '-c' ]]; then
       export BASH_IT_SEARCH_USE_COLOR=false
     else
-      args=(${args[@]} ${word})
+      args=("${args[@]}" "${word}")
     fi
   done
 
@@ -100,7 +101,7 @@ _bash-it-component-term-matches-negation () {
   local negative
 
   for negative in "$@"; do
-    [[ "${match}" =~ "${negative}" ]] && return 0
+    [[ "${match}" =~ ${negative} ]] && return 0
   done
 
   return 1
@@ -135,7 +136,7 @@ _bash-it-search-component () {
   done
 
    # passed on the command line
-  local -a terms=($@)
+  local -a terms=("$@")
 
   unset exact_terms
   unset partial_terms
@@ -158,27 +159,27 @@ _bash-it-search-component () {
     if [[ "${term:0:2}" == "--" ]] ; then
       continue
     elif [[ "${term:0:1}" == "-"  ]] ; then
-      negative_terms=(${negative_terms[@]} "${search_term}")
+      negative_terms=("${negative_terms[@]}" "${search_term}")
     elif [[ "${term:0:1}" == "@"  ]] ; then
       if $(_bash-it-array-contains-element "${search_term}" "${component_list[@]}"); then
-        exact_terms=(${exact_terms[@]} "${search_term}")
+        exact_terms=("${exact_terms[@]}" "${search_term}")
       fi
     else
-      partial_terms=(${partial_terms[@]} $(_bash-it-component-list-matching "${component}" "${term}") )
+      partial_terms=("${partial_terms[@]}" $(_bash-it-component-list-matching "${component}" "${term}") )
     fi
   done
 
-  local -a total_matches=( $(_bash-it-array-dedup ${exact_terms[@]} ${partial_terms[@]}) )
+  local -a total_matches=( $(_bash-it-array-dedup "${exact_terms[@]}" "${partial_terms[@]}") )
 
   unset matches
   declare -a matches=()
-  for match in ${total_matches[@]}; do
+  for match in "${total_matches[@]}"; do
     local include_match=true
 
     if  [[ ${#negative_terms[@]} -gt 0 ]]; then
       ( _bash-it-component-term-matches-negation "${match}" "${negative_terms[@]}" ) && include_match=false
     fi
-    ( ${include_match} ) && matches=(${matches[@]} "${match}")
+    ( ${include_match} ) && matches=("${matches[@]}" "${match}")
   done
   _bash-it-search-result "${component}" "${action}" "${action_func}" "${matches[@]}"
   unset matches final_matches terms
@@ -188,7 +189,7 @@ _bash-it-search-result () {
   local component="$1"; shift
   local action="$1"; shift
   local action_func="$1"; shift
-  local -a matches=($@)
+  local -a matches=("$@")
   local color_component color_enable color_disable color_off
 
   color_sep=':'
@@ -268,7 +269,6 @@ _bash-it-search-result () {
 
 _bash-it-rewind () {
   local len="$1"
-
   printf "\033[${len}D"
 }
 
@@ -278,7 +278,7 @@ _bash-it-flash-term () {
   local delay=0.1
   local color
 
-  for color in ${text_black} ${BLUE} ${bold_yellow} ${bold_red} ${GREEN} ; do
+  for color in ${BLUE} ${GREEN} ; do
     sleep ${delay}
     _bash-it-rewind "${len}"
     printf "${color}${match}"
@@ -296,7 +296,8 @@ _bash-it-erase-term () {
 }
 
 _bash-it-search-help () {
-  printf "${NC}
+  printf "${NC}%s" "
+
 ${YELLOW}USAGE${NC}
 
    bash-it search [-|@]term1 [-|@]term2 ... \\

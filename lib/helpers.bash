@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
+# shellcheck disable=SC1090
 
-BASH_IT_LOAD_PRIORITY_DEFAULT_ALIAS=${BASH_IT_LOAD_PRIORITY_DEFAULT_ALIAS:-150}
-BASH_IT_LOAD_PRIORITY_DEFAULT_PLUGIN=${BASH_IT_LOAD_PRIORITY_DEFAULT_PLUGIN:-250}
-BASH_IT_LOAD_PRIORITY_DEFAULT_COMPLETION=${BASH_IT_LOAD_PRIORITY_DEFAULT_COMPLETION:-350}
-BASH_IT_LOAD_PRIORITY_SEPARATOR="---"
+BASH_IT_LOAD_PRIORITY_SEPARATOR="-"
 
-source "${BASH_IT}/lib/helpers/help.bash"
-source "${BASH_IT}/lib/helpers/enabler.bash"
-source "${BASH_IT}/lib/helpers/disabler.bash"
+# support 'plumbing' metadata
+cite _about _param _example _group _author _version
+
+# Load all the helper libraries
+for helper in ${BASH_IT}/lib/helpers/*.bash; do source $helper; done
 
 _bash-it-aliases () {
     _about 'summarizes available bash_it aliases'
