@@ -1,12 +1,13 @@
 #!/usr/bin/env bash
-# shellcheck disable=SC1090
+# bash-it installer
 
 source "./lib/colors.bash"
 
 echo -e "\n[INFO] ${YELLOW}Getting bash version .... ${NC}\n"
 bash --version
 
-echo -e "
+printf "
+
 ██████╗  █████╗ ███████╗██╗  ██╗      ██╗████████╗
 ██╔══██╗██╔══██╗██╔════╝██║  ██║      ██║╚══██╔══╝
 ██████╔╝███████║███████╗███████║█████╗██║   ██║
@@ -14,7 +15,9 @@ echo -e "
 ██████╔╝██║  ██║███████║██║  ██║      ██║   ██║
 ╚═════╝ ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝      ╚═╝   ╚═╝
 
-${CYAN}Installing bash-it ..${NC}"
+${CYAN}Installing bash-it ..${NC}
+
+"
 
 # Show how to use this installer
 show_usage () {
@@ -35,7 +38,7 @@ load_one () {
   mkdir -p "$BASH_IT/${file_type}/enabled"
 
   dest="${BASH_IT}/${file_type}/enabled/${file_to_enable}"
-  if [[ ! -e "${dest}" ]]; then
+  if [ ! -e "${dest}" ]; then
     ln -sf "../available/${file_to_enable}" "${dest}"
   else
     echo "File ${dest} exists, skipping"
@@ -47,7 +50,7 @@ load_some () {
   file_type=$1
   single_type=$(echo "$file_type" | sed -e "s/aliases$/alias/g" | sed -e "s/plugins$/plugin/g")
   enable_func="_enable-$single_type"
-  [[ -d "$BASH_IT/$file_type/enabled" ]] || mkdir "$BASH_IT/$file_type/enabled"
+  [ -d "$BASH_IT/$file_type/enabled" ] || mkdir "$BASH_IT/$file_type/enabled"
   for path in "$BASH_IT/${file_type}/available/"[^_]*
   do
     file_name=$(basename "$path")
@@ -75,9 +78,9 @@ load_some () {
 backup_new () {
   test -w "$HOME/$CONFIG_FILE" &&
   cp -aL "$HOME/$CONFIG_FILE" "$HOME/$CONFIG_FILE.bak" &&
-  echo -e "${GREEN}%s${NC}\n" "Your original $CONFIG_FILE has been backed up to $CONFIG_FILE.bak"
+  echo -e "${GREEN}Your original $CONFIG_FILE has been backed up to $CONFIG_FILE.bak${NC}"
   sed "s|{{BASH_IT}}|$BASH_IT|" "$BASH_IT/template/bash_profile.template.bash" > "$HOME/$CONFIG_FILE"
-  echo -e "${YELLOW}%s${NC}\n" "Copied the template $CONFIG_FILE into ~/$CONFIG_FILE, edit this file to customize bash-it"
+  echo -e "${GREEN}Copied the template $CONFIG_FILE into ~/$CONFIG_FILE, edit this file to customize bash-it${NC}"
 }
 
 for param in "$@"; do
@@ -102,7 +105,7 @@ do
   "?") show_usage >&2; exit 1 ;;
   esac
 done
-shift "$(expr $OPTIND - 1)"
+shift $(expr $OPTIND - 1)
 
 if [[ $silent ]] && [[ $interactive ]]; then
   echo -e "Options --silent and --interactive are mutually exclusive. Please choose one or the other"
@@ -123,9 +126,9 @@ esac
 BACKUP_FILE=$CONFIG_FILE.bak
 
 if ! [[ $silent ]] && ! [[ $no_modify_config ]]; then
-  if [[ -e "$HOME/$BACKUP_FILE" ]]; then
+  if [ -e "$HOME/$BACKUP_FILE" ]; then
     echo -e "${YELLOW}Backup file already exists. Make sure to backup your .bashrc before running this installation.${NC}" >&2
-    while ! [[ $silent ]];  do
+    while ! [ $silent ];  do
       read -e -n 1 -r -p "Would you like to overwrite the existing backup? This will delete your existing backup file ($HOME/$BACKUP_FILE) [Y/N] " RESP
       case $RESP in
       [yY])
@@ -142,7 +145,7 @@ if ! [[ $silent ]] && ! [[ $no_modify_config ]]; then
     done
   fi
 
-  while ! [[ $silent ]]; do
+  while ! [ $silent ]; do
     read -e -n 1 -r -p "Would you like to keep your $CONFIG_FILE and append bash-it templates at the end? [Y/N] " choice
     case $choice in
     [yY])
@@ -170,6 +173,7 @@ fi
 
 # Load dependencies for enabling components
 source "$BASH_IT/lib/composure.bash"
+source "$BASH_IT/lib/utilities.bash"
 cite _about _param _example _group _author _version
 source "$BASH_IT/lib/helpers.bash"
 
@@ -182,7 +186,7 @@ then
   done
 else
   echo ""
-  echo -e "${GREEN}Enabling reasonable defaults${NC}\n"
+  echo -e "${GREEN}Enabling reasonable defaults${NC}"
   _enable-completion bash-it
   _enable-completion system
   _enable-plugin base
@@ -192,7 +196,7 @@ fi
 
 echo ""
 echo -e "${GREEN}Installation finished successfully! Enjoy bash-it!${NC}"
-echo -e "${MAGENTA}To start using it, open a new tab or 'source "$HOME/$CONFIG_FILE"'.${NC}"
+echo -e "${GREEN}To start using it, open a new tab or 'source "$HOME/$CONFIG_FILE"'.${NC}"
 echo ""
 echo "To show the available aliases/completions/plugins, type one of the following:"
 echo "  bash-it show aliases"

@@ -149,9 +149,8 @@ _bash-it-show () {
   _group 'lib'
 
   __build-describe () {
-    typeset _component=$1
-    typeset _mode=$2
-
+    local _component=$1 file_type_singular=$1 _mode=$2
+    
     [[ "$_component" == *es ]] && file_type_singular=${_component/es/}
     [[ "$_component" == *ns ]] && file_type_singular=${_component/ns/n}
 
