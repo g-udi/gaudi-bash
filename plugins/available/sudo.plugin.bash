@@ -17,6 +17,6 @@ function sudo-command-line() {
 # Define shortcut keys: [Esc] [Esc]
 
 # Readline library requires bash version 4 or later
-if [ "${BASH_VERSINFO}" -ge 4 ]; then
+if [ "${BASH_VERSINFO[*]}" -ge 4 ]; then
   bind -x '"\e\e": sudo-command-line'
 fi

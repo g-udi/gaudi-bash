@@ -30,11 +30,13 @@ v2gif () {
   example '$ v2gif -dh *.avi'
   example '$ v2gif -thw 600 *.avi *.mov'
 
-  local convert=$(which convert)     ; [[ -x "$convert" ]]   || { echo "No convert found!" ; return 2 ;}
-  local ffmpeg=$(which ffmpeg)       ; [[ -x "$ffmpeg" ]]    || { echo "No ffmpeg found!" ; return 2 ;}
-  local mediainfo=$(which mediainfo) ; [[ -x "$mediainfo" ]] || { echo "No mediainfo found!" ; return 2 ;}
-  local gifsicle=$(which gifsicle)   ; [[ -x "$gifsicle" ]]  || { echo "No gifsicle found!" ; return 2 ;}
-  local getopt=$(which getopt)
+  declare -i convert -i ffmpeg -i mediainfo -i gifsicle -i getopt
+
+  convert=$(which convert)     ; [[ -x "$convert" ]]   || { echo "No convert found!" ; return 2 ;}
+  ffmpeg=$(which ffmpeg)       ; [[ -x "$ffmpeg" ]]    || { echo "No ffmpeg found!" ; return 2 ;}
+  mediainfo=$(which mediainfo) ; [[ -x "$mediainfo" ]] || { echo "No mediainfo found!" ; return 2 ;}
+  gifsicle=$(which gifsicle)   ; [[ -x "$gifsicle" ]]  || { echo "No gifsicle found!" ; return 2 ;}
+  getopt=$(which getopt)
 
   if [[ "$OSTYPE" == "darwin"* ]] ; then
   # Getopt on BSD is incompatible with GNU
@@ -43,7 +45,9 @@ v2gif () {
   fi
 
   # Parse the options
-  local args=$($getopt -l "alert:" -l "lossy:" -l "width:" -l del,delete -l high -l tag -l "fps:" -l webm -o "a:l:w:f:dhmt" -- "$@")
+  local args
+
+  args=$($getopt -l "alert:" -l "lossy:" -l "width:" -l del,delete -l high -l tag -l "fps:" -l webm -o "a:l:w:f:dhmt" -- "$@")
 
   if [ $? -ne 0 ]; then
     echo 'Terminating...' >&2
@@ -77,7 +81,9 @@ v2gif () {
         ;;
       -h|--high)
         #High Quality, use gifski
-        local gifski=$(which gifski) ; [[ -x "$gifski" ]] || { echo "No gifski found!" ; return 2 ; }
+        local gifski
+
+        gifski=$(which gifski) ; [[ -x "$gifski" ]] || { echo "No gifski found!" ; return 2 ; }
         use_gifski=true
         giftag="${giftag}-h"
         shift
@@ -162,18 +168,20 @@ v2gif () {
     if [[ "$use_gifski" = "true" ]] ; then
       # I trust @pornel to do his own resizing optimization choices
       $ffmpeg -loglevel panic -i "$file" -r $fps -vcodec png v2gif-tmp-%05d.png && \
-        $gifski $maxwidthski --fps $(printf "%.0f" $fps) -o "$output_file" v2gif-tmp-*.png || return 2
+        $gifski $maxwidthski --fps "$(printf "%.0f" $fps)" -o "$output_file" v2gif-tmp-*.png || return 2
     else
       $ffmpeg -loglevel panic -i "$file" $maxsize -r $fps -vcodec png v2gif-tmp-%05d.png && \
         $convert +dither -layers Optimize v2gif-tmp-*.png GIF:- | \
-        $gifsicle $lossiness --no-warnings --colors 256 --delay=$(echo "100/$fps"|bc) --loop --optimize=3 --multifile - > "$output_file" || return 2
+        $gifsicle $lossiness --no-warnings --colors 256 --delay="$(echo "100/$fps"|bc)" --loop --optimize=3 --multifile - > "$output_file" || return 2
     fi
 
     rm v2gif-tmp-*.png
 
     # Checking if the file is bigger than Twitter likes and warn
     if [[ $alert -gt 0 ]] ; then
-      local out_size=$(wc --bytes < "$output_file")
+      local out_size
+
+      out_size=$(wc --bytes < "$output_file")
       if [[ $out_size -gt $(( alert * 1000 )) ]] ; then
         echo "$(tput setaf 3)Warning: '$output_file' is $((out_size/1000))kb.$(tput sgr 0)"
         [[ "$del_after" == "true" ]] && echo "$(tput setaf 3)Warning: Keeping '$file' even though --del requested.$(tput sgr 0)"
@@ -202,7 +210,9 @@ any2webm () {
   example '$ any2webm *.mov -b 1.5M -s 600x480'
 
   # Parse the options
-  local args=$(getopt -l alert -l "bandwidth:" -l "width:" -l del,delete -l tag -l "fps:" -l webm -o "a:b:w:f:dt" -- "$@")
+  local args
+
+  args=$(getopt -l alert -l "bandwidth:" -l "width:" -l del,delete -l tag -l "fps:" -l webm -o "a:b:w:f:dt" -- "$@")
 
   if [ $? -ne 0 ]; then
     echo 'Terminating...' >&2
@@ -282,7 +292,9 @@ any2webm () {
 
     # Checking if the file is bigger than Twitter likes and warn
     if [[ $alert -gt 0 ]] ; then
-      local out_size=$(wc --bytes < "$output_file")
+      local out_size
+
+      out_size=$(wc --bytes < "$output_file")
       if [[ $out_size -gt $(( alert * 1000 )) ]] ; then
         echo "$(tput setaf 3)Warning: '$output_file' is $((out_size/1000))kb.$(tput sgr 0)"
         [[ "$del_after" == "true" ]] && echo "$(tput setaf 3)Warning: Keeping '$file' even though --del requested.$(tput sgr 0)"

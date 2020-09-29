@@ -2,22 +2,21 @@ cite about-plugin
 about-plugin 'postgres helper functions'
 
 
-export PGVERSION=`pg_config --version | awk '{print $2}'`
-export POSTGRES_BIN=`pg_config --bindir`
+PGVERSION=`pg_config --version | awk '{print $2}'`
+POSTGRES_BIN=`pg_config --bindir`
+
+export PGVERSION
+export POSTGRES_BIN
+
 COMMON_PGDATA_PATHS=("/usr/local/var/postgres" "/var/pgsql" "/Library/Server/PostgreSQL/Data")
 for possible in "${COMMON_PGDATA_PATHS[@]}"
 do
    :
    if [ -f "$possible/pg_hba.conf" ]
    then
-       # echo "PGDATA: $possible"
        export PGDATA=$possible
    fi
 done
-
-
-
-
 
 postgres_start () {
   about 'Starts PostgreSQL server'

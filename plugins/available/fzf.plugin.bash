@@ -1,3 +1,6 @@
+
+
+# shellcheck disable=SC1090
 # Load after the system completion to make sure that the fzf completions are working
 # BASH_IT_LOAD_PRIORITY: 375
 
@@ -24,8 +27,8 @@ fe () {
 
   local IFS=$'\n'
   local files
-  files=($(fzf-tmux --query="$1" --multi --select-1 --exit-0))
-  [[ -n "$files" ]] && ${EDITOR:-vim} "${files[@]}"
+  files=("$(fzf-tmux --query="$1" --multi --select-1 --exit-0)")
+  [[ -n "${files[*]}" ]] && ${EDITOR:-vim} "${files[@]}"
 }
 
 fcd () {
@@ -37,5 +40,5 @@ fcd () {
   local dir
   dir=$(find ${1:-.} -path '*/\.*' -prune \
                   -o -type d -print 2> /dev/null | fzf +m) &&
-  cd "$dir"
+  cd "$dir" || return
 }

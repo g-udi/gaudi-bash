@@ -6,8 +6,8 @@ export EDITOR="vi";
 export GIT_EDITOR="vi";
 export IRC_CLIENT='irssi'
 
-alias edit="$EDITOR"
-alias irc="${IRC_CLIENT:=irc}"
+alias edit="\$EDITOR"
+alias irc="\${IRC_CLIENT:=irc}"
 
 # sudo editors
 alias svim="sudo vim"

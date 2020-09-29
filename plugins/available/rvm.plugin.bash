@@ -1,12 +1,11 @@
-# Load RVM, if you are using it
+# shellcheck disable=SC1090,SC2154
 
 cite about-plugin
 about-plugin 'load rvm, if you are using it'
 
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm"
 
-# Check to make sure that RVM is actually loaded before adding
-# the customizations to it.
+# Check to make sure that RVM is actually loaded before adding the customizations to it
 if [ "$rvm_path" ]
 then
     # Load the auto-completion script if RVM was loaded.
@@ -14,9 +13,10 @@ then
 
     switch () {
       rvm $1
-      local v=$(rvm_version)
+      local v
+      v=$(rvm_version)
       rvm wrapper $1 textmate
-      echo "Switch to Ruby version: "$v
+      echo "Switch to Ruby version: $v"
     }
 
     rvm_default () {

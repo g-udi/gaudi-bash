@@ -1,3 +1,5 @@
+# shellcheck disable=SC1090
+
 cite about-plugin
 about-plugin 'sources tmuxinator script if available'
 

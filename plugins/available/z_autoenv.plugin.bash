@@ -1,3 +1,5 @@
+# shellcheck disable=SC1090
+
 cite about-plugin
 about-plugin 'source into environment when cding to directories'
 
@@ -6,22 +8,22 @@ then __array_offset=0
 else __array_offset=1
 fi
 
-autoenv_init() {
-  typeset target home _file
+autoenv_init () {
+  typeset home _file
   typeset -a _files
-  target=$1
+
   home="$(dirname "$HOME")"
 
-  _files=( $(
+  _files=( "$(
     while [[ "$PWD" != "/" && "$PWD" != "$home" ]]
     do
       _file="$PWD/.env"
       if [[ -e "${_file}" ]]
       then echo "${_file}"
       fi
-      builtin cd ..
+      builtin cd .. || return
     done
-  ) )
+  )" )
 
   _file=${#_files[@]}
   while (( _file > 0 ))
@@ -34,7 +36,7 @@ autoenv_init() {
 cd() {
   if builtin cd "$@"
   then
-    autoenv_init
+    autoenv_init "$@"
     return 0
   else
     echo "else?"

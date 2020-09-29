@@ -1,4 +1,3 @@
-#!/usr/bin/env bash
 cite about-plugin
 about-plugin 'sshagent helper functions'
 

@@ -30,8 +30,7 @@ if [ -z "$1" ]; then
 fi
 
 
-# collect possible destinations to account for directories
-# with the same name in project directories
+# collect possible destinations to account for directories with the same name in project directories
 for i in ${PROJECT_PATHS//:/$'\n'}; do
   if [ -d "$i"/"$1" ]; then
     dests+=("$i/$1")
@@ -64,7 +63,7 @@ elif [ ${#dests[@]} -gt 1 ]; then
 
 else
   echo "error: please report this error"
-  return 1 # should never reach this
+  return 1
 
 fi
 

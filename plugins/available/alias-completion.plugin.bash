@@ -1,3 +1,6 @@
+
+# shellcheck disable=SC2154,SC1090
+
 # Load after the other completions to understand what needs to be completed
 # BASH_IT_LOAD_PRIORITY: 365
 
@@ -5,15 +8,23 @@ cite about-plugin
 about-plugin 'Automatic completion of aliases'
 
 # References:
-# http://superuser.com/a/437508/119764
-# http://stackoverflow.com/a/1793178/1228454
+# How can I get bash to perform tab-completion for my aliases? http://superuser.com/a/437508/119764
+# How do I get bash completion to work with aliases? http://stackoverflow.com/a/1793178/1228454
 
 # This needs to be a plugin so it gets executed after the completions and the aliases have been defined.
 # bash-it loads its components in the order
-# 1) Aliases
-# 2) Completions
-# 3) Plugins
-# 4) Custom scripts
+#   1) Aliases
+#   2) Completions
+#   3) Plugins
+#   4) Custom scripts
+
+# For simple (command only, no arguments) aliases it will assign the original completion function to the alias; for aliases
+# with arguments, it creates a wrapper function that inserts the extra arguments into the original completion function.
+#
+# Unlike the scripts it has evolved from, the function respects quotes both for the alias command and its arguments (but the
+# former have to be matched by the completion command, and cannot be nested), and it should reliably filter out aliases to
+# command lists and pipes (which are skipped, as it is impossible to find out what to complete in them without re-creating the
+# complete shell command line parsing logic).
 
 # Automatically add completion for all aliases to commands having completion functions
 alias_completion () {
@@ -45,24 +56,27 @@ alias_completion () {
         read -a alias_arg_words <<< "$alias_args"
 
         # skip alias if there is no completion function triggered by the aliased command
-        if [[ ! " ${completions[*]} " =~ " $alias_cmd " ]]; then
+        if [[ ! " ${completions[*]} " =~  $alias_cmd  ]]; then
             if [[ -n "$completion_loader" ]]; then
                 # force loading of completions for the aliased command
                 eval "$completion_loader $alias_cmd"
                 # 124 means completion loader was successful
                 [[ $? -eq 124 ]] || continue
-                completions+=($alias_cmd)
+                completions+=("$alias_cmd")
             else
                 continue
             fi
         fi
-        local new_completion="$(complete -p "$alias_cmd" 2>/dev/null)"
+
+        local new_completion
+
+        new_completion="$(complete -p "$alias_cmd" 2>/dev/null)"
 
         # create a wrapper inserting the alias arguments if any
         if [[ -n $alias_args ]]; then
             local compl_func="${new_completion/#* -F /}"; compl_func="${compl_func%% *}"
             # avoid recursive call loops by ignoring our own functions
-            if [[ "${compl_func#_$namespace::}" == $compl_func ]]; then
+            if [[ "${compl_func#_$namespace::}" == "$compl_func" ]]; then
                 local compl_wrapper="_${namespace}::${alias_name}"
                     echo "function $compl_wrapper {
                         local compl_word=\$2

@@ -1,6 +1,8 @@
 cite about-plugin
 about-plugin 'Proxy Tools'
 
+PROXY_DIVIDER=$(printf '%.0s-' {1..30}; echo)
+
 disable-proxy () {
 	about 'Disables proxy settings for Bash, npm and SSH'
 	group 'proxy'
@@ -12,6 +14,7 @@ disable-proxy () {
 	unset ALL_PROXY
 	unset no_proxy
 	unset NO_PROXY
+
 	echo "Disabled proxy environment variables"
 
 	npm-disable-proxy
@@ -30,6 +33,7 @@ enable-proxy () {
 	export ALL_PROXY=$http_proxy
 	export no_proxy=$BASH_IT_NO_PROXY
 	export NO_PROXY=$no_proxy
+
 	echo "Enabled proxy environment variables"
 
 	npm-enable-proxy
@@ -59,9 +63,7 @@ show-proxy () {
 	about 'Shows the proxy settings for Bash, Git, npm and SSH'
 	group 'proxy'
 
-	echo ""
-	echo "Environment Variables"
-	echo "====================="
+  printf "\n${GREEN}%s${NC}\n$PROXY_DIVIDER\n" "Environment Variables"
 	env | grep -i "proxy" | grep -v "BASH_IT"
 
 	bash-it-show-proxy
@@ -96,11 +98,7 @@ bash-it-show-proxy () {
 	about 'Shows the bash-it proxy settings'
 	group 'proxy'
 
-	echo ""
-	echo "bash-it Environment Variables"
-	echo "============================="
-	echo "(These variables will be used to set the proxy when you call 'enable-proxy')"
-	echo ""
+  printf "\n${GREEN}%s${NC}\n%s\n$PROXY_DIVIDER\n" "bash-it Environment Variables" "(These variables will be used to set the proxy when you call 'enable-proxy')"
 	env | grep -e "BASH_IT.*PROXY"
 }
 
@@ -108,13 +106,11 @@ npm-show-proxy () {
 	about 'Shows the npm proxy settings'
 	group 'proxy'
 
-	if $(command -v npm &> /dev/null) ; then
-		echo ""
-		echo "npm"
-		echo "==="
-		echo "npm HTTP  proxy: " `npm config get proxy`
-		echo "npm HTTPS proxy: " `npm config get https-proxy`
-		echo "npm proxy exceptions: " `npm config get noproxy`
+	if command -v npm &> /dev/null ; then
+    printf "\n${GREEN}%s${NC}\n$PROXY_DIVIDER\n" "npm"
+		echo "npm HTTP  proxy: $(npm config get proxy)"
+		echo "npm HTTPS proxy: $(npm config get https-proxy)"
+		echo "npm proxy exceptions: $(npm config get noproxy)"
 	fi
 }
 
@@ -122,7 +118,7 @@ npm-disable-proxy () {
 	about 'Disables npm proxy settings'
 	group 'proxy'
 
-	if $(command -v npm &> /dev/null) ; then
+	if command -v npm &> /dev/null ; then
 		npm config delete proxy
 		npm config delete https-proxy
 		npm config delete noproxy
@@ -138,7 +134,7 @@ npm-enable-proxy () {
 	local my_https_proxy=${2:-$BASH_IT_HTTPS_PROXY}
 	local my_no_proxy=${3:-$BASH_IT_NO_PROXY}
 
-	if $(command -v npm &> /dev/null) ; then
+	if command -v npm &> /dev/null ; then
 		npm config set proxy $my_http_proxy
 		npm config set https-proxy $my_https_proxy
 		npm config set noproxy $my_no_proxy
@@ -150,12 +146,10 @@ git-global-show-proxy () {
 	about 'Shows global Git proxy settings'
 	group 'proxy'
 
-	if $(command -v git &> /dev/null) ; then
-		echo ""
-		echo "Git (Global Settings)"
-		echo "====================="
-		echo "Git (Global) HTTP  proxy: " `git config --global --get http.proxy`
-		echo "Git (Global) HTTPS proxy: " `git config --global --get https.proxy`
+	if command -v git &> /dev/null ; then
+    printf "\n${GREEN}%s${NC}\n$PROXY_DIVIDER\n" "Git (Global Settings)"
+		echo "Git (Global) HTTP  proxy: $(git config --global --get http.proxy)"
+		echo "Git (Global) HTTPS proxy: $(git config --global --get https.proxy)"
 	fi
 }
 
@@ -163,7 +157,7 @@ git-global-disable-proxy () {
 	about 'Disables global Git proxy settings'
 	group 'proxy'
 
-	if $(command -v git &> /dev/null) ; then
+	if command -v git &> /dev/null ; then
 		git config --global --unset-all http.proxy
 		git config --global --unset-all https.proxy
 		echo "Disabled global Git proxy settings"
@@ -174,7 +168,7 @@ git-global-enable-proxy () {
 	about 'Enables global Git proxy settings'
 	group 'proxy'
 
-	if $(command -v git &> /dev/null) ; then
+	if command -v git &> /dev/null ; then
 		git-global-disable-proxy
 
 		git config --global --add http.proxy $BASH_IT_HTTP_PROXY
@@ -187,11 +181,10 @@ git-show-proxy () {
 	about 'Shows current Git project proxy settings'
 	group 'proxy'
 
-	if $(command -v git &> /dev/null) ; then
-		echo "Git Project Proxy Settings"
-		echo "====================="
-		echo "Git HTTP  proxy: " `git config --get http.proxy`
-		echo "Git HTTPS proxy: " `git config --get https.proxy`
+	if command -v git &> /dev/null ; then
+    printf "\n${GREEN}%s${NC}\n$PROXY_DIVIDER\n" "Git Project Proxy Settings"
+		echo "Git HTTP  proxy: $(git config --get http.proxy)"
+		echo "Git HTTPS proxy: $(git config --get https.proxy)"
 	fi
 }
 
@@ -199,7 +192,7 @@ git-disable-proxy () {
 	about 'Disables current Git project proxy settings'
 	group 'proxy'
 
-	if $(command -v git &> /dev/null) ; then
+	if command -v git &> /dev/null ; then
 		git config --unset-all http.proxy
 		git config --unset-all https.proxy
 		echo "Disabled Git project proxy settings"
@@ -210,7 +203,7 @@ git-enable-proxy () {
 	about 'Enables current Git project proxy settings'
 	group 'proxy'
 
-	if $(command -v git &> /dev/null) ; then
+	if command -v git &> /dev/null ; then
 		git-disable-proxy
 
 		git config --add http.proxy $BASH_IT_HTTP_PROXY
@@ -224,10 +217,8 @@ svn-show-proxy () {
 	about 'Shows SVN proxy settings'
 	group 'proxy'
 
-	if $(command -v svn &> /dev/null) && $(command -v python2 &> /dev/null) ; then
-		echo ""
-		echo "SVN Proxy Settings"
-		echo "=================="
+	if command -v svn &> /dev/null && command -v python2 &> /dev/null ; then
+    printf "\n${GREEN}%s${NC}\n$PROXY_DIVIDER\n" "SVN Proxy Settings"
 		python2 - <<END
 import ConfigParser, os
 config = ConfigParser.ConfigParser()
@@ -253,7 +244,7 @@ svn-disable-proxy () {
 	about 'Disables SVN proxy settings'
 	group 'proxy'
 
-	if $(command -v svn &> /dev/null) && $(command -v python2 &> /dev/null) ; then
+	if command -v svn &> /dev/null && command -v python2 &> /dev/null ; then
 		python2 - <<END
 import ConfigParser, os
 config = ConfigParser.ConfigParser()
@@ -281,7 +272,7 @@ svn-enable-proxy () {
 	about 'Enables SVN proxy settings'
 	group 'proxy'
 
-	if $(command -v svn &> /dev/null) && $(command -v python2 &> /dev/null) ; then
+	if command -v svn &> /dev/null && command -v python2 &> /dev/null ; then
 		local my_http_proxy=${1:-$BASH_IT_HTTP_PROXY}
 
 		python2 - "$my_http_proxy" "$BASH_IT_NO_PROXY" <<END
@@ -318,9 +309,7 @@ ssh-show-proxy () {
 	group 'proxy'
 
 	if [ -f ~/.ssh/config ] ; then
-		echo ""
-		echo "SSH Config Enabled in ~/.ssh/config"
-		echo "==================================="
+    printf "\n${GREEN}%s${NC}\n$PROXY_DIVIDER\n" "SSH Config Enabled in ~/.ssh/config"
 		awk '
 		    $1 == "Host" {
 		        host = $2;
@@ -332,9 +321,7 @@ ssh-show-proxy () {
 		    }
 		' ~/.ssh/config | column -t
 
-		echo ""
-		echo "SSH Config Disabled in ~/.ssh/config"
-		echo "===================================="
+    printf "\n${GREEN}%s${NC}\n$PROXY_DIVIDER\n" "SSH Config Disabled in ~/.ssh/config"
 		awk '
 		    $1 == "Host" {
 		        host = $2;

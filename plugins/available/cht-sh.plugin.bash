@@ -15,7 +15,8 @@ if ! _command_exists cht.sh ; then
 		group 'cht-sh'
 
 		# Separate arguments with '/', preserving spaces within them
-		local query=$(IFS=/ ; echo "$*")
+		local query
+    query=$(IFS=/ ; echo "$*")
 		curl "cht.sh/${query}"
 	}
 fi

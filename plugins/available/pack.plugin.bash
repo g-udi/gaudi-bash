@@ -1,5 +1,3 @@
-# bash completion for pack                                 -*- shell-script -*-
-
 cite about-plugin
 about-plugin 'CNB pack cli aliases'
 

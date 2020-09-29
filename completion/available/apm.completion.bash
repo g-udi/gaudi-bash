@@ -1,13 +1,14 @@
 #!/usr/bin/env bash
 
-# apm-bash-completion is written by Ugur Ozyilmazel
-# repo: https://github.com/vigo/apm-bash-completion
+# apm-bash-completion is written by Ugur Ozyilmazel [ref: https://github.com/vigo/apm-bash-completion]
 
 __apm () {
     local cur prev options apm_command
+
     COMPREPLY=()
     cur="${COMP_WORDS[COMP_CWORD]}"
     prev="${COMP_WORDS[COMP_CWORD-1]}"
+
     __apm_get_command
     if [[ $cur = -* ]]; then
         options="--color"

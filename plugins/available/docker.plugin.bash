@@ -33,14 +33,14 @@ docker-remove-images () {
   about 'attempt to remove images with supplied tags or all if no tags are supplied'
   group 'docker'
   if [ -z "$1" ]; then
-    docker rmi $(docker images -q)
+    docker rmi "$(docker images -q)"
   else
     DOCKER_IMAGES=""
-    for IMAGE_ID in $@; do DOCKER_IMAGES="$DOCKER_IMAGES\|$IMAGE_ID"; done
+    for IMAGE_ID in "$@"; do DOCKER_IMAGES="$DOCKER_IMAGES\|$IMAGE_ID"; done
     # Find the image IDs for the supplied tags
-    ID_ARRAY=($(docker images | grep "${DOCKER_IMAGES:2}" | awk {'print $3'}))
+    ID_ARRAY=( "$(docker images | grep "${DOCKER_IMAGES:2}" | awk "{'print $3'}")" )
     # Strip out duplicate IDs before attempting to remove the image(s)
-    docker rmi $(echo ${ID_ARRAY[@]} | tr ' ' '\n' | sort -u | tr '\n' ' ')
+    docker rmi "$(echo "${ID_ARRAY[@]}" | tr ' ' '\n' | sort -u | tr '\n' ' ')"
  fi
 }
 

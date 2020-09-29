@@ -1,3 +1,4 @@
+# shellcheck disable=SC1090
 # Load git-subrepo if you are using it, and initialize completions
 
 cite about-plugin

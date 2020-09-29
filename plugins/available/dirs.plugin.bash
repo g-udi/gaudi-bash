@@ -1,3 +1,5 @@
+# shellcheck disable=SC1090
+
 # Directory stack navigation:
 #
 # Add to stack with: pu /path/to/directory
@@ -66,16 +68,17 @@ fi
 
 alias L='cat ~/.dirs'
 
-# Goes to destination dir, otherwise stay in the dir
+# goes to destination dir, otherwise stay in the dir
 G () {
     about 'goes to destination dir'
     param '1: directory'
     example '$ G ..'
     group 'dirs'
 
-    cd "${1:-$(pwd)}" ;
+    cd "${1:-$(pwd)}" || return ;
 }
 
+# save a bookmark
 S () {
     about 'save a bookmark'
     param '1: bookmark name'
@@ -84,12 +87,13 @@ S () {
 
     [[ $# -eq 1 ]] || { echo "${FUNCNAME[0]} function requires 1 argument"; return 1; }
 
-    sed "/$@/d" ~/.dirs > ~/.dirs1;
+    sed "/$*/d" ~/.dirs > ~/.dirs1;
     \mv ~/.dirs1 ~/.dirs;
-    echo "$@"=\"`pwd`\" >> ~/.dirs;
+    echo "$*"=\""$(pwd)"\" >> ~/.dirs;
     source ~/.dirs ;
 }
 
+# remove a bookmark
 R () {
     about 'remove a bookmark'
     param '1: bookmark name'
@@ -98,10 +102,12 @@ R () {
 
     [[ $# -eq 1 ]] || { echo "${FUNCNAME[0]} function requires 1 argument"; return 1; }
 
-    sed "/$@/d" ~/.dirs > ~/.dirs1;
+    sed "/$*/d" ~/.dirs > ~/.dirs1;
     \mv ~/.dirs1 ~/.dirs;
 }
 
-alias U='source ~/.dirs' 	# Update bookmark stack
+# Update bookmark stack
+alias U='source ~/.dirs'
+
 # Set the Bash option so that no '$' is required when using the above facility
 shopt -s cdable_vars

@@ -33,3 +33,6 @@ v () {
 		vim "$@";
 	fi;
 }
+
+# set the global edit mode using the EDIT_MODE global variable e.g., vi, emacs
+[[ -z $EDIT_MODE ]] && set -o "$EDIT_MODE"

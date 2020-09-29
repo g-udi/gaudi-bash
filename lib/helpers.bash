@@ -179,8 +179,8 @@ _bash-it-describe () {
     column_header="$4"
 
     typeset f
-    typeset enabled
-    printf "%-20s%-10s%s\n" "$column_header" 'Enabled?' 'Description'
+    printf "\n%-20s%-10s%s\n" "$column_header" 'Enabled?' '  Description'
+    printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -
     for f in "${BASH_IT}/$subdirectory/available/"*.bash
     do
         # Check for both the old format without the load priority, and the extended format with the priority
@@ -189,11 +189,11 @@ _bash-it-describe () {
         enabled_files=$(sort <(compgen -G "${BASH_IT}/enabled/*$BASH_IT_LOAD_PRIORITY_SEPARATOR${enabled_file}") <(compgen -G "${BASH_IT}/$subdirectory/enabled/${enabled_file}") <(compgen -G "${BASH_IT}/$subdirectory/enabled/*$BASH_IT_LOAD_PRIORITY_SEPARATOR${enabled_file}") | wc -l)
 
         if [ $enabled_files -gt 0 ]; then
-            enabled='x'
+            printf "%-20s${GREEN}%-10s" "$(basename $f | sed -e 's/\(.*\)\..*\.bash/\1/g')" "  [●]"
         else
-            enabled=' '
+            printf "%-20s${RED}%-10s" "$(basename $f | sed -e 's/\(.*\)\..*\.bash/\1/g')" "  [◯]"
         fi
-        printf "%-20s%-10s%s\n" "$(basename $f | sed -e 's/\(.*\)\..*\.bash/\1/g')" "  [$enabled]" "$(cat $f | metafor about-$file_type)"
+        printf "${NC}\t%s\n" "$(cat $f | metafor about-$file_type)"
     done
     printf '\n%s\n' "to enable $preposition $file_type, do:"
     printf '%s\n' "$ bash-it enable $file_type  <$file_type name> [$file_type name]... -or- $ bash-it enable $file_type all"

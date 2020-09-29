@@ -1,7 +1,7 @@
 cite about-plugin
 about-plugin 'one command to extract them all...'
 
-# extract file(s) from compressed status
+
 extract () {
     local opt
     local OPTIND=1
@@ -37,7 +37,9 @@ End-Of-Usage
 
         local -r filename=$(basename -- $1)
         local -r filedirname=$(dirname -- $1)
-        local targetdirname=$(sed 's/\(\.tar\.bz2$\|\.tbz$\|\.tbz2$\|\.tar\.gz$\|\.tgz$\|\.tar$\|\.tar\.xz$\|\.txz$\|\.tar\.Z$\|\.7z$\)//g' <<< $filename)
+        local targetdirname
+
+        targetdirname=$(sed 's/\(\.tar\.bz2$\|\.tbz$\|\.tbz2$\|\.tar\.gz$\|\.tgz$\|\.tar$\|\.tar\.xz$\|\.txz$\|\.tar\.Z$\|\.7z$\)//g' <<< $filename)
         if [ "$filename" = "$targetdirname" ]; then
             # archive type either not supported or it doesn't need dir creation
             targetdirname=""

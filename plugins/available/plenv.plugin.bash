@@ -1,5 +1,3 @@
-# plugin for plenv
-
 cite about-plugin
 about-plugin 'plenv plugin for Perl'
 
