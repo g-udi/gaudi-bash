@@ -199,7 +199,7 @@ __bundle_get_command () {
 # Input is read from $cur, and the result is directly written to $COMPREPLY.
 __bundle_complete_groups () {
     # Group being currently written
-    local cur_group=${cur##*[ :]}
+    local cur_group=${cur##*[[ :]}
     # All groups written before
     local prefix=${cur%"$cur_group"}
     local groups=$(__bundle_exec_ruby 'puts Bundler.definition.dependencies.map(&:groups).reduce(:|).map(&:to_s)')

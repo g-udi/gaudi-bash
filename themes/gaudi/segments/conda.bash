@@ -24,7 +24,7 @@ gaudi_conda () {
   [[ $GAUDI_CONDA_SHOW == false ]] && return
 
   # Check if running via conda virtualenv
-  gaudi::exists conda && [ -n "$CONDA_DEFAULT_ENV" ] || return
+  gaudi::exists conda && [[ -n "$CONDA_DEFAULT_ENV" ]] || return
 
   gaudi::section \
     "$GAUDI_CONDA_COLOR" \

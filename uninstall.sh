@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-if [ -z "$BASH_IT" ];
+if [[ -z "$BASH_IT" ]];
 then
   BASH_IT="$HOME/.bash_it"
 fi
@@ -15,7 +15,7 @@ esac
 
 BACKUP_FILE=$CONFIG_FILE.bak
 
-if [ ! -e "$HOME/$BACKUP_FILE" ]; then
+if [[ ! -e "$HOME/$BACKUP_FILE" ]]; then
   echo -e "${YELLOW}Backup file $HOME/$BACKUP_FILE not found.${NC}" >&2
 
   test -w "$HOME/$CONFIG_FILE" &&

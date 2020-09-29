@@ -7,9 +7,9 @@ _is_function _rl_enabled ||
 _pj () {
   _is_function _init_completion || return
   _is_function _rl_enabled || return
-  [ -n "$PROJECT_PATHS" ] || return
+  [[ -n "$PROJECT_PATHS" ]] || return
   shift
-  [ "$1" == "open" ] && shift
+  [[ "$1" == "open" ]] && shift
 
   local cur prev words cword
   _init_completion || return

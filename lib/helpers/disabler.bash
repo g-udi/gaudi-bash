@@ -49,7 +49,7 @@ _disable-thing () {
     file_type="$2"
     file_entity="$3"
 
-    if [ -z "$file_entity" ]; then
+    if [[ -z "$file_entity" ]]; then
         reference "disable-$file_type"
         return
     fi
@@ -57,7 +57,7 @@ _disable-thing () {
     typeset f suffix
     suffix=$(echo "$subdirectory" | sed -e 's/plugins/plugin/g')
 
-    if [ "$file_entity" = "all" ]; then
+    if [[ "$file_entity" = "all" ]]; then
         # Disable everything that's using the old structure
         for f in `compgen -G "${BASH_IT}/$subdirectory/enabled/*.${suffix}.bash"`
         do
@@ -71,10 +71,10 @@ _disable-thing () {
         done
     else
         typeset plugin_global=$(command ls $ "${BASH_IT}/enabled/"[0-9]*$BASH_IT_LOAD_PRIORITY_SEPARATOR$file_entity.$suffix.bash 2>/dev/null | head -1)
-        if [ -z "$plugin_global" ]; then
+        if [[ -z "$plugin_global" ]]; then
           # Use a glob to search for both possible patterns
           typeset plugin=$(command ls $ "${BASH_IT}/$subdirectory/enabled/"{[0-9]*$BASH_IT_LOAD_PRIORITY_SEPARATOR$file_entity.$suffix.bash,$file_entity.$suffix.bash} 2>/dev/null | head -1)
-          if [ -z "$plugin" ]; then
+          if [[ -z "$plugin" ]]; then
               printf '%s\n' "sorry, $file_entity does not appear to be an enabled $file_type."
               return
           fi
@@ -86,7 +86,7 @@ _disable-thing () {
 
     _bash-it-clean-component-cache "${file_type}"
 
-    if [ -n "$BASH_IT_AUTOMATIC_RELOAD_AFTER_CONFIG_CHANGE" ]; then
+    if [[ -n "$BASH_IT_AUTOMATIC_RELOAD_AFTER_CONFIG_CHANGE" ]]; then
       _bash-it-reload
     fi
 

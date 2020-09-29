@@ -30,7 +30,7 @@ gaudi::section () {
     # gaudi::escape "$color$prefix$symbol $content$suffix${NC}"
     # printf "%b%b%b %b%b%b" "$color" "$prefix" "$symbol" "$content" "$suffix" "${NC}"
 
-    [ $GAUDI_ENABLE_SYMBOLS == false ] && symbol="$GAUDI_SYMBOL_ALT " || symbol="$symbol "
+    [[ $GAUDI_ENABLE_SYMBOLS == false ]] && symbol="$GAUDI_SYMBOL_ALT " || symbol="$symbol "
     # Why are wrapping the cariables with "" you say ?
     # To pass a whole string containing whitespaces as a single argument, enclose it in double quotes
     # Like every other program, echo or printf interprets strings separated by whitespace as different arguments

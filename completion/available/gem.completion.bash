@@ -2,7 +2,7 @@
 # Completion for gem
 
 _installcomp () {
-  if [ -z "$REMOTE_GEMS" ]
+  if [[ -z "$REMOTE_GEMS" ]]
   then
     REMOTE_GEMS=( $(gem list --remote --no-versions | tr '\n' ' ') )
   fi
@@ -11,7 +11,7 @@ _installcomp () {
 }
 
 _uninstallcomp () {
-  if [ -z "$LOCAL_GEMS" ]
+  if [[ -z "$LOCAL_GEMS" ]]
   then
     LOCAL_GEMS=( $(gem list --no-versions | sed 's/\*\*\* LOCAL GEMS \*\*\*//' | tr '\n' ' ') )
   fi

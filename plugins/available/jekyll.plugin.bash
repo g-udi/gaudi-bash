@@ -7,7 +7,7 @@ editpost () {
   group 'jekyll'
 
   unset SITE
-  if [ -z "$1" ]
+  if [[ -z "$1" ]]
   then
     echo "Error: no site specified."
     echo "The site is the name of the directory your project is in."
@@ -16,14 +16,14 @@ editpost () {
 
   for site in ${SITES[@]}
   do
-    if [ "$(basename $site)" = "$1" ]
+    if [[ "$(basename $site)" = "$1" ]]
     then
       SITE=$site
       break
     fi
   done
 
-  if [ -z "$SITE" ]
+  if [[ -z "$SITE" ]]
   then
     echo "No such site."
     return 1
@@ -46,7 +46,7 @@ editpost () {
   done
   less $TMPFILE
   read -p "Number of post to edit: " POST_TO_EDIT
-  if [ -z "$JEKYLL_EDITOR" ]
+  if [[ -z "$JEKYLL_EDITOR" ]]
   then
     nano "${POSTS[$POST_TO_EDIT]}"
   else
@@ -60,14 +60,14 @@ newpost () {
   group 'jekyll'
 
   unset SITE
-  if [ -z "$1" ]
+  if [[ -z "$1" ]]
   then
     echo "Error: no site specified."
     echo "The site is the name of the directory your project is in."
     return 1
   fi
 
-  if [ -z "$SITE" ]
+  if [[ -z "$SITE" ]]
   then
     echo "No such site."
     return 1
@@ -77,7 +77,7 @@ newpost () {
 
   for site in ${SITES[@]}
   do
-    if [ "$(basename $site)" = "$1" ]
+    if [[ "$(basename $site)" = "$1" ]]
     then
       SITE=$site
       JEKYLL_FORMATTING=${MARKUPS[$loc]}
@@ -98,7 +98,7 @@ newpost () {
 
   OPTIONS="Text Quote Image Audio Video Link"
 
-  if [ $JEKYLL_FORMATTING = "markdown" -o $JEKYLL_FORMATTING = "textile" ]
+  if [[ $JEKYLL_FORMATTING = "markdown" -o $JEKYLL_FORMATTING = "textile" ]]
   then
     select OPTION in $OPTIONS
     do
@@ -271,7 +271,7 @@ testsite () {
   group 'jekyll'
 
   unset SITE
-  if [ -z "$1" ]
+  if [[ -z "$1" ]]
   then
     echo "Error: no site specified."
     echo "The site is the name of the directory your project is in."
@@ -280,14 +280,14 @@ testsite () {
 
   for site in ${SITES[@]}
   do
-    if [ "$(basename $site)" = "$1" ]
+    if [[ "$(basename $site)" = "$1" ]]
     then
       SITE=$site
       break
     fi
   done
 
-  if [ -z "$SITE" ]
+  if [[ -z "$SITE" ]]
   then
     echo "No such site."
     return 1
@@ -303,7 +303,7 @@ buildsite () {
   group 'jekyll'
 
   unset SITE
-  if [ -z "$1" ]
+  if [[ -z "$1" ]]
   then
     echo "Error: no site specified."
     echo "The site is the name of the directory your project is in."
@@ -312,14 +312,14 @@ buildsite () {
 
   for site in ${SITES[@]}
   do
-    if [ "$(basename $site)" = "$1" ]
+    if [[ "$(basename $site)" = "$1" ]]
     then
       SITE=$site
       break
     fi
   done
 
-  if [ -z "$SITE" ]
+  if [[ -z "$SITE" ]]
   then
     echo "No such site."
     return 1
@@ -336,7 +336,7 @@ deploysite () {
   group 'jekyll'
 
   unset SITE
-  if [ -z "$1" ]
+  if [[ -z "$1" ]]
   then
     echo "Error: no site specified."
     echo "The site is the name of the directory your project is in."
@@ -347,7 +347,7 @@ deploysite () {
 
   for site in ${SITES[@]}
   do
-    if [ "$(basename $site)" = "$1" ]
+    if [[ "$(basename $site)" = "$1" ]]
     then
       SITE=$site
       REMOTE=${REMOTES[$loc]}
@@ -356,7 +356,7 @@ deploysite () {
     loc=$(($loc+1))
   done
 
-  if [ -z "$SITE" ]
+  if [[ -z "$SITE" ]]
   then
     echo "No such site."
     return 1

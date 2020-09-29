@@ -128,7 +128,7 @@ _packer_completion () {
     COMPREPLY=()
     local i c=1 command
 
-    while [ $c -lt $COMP_CWORD ]; do
+    while [[ $c -lt $COMP_CWORD ]]; do
         i="${COMP_WORDS[c]}"
         case "$i" in
             -*) ;;
@@ -137,7 +137,7 @@ _packer_completion () {
         ((c++))
     done
 
-    if [ -z $command ]; then
+    if [[ -z $command ]]; then
         case "$cur" in
             '-'*)
                 __packercomp "-machine-readable --help --version"

@@ -169,11 +169,11 @@ local_setup () {
   assert_line -n 0 'sorry, unknown-foo does not appear to be an available plugin.'
 
   # Check for both old an new structure
-  assert [ ! -L "$BASH_IT/plugins/enabled/250---unknown-foo.plugin.bash" ]
-  assert [ ! -L "$BASH_IT/plugins/enabled/unknown-foo.plugin.bash" ]
+  assert [[ ! -L "$BASH_IT/plugins/enabled/250---unknown-foo.plugin.bash" ]]
+  assert [[ ! -L "$BASH_IT/plugins/enabled/unknown-foo.plugin.bash" ]]
 
-  assert [ ! -L "$BASH_IT/enabled/250---unknown-foo.plugin.bash" ]
-  assert [ ! -L "$BASH_IT/enabled/unknown-foo.plugin.bash" ]
+  assert [[ ! -L "$BASH_IT/enabled/250---unknown-foo.plugin.bash" ]]
+  assert [[ ! -L "$BASH_IT/enabled/unknown-foo.plugin.bash" ]]
 }
 
 @test "helpers: enable an unknown plugin through the bash-it function" {
@@ -182,11 +182,11 @@ local_setup () {
   assert_line -n 0 'sorry, unknown-foo does not appear to be an available plugin.'
 
   # Check for both old an new structure
-  assert [ ! -L "$BASH_IT/plugins/enabled/250---unknown-foo.plugin.bash" ]
-  assert [ ! -L "$BASH_IT/plugins/enabled/unknown-foo.plugin.bash" ]
+  assert [[ ! -L "$BASH_IT/plugins/enabled/250---unknown-foo.plugin.bash" ]]
+  assert [[ ! -L "$BASH_IT/plugins/enabled/unknown-foo.plugin.bash" ]]
 
-  assert [ ! -L "$BASH_IT/enabled/250---unknown-foo.plugin.bash" ]
-  assert [ ! -L "$BASH_IT/enabled/unknown-foo.plugin.bash" ]
+  assert [[ ! -L "$BASH_IT/enabled/250---unknown-foo.plugin.bash" ]]
+  assert [[ ! -L "$BASH_IT/enabled/unknown-foo.plugin.bash" ]]
 }
 
 @test "helpers: disable a plugin that is not enabled" {
@@ -198,22 +198,22 @@ local_setup () {
   run _enable-plugin "nvm"
   assert_line -n 0 'nvm enabled with priority 225.'
   assert_link_exist "$BASH_IT/enabled/225---nvm.plugin.bash"
-  assert [ ! -L "$BASH_IT/plugins/enabled/225---nvm.plugin.bash" ]
+  assert [[ ! -L "$BASH_IT/plugins/enabled/225---nvm.plugin.bash" ]]
 
   run _disable-plugin "nvm"
   assert_line -n 0 'nvm disabled.'
-  assert [ ! -L "$BASH_IT/enabled/225---nvm.plugin.bash" ]
+  assert [[ ! -L "$BASH_IT/enabled/225---nvm.plugin.bash" ]]
 }
 
 @test "helpers: disable the nvm plugin if it was enabled with a priority, but in the component-specific directory" {
   ln -s $BASH_IT/plugins/available/nvm.plugin.bash $BASH_IT/plugins/enabled/225---nvm.plugin.bash
   assert_link_exist "$BASH_IT/plugins/enabled/225---nvm.plugin.bash"
-  assert [ ! -L "$BASH_IT/enabled/225---nvm.plugin.bash" ]
+  assert [[ ! -L "$BASH_IT/enabled/225---nvm.plugin.bash" ]]
 
   run _disable-plugin "nvm"
   assert_line -n 0 'nvm disabled.'
-  assert [ ! -L "$BASH_IT/plugins/enabled/225---nvm.plugin.bash" ]
-  assert [ ! -L "$BASH_IT/enabled/225---nvm.plugin.bash" ]
+  assert [[ ! -L "$BASH_IT/plugins/enabled/225---nvm.plugin.bash" ]]
+  assert [[ ! -L "$BASH_IT/enabled/225---nvm.plugin.bash" ]]
 }
 
 @test "helpers: disable the nvm plugin if it was enabled without a priority" {
@@ -222,7 +222,7 @@ local_setup () {
 
   run _disable-plugin "nvm"
   assert_line -n 0 'nvm disabled.'
-  assert [ ! -L "$BASH_IT/plugins/enabled/nvm.plugin.bash" ]
+  assert [[ ! -L "$BASH_IT/plugins/enabled/nvm.plugin.bash" ]]
 }
 
 @test "helpers: enable the nvm plugin if it was enabled without a priority" {
@@ -232,8 +232,8 @@ local_setup () {
   run _enable-plugin "nvm"
   assert_line -n 0 'nvm is already enabled.'
   assert_link_exist "$BASH_IT/plugins/enabled/nvm.plugin.bash"
-  assert [ ! -L "$BASH_IT/plugins/enabled/225---nvm.plugin.bash" ]
-  assert [ ! -L "$BASH_IT/enabled/225---nvm.plugin.bash" ]
+  assert [[ ! -L "$BASH_IT/plugins/enabled/225---nvm.plugin.bash" ]]
+  assert [[ ! -L "$BASH_IT/enabled/225---nvm.plugin.bash" ]]
 }
 
 @test "helpers: enable the nvm plugin if it was enabled with a priority, but in the component-specific directory" {
@@ -242,9 +242,9 @@ local_setup () {
 
   run _enable-plugin "nvm"
   assert_line -n 0 'nvm is already enabled.'
-  assert [ ! -L "$BASH_IT/plugins/enabled/nvm.plugin.bash" ]
+  assert [[ ! -L "$BASH_IT/plugins/enabled/nvm.plugin.bash" ]]
   assert_link_exist "$BASH_IT/plugins/enabled/225---nvm.plugin.bash"
-  assert [ ! -L "$BASH_IT/enabled/225---nvm.plugin.bash" ]
+  assert [[ ! -L "$BASH_IT/enabled/225---nvm.plugin.bash" ]]
 }
 
 @test "helpers: enable the nvm plugin twice" {
@@ -275,8 +275,8 @@ local_setup () {
 
   assert_link_exist "$BASH_IT/enabled/350---dirs.completion.bash"
   assert_link_exist "$BASH_IT/enabled/250---dirs.plugin.bash"
-  assert [ ! -L "$BASH_IT/completion/enabled/350----dirs.completion.bash" ]
-  assert [ ! -L "$BASH_IT/plugins/enabled/250----dirs.plugin.bash" ]
+  assert [[ ! -L "$BASH_IT/completion/enabled/350----dirs.completion.bash" ]]
+  assert [[ ! -L "$BASH_IT/plugins/enabled/250----dirs.plugin.bash" ]]
 }
 
 @test "helpers: migrate enabled plugins that don't use the new priority-based configuration" {
@@ -301,9 +301,9 @@ local_setup () {
   assert_link_exist "$BASH_IT/enabled/250---node.plugin.bash"
   assert_link_exist "$BASH_IT/enabled/250---ssh.plugin.bash"
   assert_link_exist "$BASH_IT/enabled/150---todo.txt-cli.aliases.bash"
-  assert [ ! -L "$BASH_IT/plugins/enabled/node.plugin.bash" ]
-  assert [ ! -L "$BASH_IT/plugins/enabled/nvm.plugin.bash" ]
-  assert [ ! -L "$BASH_IT/aliases/enabled/todo.txt-cli.aliases.bash" ]
+  assert [[ ! -L "$BASH_IT/plugins/enabled/node.plugin.bash" ]]
+  assert [[ ! -L "$BASH_IT/plugins/enabled/nvm.plugin.bash" ]]
+  assert [[ ! -L "$BASH_IT/aliases/enabled/todo.txt-cli.aliases.bash" ]]
 }
 
 @test "helpers: migrate enabled plugins that use the new priority-based configuration in the individual directories" {
@@ -324,9 +324,9 @@ local_setup () {
   assert_link_exist "$BASH_IT/enabled/250---node.plugin.bash"
   assert_link_exist "$BASH_IT/enabled/250---ssh.plugin.bash"
   assert_link_exist "$BASH_IT/enabled/150---todo.txt-cli.aliases.bash"
-  assert [ ! -L "$BASH_IT/plugins/enabled/225----node.plugin.bash" ]
-  assert [ ! -L "$BASH_IT/plugins/enabled/250----nvm.plugin.bash" ]
-  assert [ ! -L "$BASH_IT/aliases/enabled/250----todo.txt-cli.aliases.bash" ]
+  assert [[ ! -L "$BASH_IT/plugins/enabled/225----node.plugin.bash" ]]
+  assert [[ ! -L "$BASH_IT/plugins/enabled/250----nvm.plugin.bash" ]]
+  assert [[ ! -L "$BASH_IT/aliases/enabled/250----todo.txt-cli.aliases.bash" ]]
 }
 
 @test "helpers: run the migrate command without anything to migrate and nothing enabled" {
@@ -349,7 +349,7 @@ __migrate_all_components () {
   for f in "${BASH_IT}/$subdirectory/available/"*.bash
   do
     to_enable=$(basename $f)
-    if [ -z "$priority" ]; then
+    if [[ -z "$priority" ]]; then
       ln -s "../available/$to_enable" "${BASH_IT}/${subdirectory}/enabled/$to_enable"
     else
       ln -s "../available/$to_enable" "${BASH_IT}/${subdirectory}/enabled/$priority---$to_enable"
@@ -424,7 +424,7 @@ __migrate_all_components () {
   assert_line -n 2 'nvm enabled with priority 225.'
   assert_line -n 3 'If any migration errors were reported, please try the following: reload && bash-it migrate'
   assert_line -n 4 'node enabled with priority 250.'
-  assert [ ! -L "$BASH_IT/plugins/enabled/nvm.plugin.bash" ]
+  assert [[ ! -L "$BASH_IT/plugins/enabled/nvm.plugin.bash" ]]
   assert_link_exist "$BASH_IT/enabled/225---nvm.plugin.bash"
   assert_link_exist "$BASH_IT/enabled/250---node.plugin.bash"
 }
@@ -444,10 +444,10 @@ __migrate_all_components () {
   assert_line -n 5 'nvm enabled with priority 225.'
   assert_line -n 6 'If any migration errors were reported, please try the following: reload && bash-it migrate'
   assert_line -n 7 'node disabled.'
-  assert [ ! -L "$BASH_IT/plugins/enabled/nvm.plugin.bash" ]
+  assert [[ ! -L "$BASH_IT/plugins/enabled/nvm.plugin.bash" ]]
   assert_link_exist "$BASH_IT/enabled/225---nvm.plugin.bash"
-  assert [ ! -L "$BASH_IT/plugins/enabled/250---node.plugin.bash" ]
-  assert [ ! -L "$BASH_IT/enabled/250---node.plugin.bash" ]
+  assert [[ ! -L "$BASH_IT/plugins/enabled/250---node.plugin.bash" ]]
+  assert [[ ! -L "$BASH_IT/enabled/250---node.plugin.bash" ]]
 }
 
 @test "helpers: enable all plugins" {
@@ -530,7 +530,7 @@ __migrate_all_components () {
 }
 
 @test "helpers: describe the nvm plugin without enabling it" {
-  _bash-it-plugins | grep "nvm" | grep "\[ \]"
+  _bash-it-plugins | grep "nvm" | grep "\[[ \]"
 }
 
 @test "helpers: describe the nvm plugin after enabling it" {
@@ -557,5 +557,5 @@ __migrate_all_components () {
 
 @test "helpers: describe the todo.txt-cli aliases without enabling them" {
   run _bash-it-aliases
-  assert_line "todo.txt-cli          [ ]     todo.txt-cli abbreviations"
+  assert_line "todo.txt-cli          [[ ]]     todo.txt-cli abbreviations"
 }

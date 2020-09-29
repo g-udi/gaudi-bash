@@ -45,7 +45,7 @@ gaudi_elapsed () {
 
     trap '_gaudi::timer_start' DEBUG
 
-    if [ "$PROMPT_COMMAND" == "" ]; then
+    if [[ "$PROMPT_COMMAND" == "" ]]; then
         PROMPT_COMMAND="_gaudi::timer_stop"
     else
         PROMPT_COMMAND="$PROMPT_COMMAND; _gaudi::timer_stop"

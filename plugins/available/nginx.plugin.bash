@@ -9,7 +9,7 @@ nginx_reload () {
   group 'nginx'
 
   FILE="${NGINX_PATH}/logs/nginx.pid"
-  if [ -e $FILE ]; then
+  if [[ -e $FILE ]]; then
     echo "Reloading NGINX..."
     PID=`cat $NGINX_PATH/logs/nginx.pid`
     sudo kill -HUP $PID
@@ -24,7 +24,7 @@ nginx_stop () {
   group 'nginx'
 
   FILE="${NGINX_PATH}/logs/nginx.pid"
-  if [ -e $FILE ]; then
+  if [[ -e $FILE ]]; then
     echo "Stopping NGINX..."
     PID=`cat $NGINX_PATH/logs/nginx.pid`
     sudo kill -INT $PID
@@ -39,7 +39,7 @@ nginx_start () {
   group 'nginx'
 
   FILE="${NGINX_PATH}/sbin/nginx"
-  if [ -e $FILE ]; then
+  if [[ -e $FILE ]]; then
     echo "Starting NGINX..."
     sudo $NGINX_PATH/sbin/nginx
   else
@@ -52,7 +52,7 @@ nginx_restart () {
   group 'nginx'
 
   FILE="${NGINX_PATH}/logs/nginx.pid"
-  if [ -e $FILE ]; then
+  if [[ -e $FILE ]]; then
     echo "Stopping NGINX..."
     PID=`cat $NGINX_PATH/logs/nginx.pid`
     sudo kill -INT $PID

@@ -33,8 +33,8 @@ stat -c %Y /dev/null > /dev/null 2>&1 && _KAC_STAT_COMMAND="stat -c %Y" || _KAC_
 # returns 1 otherwise
 _KAC_is_file_newer_than()
 {
-    [ -f "$1" ] || return 1
-    [ $(( $(date +%s) - $($_KAC_STAT_COMMAND "$1") )) -gt $2 ] && return 1 || return 0
+    [[ -f "$1" ]] || return 1
+    [[ $(( $(date +%s) - $($_KAC_STAT_COMMAND "$1") )) -gt $2 ]] && return 1 || return 0
 }
 
 # helper function for _KAC_get_and_regen_cache, see doc below
@@ -73,7 +73,7 @@ _KAC_get_and_regen_cache()
     local REGEN_CMD="_KAC_regen_cache $CACHE_NAME $@"
     _KAC_CACHE_PATH="$_KNIFE_AUTOCOMPLETE_CACHE_DIR/$CACHE_NAME"
     # no need to wait for the regen if the file already exists
-    [ -f $_KAC_CACHE_PATH ] && ($REGEN_CMD &) || $REGEN_CMD
+    [[ -f $_KAC_CACHE_PATH ]] && ($REGEN_CMD &) || $REGEN_CMD
 }
 
 # performs two things: first, deletes all obsolete temp files
@@ -119,7 +119,7 @@ _KAC_get_current_base_command()
     local PREVIOUS="knife"
     local I=1
     local CURRENT
-    while [ $I -le $COMP_CWORD ]
+    while [[ $I -le $COMP_CWORD ]]
     do
         # command words are all lower-case
         echo ${COMP_WORDS[$I]} | grep -E "^[a-z]+$" > /dev/null || break
@@ -129,7 +129,7 @@ _KAC_get_current_base_command()
         I=$(( $I + 1))
     done
     _KAC_CURRENT_COMMAND=$PREVIOUS
-    [ $I -le $COMP_CWORD ] && _KAC_CURRENT_COMMAND_NB_WORDS=$I
+    [[ $I -le $COMP_CWORD ]] && _KAC_CURRENT_COMMAND_NB_WORDS=$I
 }
 
 # searches the position of the currently completed argument in the current base command
@@ -140,7 +140,7 @@ _KAC_get_current_arg_position()
     local CURRENT_ARG_POS=$(( $_KAC_CURRENT_COMMAND_NB_WORDS + 1 ))
     local COMPLETE_COMMAND=$(cat $_KAC_CACHE_PATH | grep -E "^$_KAC_CURRENT_COMMAND")
     local CURRENT_ARG
-    while [ $CURRENT_ARG_POS -le $COMP_CWORD ]
+    while [[ $CURRENT_ARG_POS -le $COMP_CWORD ]]
     do
         CURRENT_ARG=$(echo $COMPLETE_COMMAND | cut -d ' ' -f $CURRENT_ARG_POS)
         # we break if the current arg is a "plural" arg

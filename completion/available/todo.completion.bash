@@ -16,7 +16,7 @@ _todo () {
 
     local _todo_sh=${_todo_sh:-todo.sh}
     local completions
-    if [ $COMP_CWORD -eq 1 ]; then
+    if [[ $COMP_CWORD -eq 1 ]]; then
         completions="$COMMANDS $(eval TODOTXT_VERBOSE=0 $_todo_sh command listaddons) $OPTS"
     elif [[ $COMP_CWORD -gt 2 && ( \
         "${COMP_WORDS[COMP_CWORD-2]}" =~ $MOVE_COMMAND_PATTERN || \
@@ -34,12 +34,12 @@ _todo () {
             *)  case "$cur" in
                     +*) completions=$(eval TODOTXT_VERBOSE=0 $_todo_sh command listproj)
                         COMPREPLY=( $( compgen -W "$completions" -- $cur ))
-                        [ ${#COMPREPLY[@]} -gt 0 ] && return 0
+                        [[ ${#COMPREPLY[@]} -gt 0 ]] && return 0
                         completions=$(eval 'TODOTXT_VERBOSE=0 TODOTXT_SOURCEVAR=\$DONE_FILE' $_todo_sh command listproj)
                         ;;
                     @*) completions=$(eval TODOTXT_VERBOSE=0 $_todo_sh command listcon)
                         COMPREPLY=( $( compgen -W "$completions" -- $cur ))
-                        [ ${#COMPREPLY[@]} -gt 0 ] && return 0
+                        [[ ${#COMPREPLY[@]} -gt 0 ]] && return 0
                         completions=$(eval 'TODOTXT_VERBOSE=0 TODOTXT_SOURCEVAR=\$DONE_FILE' $_todo_sh command listcon)
                         ;;
                     *)  if [[ "$cur" =~ ^[0-9]+$ ]]; then
@@ -50,7 +50,7 @@ _todo () {
                                     -e 's/[[:space:]]*$//' \
                                     -e '1q' \
                             )
-                            [ "$todo" ] && COMPREPLY[0]="$cur # $todo"
+                            [[ "$todo" ]] && COMPREPLY[0]="$cur # $todo"
                             return 0
                         else
                             return 0

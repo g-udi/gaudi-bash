@@ -22,7 +22,7 @@ _serverProfiles () {
       fi
 
     done
-    if [ -d "${serverdir}" ]
+    if [[ -d "${serverdir}" ]]
     then
 
       IFS=$'\n' tmp="$(ls "${serverdir}" | grep xml)"

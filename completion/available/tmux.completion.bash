@@ -6,7 +6,7 @@
 # Based upon the example at http://paste-it.appspot.com/Pj4mLycDE
 
 _tmux_expand () {
-    [ "$cur" != "${cur%\\}" ] && cur="$cur"'\';
+    [[ "$cur" != "${cur%\\}" ]] && cur="$cur"'\';
     if [[ "$cur" == \~*/* ]]; then
         eval cur=$cur;
     else
@@ -22,7 +22,7 @@ _tmux_filedir () {
     local IFS='
 ';
     _tmux_expand || return 0;
-    if [ "$1" = -d ]; then
+    if [[ "$1" = -d ]]; then
         COMPREPLY=(${COMPREPLY[@]} $( compgen -d -- $cur ));
         return 0;
     fi;
@@ -63,7 +63,7 @@ _tmux () {
     cur="${COMP_WORDS[COMP_CWORD]}"
     prev="${COMP_WORDS[COMP_CWORD-1]}"
 
-    if [ ${prev} == -f ]; then
+    if [[ ${prev} == -f ]]; then
         _tmux_filedir
     else
     # Search for the command

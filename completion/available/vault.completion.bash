@@ -21,7 +21,7 @@ _vault () {
   local cur
   local prev
 
-  if [ $COMP_CWORD -gt 0 ]; then
+  if [[ $COMP_CWORD -gt 0 ]]; then
     cur=${COMP_WORDS[COMP_CWORD]}
     prev=${COMP_WORDS[COMP_CWORD-1]}
   fi
@@ -31,7 +31,7 @@ _vault () {
   if [[ $prev =~ ^(policies|policy-write|policy-delete) ]]; then
     local policies=$(vault policies 2> /dev/null)
     COMPREPLY=($(compgen -W "$policies" -- $cur))
-  elif [ "$(echo $line | wc -w)" -le 2 ]; then
+  elif [[ "$(echo $line | wc -w)" -le 2 ]]; then
     if [[ "$line" =~ ^vault\ (read|write|delete|list)\ $ ]]; then
       COMPREPLY=($(compgen -W "$(_vault_mounts)" -- ''))
     else
@@ -39,7 +39,7 @@ _vault () {
     fi
   elif [[ "$line" =~ ^vault\ (read|write|delete|list)\ (.*)$ ]]; then
     path=${BASH_REMATCH[2]}
-    if [[ "$path" =~ ^([^ ]+)/([^ /]*)$ ]]; then
+    if [[ "$path" =~ ^([^ ]]+)/([^ /]*)$ ]]; then
       list=$(vault list -format=yaml ${BASH_REMATCH[1]} 2> /dev/null | awk '{ print $2 }')
       COMPREPLY=($(compgen -W "$list" -P "${BASH_REMATCH[1]}/" -- ${BASH_REMATCH[2]}))
     else

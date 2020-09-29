@@ -8,7 +8,7 @@ setup () {
   sudo chmod 777 ${TEST_FIXTURE_ROOT}/dir/permission
 }
 teardown () {
-  
+
   rm -f ${TEST_FIXTURE_ROOT}/dir/permission
 }
 
@@ -17,19 +17,19 @@ teardown () {
   local -r permission="777"
   local -r file="${TEST_FIXTURE_ROOT}/dir/permission"
   run assert_file_permission "$permission" "$file"
-  [ "$status" -eq 0 ]
-  [ "${#lines[@]}" -eq 0 ]
+  [[ "$status" -eq 0 ]]
+  [[ "${#lines[@]}" -eq 0 ]]
 }
 
 @test 'assert_file_permission() <file>: returns 1 and displays path if <file> file does not have permissions 777' {
   local -r permission="644"
   local -r file="${TEST_FIXTURE_ROOT}/dir/permission"
   run assert_file_permission "$permission" "$file"
-  [ "$status" -eq 1 ]
-  [ "${#lines[@]}" -eq 3 ]
-  [ "${lines[0]}" == '-- file does not have permissions 644 --' ]
-  [ "${lines[1]}" == "path : $file" ]
-  [ "${lines[2]}" == '--' ]
+  [[ "$status" -eq 1 ]]
+  [[ "${#lines[@]}" -eq 3 ]]
+  [[ "${lines[0]}" == '-- file does not have permissions 644 --' ]]
+  [[ "${lines[1]}" == "path : $file" ]]
+  [[ "${lines[2]}" == '--' ]]
 }
 
 
@@ -41,11 +41,11 @@ teardown () {
   local -r permission="644"
   local -r file="${TEST_FIXTURE_ROOT}/dir/permission"
   run assert_file_permission "$permission" "$file"
-  [ "$status" -eq 1 ]
-  [ "${#lines[@]}" -eq 3 ]
-  [ "${lines[0]}" == '-- file does not have permissions 644 --' ]
-  [ "${lines[1]}" == "path : ../dir/permission" ]
-  [ "${lines[2]}" == '--' ]
+  [[ "$status" -eq 1 ]]
+  [[ "${#lines[@]}" -eq 3 ]]
+  [[ "${lines[0]}" == '-- file does not have permissions 644 --' ]]
+  [[ "${lines[1]}" == "path : ../dir/permission" ]]
+  [[ "${lines[2]}" == '--' ]]
 }
 
 @test 'assert_file_permission() <file>: replace suffix of displayed path' {
@@ -54,11 +54,11 @@ teardown () {
   local -r permission="644"
   local -r file="${TEST_FIXTURE_ROOT}/dir/permission"
   run assert_file_permission "$permission" "$file"
-  [ "$status" -eq 1 ]
-  [ "${#lines[@]}" -eq 3 ]
-  [ "${lines[0]}" == '-- file does not have permissions 644 --' ]
-  [ "${lines[1]}" == "path : ${TEST_FIXTURE_ROOT}/.." ]
-  [ "${lines[2]}" == '--' ]
+  [[ "$status" -eq 1 ]]
+  [[ "${#lines[@]}" -eq 3 ]]
+  [[ "${lines[0]}" == '-- file does not have permissions 644 --' ]]
+  [[ "${lines[1]}" == "path : ${TEST_FIXTURE_ROOT}/.." ]]
+  [[ "${lines[2]}" == '--' ]]
 }
 
 @test 'assert_file_permission() <file>: replace infix of displayed path' {
@@ -67,9 +67,9 @@ teardown () {
   local -r permission="644"
   local -r file="${TEST_FIXTURE_ROOT}/dir/permission"
   run assert_file_permission "$permission" "$file"
-  [ "$status" -eq 1 ]
-  [ "${#lines[@]}" -eq 3 ]
-  [ "${lines[0]}" == '-- file does not have permissions 644 --' ]
-  [ "${lines[1]}" == "path : ${TEST_FIXTURE_ROOT}/.." ]
-  [ "${lines[2]}" == '--' ]
+  [[ "$status" -eq 1 ]]
+  [[ "${#lines[@]}" -eq 3 ]]
+  [[ "${lines[0]}" == '-- file does not have permissions 644 --' ]]
+  [[ "${lines[1]}" == "path : ${TEST_FIXTURE_ROOT}/.." ]]
+  [[ "${lines[2]}" == '--' ]]
 }

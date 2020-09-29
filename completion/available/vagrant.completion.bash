@@ -34,14 +34,14 @@ __pwdln () {
 }
 
 __vagrantinvestigate () {
-    if [ -f "${PWD}/.vagrant" -o -d "${PWD}/.vagrant" ];then
+    if [[ -f "${PWD}/.vagrant" -o -d "${PWD}/.vagrant" ]];then
       echo "${PWD}/.vagrant"
       return 0
    else
       pwdmod2="${PWD}"
       for (( i=2; i<=$(__pwdln); i++ ));do
          pwdmod2="${pwdmod2%/*}"
-         if [ -f "${pwdmod2}/.vagrant" -o -d "${pwdmod2}/.vagrant" ];then
+         if [[ -f "${pwdmod2}/.vagrant" -o -d "${pwdmod2}/.vagrant" ]];then
             echo "${pwdmod2}/.vagrant"
             return 0
          fi
@@ -55,13 +55,13 @@ _vagrant () {
     prev="${COMP_WORDS[COMP_CWORD-1]}"
     commands="box cloud destroy global-status halt help hostmanager init login package plugin port powershell provision push rdp reload resume scp snapshot ssh ssh-config status suspend up upload validate vbguest version winrm winrm-config"
 
-    if [ $COMP_CWORD == 1 ]
+    if [[ $COMP_CWORD == 1 ]]
     then
       COMPREPLY=($(compgen -W "${commands}" -- ${cur}))
       return 0
     fi
 
-    if [ $COMP_CWORD == 2 ]
+    if [[ $COMP_CWORD == 2 ]]
     then
         case "$prev" in
             "init")
@@ -114,12 +114,12 @@ _vagrant () {
         esac
     fi
 
-    if [ $COMP_CWORD == 3 ]
+    if [[ $COMP_CWORD == 3 ]]
     then
       action="${COMP_WORDS[COMP_CWORD-2]}"
       case "$action" in
           "up")
-              if [ "$prev" == "--no-provision" ]; then
+              if [[ "$prev" == "--no-provision" ]]; then
                   COMPREPLY=($(compgen -W "${vm_list}" -- ${cur}))
                   return 0
               fi
@@ -135,7 +135,7 @@ _vagrant () {
               esac
               ;;
           "snapshot")
-              if [ "$prev" == "restore" ]; then
+              if [[ "$prev" == "restore" ]]; then
                   COMPREPLY=($(compgen -W "${vm_list}" -- ${cur}))
                   return 0
               fi
@@ -143,13 +143,13 @@ _vagrant () {
       esac
     fi
 
-    if [ $COMP_CWORD == 4 ]
+    if [[ $COMP_CWORD == 4 ]]
     then
       action="${COMP_WORDS[COMP_CWORD-3]}"
       prev="${COMP_WORDS[COMP_CWORD-2]}"
       case "$action" in
           "snapshot")
-              if [ "$prev" == "restore" ]; then
+              if [[ "$prev" == "restore" ]]; then
                   local snapshot_list="$(vagrant snapshot list ${cur} 2>/dev/null | awk '{ORS=" "} /==>/ {next} {print}')"
                   COMPREPLY=($(compgen -W "${snapshot_list}" -- ${cur}))
                   return 0

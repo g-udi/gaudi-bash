@@ -15,40 +15,40 @@ load test_helper
 @test "assert_line() <expected>: returns 0 if <expected> is a line in \`\${lines[@]}'" {
   run printf 'a\nb\nc'
   run assert_line 'b'
-  [ "$status" -eq 0 ]
-  [ "${#lines[@]}" -eq 0 ]
+  [[ "$status" -eq 0 ]]
+  [[ "${#lines[@]}" -eq 0 ]]
 }
 
 @test "assert_line() <expected>: returns 1 and displays details if <expected> is not a line in \`\${lines[@]}'" {
   run echo 'b'
   run assert_line 'a'
-  [ "$status" -eq 1 ]
-  [ "${#lines[@]}" -eq 4 ]
-  [ "${lines[0]}" == '-- output does not contain line --' ]
-  [ "${lines[1]}" == 'line   : a' ]
-  [ "${lines[2]}" == 'output : b' ]
-  [ "${lines[3]}" == '--' ]
+  [[ "$status" -eq 1 ]]
+  [[ "${#lines[@]}" -eq 4 ]]
+  [[ "${lines[0]}" == '-- output does not contain line --' ]]
+  [[ "${lines[1]}" == 'line   : a' ]]
+  [[ "${lines[2]}" == 'output : b' ]]
+  [[ "${lines[3]}" == '--' ]]
 }
 
 # Output formatting
 @test "assert_line() <expected>: displays \`\$output' in multi-line format if it is longer than one line" {
   run printf 'b 0\nb 1'
   run assert_line 'a'
-  [ "$status" -eq 1 ]
-  [ "${#lines[@]}" -eq 6 ]
-  [ "${lines[0]}" == '-- output does not contain line --' ]
-  [ "${lines[1]}" == 'line : a' ]
-  [ "${lines[2]}" == 'output (2 lines):' ]
-  [ "${lines[3]}" == '  b 0' ]
-  [ "${lines[4]}" == '  b 1' ]
-  [ "${lines[5]}" == '--' ]
+  [[ "$status" -eq 1 ]]
+  [[ "${#lines[@]}" -eq 6 ]]
+  [[ "${lines[0]}" == '-- output does not contain line --' ]]
+  [[ "${lines[1]}" == 'line : a' ]]
+  [[ "${lines[2]}" == 'output (2 lines):' ]]
+  [[ "${lines[3]}" == '  b 0' ]]
+  [[ "${lines[4]}" == '  b 1' ]]
+  [[ "${lines[5]}" == '--' ]]
 }
 
 # Options
 @test 'assert_line() <expected>: performs literal matching by default' {
   run echo 'a'
   run assert_line '*'
-  [ "$status" -eq 1 ]
+  [[ "$status" -eq 1 ]]
 }
 
 
@@ -60,8 +60,8 @@ load test_helper
 test_p_partial () {
   run printf 'a\n_b_\nc'
   run assert_line "$1" 'b'
-  [ "$status" -eq 0 ]
-  [ "${#lines[@]}" -eq 0 ]
+  [[ "$status" -eq 0 ]]
+  [[ "${#lines[@]}" -eq 0 ]]
 }
 
 @test 'assert_line() -p <partial>: enables partial matching' {
@@ -76,33 +76,33 @@ test_p_partial () {
 @test "assert_line() --partial <partial>: returns 0 if <partial> is a substring in any line in \`\${lines[@]}'" {
   run printf 'a\n_b_\nc'
   run assert_line --partial 'b'
-  [ "$status" -eq 0 ]
-  [ "${#lines[@]}" -eq 0 ]
+  [[ "$status" -eq 0 ]]
+  [[ "${#lines[@]}" -eq 0 ]]
 }
 
 @test "assert_line() --partial <partial>: returns 1 and displays details if <partial> is not a substring in any lines in \`\${lines[@]}'" {
   run echo 'b'
   run assert_line --partial 'a'
-  [ "$status" -eq 1 ]
-  [ "${#lines[@]}" -eq 4 ]
-  [ "${lines[0]}" == '-- no output line contains substring --' ]
-  [ "${lines[1]}" == 'substring : a' ]
-  [ "${lines[2]}" == 'output    : b' ]
-  [ "${lines[3]}" == '--' ]
+  [[ "$status" -eq 1 ]]
+  [[ "${#lines[@]}" -eq 4 ]]
+  [[ "${lines[0]}" == '-- no output line contains substring --' ]]
+  [[ "${lines[1]}" == 'substring : a' ]]
+  [[ "${lines[2]}" == 'output    : b' ]]
+  [[ "${lines[3]}" == '--' ]]
 }
 
 # Output formatting
 @test "assert_line() --partial <partial>: displays \`\$output' in multi-line format if it is longer than one line" {
   run printf 'b 0\nb 1'
   run assert_line --partial 'a'
-  [ "$status" -eq 1 ]
-  [ "${#lines[@]}" -eq 6 ]
-  [ "${lines[0]}" == '-- no output line contains substring --' ]
-  [ "${lines[1]}" == 'substring : a' ]
-  [ "${lines[2]}" == 'output (2 lines):' ]
-  [ "${lines[3]}" == '  b 0' ]
-  [ "${lines[4]}" == '  b 1' ]
-  [ "${lines[5]}" == '--' ]
+  [[ "$status" -eq 1 ]]
+  [[ "${#lines[@]}" -eq 6 ]]
+  [[ "${lines[0]}" == '-- no output line contains substring --' ]]
+  [[ "${lines[1]}" == 'substring : a' ]]
+  [[ "${lines[2]}" == 'output (2 lines):' ]]
+  [[ "${lines[3]}" == '  b 0' ]]
+  [[ "${lines[4]}" == '  b 1' ]]
+  [[ "${lines[5]}" == '--' ]]
 }
 
 
@@ -114,8 +114,8 @@ test_p_partial () {
 test_r_regexp () {
   run printf 'a\n_b_\nc'
   run assert_line "$1" '^.b'
-  [ "$status" -eq 0 ]
-  [ "${#lines[@]}" -eq 0 ]
+  [[ "$status" -eq 0 ]]
+  [[ "${#lines[@]}" -eq 0 ]]
 }
 
 @test 'assert_line() -e <regexp>: enables regular expression matching' {
@@ -130,33 +130,33 @@ test_r_regexp () {
 @test "assert_line() --regexp <regexp>: returns 0 if <regexp> matches any line in \`\${lines[@]}'" {
   run printf 'a\n_b_\nc'
   run assert_line --regexp '^.b'
-  [ "$status" -eq 0 ]
-  [ "${#lines[@]}" -eq 0 ]
+  [[ "$status" -eq 0 ]]
+  [[ "${#lines[@]}" -eq 0 ]]
 }
 
 @test "assert_line() --regexp <regexp>: returns 1 and displays details if <regexp> does not match any lines in \`\${lines[@]}'" {
   run echo 'b'
   run assert_line --regexp '^.a'
-  [ "$status" -eq 1 ]
-  [ "${#lines[@]}" -eq 4 ]
-  [ "${lines[0]}" == '-- no output line matches regular expression --' ]
-  [ "${lines[1]}" == 'regexp : ^.a' ]
-  [ "${lines[2]}" == 'output : b' ]
-  [ "${lines[3]}" == '--' ]
+  [[ "$status" -eq 1 ]]
+  [[ "${#lines[@]}" -eq 4 ]]
+  [[ "${lines[0]}" == '-- no output line matches regular expression --' ]]
+  [[ "${lines[1]}" == 'regexp : ^.a' ]]
+  [[ "${lines[2]}" == 'output : b' ]]
+  [[ "${lines[3]}" == '--' ]]
 }
 
 # Output formatting
 @test "assert_line() --regexp <regexp>: displays \`\$output' in multi-line format if longer than one line" {
   run printf 'b 0\nb 1'
   run assert_line --regexp '^.a'
-  [ "$status" -eq 1 ]
-  [ "${#lines[@]}" -eq 6 ]
-  [ "${lines[0]}" == '-- no output line matches regular expression --' ]
-  [ "${lines[1]}" == 'regexp : ^.a' ]
-  [ "${lines[2]}" == 'output (2 lines):' ]
-  [ "${lines[3]}" == '  b 0' ]
-  [ "${lines[4]}" == '  b 1' ]
-  [ "${lines[5]}" == '--' ]
+  [[ "$status" -eq 1 ]]
+  [[ "${#lines[@]}" -eq 6 ]]
+  [[ "${lines[0]}" == '-- no output line matches regular expression --' ]]
+  [[ "${lines[1]}" == 'regexp : ^.a' ]]
+  [[ "${lines[2]}" == 'output (2 lines):' ]]
+  [[ "${lines[3]}" == '  b 0' ]]
+  [[ "${lines[4]}" == '  b 1' ]]
+  [[ "${lines[5]}" == '--' ]]
 }
 
 
@@ -168,8 +168,8 @@ test_r_regexp () {
 test_n_index () {
   run printf 'a\nb\nc'
   run assert_line "$1" 1 'b'
-  [ "$status" -eq 0 ]
-  [ "${#lines[@]}" -eq 0 ]
+  [[ "$status" -eq 0 ]]
+  [[ "${#lines[@]}" -eq 0 ]]
 }
 
 @test 'assert_line() -n <idx> <expected>: matches against the <idx>-th line only' {
@@ -182,11 +182,11 @@ test_n_index () {
 
 @test 'assert_line() --index <idx>: returns 1 and displays an error message if <idx> is not an integer' {
   run assert_line --index 1a
-  [ "$status" -eq 1 ]
-  [ "${#lines[@]}" -eq 3 ]
-  [ "${lines[0]}" == '-- ERROR: assert_line --' ]
-  [ "${lines[1]}" == "\`--index' requires an integer argument: \`1a'" ]
-  [ "${lines[2]}" == '--' ]
+  [[ "$status" -eq 1 ]]
+  [[ "${#lines[@]}" -eq 3 ]]
+  [[ "${lines[0]}" == '-- ERROR: assert_line --' ]]
+  [[ "${lines[1]}" == "\`--index' requires an integer argument: \`1a'" ]]
+  [[ "${lines[2]}" == '--' ]]
 }
 
 
@@ -198,27 +198,27 @@ test_n_index () {
 @test "assert_line() --index <idx> <expected>: returns 0 if <expected> equals \`\${lines[<idx>]}'" {
   run printf 'a\nb\nc'
   run assert_line --index 1 'b'
-  [ "$status" -eq 0 ]
-  [ "${#lines[@]}" -eq 0 ]
+  [[ "$status" -eq 0 ]]
+  [[ "${#lines[@]}" -eq 0 ]]
 }
 
 @test "assert_line() --index <idx> <expected>: returns 1 and displays details if <expected> does not equal \`\${lines[<idx>]}'" {
   run printf 'a\nb\nc'
   run assert_line --index 1 'a'
-  [ "$status" -eq 1 ]
-  [ "${#lines[@]}" -eq 5 ]
-  [ "${lines[0]}" == '-- line differs --' ]
-  [ "${lines[1]}" == 'index    : 1' ]
-  [ "${lines[2]}" == 'expected : a' ]
-  [ "${lines[3]}" == 'actual   : b' ]
-  [ "${lines[4]}" == '--' ]
+  [[ "$status" -eq 1 ]]
+  [[ "${#lines[@]}" -eq 5 ]]
+  [[ "${lines[0]}" == '-- line differs --' ]]
+  [[ "${lines[1]}" == 'index    : 1' ]]
+  [[ "${lines[2]}" == 'expected : a' ]]
+  [[ "${lines[3]}" == 'actual   : b' ]]
+  [[ "${lines[4]}" == '--' ]]
 }
 
 # Options
 @test 'assert_line() --index <idx> <expected>: performs literal matching by default' {
   run printf 'a\nb\nc'
   run assert_line --index 1 '*'
-  [ "$status" -eq 1 ]
+  [[ "$status" -eq 1 ]]
 }
 
 
@@ -230,8 +230,8 @@ test_n_index () {
 test_index_p_partial () {
   run printf 'a\n_b_\nc'
   run assert_line --index 1 "$1" 'b'
-  [ "$status" -eq 0 ]
-  [ "${#lines[@]}" -eq 0 ]
+  [[ "$status" -eq 0 ]]
+  [[ "${#lines[@]}" -eq 0 ]]
 }
 
 @test 'assert_line() --index <idx> -p <partial>: enables partial matching' {
@@ -246,20 +246,20 @@ test_index_p_partial () {
 @test "assert_line() --index <idx> --partial <partial>: returns 0 if <partial> is a substring in \`\${lines[<idx>]}'" {
   run printf 'a\n_b_\nc'
   run assert_line --index 1 --partial 'b'
-  [ "$status" -eq 0 ]
-  [ "${#lines[@]}" -eq 0 ]
+  [[ "$status" -eq 0 ]]
+  [[ "${#lines[@]}" -eq 0 ]]
 }
 
 @test "assert_line() --index <idx> --partial <partial>: returns 1 and displays details if <partial> is not a substring in \`\${lines[<idx>]}'" {
   run printf 'b 0\nb 1'
   run assert_line --index 1 --partial 'a'
-  [ "$status" -eq 1 ]
-  [ "${#lines[@]}" -eq 5 ]
-  [ "${lines[0]}" == '-- line does not contain substring --' ]
-  [ "${lines[1]}" == 'index     : 1' ]
-  [ "${lines[2]}" == 'substring : a' ]
-  [ "${lines[3]}" == 'line      : b 1' ]
-  [ "${lines[4]}" == '--' ]
+  [[ "$status" -eq 1 ]]
+  [[ "${#lines[@]}" -eq 5 ]]
+  [[ "${lines[0]}" == '-- line does not contain substring --' ]]
+  [[ "${lines[1]}" == 'index     : 1' ]]
+  [[ "${lines[2]}" == 'substring : a' ]]
+  [[ "${lines[3]}" == 'line      : b 1' ]]
+  [[ "${lines[4]}" == '--' ]]
 }
 
 
@@ -271,8 +271,8 @@ test_index_p_partial () {
 test_index_r_regexp () {
   run printf 'a\n_b_\nc'
   run assert_line --index 1 "$1" '^.b'
-  [ "$status" -eq 0 ]
-  [ "${#lines[@]}" -eq 0 ]
+  [[ "$status" -eq 0 ]]
+  [[ "${#lines[@]}" -eq 0 ]]
 }
 
 @test 'assert_line() --index <idx> -e <regexp>: enables regular expression matching' {
@@ -287,20 +287,20 @@ test_index_r_regexp () {
 @test "assert_line() --index <idx> --regexp <regexp>: returns 0 if <regexp> matches \`\${lines[<idx>]}'" {
   run printf 'a\n_b_\nc'
   run assert_line --index 1 --regexp '^.b'
-  [ "$status" -eq 0 ]
-  [ "${#lines[@]}" -eq 0 ]
+  [[ "$status" -eq 0 ]]
+  [[ "${#lines[@]}" -eq 0 ]]
 }
 
 @test "assert_line() --index <idx> --regexp <regexp>: returns 1 and displays details if <regexp> does not match \`\${lines[<idx>]}'" {
   run printf 'a\nb\nc'
   run assert_line --index 1 --regexp '^.a'
-  [ "$status" -eq 1 ]
-  [ "${#lines[@]}" -eq 5 ]
-  [ "${lines[0]}" == '-- regular expression does not match line --' ]
-  [ "${lines[1]}" == 'index  : 1' ]
-  [ "${lines[2]}" == 'regexp : ^.a' ]
-  [ "${lines[3]}" == 'line   : b' ]
-  [ "${lines[4]}" == '--' ]
+  [[ "$status" -eq 1 ]]
+  [[ "${#lines[@]}" -eq 5 ]]
+  [[ "${lines[0]}" == '-- regular expression does not match line --' ]]
+  [[ "${lines[1]}" == 'index  : 1' ]]
+  [[ "${lines[2]}" == 'regexp : ^.a' ]]
+  [[ "${lines[3]}" == 'line   : b' ]]
+  [[ "${lines[4]}" == '--' ]]
 }
 
 
@@ -310,25 +310,25 @@ test_index_r_regexp () {
 
 @test "assert_line(): \`--partial' and \`--regexp' are mutually exclusive" {
   run assert_line --partial --regexp
-  [ "$status" -eq 1 ]
-  [ "${#lines[@]}" -eq 3 ]
-  [ "${lines[0]}" == '-- ERROR: assert_line --' ]
-  [ "${lines[1]}" == "\`--partial' and \`--regexp' are mutually exclusive" ]
-  [ "${lines[2]}" == '--' ]
+  [[ "$status" -eq 1 ]]
+  [[ "${#lines[@]}" -eq 3 ]]
+  [[ "${lines[0]}" == '-- ERROR: assert_line --' ]]
+  [[ "${lines[1]}" == "\`--partial' and \`--regexp' are mutually exclusive" ]]
+  [[ "${lines[2]}" == '--' ]]
 }
 
 @test 'assert_line() --regexp <regexp>: returns 1 and displays an error message if <regexp> is not a valid extended regular expression' {
   run assert_line --regexp '[.*'
-  [ "$status" -eq 1 ]
-  [ "${#lines[@]}" -eq 3 ]
-  [ "${lines[0]}" == '-- ERROR: assert_line --' ]
-  [ "${lines[1]}" == "Invalid extended regular expression: \`[.*'" ]
-  [ "${lines[2]}" == '--' ]
+  [[ "$status" -eq 1 ]]
+  [[ "${#lines[@]}" -eq 3 ]]
+  [[ "${lines[0]}" == '-- ERROR: assert_line --' ]]
+  [[ "${lines[1]}" == "Invalid extended regular expression: \`[.*'" ]]
+  [[ "${lines[2]}" == '--' ]]
 }
 
 @test "assert_line(): \`--' stops parsing options" {
   run printf 'a\n-p\nc'
   run assert_line -- '-p'
-  [ "$status" -eq 0 ]
-  [ "${#lines[@]}" -eq 0 ]
+  [[ "$status" -eq 0 ]]
+  [[ "${#lines[@]}" -eq 0 ]]
 }

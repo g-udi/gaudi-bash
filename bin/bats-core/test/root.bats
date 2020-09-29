@@ -34,8 +34,8 @@ setup () {
 
 @test "#113: set BATS_ROOT when /bin is a symlink to /usr/bin" {
   run "$BATS_TEST_SUITE_TMPDIR/bin/bats" -v
-  [ "$status" -eq 0 ]
-  [ "${output%% *}" == 'Bats' ]
+  [[ "$status" -eq 0 ]]
+  [[ "${output%% *}" == 'Bats' ]]
 }
 
 # The resolution scheme here is:
@@ -62,6 +62,6 @@ setup () {
 
   cd - >/dev/null
   run "$BATS_TEST_SUITE_TMPDIR/bin/foo" -v
-  [ "$status" -eq 0 ]
-  [ "${output%% *}" == 'Bats' ]
+  [[ "$status" -eq 0 ]]
+  [[ "${output%% *}" == 'Bats' ]]
 }

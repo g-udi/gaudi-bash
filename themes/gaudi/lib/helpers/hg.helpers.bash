@@ -13,8 +13,8 @@ GAUDI_SCM_HG_CHAR='\uf223'
 get_hg_root () {
     local CURRENT_DIR=$(pwd)
 
-    while [ "$CURRENT_DIR" != "/" ]; do
-        if [ -d "$CURRENT_DIR/.hg" ]; then
+    while [[ "$CURRENT_DIR" != "/" ]]; do
+        if [[ -d "$CURRENT_DIR/.hg" ]]; then
             echo "$CURRENT_DIR/.hg"
             return
         fi
@@ -36,14 +36,14 @@ hg_prompt_vars () {
 
     HG_ROOT=$(get_hg_root)
 
-    if [ -f "$HG_ROOT/branch" ]; then
+    if [[ -f "$HG_ROOT/branch" ]]; then
         # Mercurial holds it's current branch in .hg/branch file
         GAUDI_SCM_BRANCH=$(cat "$HG_ROOT/branch")
     else
         GAUDI_SCM_BRANCH=$(hg summary 2> /dev/null | grep branch: | awk '{print $2}')
     fi
 
-    if [ -f "$HG_ROOT/dirstate" ]; then
+    if [[ -f "$HG_ROOT/dirstate" ]]; then
         # Mercurial holds various information about the working directory in .hg/dirstate file. More on http://mercurial.selenic.com/wiki/DirState
         GAUDI_SCM_CHANGE=$(hexdump -n 10 -e '1/1 "%02x"' "$HG_ROOT/dirstate" | cut -c-12)
     else

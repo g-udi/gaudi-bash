@@ -12,7 +12,7 @@ COMMON_PGDATA_PATHS=("/usr/local/var/postgres" "/var/pgsql" "/Library/Server/Pos
 for possible in "${COMMON_PGDATA_PATHS[@]}"
 do
    :
-   if [ -f "$possible/pg_hba.conf" ]
+   if [[ -f "$possible/pg_hba.conf" ]]
    then
        export PGDATA=$possible
    fi

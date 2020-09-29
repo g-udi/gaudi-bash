@@ -17,7 +17,7 @@ _bash-it_update () {
 
   cd "${BASH_IT}" || return
 
-  if [ -z $BASH_IT_REMOTE ]; then
+  if [[ -z $BASH_IT_REMOTE ]]; then
     BASH_IT_REMOTE="origin"
   fi
 
@@ -30,7 +30,7 @@ _bash-it_update () {
 
     for i in $(git rev-list --merges --first-parent master..${BASH_IT_REMOTE}); do
       num_of_lines=$(git log -1 --format=%B $i | awk 'NF' | wc -l)
-      if [ $num_of_lines -eq 1 ]; then
+      if [[ $num_of_lines -eq 1 ]]; then
         description="%s"
       else
         description="%b"
@@ -97,7 +97,7 @@ _bash-it-migrate () {
     done
   done
 
-  if [ "$migrated_something" = "true" ]; then
+  if [[ "$migrated_something" = "true" ]]; then
     echo ""
     echo "If any migration errors were reported, please try the following: reload && bash-it migrate"
   fi
@@ -109,7 +109,7 @@ _bash-it-version () {
 
   cd "${BASH_IT}" || return
 
-  if [ -z $BASH_IT_REMOTE ]; then
+  if [[ -z $BASH_IT_REMOTE ]]; then
     BASH_IT_REMOTE="origin"
   fi
 
@@ -192,14 +192,14 @@ _bash-it-describe () {
         enabled_file=$(basename $f)
         enabled_files=$(sort <(compgen -G "${BASH_IT}/enabled/*$BASH_IT_LOAD_PRIORITY_SEPARATOR${enabled_file}") <(compgen -G "${BASH_IT}/$subdirectory/enabled/${enabled_file}") <(compgen -G "${BASH_IT}/$subdirectory/enabled/*$BASH_IT_LOAD_PRIORITY_SEPARATOR${enabled_file}") | wc -l)
 
-        if [ "$enabled_files" -gt 0 ]; then
-            printf "%-20s${GREEN}%-10s${NC}%s\n" "$(basename "$f" | sed -e 's/\(.*\)\..*\.bash/\1/g')" "  [●]" "$(cat "$f" | metafor about-"$file_type")"
-        elif [ "$5" = "all" ]; then
-            printf "%-20s${RED}%-10s${NC}%s\n" "$(basename "$f" | sed -e 's/\(.*\)\..*\.bash/\1/g')" "  [◯]" "$(cat "$f" | metafor about-"$file_type")"
+        if [[ "$enabled_files" -gt 0 ]]; then
+            printf "%-20s${GREEN}%-10s${NC}%s\n" "$(basename "$f" | sed -e 's/\(.*\)\..*\.bash/\1/g')" "  [●]" "$(cat $f | metafor about-"$file_type")"
+        elif [[ "$5" = "all" ]]; then
+            printf "%-20s${RED}%-10s${NC}%s\n" "$(basename "$f" | sed -e 's/\(.*\)\..*\.bash/\1/g')" "  [◯]" "$(cat $f | metafor about-"$file_type")"
         fi
     done
 
-    if [ "$5" = "all" ]; then
+    if [[ "$5" = "all" ]]; then
       printf '\n%s\n' "to enable $preposition $file_type, do:"
       printf '%s\n' "$ bash-it enable $file_type  <$file_type name> [$file_type name]... -or- $ bash-it enable $file_type all"
       printf '\n%s\n' "to disable $preposition $file_type, do:"
@@ -230,7 +230,7 @@ then
     example 'pathmunge /path/to/dir after is equivalent to PATH=$PATH:/path/to/dir'
 
     if ! [[ $PATH =~ (^|:)$1($|:) ]] ; then
-      if [ "$2" = "after" ] ; then
+      if [[ "$2" = "after" ]] ; then
         export PATH=$PATH:$1
       else
         export PATH=$1:$PATH
@@ -241,8 +241,8 @@ fi
 
 bash-it () {
     about 'bash-it help and maintenance'
-    param '1: verb [one of: help | show | enable | disable | migrate | update | search | version | reload | doctor ] '
-    param '2: component type [one of: alias(es) | completion(s) | plugin(s) ] or search term(s)'
+    param '1: verb [one of: help | show | enable | disable | migrate | update | search | version | reload | doctor ]] '
+    param '2: component type [one of: alias(es) | completion(s) | plugin(s) ]] or search term(s)'
     param '3: specific component [optional]'
     example '$ bash-it show plugins'
     example '$ bash-it help aliases'
@@ -250,7 +250,7 @@ bash-it () {
     example '$ bash-it disable alias hg [tmux]...'
     example '$ bash-it migrate'
     example '$ bash-it update'
-    example '$ bash-it search [-|@]term1 [-|@]term2 ... [ -e/--enable ] [ -d/--disable ] [ -r/--refresh ] [ -c/--no-color ]'
+    example '$ bash-it search [-|@]term1 [-|@]term2 ... [[ -e/--enable ]] [[ -d/--disable ]] [[ -r/--refresh ]] [[ -c/--no-color ]]'
     example '$ bash-it version'
     example '$ bash-it reload'
     example '$ bash-it doctor errors|warnings|all'
@@ -305,7 +305,7 @@ bash-it () {
         fi
     fi
 
-    if [ x"$verb" == x"enable" ] || [ x"$verb" == x"disable" ]; then
+    if [[ x"$verb" == x"enable" ]] || [[ x"$verb" == x"disable" ]]; then
         _bash-it-migrate
 
         for arg in "$@"

@@ -40,7 +40,7 @@ battstat () {
         battery_details=$(LC_ALL=en_US.UTF-8 upower -i $(upower -e | grep 'BAT'))
 
         # Exit if no batery exists.
-        if [ -z "$battery_details" ]; then
+        if [[ -z "$battery_details" ]]; then
             exit_no_battery
         fi
 
@@ -61,12 +61,12 @@ battstat () {
         esac
 
         # Diplay 0 in the hours spot when only minutes remain.
-        if [ -z "$hours" ]; then
+        if [[ -z "$hours" ]]; then
             hours="0"
         fi
 
         # Prefix 0 when minutes drop below 10.
-        if [ ${#minutes} -eq '1' ]; then
+        if [[ ${#minutes} -eq '1' ]]; then
             minutes="0$minutes"
         fi
 
@@ -77,7 +77,7 @@ battstat () {
         battery_details=$(apm)
 
         # Exit if no battery exists.
-        if [ -z "$battery_details" ]; then
+        if [[ -z "$battery_details" ]]; then
         exit_no_battery
         fi
 
@@ -87,17 +87,17 @@ battstat () {
         full_minutes=$(echo $battery_details | grep -o ' [0-9]* ')
 
         # Battery is considered charged when AC is connected and 100%
-        if [ ! -z "$charging" ] && [ $percent = "100%" ]; then
+        if [[ ! -z "$charging" ]] && [[ $percent = "100%" ]]; then
             charged="charged"
         fi
 
         # Only compute time when available
-        if [ ! -z "$full_minutes" ]; then
+        if [[ ! -z "$full_minutes" ]]; then
             hours=$(($full_minutes/60))
             minutes=$(($full_minutes%60))
 
             # Prefix 0 when minutes drop below 10.
-            if [ ${#minutes} -eq '1' ]; then
+            if [[ ${#minutes} -eq '1' ]]; then
             minutes="0$minutes"
             fi
 
@@ -106,33 +106,33 @@ battstat () {
     }
 
     hide_percent_until_charged () {
-        if [ -z "$charged" ]; then
+        if [[ -z "$charged" ]]; then
             percent=""
         fi
     }
 
     print_icon () {
-        if [ ! -z "$charging" ] || [ ! -z "$charged" ]; then
+        if [[ ! -z "$charging" ]] || [[ ! -z "$charged" ]]; then
             icon=$charging_icon
-        elif [ ! -z "$discharging" ]; then
+        elif [[ ! -z "$discharging" ]]; then
             icon=$discharging_icon
         fi
 
-        [ $GAUDI_ENABLE_SYMBOLS == true ] && echo -e -n " $icon "
+        [[ $GAUDI_ENABLE_SYMBOLS == true ]] && echo -e -n " $icon "
     }
 
     print_time () {
         # Display "calc..." when calculating time remaining.
-        if [ -z "$time" ] || [ $time = "0:00" ]; then
+        if [[ -z "$time" ]] || [[ $time = "0:00" ]]; then
           time="calculating..."
         fi
 
         # Hide time when fully charged.
-        if [ ! -z "$charged" ]; then
+        if [[ ! -z "$charged" ]]; then
             time=""
         fi
 
-        if [ ! -z "$time" ]; then
+        if [[ ! -z "$time" ]]; then
             printf " %s " $time
         fi
 
@@ -152,7 +152,7 @@ battstat () {
     }
 
     print_percent () {
-        if [ ! -z "$percent" ]; then
+        if [[ ! -z "$percent" ]]; then
             printf " %s " $percent
         fi
     }
@@ -173,7 +173,7 @@ battstat () {
         ;;
     esac
 
-    if [ $# -eq 0 ]; then
+    if [[ $# -eq 0 ]]; then
         print_background
         print_time
         print_percent

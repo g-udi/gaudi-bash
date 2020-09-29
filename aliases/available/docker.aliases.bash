@@ -26,7 +26,7 @@ case $OSTYPE in
     ;;
 esac
 
-if [ ! -z "$(command ls "${BASH_IT}/enabled/"{[0-9][0-9][0-9]${BASH_IT_LOAD_PRIORITY_SEPARATOR}docker,docker}.plugin.bash 2>/dev/null | head -1)" ]; then
+if [[ ! -z "$(command ls "${BASH_IT}/enabled/"{[0-9][0-9][0-9]${BASH_IT_LOAD_PRIORITY_SEPARATOR}docker,docker}.plugin.bash 2>/dev/null | head -1)" ]]; then
     # Delete most recent (i.e., last) Docker container
     alias dkrmlc='docker-remove-most-recent-container'
     # Delete all untagged images and exited containers

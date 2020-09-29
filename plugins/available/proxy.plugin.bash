@@ -308,7 +308,7 @@ ssh-show-proxy () {
 	about 'Shows SSH config proxy settings (from ~/.ssh/config)'
 	group 'proxy'
 
-	if [ -f ~/.ssh/config ] ; then
+	if [[ -f ~/.ssh/config ]] ; then
     printf "\n${GREEN}%s${NC}\n$PROXY_DIVIDER\n" "SSH Config Enabled in ~/.ssh/config"
 		awk '
 		    $1 == "Host" {
@@ -340,7 +340,7 @@ ssh-disable-proxy () {
 	about 'Disables SSH config proxy settings'
 	group 'proxy'
 
-	if [ -f ~/.ssh/config ] ; then
+	if [[ -f ~/.ssh/config ]] ; then
 		sed -e's/^.*ProxyCommand/#	ProxyCommand/' "${BASH_IT_SED_I_PARAMETERS[@]}"  ~/.ssh/config
 		echo "Disabled SSH config proxy settings"
 	fi
@@ -351,7 +351,7 @@ ssh-enable-proxy () {
 	about 'Enables SSH config proxy settings'
 	group 'proxy'
 
-	if [ -f ~/.ssh/config ] ; then
+	if [[ -f ~/.ssh/config ]] ; then
 		sed -e's/#	ProxyCommand/	ProxyCommand/' "${BASH_IT_SED_I_PARAMETERS[@]}"  ~/.ssh/config
 		echo "Enabled SSH config proxy settings"
 	fi

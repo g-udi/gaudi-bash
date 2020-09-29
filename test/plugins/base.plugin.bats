@@ -70,6 +70,6 @@ load ../../plugins/available/base.plugin
   # By using `or` for the two checks, we can verify that one of the two files is present.
   # In most cases, it's going to have the same timestamp anyway.
   # We can't use `assert_file_exist` here, since it only checks for a single file name.
-  assert [ -e "${file}_${stamp1}" \
-    -o -e "${file}_${stamp2}" ]
+  assert [[ -e "${file}_${stamp1}" \
+    -o -e "${file}_${stamp2}" ]]
 }

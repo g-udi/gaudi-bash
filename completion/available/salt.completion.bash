@@ -13,7 +13,7 @@
 
 
 _salt_get_grains () {
-    if [ "$1" = 'local' ] ; then
+    if [[ "$1" = 'local' ]] ; then
         salt-call --out=txt -- grains.ls | sed  's/^.*\[//' | tr -d ",']" |sed 's:\([a-z0-9]\) :\1\: :g'
     else
       salt '*' --timeout 2 --out=txt -- grains.ls | sed  's/^.*\[//' | tr -d ",']" |sed 's:\([a-z0-9]\) :\1\: :g'
@@ -21,7 +21,7 @@ _salt_get_grains () {
 }
 
 _salt_get_grain_values () {
-    if [ "$1" = 'local' ] ; then
+    if [[ "$1" = 'local' ]] ; then
         salt-call --out=txt -- grains.item $1 |sed 's/^\S*:\s//' |grep -v '^\s*$'
     else
         salt '*' --timeout 2 --out=txt -- grains.item $1 |sed 's/^\S*:\s//' |grep -v '^\s*$'
@@ -34,10 +34,10 @@ _salt () {
     COMPREPLY=()
     cur="${COMP_WORDS[COMP_CWORD]}"
     prev="${COMP_WORDS[COMP_CWORD-1]}"
-    if [ ${COMP_CWORD} -gt 2 ]; then
+    if [[ ${COMP_CWORD} -gt 2 ]]; then
 	pprev="${COMP_WORDS[COMP_CWORD-2]}"
     fi
-    if [ ${COMP_CWORD} -gt 3 ]; then
+    if [[ ${COMP_CWORD} -gt 3 ]]; then
 	ppprev="${COMP_WORDS[COMP_CWORD-3]}"
     fi
 
@@ -57,7 +57,7 @@ _salt () {
     # 2 special cases for filling up grain values
     case "${pprev}" in
     -G|--grain|--grain-pcre)
-    if [ "${cur}" = ":" ]; then
+    if [[ "${cur}" = ":" ]]; then
         COMPREPLY=($(compgen -W "`_salt_get_grain_values ${prev}`"  ))
         return 0
     fi
@@ -65,17 +65,17 @@ _salt () {
     esac
     case "${ppprev}" in
     -G|--grain|--grain-pcre)
-        if [ "${prev}" = ":" ]; then
+        if [[ "${prev}" = ":" ]]; then
         COMPREPLY=( $(compgen -W "`_salt_get_grain_values ${pprev}`" -- ${cur}) )
         return 0
         fi
     ;;
     esac
 
-    if [ "${cur}" = "=" ] && [[ "${prev}" == --* ]]; then
+    if [[ "${cur}" = "=" ]] && [[ "${prev}" == --* ]]; then
        cur=""
     fi
-    if [ "${prev}" = "=" ] && [[ "${pprev}" == --* ]]; then
+    if [[ "${prev}" = "=" ]] && [[ "${pprev}" == --* ]]; then
        prev="${pprev}"
     fi
 
@@ -111,7 +111,7 @@ _salt () {
         ;;
      -N|--nodegroup)
 	    MASTER_CONFIG='/etc/salt/master'
-        COMPREPLY=($(compgen -W "`awk -F ':'  'BEGIN {print_line = 0};  /^nodegroups/ {print_line = 1;getline } print_line && /^  */ {print $1} /^[^ ]/ {print_line = 0}' <${MASTER_CONFIG}`" -- ${cur}))
+        COMPREPLY=($(compgen -W "`awk -F ':'  'BEGIN {print_line = 0};  /^nodegroups/ {print_line = 1;getline } print_line && /^  */ {print $1} /^[^ ]]/ {print_line = 0}' <${MASTER_CONFIG}`" -- ${cur}))
         return 0
      ;;
     esac
@@ -138,10 +138,10 @@ _saltkey () {
           -d --delete= -D --delete-all -f --finger= -F --finger-all \
           --out=pprint --out=yaml --out=overstatestage --out=json --out=raw \
           --out=highstate --out=key --out=txt --no-color --out-indent= "
-    if [ ${COMP_CWORD} -gt 2 ]; then
+    if [[ ${COMP_CWORD} -gt 2 ]]; then
         pprev="${COMP_WORDS[COMP_CWORD-2]}"
     fi
-    if [ ${COMP_CWORD} -gt 3 ]; then
+    if [[ ${COMP_CWORD} -gt 3 ]]; then
         ppprev="${COMP_WORDS[COMP_CWORD-3]}"
     fi
     if [[ "${cur}" == -* ]] ; then
@@ -149,10 +149,10 @@ _saltkey () {
         return 0
     fi
 
-    if [ "${cur}" = "=" ] && [[ "${prev}" == --* ]]; then
+    if [[ "${cur}" = "=" ]] && [[ "${prev}" == --* ]]; then
        cur=""
     fi
-    if [ "${prev}" = "=" ] && [[ "${pprev}" == --* ]]; then
+    if [[ "${prev}" = "=" ]] && [[ "${pprev}" == --* ]]; then
        prev="${pprev}"
     fi
 
@@ -211,10 +211,10 @@ _saltcall () {
           -m --module-dirs= -g --grains --return= --local -c --config-dir= -l --log-level= \
           --out=pprint --out=yaml --out=overstatestage --out=json --out=raw \
           --out=highstate --out=key --out=txt --no-color --out-indent= "
-    if [ ${COMP_CWORD} -gt 2 ]; then
+    if [[ ${COMP_CWORD} -gt 2 ]]; then
         pprev="${COMP_WORDS[COMP_CWORD-2]}"
     fi
-    if [ ${COMP_CWORD} -gt 3 ]; then
+    if [[ ${COMP_CWORD} -gt 3 ]]; then
         ppprev="${COMP_WORDS[COMP_CWORD-3]}"
     fi
     if [[ "${cur}" == -* ]] ; then
@@ -222,10 +222,10 @@ _saltcall () {
         return 0
     fi
 
-    if [ "${cur}" = "=" ] && [[ ${prev} == --* ]]; then
+    if [[ "${cur}" = "=" ]] && [[ ${prev} == --* ]]; then
        cur=""
     fi
-    if [ "${prev}" = "=" ] && [[ ${pprev} == --* ]]; then
+    if [[ "${prev}" = "=" ]] && [[ ${pprev} == --* ]]; then
        prev="${pprev}"
     fi
 
@@ -271,10 +271,10 @@ _saltcp () {
         return 0
     fi
 
-    if [ "${cur}" = "=" ] && [[ "${prev}" == --* ]]; then
+    if [[ "${cur}" = "=" ]] && [[ "${prev}" == --* ]]; then
        cur=""
     fi
-    if [ "${prev}" = "=" ] && [[ "${pprev}" == --* ]]; then
+    if [[ "${prev}" = "=" ]] && [[ "${pprev}" == --* ]]; then
        prev=${pprev}
     fi
 

@@ -49,7 +49,7 @@ v2gif () {
 
   args=$($getopt -l "alert:" -l "lossy:" -l "width:" -l del,delete -l high -l tag -l "fps:" -l webm -o "a:l:w:f:dhmt" -- "$@")
 
-  if [ $? -ne 0 ]; then
+  if [[ $? -ne 0 ]]; then
     echo 'Terminating...' >&2
     return 2
   fi
@@ -67,7 +67,7 @@ v2gif () {
   local fps=""
   local make_webm=""
   local alert=5000
-  while [ $# -ge 1 ]; do
+  while [[ $# -ge 1 ]]; do
     case "$1" in
       --)
         # No more options left.
@@ -214,7 +214,7 @@ any2webm () {
 
   args=$(getopt -l alert -l "bandwidth:" -l "width:" -l del,delete -l tag -l "fps:" -l webm -o "a:b:w:f:dt" -- "$@")
 
-  if [ $? -ne 0 ]; then
+  if [[ $? -ne 0 ]]; then
     echo 'Terminating...' >&2
     return 2
   fi
@@ -228,7 +228,7 @@ any2webm () {
   local fps=""
   local bandwidth="2M"
   local alert=5000
-  while [ $# -ge 1 ]; do
+  while [[ $# -ge 1 ]]; do
     case "$1" in
       --)
         # No more options left.

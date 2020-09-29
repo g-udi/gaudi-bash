@@ -17,7 +17,7 @@ jquery_install () {
   about 'download jquery.js into public/javascripts'
   group 'javascript'
 
-  if [ -z "$1" ]
+  if [[ -z "$1" ]]
   then
       version=$JQUERY_VERSION_NUMBER
   else
@@ -30,7 +30,7 @@ jquery_ui_install () {
   about 'download jquery_us.js into public/javascripts'
   group 'javascript'
 
-  if [ -z "$1" ]
+  if [[ -z "$1" ]]
   then
       version=$JQUERY_UI_VERSION_NUMBER
   else

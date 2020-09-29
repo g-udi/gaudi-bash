@@ -2,7 +2,7 @@ cite about-alias
 about-alias 'Curl aliases for convenience.'
 
 _set_pkg_aliases () {
-	if [ -x "$(which curl)" ]; then
+	if [[ -x "$(which curl)" ]]; then
 		# follow redirects
     alias cl='curl -L'
     # follow redirects, download as original name

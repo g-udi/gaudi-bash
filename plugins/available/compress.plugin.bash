@@ -27,7 +27,7 @@ targz () {
 
 	echo "Compressing .tar using \`${cmd}\`…";
 	"${cmd}" -v "${tmpFile}" || return 1;
-	[ -f "${tmpFile}" ] && rm "${tmpFile}";
+	[[ -f "${tmpFile}" ]] && rm "${tmpFile}";
 	echo "${tmpFile}.gz created successfully.";
 }
 

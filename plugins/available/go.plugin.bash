@@ -8,7 +8,7 @@ command -v go &>/dev/null || return
 _go_pathmunge_wrap () {
   IFS=':' local -a 'a=($1)'
   local i=${#a[@]}
-  while [ $i -gt 0 ] ; do
+  while [[ $i -gt 0 ]] ; do
     i=$(( i - 1 ))
     pathmunge "${a[i]}/bin"
   done

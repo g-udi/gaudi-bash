@@ -13,7 +13,7 @@ _help-aliases () {
     _example '$ alias-help'
     _example '$ alias-help git'
 
-    if [ -n "$1" ]; then
+    if [[ -n "$1" ]]; then
         case $1 in
             custom)
                 alias_path='custom.aliases.bash'
@@ -31,7 +31,7 @@ _help-aliases () {
             _help-list-aliases $f
         done
 
-        if [ -e "${BASH_IT}/aliases/custom.aliases.bash" ]; then
+        if [[ -e "${BASH_IT}/aliases/custom.aliases.bash" ]]; then
           _help-list-aliases "${BASH_IT}/aliases/custom.aliases.bash"
         fi
     fi
@@ -53,7 +53,7 @@ _help-plugins () {
     for func in $(_typeset_functions)
     do
         typeset group="$(typeset -f $func | metafor group)"
-        if [ -z "$group" ]; then
+        if [[ -z "$group" ]]; then
             group='misc'
         fi
         typeset about="$(typeset -f $func | metafor about)"

@@ -68,20 +68,20 @@ _docker_machine_map_key_of_current_option () {
     local glob="$1"
 
     local key glob_pos
-    if [ "$cur" = "=" ] ; then        # key= case
+    if [[ "$cur" = "=" ]] ; then        # key= case
             key="$prev"
             glob_pos=$((cword - 2))
     elif [[ $cur == *=* ]] ; then     # key=value case (OSX)
             key=${cur%=*}
             glob_pos=$((cword - 1))
-    elif [ "$prev" = "=" ] ; then
+    elif [[ "$prev" = "=" ]] ; then
             key=${words[$cword - 2]}  # key=value case
             glob_pos=$((cword - 3))
     else
             return
     fi
 
-    [ "${words[$glob_pos]}" = "=" ] && ((glob_pos--))  # --option=key=value syntax
+    [[ "${words[$glob_pos]}" = "=" ]] && ((glob_pos--))  # --option=key=value syntax
 
     [[ ${words[$glob_pos]} == $glob ]] && echo "$key"
 }
@@ -94,11 +94,11 @@ _docker_machine_pos_first_nonflag () {
     local argument_flags=$1
 
     local counter=$((${subcommand_pos:-${command_pos}} + 1))
-    while [ "$counter" -le "$cword" ]; do
-       if [ -n "$argument_flags" ] && eval "case '${words[$counter]}' in $argument_flags) true ;; *) false ;; esac"; then
+    while [[ "$counter" -le "$cword" ]]; do
+       if [[ -n "$argument_flags" ]] && eval "case '${words[$counter]}' in $argument_flags) true ;; *) false ;; esac"; then
           (( counter++ ))
           # eat "=" in case of --option=arg syntax
-          [ "${words[$counter]}" = "=" ] && (( counter++ ))
+          [[ "${words[$counter]}" = "=" ]] && (( counter++ ))
        else
           case "${words[$counter]}" in
              -*)
@@ -111,7 +111,7 @@ _docker_machine_pos_first_nonflag () {
 
        # Bash splits words at "=", retaining "=" as a word, examples:
        # "--debug=false" => 3 words, "--log-opt syslog-facility=daemon" => 4 words
-       while [ "${words[$counter + 1]}" = "=" ] ; do
+       while [[ "${words[$counter + 1]}" = "=" ]] ; do
                counter=$(( counter + 2))
        done
 
@@ -247,11 +247,11 @@ _docker_machine_mount () {
         COMPREPLY=($(compgen -W "--help --unmount -u" -- "${cur}"))
     else
         local pos=$(_docker_machine_pos_first_nonflag)
-        if [ "$cword" -eq "$pos" ]; then
+        if [[ "$cword" -eq "$pos" ]]; then
             # We can't complete remote filesystems. All we can do here is to complete the machine.
             COMPREPLY=($(compgen -W "$(_docker_machine_machines --filter state=Running)" -S: -- "${cur}"))
             _docker_machine_nospace
-        elif [ "$cword" -eq "$((pos + 1))" ]; then
+        elif [[ "$cword" -eq "$((pos + 1))" ]]; then
            _filedir -d
         fi
     fi

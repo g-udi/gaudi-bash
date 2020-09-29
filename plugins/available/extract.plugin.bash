@@ -27,8 +27,8 @@ End-Of-Usage
     done
     shift $((OPTIND-1))
 
-    [ $# -eq 0 ] && extract -h && return 1
-    while [ $# -gt 0 ]; do
+    [[ $# -eq 0 ]] && extract -h && return 1
+    while [[ $# -gt 0 ]]; do
         if [[ ! -f "$1" ]]; then
             echo "extract: '$1' is not a valid file" >&2
             shift
@@ -40,14 +40,14 @@ End-Of-Usage
         local targetdirname
 
         targetdirname=$(sed 's/\(\.tar\.bz2$\|\.tbz$\|\.tbz2$\|\.tar\.gz$\|\.tgz$\|\.tar$\|\.tar\.xz$\|\.txz$\|\.tar\.Z$\|\.7z$\)//g' <<< $filename)
-        if [ "$filename" = "$targetdirname" ]; then
+        if [[ "$filename" = "$targetdirname" ]]; then
             # archive type either not supported or it doesn't need dir creation
             targetdirname=""
         else
             mkdir -v "$filedirname/$targetdirname"
         fi
 
-        if [ -f "$1" ]; then
+        if [[ -f "$1" ]]; then
             case "$1" in
                 *.tar.bz2|*.tbz|*.tbz2) tar "x${verbose}jf" "$1" -C "$filedirname/$targetdirname" ;;
                 *.tar.gz|*.tgz) tar "x${verbose}zf" "$1" -C "$filedirname/$targetdirname" ;;

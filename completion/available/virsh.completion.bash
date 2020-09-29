@@ -28,7 +28,7 @@ _contain_cmd () {
 _virsh_list_networks () {
     local flag_all=$1 flags
 
-    if [ "$flag_all" -eq 1 ]; then
+    if [[ "$flag_all" -eq 1 ]]; then
         flags="--all"
     else
         flags="--inactive"
@@ -39,7 +39,7 @@ _virsh_list_networks () {
 _virsh_list_domains () {
     local flag_all=$1 flags
 
-    if [ "$flag_all" -eq 1 ]; then
+    if [[ "$flag_all" -eq 1 ]]; then
         flags="--all"
     else
         flags="--inactive"
@@ -50,7 +50,7 @@ _virsh_list_domains () {
 _virsh_list_pools () {
     local flag_all=$1 flags
 
-    if [ "$flag_all" -eq 1 ]; then
+    if [[ "$flag_all" -eq 1 ]]; then
         flags="--all"
     else
         flags="--inactive"
@@ -61,7 +61,7 @@ _virsh_list_pools () {
 _virsh_list_ifaces () {
     local flag_all=$1 flags
 
-    if [ "$flag_all" -eq 1 ]; then
+    if [[ "$flag_all" -eq 1 ]]; then
         flags="--all"
     else
         flags="--inactive"
@@ -125,7 +125,7 @@ _virsh()  {
 
     if [[ "$ret" != "notfound" && "$ret" != "$cur" ]]; then
         a=$(virsh help "$ret" |grep '^    --'|cut -d\  -f5)
-        b=$(virsh help "$ret" |grep '^    \[--'|cut -d\  -f5|cut -d[  -f2|cut -d]  -f1)
+        b=$(virsh help "$ret" |grep '^    \[--'|cut -d\  -f5|cut -d[[  -f2|cut -d]  -f1)
         options=$( echo $a $b )
         COMPREPLY=( $(compgen -W "$options" -- "$cur") )
         return 0

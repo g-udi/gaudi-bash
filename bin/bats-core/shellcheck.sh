@@ -15,5 +15,5 @@ done < <(
   )
 
 for file in "${targets[@]}"; do
-  [ -f "${file}" ] && LC_ALL=C.UTF-8 shellcheck "${file}"
+  [[ -f "${file}" ]] && LC_ALL=C.UTF-8 shellcheck "${file}"
 done;

@@ -13,20 +13,20 @@ setup () {
 
 @test "install.sh creates a valid installation" {
   run "$BATS_ROOT/install.sh" "$INSTALL_DIR"
-  [ "$status" -eq 0 ]
-  [ "$output" == "Installed Bats to $INSTALL_DIR/bin/bats" ]
-  [ -x "$INSTALL_DIR/bin/bats" ]
-  [ -x "$INSTALL_DIR/libexec/bats-core/bats" ]
-  [ -x "$INSTALL_DIR/libexec/bats-core/bats-exec-suite" ]
-  [ -x "$INSTALL_DIR/libexec/bats-core/bats-exec-test" ]
-  [ -x "$INSTALL_DIR/libexec/bats-core/bats-format-tap-stream" ]
-  [ -x "$INSTALL_DIR/libexec/bats-core/bats-preprocess" ]
-  [ -f "$INSTALL_DIR/share/man/man1/bats.1" ]
-  [ -f "$INSTALL_DIR/share/man/man7/bats.7" ]
+  [[ "$status" -eq 0 ]]
+  [[ "$output" == "Installed Bats to $INSTALL_DIR/bin/bats" ]]
+  [[ -x "$INSTALL_DIR/bin/bats" ]]
+  [[ -x "$INSTALL_DIR/libexec/bats-core/bats" ]]
+  [[ -x "$INSTALL_DIR/libexec/bats-core/bats-exec-suite" ]]
+  [[ -x "$INSTALL_DIR/libexec/bats-core/bats-exec-test" ]]
+  [[ -x "$INSTALL_DIR/libexec/bats-core/bats-format-tap-stream" ]]
+  [[ -x "$INSTALL_DIR/libexec/bats-core/bats-preprocess" ]]
+  [[ -f "$INSTALL_DIR/share/man/man1/bats.1" ]]
+  [[ -f "$INSTALL_DIR/share/man/man7/bats.7" ]]
 
   run "$INSTALL_DIR/bin/bats" -v
-  [ "$status" -eq 0 ]
-  [ "${output%% *}" == 'Bats' ]
+  [[ "$status" -eq 0 ]]
+  [[ "${output%% *}" == 'Bats' ]]
 }
 
 @test "install.sh only updates permissions for Bats files" {
@@ -39,16 +39,16 @@ setup () {
   printf 'dummy' >"$dummy_libexec"
 
   run "$BATS_ROOT/install.sh" "$INSTALL_DIR"
-  [ "$status" -eq 0 ]
-  [ -f "$dummy_bin" ]
-  [ ! -x "$dummy_bin" ]
-  [ -f "$dummy_libexec" ]
-  [ ! -x "$dummy_libexec" ]
+  [[ "$status" -eq 0 ]]
+  [[ -f "$dummy_bin" ]]
+  [[ ! -x "$dummy_bin" ]]
+  [[ -f "$dummy_libexec" ]]
+  [[ ! -x "$dummy_libexec" ]]
 }
 
 @test "bin/bats is resilient to symbolic links" {
   run "$BATS_ROOT/install.sh" "$INSTALL_DIR"
-  [ "$status" -eq 0 ]
+  [[ "$status" -eq 0 ]]
 
   # Simulate a symlink to bin/bats (without using a symlink, for Windows sake)
   # by creating a wrapper script that executes bin/bats via a relative path.
@@ -62,6 +62,6 @@ setup () {
   chmod 700 "$bats_symlink"
 
   run "$bats_symlink" -v
-  [ "$status" -eq 0 ]
-  [ "${output%% *}" == 'Bats' ]
+  [[ "$status" -eq 0 ]]
+  [[ "${output%% *}" == 'Bats' ]]
 }

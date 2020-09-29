@@ -33,10 +33,10 @@ gaudi_multiplexer () {
   detached_tmux_sessions=$(tmux list-sessions 2> /dev/null | \grep -cv 'attached')
   detached_screen_sessions=$(screen -ls 2> /dev/null | \grep -c '[Dd]etach[^)]*)$')
 
-  [ $detached_tmux_sessions == 0 ] && [ $detached_screen_sessions == 0 ] && return
+  [[ $detached_tmux_sessions == 0 ]] && [[ $detached_screen_sessions == 0 ]] && return
 
-  [ $detached_tmux_sessions != 0 ] && multiplexers=" T:$detached_tmux_sessions"
-  [ $detached_screen_sessions != 0 ] && multiplexers="$multiplexers S:$detached_screen_sessions"
+  [[ $detached_tmux_sessions != 0 ]] && multiplexers=" T:$detached_tmux_sessions"
+  [[ $detached_screen_sessions != 0 ]] && multiplexers="$multiplexers S:$detached_screen_sessions"
 
   gaudi::section \
     "$GAUDI_MULTIPLEXER_COLOR" \

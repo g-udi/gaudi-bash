@@ -205,7 +205,7 @@ batslib_print_kv_single_or_multi () {
 # Globals:
 #   none
 # Arguments:
-#   $1 - [=  ] prefix string
+#   $1 - [=  ]] prefix string
 # Returns:
 #   none
 # Inputs:

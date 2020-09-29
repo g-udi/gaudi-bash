@@ -5,7 +5,7 @@
 BASH_IT_LOG_PREFIX="[CORE]"
 
 # Only set $BASH_IT if it's not already set
-if [ -z "$BASH_IT" ];
+if [[ -z "$BASH_IT" ]];
 then
   # Setting $BASH to maintain backwards compatibility
   export BASH_IT=$BASH
@@ -29,12 +29,12 @@ for file_type in "aliases" "plugins" "completion"; do source "${BASH_IT}/scripts
 # Load custom aliases, completions, plugins
 _log_debug "Loading general custom files..."
 CUSTOM_LIB="${BASH_IT_CUSTOM:=${BASH_IT}/custom}/*.bash ${BASH_IT_CUSTOM:=${BASH_IT}/custom}/**/*.bash"
-for custom in ${CUSTOM_LIB}; do [ -e "${custom}" ] && _log_component $custom "custom" && source $custom; done
+for custom in ${CUSTOM_LIB}; do [[ -e "${custom}" ]] && _log_component $custom "custom" && source $custom; done
 # Load the bash theme
 source "${BASH_IT}/lib/appearance.bash"
 
 # handle the case where BASH_IT_RELOAD_LEGACY is set
-if ! command -v reload &>/dev/null && [ -n "$BASH_IT_RELOAD_LEGACY" ]; then
+if ! command -v reload &>/dev/null && [[ -n "$BASH_IT_RELOAD_LEGACY" ]]; then
   case $OSTYPE in
     darwin*)
       alias reload='source ~/.bash_profile'

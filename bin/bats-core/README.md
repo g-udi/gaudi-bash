@@ -21,12 +21,12 @@ Under the hood, each test case is just a function with a description.
 
 @test "addition using bc" {
   result="$(echo 2+2 | bc)"
-  [ "$result" -eq 4 ]
+  [[ "$result" -eq 4 ]]
 }
 
 @test "addition using dc" {
   result="$(echo 2 2+p | dc)"
-  [ "$result" -eq 4 ]
+  [[ "$result" -eq 4 ]]
 }
 ```
 
@@ -282,8 +282,8 @@ nonexistent filename, exits with a `1` status code and prints an error message.
 ```bash
 @test "invoking foo with a nonexistent file prints an error" {
   run foo nonexistent_filename
-  [ "$status" -eq 1 ]
-  [ "$output" = "foo: no such file 'nonexistent_filename'" ]
+  [[ "$status" -eq 1 ]]
+  [[ "$output" = "foo: no such file 'nonexistent_filename'" ]]
 }
 ```
 
@@ -298,8 +298,8 @@ without any arguments prints usage information on the first line:
 ```bash
 @test "invoking foo without arguments prints usage" {
   run foo
-  [ "$status" -eq 1 ]
-  [ "${lines[0]}" = "usage: foo <filename>" ]
+  [[ "$status" -eq 1 ]]
+  [[ "${lines[0]}" = "usage: foo <filename>" ]]
 }
 ```
 
@@ -337,7 +337,7 @@ to skip.
 @test "A test I don't want to execute for now" {
   skip
   run foo
-  [ "$status" -eq 0 ]
+  [[ "$status" -eq 0 ]]
 }
 ```
 
@@ -347,7 +347,7 @@ Optionally, you may include a reason for skipping:
 @test "A test I don't want to execute for now" {
   skip "This command will return zero soon, but not now"
   run foo
-  [ "$status" -eq 0 ]
+  [[ "$status" -eq 0 ]]
 }
 ```
 
@@ -355,12 +355,12 @@ Or you can skip conditionally:
 
 ```bash
 @test "A test which should run" {
-  if [ foo != bar ]; then
+  if [[ foo != bar ]]; then
     skip "foo isn't bar"
   fi
 
   run foo
-  [ "$status" -eq 0 ]
+  [[ "$status" -eq 0 ]]
 }
 ```
 

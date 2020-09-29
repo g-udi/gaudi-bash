@@ -31,9 +31,9 @@ alias_completion () {
     local namespace="alias_completion"
 
     # parse function based completion definitions, where capture group 2 => function and 3 => trigger
-    local compl_regex='complete( +[^ ]+)* -F ([^ ]+) ("[^"]+"|[^ ]+)'
+    local compl_regex='complete( +[^ ]]+)* -F ([^ ]]+) ("[^"]+"|[^ ]]+)'
     # parse alias definitions, where capture group 1 => trigger, 2 => command, 3 => command arguments
-    local alias_regex="alias( -- | )([^=]+)='(\"[^\"]+\"|[^ ]+)(( +[^ ]+)*)'"
+    local alias_regex="alias( -- | )([^=]+)='(\"[^\"]+\"|[^ ]]+)(( +[^ ]]+)*)'"
 
     # create array of function completion triggers, keeping multi-word triggers together
     eval "local completions=($(complete -p | sed -Ene "/$compl_regex/s//'\3'/p"))"
@@ -42,7 +42,7 @@ alias_completion () {
     # create temporary file for wrapper functions and completions
     local tmp_file; tmp_file="$(mktemp -t "${namespace}-${RANDOM}XXXXXX")" || return 1
 
-    local completion_loader; completion_loader="$(complete -p -D 2>/dev/null | sed -Ene 's/.* -F ([^ ]*).*/\1/p')"
+    local completion_loader; completion_loader="$(complete -p -D 2>/dev/null | sed -Ene 's/.* -F ([^ ]]*).*/\1/p')"
 
     # read in "<alias> '<aliased command>' '<command args>'" lines from defined aliases
     local line; while read line; do

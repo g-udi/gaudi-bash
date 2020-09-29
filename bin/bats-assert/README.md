@@ -38,7 +38,7 @@ with `bash -c`.*
 ```bash
 @test 'assert()' {
   touch '/var/log/test.log'
-  assert [ -e '/var/log/test.log' ]
+  assert [[ -e '/var/log/test.log' ]]
 }
 ```
 
@@ -46,7 +46,7 @@ On failure, the failed expression is displayed.
 
 ```
 -- assertion failed --
-expression : [ -e /var/log/test.log ]
+expression : [[ -e /var/log/test.log ]]
 --
 ```
 
@@ -62,7 +62,7 @@ with `bash -c`.*
 ```bash
 @test 'refute()' {
   rm -f '/var/log/test.log'
-  refute [ -e '/var/log/test.log' ]
+  refute [[ -e '/var/log/test.log' ]]
 }
 ```
 
@@ -70,7 +70,7 @@ On failure, the successful expression is displayed.
 
 ```
 -- assertion succeeded, but it was expected to fail --
-expression : [ -e /var/log/test.log ]
+expression : [[ -e /var/log/test.log ]]
 --
 ```
 

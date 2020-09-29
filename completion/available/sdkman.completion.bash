@@ -4,9 +4,9 @@ _sdkman_complete () {
 
   COMPREPLY=()
 
-  if [ $COMP_CWORD -eq 1 ]; then
+  if [[ $COMP_CWORD -eq 1 ]]; then
     COMPREPLY=( $(compgen -W "install uninstall rm list ls use current outdated version default selfupdate broadcast offline help flush" -- ${COMP_WORDS[COMP_CWORD]}) )
-  elif [ $COMP_CWORD -eq 2 ]; then
+  elif [[ $COMP_CWORD -eq 2 ]]; then
     case "${COMP_WORDS[COMP_CWORD-1]}" in
       "install" | "uninstall" | "rm" | "list" | "ls" | "use" | "current" | "outdated" )
         CANDIDATES=$(echo "${SDKMAN_CANDIDATES_CSV}" | tr ',' ' ')
@@ -24,7 +24,7 @@ _sdkman_complete () {
       *)
         ;;
     esac
-  elif [ $COMP_CWORD -eq 3 ]; then
+  elif [[ $COMP_CWORD -eq 3 ]]; then
     case "${COMP_WORDS[COMP_CWORD-2]}" in
       "uninstall" | "rm" | "use" | "default" )
         _sdkman_candidate_versions ${COMP_WORDS[COMP_CWORD-1]}
@@ -45,7 +45,7 @@ _sdkman_complete () {
 _sdkman_candidate_versions () {
 
   CANDIDATE_LOCAL_VERSIONS=$(__sdkman_cleanup_local_versions $1)
-  if [ "$SDKMAN_OFFLINE_MODE" = "true" ]; then
+  if [[ "$SDKMAN_OFFLINE_MODE" = "true" ]]; then
     CANDIDATE_VERSIONS=$CANDIDATE_LOCAL_VERSIONS
   else
     CANDIDATE_ONLINE_VERSIONS="$(curl -s "${SDKMAN_SERVICE}/candidates/$1" | tr ',' ' ')"
@@ -56,7 +56,7 @@ _sdkman_candidate_versions () {
 
 _sdkman_candidate_not_installed_versions () {
   CANDIDATE_LOCAL_VERSIONS=$(__sdkman_cleanup_local_versions $1)
-  if [ "$SDKMAN_OFFLINE_MODE" = "false" ]; then
+  if [[ "$SDKMAN_OFFLINE_MODE" = "false" ]]; then
     CANDIDATE_ONLINE_VERSIONS="$(__sdkman_list_versions $1 | grep " " | grep "\." | cut -c 6-)"
     CANDIDATE_VERSIONS="$(echo $CANDIDATE_ONLINE_VERSIONS $CANDIDATE_LOCAL_VERSIONS | tr ' ' '\n' | sort | uniq -u) "
   fi

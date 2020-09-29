@@ -37,14 +37,14 @@ _svn_read_hashfile () {
   local tkey=$1 key= val=
   while true; do
     read tag len
-    [ $tag = 'END' ] && break
-    [ $tag != 'K' ] && {
+    [[ $tag = 'END' ]] && break
+    [[ $tag != 'K' ]] && {
       #echo "unexpected tag '$tag' instead of 'K'" >&2
       return
     }
     read -r -n $len key ; read
     read tag len
-    [ $tag != 'V' ] && {
+    [[ $tag != 'V' ]] && {
       #echo "unexpected tag '$tag' instead of 'V'" >&2
       return
     }
@@ -97,7 +97,7 @@ _svn_lls () {
 	    [[ "$f" == */* ]] && dn=${f%\/*}/ fn=${f##*\/}
 	    # ??? this does not work for just added files, because they
 	    # do not have a content reference yet...
-	    [ -f "${dn}.svn/text-base/${fn}.svn-base" ] && echo "$f"
+	    [[ -f "${dn}.svn/text-base/${fn}.svn-base" ]] && echo "$f"
 	fi
     done
 }
@@ -240,7 +240,7 @@ _svn () {
 	    let i++
 
 	    # FIRST must be the "svn" command
-	    [ $last = 'none' ] && { last='first'; continue ; }
+	    [[ $last = 'none' ]] && { last='first'; continue ; }
 
 	    # SKIP option arguments
 	    if [[ $prev == @($optsParam) ]] ; then
@@ -399,7 +399,7 @@ _svn () {
 			# get known urls
 			local urls= file=
 			for file in ~/.subversion/auth/svn.simple/* ; do
-				if [ -r $file ] ; then
+				if [[ -r $file ]] ; then
 					local url=$(_svn_read_hashfile svn:realmstring < $file)
 					url=${url/*</}
 					url=${url/>*/}
@@ -502,7 +502,7 @@ _svn () {
 		local file=
 		# digest? others?
 		for file in ~/.subversion/auth/svn.simple/* ; do
-		  if [ -r $file ] ; then
+		  if [[ -r $file ]] ; then
 		    values="$values $(_svn_read_hashfile username < $file)"
 		  fi
 		done
@@ -567,7 +567,7 @@ _svn () {
 	    else
 		# only one choice is fine
 		COMPREPLY=( $( compgen -W "${allProps[*]}" -- $cur ) )
-		[ ${#COMPREPLY[@]} -eq 1 ] && return 0
+		[[ ${#COMPREPLY[@]} -eq 1 ]] && return 0
 
 		# no ':' so only suggest prefixes?
 		local seen= n=0 last= c=
@@ -1005,7 +1005,7 @@ _svn () {
 		esac
 
 		# remove help options within help subcommand
-		if [ $isHelpCmd ] ; then
+		if [[ $isHelpCmd ]] ; then
 		    cmdOpts=${cmdOpts/ -h / }
 		    cmdOpts=${cmdOpts/ --help / }
 		fi
@@ -1438,7 +1438,7 @@ _svnversion () {
 		[[ $i -eq $COMP_CWORD ]] && isCur=1
 
 		# skip first command, should be 'svnversion'
-		if [ $last = 'none' ] ; then
+		if [[ $last = 'none' ]] ; then
 			last='first'
 			continue
 		fi

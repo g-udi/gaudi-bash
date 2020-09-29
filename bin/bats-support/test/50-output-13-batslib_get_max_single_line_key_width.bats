@@ -7,8 +7,8 @@ load test_helper
                     'k 2'   'v 2'
                     'k __3' 'v 3' )
   run batslib_get_max_single_line_key_width "${pairs[@]}"
-  [ "$status" -eq 0 ]
-  [ "$output" == '5' ]
+  [[ "$status" -eq 0 ]]
+  [[ "$output" == '5' ]]
 }
 
 @test 'batslib_get_max_single_line_key_width() <pair...>: only considers keys with single-line values' {
@@ -16,6 +16,6 @@ load test_helper
                     'k 2'   'v 2'
                     'k __3' $'v\n3' )
   run batslib_get_max_single_line_key_width "${pairs[@]}"
-  [ "$status" -eq 0 ]
-  [ "$output" == '4' ]
+  [[ "$status" -eq 0 ]]
+  [[ "$output" == '4' ]]
 }

@@ -92,7 +92,7 @@ _defaults () {
 		fi
 	fi
 
-	keys=$( defaults read $domain 2>/dev/null | sed -n -e '/^    [^}) ]/p' | sed -e 's/^    \([^" ]\{1,\}\) = .*$/\1/g' -e 's/^    "\([^"]\{1,\}\)" = .*$/\1/g' | sed -e 's/ /\\ /g' )
+	keys=$( defaults read $domain 2>/dev/null | sed -n -e '/^    [^}) ]]/p' | sed -e 's/^    \([^" ]]\{1,\}\) = .*$/\1/g' -e 's/^    "\([^"]\{1,\}\)" = .*$/\1/g' | sed -e 's/ /\\ /g' )
 
 	case $cmd in
 	read|read-type)

@@ -7,7 +7,7 @@ _is_function () {
     _about 'sets $? to true if parameter is the name of a function'
     _param '1: name of alleged function'
     _group 'lib'
-    [ -n "$(LANG=C type -t $1 2>/dev/null | grep 'function')" ]
+    [[ -n "$(LANG=C type -t $1 2>/dev/null | grep 'function')" ]]
 }
 
 _command_exists () {
@@ -34,8 +34,8 @@ esac
 # Adding Support for other OSes
 PREVIEW="less"
 
-if [ -s /usr/bin/gloobus-preview ]; then
+if [[ -s /usr/bin/gloobus-preview ]]; then
   PREVIEW="gloobus-preview"
-elif [ -s /Applications/Preview.app ]; then
+elif [[ -s /Applications/Preview.app ]]; then
   PREVIEW="/Applications/Preview.app"
 fi

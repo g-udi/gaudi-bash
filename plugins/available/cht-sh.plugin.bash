@@ -5,7 +5,7 @@ about-plugin 'Simplify `curl cht.sh/<query>` to `cht.sh <query>`'
 if ! _command_exists cht.sh ; then
 	function cht.sh () {
 		about 'Executes a cht.sh curl query using the provided arguments'
-		param ' [ ( topic [sub-topic] ) | ~keyword ] [ :list | :help | :learn ]'
+		param ' [[ ( topic [sub-topic] ) | ~keyword ]] [[ :list | :help | :learn ]]'
 		example '$ cht.sh :help'
 		example '$ cht.sh :list'
 		example '$ cht.sh tar'

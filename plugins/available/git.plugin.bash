@@ -50,7 +50,7 @@ git_rollback () {
   commit_exists () {
     git rev-list --quiet $1
     status=$?
-    if [ $status -ne 0 ]; then
+    if [[ $status -ne 0 ]]; then
       echo "Commit ${1} does not exist"
       kill -INT $$
     fi
@@ -78,7 +78,7 @@ git_rollback () {
     done
   }
 
-  if [ -n "$(git symbolic-ref HEAD 2> /dev/null)" ]; then
+  if [[ -n "$(git symbolic-ref HEAD 2> /dev/null)" ]]; then
     is_clean
     commit_exists $1
 
@@ -123,7 +123,7 @@ git_info () {
     about 'overview for your git repo'
     group 'git'
 
-    if [ -n "$(git symbolic-ref HEAD 2> /dev/null)" ]; then
+    if [[ -n "$(git symbolic-ref HEAD 2> /dev/null)" ]]; then
         # print informations
         echo "git repo overview"
         echo "-----------------"
@@ -138,7 +138,7 @@ git_info () {
 
         # print status of working repo
         echo "status:"
-        if [ -n "$(git status -s 2> /dev/null)" ]; then
+        if [[ -n "$(git status -s 2> /dev/null)" ]]; then
             git status -s
         else
             echo "working directory is clean"
@@ -163,20 +163,20 @@ git_stats () {
 # awesome work from https://github.com/esc/git-stats
 # including some modifications
 
-if [ -n "$(git symbolic-ref HEAD 2> /dev/null)" ]; then
+if [[ -n "$(git symbolic-ref HEAD 2> /dev/null)" ]]; then
     echo "Number of commits per author:"
     git --no-pager shortlog -sn --all
     AUTHORS=$( git shortlog -sn --all | cut -f2 | cut -f1 -d' ')
     LOGOPTS=""
-    if [ "$1" == '-w' ]; then
+    if [[ "$1" == '-w' ]]; then
         LOGOPTS="$LOGOPTS -w"
         shift
     fi
-    if [ "$1" == '-M' ]; then
+    if [[ "$1" == '-M' ]]; then
         LOGOPTS="$LOGOPTS -M"
         shift
     fi
-    if [ "$1" == '-C' ]; then
+    if [[ "$1" == '-C' ]]; then
         LOGOPTS="$LOGOPTS -C --find-copies-harder"
         shift
     fi
@@ -253,7 +253,7 @@ gitignore-reload () {
   fi
 
   # Prompt user to commit or stash changes and exit
-  if [ $err = 1 ]
+  if [[ $err = 1 ]]
   then
     echo >&2 "Please commit or stash them."
   fi
@@ -262,7 +262,7 @@ gitignore-reload () {
 
   # If we're here, then there are no uncommited or unstaged changes dangling around.
   # Proceed to reload .gitignore
-  if [ $err = 0 ]; then
+  if [[ $err = 0 ]]; then
     # Remove all cached files
     git rm -r --cached .
 

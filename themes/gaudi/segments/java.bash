@@ -27,7 +27,7 @@ gaudi_java () {
   [[ -f pom.xml || -f build.gradle || -f build.gradle.kts ||
 	   -n $(find . -not -path '*/\.*' -maxdepth 1 -name "*.java") ||
 	   -n $(find . -not -path '*/\.*' -maxdepth 1 -name "*.jar")
-	]] || return
+ ]] || return
 
 	if gaudi::exists java; then
 			_java=java

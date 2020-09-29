@@ -10,7 +10,7 @@ if command -v laravel > /dev/null; then
             fi
         done
     }
-    
+
     complete -F __laravel_completion laravel
 fi
 

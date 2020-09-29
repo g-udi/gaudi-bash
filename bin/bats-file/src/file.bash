@@ -286,7 +286,7 @@ assert_file_owner () {
   if [[ `uname` == "Darwin" ]]; then
   sudo chown root ${TEST_FIXTURE_ROOT}/dir/owner
   sudo chown daemon ${TEST_FIXTURE_ROOT}/dir/notowner
-  if [ `stat -f '%Su' "$file"` != "$owner" ]; then
+  if [[ `stat -f '%Su' "$file"` != "$owner" ]]; then
     local -r rem="$BATSLIB_FILE_PATH_REM"
     local -r add="$BATSLIB_FILE_PATH_ADD"
     batslib_print_kv_single 4 'path' "${file/$rem/$add}" \
@@ -296,7 +296,7 @@ assert_file_owner () {
 elif [[ `uname` == "Linux" ]]; then
   sudo chown root ${TEST_FIXTURE_ROOT}/dir/owner
   sudo chown daemon ${TEST_FIXTURE_ROOT}/dir/notowner
-  if [ `stat -c "%U" "$file"` != "$owner" ]; then
+  if [[ `stat -c "%U" "$file"` != "$owner" ]]; then
     local -r rem="$BATSLIB_FILE_PATH_REM"
     local -r add="$BATSLIB_FILE_PATH_ADD"
     batslib_print_kv_single 4 'path' "${file/$rem/$add}" \
@@ -323,7 +323,7 @@ assert_file_permission () {
   local -r permission="$1"
   local -r file="$2"
   if [[ `uname` == "Darwin" ]]; then
-  if [ `stat -f '%A' "$file"` -ne "$permission" ]; then
+  if [[ `stat -f '%A' "$file"` -ne "$permission" ]]; then
     local -r rem="$BATSLIB_FILE_PATH_REM"
     local -r add="$BATSLIB_FILE_PATH_ADD"
     batslib_print_kv_single 4 'path' "${file/$rem/$add}" \
@@ -331,7 +331,7 @@ assert_file_permission () {
       | fail
   fi
   elif [[ `uname` == "Linux" ]]; then
-  if [ `stat -c "%a" "$file"` -ne "$permission" ]; then
+  if [[ `stat -c "%a" "$file"` -ne "$permission" ]]; then
     local -r rem="$BATSLIB_FILE_PATH_REM"
     local -r add="$BATSLIB_FILE_PATH_ADD"
     batslib_print_kv_single 4 'path' "${file/$rem/$add}" \
@@ -359,7 +359,7 @@ assert_size_zero () {
   local -r file="$1"
     if [[ `uname` == "Darwin" ]]; then
     mkfile 2k ${TEST_FIXTURE_ROOT}/dir/notzerobyte
-    if [ -s "$file" ]; then
+    if [[ -s "$file" ]]; then
     local -r rem="$BATSLIB_FILE_PATH_REM"
     local -r add="$BATSLIB_FILE_PATH_ADD"
     batslib_print_kv_single 4 'path' "${file/$rem/$add}" \
@@ -368,7 +368,7 @@ assert_size_zero () {
   fi
     elif [[ `uname` == "Linux" ]]; then
     fallocate -l 2k ${TEST_FIXTURE_ROOT}/dir/notzerobyte
-    if [ -s "$file" ]; then
+    if [[ -s "$file" ]]; then
     local -r rem="$BATSLIB_FILE_PATH_REM"
     local -r add="$BATSLIB_FILE_PATH_ADD"
     batslib_print_kv_single 4 'path' "${file/$rem/$add}" \
@@ -464,7 +464,7 @@ assert_symlink_to () {
   local -r link="$2"
   # If OS is linux
   if [[ `uname` == "Linux" ]]; then
-    if [ ! -L $link   ]; then
+    if [[ ! -L $link   ]]; then
       local -r rem="$BATSLIB_FILE_PATH_REM"
       local -r add="$BATSLIB_FILE_PATH_ADD"
       batslib_print_kv_single 4 'path' "${link/$rem/$add}" \
@@ -472,7 +472,7 @@ assert_symlink_to () {
         | fail
     fi
     local -r realsource=$( readlink -f "$link" )
-    if [ ! "$realsource" = "$sourcefile"  ]; then
+    if [[ ! "$realsource" = "$sourcefile"  ]]; then
       local -r rem="$BATSLIB_FILE_PATH_REM"
       local -r add="$BATSLIB_FILE_PATH_ADD"
       batslib_print_kv_single 4 'path' "${link/$rem/$add}" \
@@ -486,7 +486,7 @@ assert_symlink_to () {
     cd `dirname $TARGET_FILE`
     TARGET_FILE=`basename $TARGET_FILE`
     # Iterate down a (possible) chain of symlinks
-    while [ -L "$TARGET_FILE" ]
+    while [[ -L "$TARGET_FILE" ]]
     do
       TARGET_FILE=`readlink $TARGET_FILE`
       cd `dirname $TARGET_FILE`
@@ -499,7 +499,7 @@ assert_symlink_to () {
     echo $RESULT
   }
 
-  if [ ! -L $link   ]; then
+  if [[ ! -L $link   ]]; then
     local -r rem="$BATSLIB_FILE_PATH_REM"
     local -r add="$BATSLIB_FILE_PATH_ADD"
     batslib_print_kv_single 4 'path' "${link/$rem/$add}" \
@@ -507,7 +507,7 @@ assert_symlink_to () {
       | fail
     fi
     local -r realsource=$( readlinkf "$link" )
-    if [ ! "$realsource" = "$sourcefile"  ]; then
+    if [[ ! "$realsource" = "$sourcefile"  ]]; then
       local -r rem="$BATSLIB_FILE_PATH_REM"
       local -r add="$BATSLIB_FILE_PATH_ADD"
       batslib_print_kv_single 4 'path' "${link/$rem/$add}" \
@@ -533,7 +533,7 @@ assert_file_size_equals () {
   local -r file="$1"
   local -r expectedsize="$2"
   local -r size=$( wc -c "$file" | awk '{print $1}' )
-  if [ ! "$expectedsize" = "$size" ]; then
+  if [[ ! "$expectedsize" = "$size" ]]; then
     local -r rem="$BATSLIB_FILE_PATH_REM"
     local -r add="$BATSLIB_FILE_PATH_ADD"
     batslib_print_kv_single 4 'path' "${file/$rem/$add}" \
@@ -827,7 +827,7 @@ assert_not_file_owner () {
   if [[ `uname` == "Darwin" ]]; then
   sudo chown root ${TEST_FIXTURE_ROOT}/dir/owner
   sudo chown daemon ${TEST_FIXTURE_ROOT}/dir/notowner
-  if [ `stat -f '%Su' "$file"` = "$owner" ]; then
+  if [[ `stat -f '%Su' "$file"` = "$owner" ]]; then
     local -r rem="$BATSLIB_FILE_PATH_REM"
     local -r add="$BATSLIB_FILE_PATH_ADD"
     batslib_print_kv_single 4 'path' "${file/$rem/$add}" \
@@ -837,7 +837,7 @@ assert_not_file_owner () {
   elif [[ `uname` == "Linux" ]]; then
   sudo chown root ${TEST_FIXTURE_ROOT}/dir/owner
   sudo chown daemon ${TEST_FIXTURE_ROOT}/dir/notowner
-    if [ `stat -c "%U" "$file"` = "$owner" ]; then
+    if [[ `stat -c "%U" "$file"` = "$owner" ]]; then
     local -r rem="$BATSLIB_FILE_PATH_REM"
     local -r add="$BATSLIB_FILE_PATH_ADD"
     batslib_print_kv_single 4 'path' "${file/$rem/$add}" \
@@ -864,7 +864,7 @@ assert_not_file_permission () {
   local -r permission="$1"
   local -r file="$2"
   if [[ `uname` == "Darwin" ]]; then
-    if [ `stat -f '%A' "$file"` -eq "$permission" ]; then
+    if [[ `stat -f '%A' "$file"` -eq "$permission" ]]; then
     local -r rem="$BATSLIB_FILE_PATH_REM"
     local -r add="$BATSLIB_FILE_PATH_ADD"
     batslib_print_kv_single 4 'path' "${file/$rem/$add}" \
@@ -872,7 +872,7 @@ assert_not_file_permission () {
       | fail
   fi
   elif [[ `uname` == "Linux" ]]; then
-        if [ `stat -c "%a" "$file"` -eq "$permission" ]; then
+        if [[ `stat -c "%a" "$file"` -eq "$permission" ]]; then
     local -r rem="$BATSLIB_FILE_PATH_REM"
     local -r add="$BATSLIB_FILE_PATH_ADD"
     batslib_print_kv_single 4 'path' "${file/$rem/$add}" \
@@ -955,7 +955,7 @@ fi
 #   STDERR - details, on failure
 assert_file_not_group_id_set () {
   local -r file="$1"
-  if [ -g "$file" ]; then
+  if [[ -g "$file" ]]; then
     local -r rem="$BATSLIB_FILE_PATH_REM"
     local -r add="$BATSLIB_FILE_PATH_ADD"
     batslib_print_kv_single 4 'path' "${file/$rem/$add}" \
@@ -980,7 +980,7 @@ assert_file_not_group_id_set () {
 #   STDERR - details, on failure
 assert_file_not_user_id_set () {
   local -r file="$1"
-  if [ -u "$file" ]; then
+  if [[ -u "$file" ]]; then
     local -r rem="$BATSLIB_FILE_PATH_REM"
     local -r add="$BATSLIB_FILE_PATH_ADD"
     batslib_print_kv_single 4 'path' "${file/$rem/$add}" \
@@ -1004,7 +1004,7 @@ assert_file_not_user_id_set () {
 #   STDERR - details, on failure
 assert_no_sticky_bit () {
   local -r file="$1"
-  if [ -k "$file" ]; then
+  if [[ -k "$file" ]]; then
     local -r rem="$BATSLIB_FILE_PATH_REM"
     local -r add="$BATSLIB_FILE_PATH_ADD"
     batslib_print_kv_single 4 'path' "${file/$rem/$add}" \
@@ -1027,7 +1027,7 @@ assert_not_symlink_to () {
   local -r link="$2"
   # If OS is linux
   if [[ `uname` == "Linux" ]]; then
-    if [ -L $link   ]; then
+    if [[ -L $link   ]]; then
       local -r rem="$BATSLIB_FILE_PATH_REM"
       local -r add="$BATSLIB_FILE_PATH_ADD"
       batslib_print_kv_single 4 'path' "${link/$rem/$add}" \
@@ -1035,7 +1035,7 @@ assert_not_symlink_to () {
         | fail
     fi
     local -r realsource=$( readlink -f "$link" )
-    if [ "$realsource" = "$sourcefile"  ]; then
+    if [[ "$realsource" = "$sourcefile"  ]]; then
       batslib_print_kv_single 4 'path' "${link/$rem/$add}" \
         | batslib_decorate 'symbolic link does have the correct target' \
         | fail
@@ -1047,7 +1047,7 @@ assert_not_symlink_to () {
     cd `dirname $TARGET_FILE`
     TARGET_FILE=`basename $TARGET_FILE`
     # Iterate down a (possible) chain of symlinks
-    while [ -L "$TARGET_FILE" ]
+    while [[ -L "$TARGET_FILE" ]]
     do
       TARGET_FILE=`readlink $TARGET_FILE`
       cd `dirname $TARGET_FILE`
@@ -1060,7 +1060,7 @@ assert_not_symlink_to () {
     echo $RESULT
   }
 
-  if [ -L $link   ]; then
+  if [[ -L $link   ]]; then
     local -r rem="$BATSLIB_FILE_PATH_REM"
     local -r add="$BATSLIB_FILE_PATH_ADD"
     batslib_print_kv_single 4 'path' "${link/$rem/$add}" \
@@ -1068,7 +1068,7 @@ assert_not_symlink_to () {
       | fail
     fi
     local -r realsource=$( readlinkf "$link" )
-    if [ "$realsource" = "$sourcefile"  ]; then
+    if [[ "$realsource" = "$sourcefile"  ]]; then
       batslib_print_kv_single 4 'path' "${link/$rem/$add}" \
         | batslib_decorate 'symbolic link does have the correct target' \
         | fail

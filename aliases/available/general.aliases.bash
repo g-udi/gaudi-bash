@@ -34,7 +34,7 @@ alias rd='rmdir'
 alias h='history'
 
 # tree (list directories as a tree structure)
-if [ ! -x "$(which tree 2>/dev/null)" ]
+if [[ ! -x "$(which tree 2>/dev/null)" ]]
 then
   alias tree="find . -print | sed -e 's;[^/]*/;|____;g;s;____|; |;g'"
 fi

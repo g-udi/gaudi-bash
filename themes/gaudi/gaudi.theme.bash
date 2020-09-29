@@ -17,7 +17,7 @@ test -z "$TERM" -o "x$TERM" = xdumb && return
 if test -n "${BASH_VERSION-}" -a -n "$PS1" ; then
   bash=${BASH_VERSION%.*}; bmajor=${bash%.*}; bminor=${bash#*.}
   if (( bmajor < 4 || ( bmajor == 4 && bminor < 0 ) )); then
-    echo "The current bash version ${bash} is not supported by Gaudi [ 4.0+ ]"
+    echo "The current bash version ${bash} is not supported by Gaudi [[ 4.0+ ]]"
     unset bash bmajor bminor
     return
   fi

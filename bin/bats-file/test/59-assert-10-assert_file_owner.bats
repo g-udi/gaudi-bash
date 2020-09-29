@@ -16,9 +16,9 @@ teardown () {
   local -r owner="root"
   local -r file="${TEST_FIXTURE_ROOT}/dir/owner"
   run assert_file_owner "$owner" "$file"
-  [ "$status" -eq 0 ]
+  [[ "$status" -eq 0 ]]
   echo ${#lines[@]}
-  [ "${#lines[@]}" -eq 0 ] 
+  [[ "${#lines[@]}" -eq 0 ]]
 
 }
 
@@ -26,11 +26,11 @@ teardown () {
   local -r owner="root"
   local -r file="${TEST_FIXTURE_ROOT}/dir/notowner"
   run assert_file_owner "$owner" "$file"
-  [ "$status" -eq 1 ]
-  [ "${#lines[@]}" -eq 3 ]
-  [ "${lines[0]}" == '-- user root is not the owner of the file --' ]
-  [ "${lines[1]}" == "path : $file" ]
-  [ "${lines[2]}" == '--' ]
+  [[ "$status" -eq 1 ]]
+  [[ "${#lines[@]}" -eq 3 ]]
+  [[ "${lines[0]}" == '-- user root is not the owner of the file --' ]]
+  [[ "${lines[1]}" == "path : $file" ]]
+  [[ "${lines[2]}" == '--' ]]
 }
 
 
@@ -42,11 +42,11 @@ teardown () {
   local -r owner="root"
   local -r file="${TEST_FIXTURE_ROOT}/dir/notowner"
   run assert_file_owner "$owner" "$file"
-  [ "$status" -eq 1 ]
-  [ "${#lines[@]}" -eq 3 ]
-  [ "${lines[0]}" == '-- user root is not the owner of the file --' ]
-  [ "${lines[1]}" == "path : ../dir/notowner" ]
-  [ "${lines[2]}" == '--' ]
+  [[ "$status" -eq 1 ]]
+  [[ "${#lines[@]}" -eq 3 ]]
+  [[ "${lines[0]}" == '-- user root is not the owner of the file --' ]]
+  [[ "${lines[1]}" == "path : ../dir/notowner" ]]
+  [[ "${lines[2]}" == '--' ]]
 }
 
 @test 'assert_file_owner() <file>: replace suffix of displayed path' {
@@ -55,11 +55,11 @@ teardown () {
   local -r owner="root"
   local -r file="${TEST_FIXTURE_ROOT}/dir/notowner"
   run assert_file_owner "$owner" "$file"
-  [ "$status" -eq 1 ]
-  [ "${#lines[@]}" -eq 3 ]
-  [ "${lines[0]}" == '-- user root is not the owner of the file --' ]
-  [ "${lines[1]}" == "path : ${TEST_FIXTURE_ROOT}/.." ]
-  [ "${lines[2]}" == '--' ]
+  [[ "$status" -eq 1 ]]
+  [[ "${#lines[@]}" -eq 3 ]]
+  [[ "${lines[0]}" == '-- user root is not the owner of the file --' ]]
+  [[ "${lines[1]}" == "path : ${TEST_FIXTURE_ROOT}/.." ]]
+  [[ "${lines[2]}" == '--' ]]
 }
 
 @test 'assert_file_owner() <file>: replace infix of displayed path' {
@@ -68,9 +68,9 @@ teardown () {
   local -r owner="root"
   local -r file="${TEST_FIXTURE_ROOT}/dir/notowner"
   run assert_file_owner "$owner" "$file"
-  [ "$status" -eq 1 ]
-  [ "${#lines[@]}" -eq 3 ]
-  [ "${lines[0]}" == '-- user root is not the owner of the file --' ]
-  [ "${lines[1]}" == "path : ${TEST_FIXTURE_ROOT}/.." ]
-  [ "${lines[2]}" == '--' ]
+  [[ "$status" -eq 1 ]]
+  [[ "${#lines[@]}" -eq 3 ]]
+  [[ "${lines[0]}" == '-- user root is not the owner of the file --' ]]
+  [[ "${lines[1]}" == "path : ${TEST_FIXTURE_ROOT}/.." ]]
+  [[ "${lines[2]}" == '--' ]]
 }

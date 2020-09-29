@@ -221,7 +221,7 @@ assert_output () {
 
   # Matching.
   if (( is_mode_nonempty )); then
-    if [ -z "$output" ]; then
+    if [[ -z "$output" ]]; then
       echo 'expected non-empty output, but output was empty' \
         | batslib_decorate 'no output' \
         | fail
@@ -337,7 +337,7 @@ refute_output () {
 
   # Matching.
   if (( is_mode_empty )); then
-    if [ -n "$output" ]; then
+    if [[ -n "$output" ]]; then
       batslib_print_kv_single_or_multi 6 \
           'output' "$output" \
         | batslib_decorate 'output non-empty, but expected no output' \

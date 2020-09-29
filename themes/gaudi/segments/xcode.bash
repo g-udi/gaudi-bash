@@ -34,9 +34,9 @@ gaudi_xcode () {
     fi
   fi
 
-  if [ -n "${xcode_path}" ]; then
+  if [[ -n "${xcode_path}" ]]; then
     local xcode_version_path=$xcode_path"/Contents/version.plist"
-    if [ -f ${xcode_version_path} ]; then
+    if [[ -f ${xcode_version_path} ]]; then
       if gaudi::exists defaults; then
         local xcode_version=$(defaults read ${xcode_version_path} CFBundleShortVersionString)
 

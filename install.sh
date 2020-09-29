@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
-if [ -z "$BASH_IT" ];
+if [[ -z "$BASH_IT" ]];
 then
   BASH_IT="$HOME/.bash_it"
 fi
 
 
-if [ -d "$BASH_IT" ]; then
+if [[ -d "$BASH_IT" ]]; then
     printf "You already have bash-it installed..\\n"
     unset REPLY
     while ! [[ $REPLY =~ ^[yY]$ ]] && ! [[ $REPLY =~ ^[nN]$ ]]; do

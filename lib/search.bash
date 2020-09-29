@@ -8,11 +8,11 @@
 #
 # Usage:
 #    ❯ bash-it search [-|@]term1 [-|@]term2 ... \
-#       [ --enable   | -e ] \
-#       [ --disable  | -d ] \
-#       [ --no-color | -c ] \
-#       [ --refresh  | -r ] \
-#       [ --help     | -h ]
+#       [[ --enable   | -e ]] \
+#       [[ --disable  | -d ]] \
+#       [[ --no-color | -c ]] \
+#       [[ --refresh  | -r ]] \
+#       [[ --help     | -h ]]
 #
 #    Single dash, as in "-chruby", indicates a negative search term.
 #    Double dash indicates a command that is to be applied to the search result.
@@ -51,7 +51,7 @@
 _bash-it-search () {
   _about 'searches for given terms amongst bash-it plugins, aliases and completions'
   _param '1: term1'
-  _param '2: [ term2 ]...'
+  _param '2: [[ term2 ]]...'
   _example '$ _bash-it-search @git ruby -rvm rake bundler'
 
   [[ -z "$(type _bash-it-array-contains-element 2>/dev/null)" ]]
@@ -113,7 +113,7 @@ _bash-it-search-component () {
   shift
 
   _about 'searches for given terms amongst a given component'
-  _param '1: component type, one of: [ aliases | plugins | completions ]'
+  _param '1: component type, one of: [[ aliases | plugins | completions ]]'
   _param '2: term1 term2 @term3'
   _param '3: [-]term4 [-]term5 ...'
   _example '$ _bash-it-search-component aliases @git rake bundler -chruby'
@@ -301,11 +301,11 @@ _bash-it-search-help () {
 ${YELLOW}USAGE${NC}
 
    bash-it search [-|@]term1 [-|@]term2 ... \\
-     [ --enable   | -e ] \\
-     [ --disable  | -d ] \\
-     [ --no-color | -c ] \\
-     [ --refresh  | -r ] \\
-     [ --help     | -h ]
+     [[ --enable   | -e ]] \\
+     [[ --disable  | -d ]] \\
+     [[ --no-color | -c ]] \\
+     [[ --refresh  | -r ]] \\
+     [[ --help     | -h ]]
 
 ${YELLOW}DESCRIPTION${NC}
 

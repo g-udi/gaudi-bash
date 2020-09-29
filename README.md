@@ -58,7 +58,7 @@ A good "practice" is sourcing `.bashrc` into `.bash_profile` to keep things work
 To achieve this, you can add this snippet in your `.bash_profile`:
 
 ```
-if [ -f ~/.bashrc ]; then
+if [[ -f ~/.bashrc ]]; then
   . ~/.bashrc
 fi
 ```

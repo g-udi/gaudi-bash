@@ -57,20 +57,20 @@ __docker_compose_map_key_of_current_option () {
         local glob="$1"
 
         local key glob_pos
-        if [ "$cur" = "=" ] ; then        # key= case
+        if [[ "$cur" = "=" ]] ; then        # key= case
                 key="$prev"
                 glob_pos=$((cword - 2))
         elif [[ $cur == *=* ]] ; then     # key=value case (OSX)
                 key=${cur%=*}
                 glob_pos=$((cword - 1))
-        elif [ "$prev" = "=" ] ; then
+        elif [[ "$prev" = "=" ]] ; then
                 key=${words[$cword - 2]}  # key=value case
                 glob_pos=$((cword - 3))
         else
                 return
         fi
 
-        [ "${words[$glob_pos]}" = "=" ] && ((glob_pos--))  # --option=key=value syntax
+        [[ "${words[$glob_pos]}" = "=" ]] && ((glob_pos--))  # --option=key=value syntax
 
         [[ ${words[$glob_pos]} == @($glob) ]] && echo "$key"
 }
@@ -636,7 +636,7 @@ _docker_compose () {
 	local top_level_options=()
 	local counter=1
 
-	while [ $counter -lt $cword ]; do
+	while [[ $counter -lt $cword ]]; do
 		case "${words[$counter]}" in
 			$(__docker_compose_to_extglob "$daemon_boolean_options") )
 				local opt=${words[counter]}

@@ -26,7 +26,7 @@ _replace_by_history () {
 
 if command -v percol>/dev/null; then
     current_version=${BASH_VERSION%%[^0-9]*}
-    if [ $current_version -lt 4 ]; then
+    if [[ $current_version -lt 4 ]]; then
        echo -e "Warning: You have to upgrade Bash to Bash v4.x to use the 'percol' plugin"
        echo -e "         Your current Bash version is $BASH_VERSION"
     else

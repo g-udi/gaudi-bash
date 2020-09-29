@@ -32,7 +32,7 @@ docker-enter () {
 docker-remove-images () {
   about 'attempt to remove images with supplied tags or all if no tags are supplied'
   group 'docker'
-  if [ -z "$1" ]; then
+  if [[ -z "$1" ]]; then
     docker rmi "$(docker images -q)"
   else
     DOCKER_IMAGES=""
@@ -75,7 +75,7 @@ docker-archive-content () {
   param '1: image archive name'
   example 'docker-archive-content images.tar.gz'
 
-  if [ -n "$1" ]; then
+  if [[ -n "$1" ]]; then
     tar -xzOf $1 manifest.json | jq '[.[] | .RepoTags] | add'
   fi
 }

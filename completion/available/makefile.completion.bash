@@ -7,10 +7,10 @@ _makecomplete () {
   # https://www.gnu.org/software/make/manual/html_node/Makefile-Names.html
   local files=()
   for f in 'GNUmakefile' 'makefile' 'Makefile' ; do
-    [ -f "$f" ] && files+=("$f")
+    [[ -f "$f" ]] && files+=("$f")
   done
 
-  [ "${#files[@]}" -eq 0 ] && return 0
+  [[ "${#files[@]}" -eq 0 ]] && return 0
 
   # collect all targets
   local targets=()
@@ -20,7 +20,7 @@ _makecomplete () {
     done < <(grep -oE '^[a-zA-Z0-9_-]+:([^=]|$)' "$f" | cut -d':' -f1)
   done
 
-  [ "${#targets[@]}" -eq 0 ] && return 0
+  [[ "${#targets[@]}" -eq 0 ]] && return 0
 
   # use the targets for completion
   while IFS='' read -r line ; do

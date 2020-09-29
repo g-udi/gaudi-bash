@@ -35,7 +35,7 @@ load_one () {
   mkdir -p "$BASH_IT/${file_type}/enabled"
 
   dest="${BASH_IT}/${file_type}/enabled/${file_to_enable}"
-  if [ ! -e "${dest}" ]; then
+  if [[ ! -e "${dest}" ]]; then
     ln -sf "../available/${file_to_enable}" "${dest}"
   else
     echo "File ${dest} exists, skipping"
@@ -47,7 +47,7 @@ load_some () {
   file_type=$1
   single_type=$(echo "$file_type" | sed -e "s/aliases$/alias/g" | sed -e "s/plugins$/plugin/g")
   enable_func="_enable-$single_type"
-  [ -d "$BASH_IT/$file_type/enabled" ] || mkdir "$BASH_IT/$file_type/enabled"
+  [[ -d "$BASH_IT/$file_type/enabled" ]] || mkdir "$BASH_IT/$file_type/enabled"
   for path in "$BASH_IT/${file_type}/available/"[^_]*
   do
     file_name=$(basename "$path")
@@ -123,9 +123,9 @@ esac
 BACKUP_FILE=$CONFIG_FILE.bak
 
 if ! [[ $silent ]] && ! [[ $no_modify_config ]]; then
-  if [ -e "$HOME/$BACKUP_FILE" ]; then
+  if [[ -e "$HOME/$BACKUP_FILE" ]]; then
     echo -e "${YELLOW}Backup file already exists. Make sure to backup your .bashrc before running this installation.${NC}" >&2
-    while ! [ $silent ];  do
+    while ! [[ $silent ]];  do
       read -e -n 1 -r -p "Would you like to overwrite the existing backup? This will delete your existing backup file ($HOME/$BACKUP_FILE) [Y/N] " RESP
       case $RESP in
       [yY])
@@ -142,7 +142,7 @@ if ! [[ $silent ]] && ! [[ $no_modify_config ]]; then
     done
   fi
 
-  while ! [ $silent ]; do
+  while ! [[ $silent ]]; do
     read -e -n 1 -r -p "Would you like to keep your $CONFIG_FILE and append bash-it templates at the end? [Y/N] " choice
     case $choice in
     [yY])

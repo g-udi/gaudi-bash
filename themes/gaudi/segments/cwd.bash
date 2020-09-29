@@ -45,8 +45,8 @@ gaudi_cwd () {
     echo "${path:0:target/2}~${path: -target/2}"
   }
 
-  [ $GAUDI_CWD_SHORTEN == true ] && GAUDI_CWD=$(reduce-path) || GAUDI_CWD=$(pwd | sed "s|^${HOME}|~|")
-  [ $GAUDI_CWD_SUMMARY == true ] && GAUDI_CWD+=" [$(ls -1 | wc -l | sed 's: ::g') Files, $(ls -lah | grep -m 1 total | sed 's/total //')]"
+  [[ $GAUDI_CWD_SHORTEN == true ]] && GAUDI_CWD=$(reduce-path) || GAUDI_CWD=$(pwd | sed "s|^${HOME}|~|")
+  [[ $GAUDI_CWD_SUMMARY == true ]] && GAUDI_CWD+=" [$(ls -1 | wc -l | sed 's: ::g') Files, $(ls -lah | grep -m 1 total | sed 's/total //')]"
 
   gaudi::section \
     "$color" \

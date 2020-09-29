@@ -47,7 +47,7 @@ __pack_handle_reply()
                 compopt -o nospace
             fi
             local allflags
-            if [ ${#must_have_one_flag[@]} -ne 0 ]; then
+            if [[ ${#must_have_one_flag[@]} -ne 0 ]]; then
                 allflags=("${must_have_one_flag[@]}")
             else
                 allflags=("${flags[*]} ${two_word_flags[*]}")
@@ -71,7 +71,7 @@ __pack_handle_reply()
                     PREFIX=""
                     cur="${cur#*=}"
                     ${flags_completion[${index}]}
-                    if [ -n "${ZSH_VERSION}" ]; then
+                    if [[ -n "${ZSH_VERSION}" ]]; then
                         # zsh completion needs --flag= prefix
                         eval "COMPREPLY=( \"\${COMPREPLY[@]/#/${flag}=}\" )"
                     fi
@@ -163,10 +163,10 @@ __pack_handle_flag()
     # keep flag value with flagname as flaghash
     # flaghash variable is an associative array which is only supported in bash > 3.
     if [[ -z "${BASH_VERSION}" || "${BASH_VERSINFO[0]}" -gt 3 ]]; then
-        if [ -n "${flagvalue}" ] ; then
+        if [[ -n "${flagvalue}" ]] ; then
             flaghash[${flagname}]=${flagvalue}
-        elif [ -n "${words[ $((c+1)) ]}" ] ; then
-            flaghash[${flagname}]=${words[ $((c+1)) ]}
+        elif [[ -n "${words[[ $((c+1)) ]]}" ]] ; then
+            flaghash[${flagname}]=${words[[ $((c+1)) ]]}
         else
             flaghash[${flagname}]="true" # pad "true" for bool flag
         fi

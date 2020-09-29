@@ -10,7 +10,7 @@
     "Jason Karns <jason.karns@gmail.com> (http://jason.karns.name)",
     "Mislav Marohnić <mislav.marohnic@gmail.com> (http://mislav.net/)",
     "Tim Pope (https://github.com/tpope)"
-  ],
+  ]],
   "repository": {
     "type": "git",
     "url": "https://github.com/jasonkarns/bats-assert-1.git"
@@ -25,7 +25,7 @@
   "files": [
     "load.bash",
     "src"
-  ],
+  ]],
   "scripts": {
     "postversion": "npm publish",
     "prepublishOnly": "npm run publish:github",
@@ -43,5 +43,5 @@
     "assert",
     "assertion",
     "helper"
-  ]
+  ]]
 }

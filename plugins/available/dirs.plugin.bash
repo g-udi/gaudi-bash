@@ -60,7 +60,7 @@ dirs-help () {
 # Add bookmarking functionality
 # Usage:
 
-if [ ! -f ~/.dirs ]; then  # if doesn't exist, create it
+if [[ ! -f ~/.dirs ]]; then  # if doesn't exist, create it
     touch ~/.dirs
 else
     source ~/.dirs

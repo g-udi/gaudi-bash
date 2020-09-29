@@ -17,7 +17,7 @@ _bash-it-comp-list-available-not-enabled () {
       typeset enabled_component=$(command ls "${BASH_IT}/$subdirectory/enabled/"{[0-9]*$BASH_IT_LOAD_PRIORITY_SEPARATOR$file_entity,$file_entity} 2>/dev/null | head -1)
       typeset enabled_component_global=$(command ls "${BASH_IT}/enabled/"[0-9]*$BASH_IT_LOAD_PRIORITY_SEPARATOR$file_entity 2>/dev/null | head -1)
 
-      if [ -z "$enabled_component" ] && [ -z "$enabled_component_global" ]
+      if [[ -z "$enabled_component" ]] && [[ -z "$enabled_component_global" ]]
       then
         basename $f | sed -e 's/\(.*\)\..*\.bash/\1/g'
       fi
@@ -68,7 +68,7 @@ _bash-it-comp () {
       return 0
       ;;
     help)
-      if [ x"${prev}" == x"aliases" ]; then
+      if [[ x"${prev}" == x"aliases" ]]; then
         _bash-it-comp-list-available aliases
         return 0
       else
@@ -86,7 +86,7 @@ _bash-it-comp () {
       return 0
       ;;
     enable | disable)
-      if [ x"${chose_opt}" == x"enable" ];then
+      if [[ x"${chose_opt}" == x"enable" ]];then
         suffix="available-not-enabled"
       else
         suffix="enabled"

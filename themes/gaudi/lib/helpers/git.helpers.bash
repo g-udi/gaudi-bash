@@ -104,10 +104,10 @@ _git-status-counts () {
     if ($0 ~ /^\?\? .+/) {
       untracked += 1
     } else {
-      if ($0 ~ /^.[^ ] .+/) {
+      if ($0 ~ /^.[^ ]] .+/) {
         unstaged += 1
       }
-      if ($0 ~ /^[^ ]. .+/) {
+      if ($0 ~ /^[^ ]]. .+/) {
         staged += 1
       }
     }
@@ -152,10 +152,10 @@ git_status_summary () {
     } else if ($0 ~ /^\?\? .+/) {
       untracked += 1
     } else {
-      if ($0 ~ /^.[^ ] .+/) {
+      if ($0 ~ /^.[^ ]] .+/) {
         unstaged += 1
       }
-      if ($0 ~ /^[^ ]. .+/) {
+      if ($0 ~ /^[^ ]]. .+/) {
         staged += 1
       }
     }
@@ -196,7 +196,7 @@ git_prompt_minimal_info () {
 
 git_prompt_vars () {
   # Make sure we do a fetch to get all the information needed form the upstream
-  [ $GAUDI_SCM_FETCH == true ] && git fetch &> /dev/null;
+  [[ $GAUDI_SCM_FETCH == true ]] && git fetch &> /dev/null;
 
   if _git-branch &> /dev/null; then
     GAUDI_SCM_GIT_DETACHED="false"

@@ -34,7 +34,7 @@ gaudi_swift () {
     fi
   fi
 
-  [ -n "${swift_version}" ] || return
+  [[ -n "${swift_version}" ]] || return
 
   gaudi::section \
     "$GAUDI_SWIFT_COLOR" \

@@ -10,7 +10,7 @@ if command -v wpscan > /dev/null; then
             fi
         done
     }
-    
+
     complete -F __wpscan_completion wpscan
 fi
 

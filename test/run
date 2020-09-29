@@ -4,13 +4,13 @@ bats_executable="${test_directory}/../bin/bats-core/bin/bats"
 
 git submodule init && git submodule update
 
-if [ -z "${BASH_IT}" ]; then
+if [[ -z "${BASH_IT}" ]]; then
   declare BASH_IT
   BASH_IT=$(cd "${test_directory}" && dirname "$(pwd)")
   export BASH_IT
 fi
 
-if [ -z "$1" ]; then
+if [[ -z "$1" ]]; then
   test_dirs=( "${test_directory}"/{bash_it,completion,install,lib,plugins,themes} )
 else
   test_dirs=( "$1" )
@@ -28,12 +28,12 @@ then
   declare -i test_jobs_effective
 
   test_jobs_effective="$(
-    if [ "${TEST_JOBS:-detect}" = "detect" ] \
+    if [[ "${TEST_JOBS:-detect}" = "detect" ]] \
       && command -v nproc &> /dev/null
     then
       nproc
-    elif [ -n "${TEST_JOBS}" ] \
-      && [ "${TEST_JOBS}" != "detect" ]
+    elif [[ -n "${TEST_JOBS}" ]] \
+      && [[ "${TEST_JOBS}" != "detect" ]]
     then
       echo "${TEST_JOBS}"
     else

@@ -24,7 +24,7 @@ _git_bash_completion_paths=(
 
 # Load the first completion file found
 for _comp_path in "${_git_bash_completion_paths[@]}" ; do
-  if [ -r "$_comp_path" ] ; then
+  if [[ -r "$_comp_path" ]] ; then
     _git_bash_completion_found=true
     source "$_comp_path"
     break
