@@ -144,39 +144,27 @@ _bash-it-reload () {
   popd &> /dev/null || return
 }
 
-_bash-it-aliases () {
-    _about 'summarizes available bash_it aliases'
-    _group 'lib'
-
-    _bash-it-describe "aliases" "an" "alias" "Alias"
-}
-
-_bash-it-completions () {
-    _about 'summarizes available bash_it completions'
-    _group 'lib'
-
-    _bash-it-describe "completion" "a" "completion" "Completion"
-}
-
-_bash-it-plugins () {
-    _about 'summarizes available bash_it plugins'
-    _group 'lib'
-
-    _bash-it-describe "plugins" "a" "plugin" "Plugin"
-}
-
-_bash-it-list () {
-  _about 'List available bash_it components'
+_bash-it-show () {
+  _about 'List available bash_it components or allow filtering for a specific type e.g., plugin, alias'
   _group 'lib'
 
-  for file_type in "aliases" "plugins" "completion"; do
+  __build-describe () {
+    typeset _component=$1
+    typeset _mode=$2
 
-    [[ $file_type == *es ]] && file_type_singular=${file_type/es/}
-    [[ $file_type == *ns ]] && file_type_singular=${file_type/ns/n}
+    [[ "$_component" == *es ]] && file_type_singular=${_component/es/}
+    [[ "$_component" == *ns ]] && file_type_singular=${_component/ns/n}
 
-    _bash-it-describe "$file_type" "a" "$file_type_singular" "${file_type_singular^}" true
-  done
+    _bash-it-describe "$_component" "a" "$file_type_singular" "${file_type_singular^}" "$_mode"
+  }
 
+  if [[ -n "$1" ]]; then
+    __build-describe "$(_bash-it-pluralize-component "$1")" "all"
+  else
+    for file_type in "aliases" "plugins" "completion"; do
+      __build-describe "$file_type" "enabled"
+    done
+  fi
 }
 
 _bash-it-describe () {
@@ -196,7 +184,6 @@ _bash-it-describe () {
     echo "file_type: $file_type"
 
     typeset f
-    typeset enabled=${4:-false}
 
     printf "\n%-20s%-10s%s\n" "$column_header" 'Enabled?' '  Description'
     printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -
@@ -209,12 +196,12 @@ _bash-it-describe () {
 
         if [ "$enabled_files" -gt 0 ]; then
             printf "%-20s${GREEN}%-10s${NC}%s\n" "$(basename "$f" | sed -e 's/\(.*\)\..*\.bash/\1/g')" "  [●]" "$(cat "$f" | metafor about-"$file_type")"
-        elif [ "$enabled" = "false" ]; then
+        elif [ "$5" = "all" ]; then
             printf "%-20s${RED}%-10s${NC}%s\n" "$(basename "$f" | sed -e 's/\(.*\)\..*\.bash/\1/g')" "  [◯]" "$(cat "$f" | metafor about-"$file_type")"
         fi
     done
 
-    if [ "$enabled" = "false" ]; then
+    if [ "$5" = "all" ]; then
       printf '\n%s\n' "to enable $preposition $file_type, do:"
       printf '%s\n' "$ bash-it enable $file_type  <$file_type name> [$file_type name]... -or- $ bash-it enable $file_type all"
       printf '\n%s\n' "to disable $preposition $file_type, do:"
@@ -278,7 +265,8 @@ bash-it () {
 
     case $verb in
       show)
-        func=_bash-it-$component;;
+        _bash-it-show $component "$@"
+        return;;
       enable)
         func=_enable-$component;;
       disable)
