@@ -3,7 +3,6 @@
 load ../helper
 load ../../lib/composure
 load ../../lib/helpers
-load ../../lib/utilities
 load ../../lib/search
 
 cite _about _param _example _group _author _version
@@ -31,7 +30,7 @@ item_disabled () {
 
 @test "_bash-it-component-item-is-enabled() - for an enabled/disabled item" {
   run bash-it enable alias svn
-  assert_line -n 0 'svn enabled with priority 150.'
+  assert_line -n 0 '[● ENABLED] svn enabled with priority 150.'
 
   run item_enabled alias svn
   assert_line -n 0 'alias svn is enabled'
@@ -50,7 +49,7 @@ item_disabled () {
 
 @test "_bash-it-component-item-is-disabled() - for an enabled/disabled item" {
   run bash-it enable alias svn
-  assert_line -n 0 'svn enabled with priority 150.'
+  assert_line -n 0 '[● ENABLED] svn enabled with priority 150.'
 
   run item_disabled alias svn
   assert_line -n 0 ''

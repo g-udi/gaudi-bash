@@ -17,12 +17,14 @@ local_setup () {
   fi
 }
 
-@test "bash-it: verify that the test fixture is available" {
+@test "bash-it" {}
+
+@test "    verify that the test fixture is available" {
   assert_file_exist "$BASH_IT/aliases/available/a.aliases.bash"
   assert_file_exist "$BASH_IT/aliases/available/b.aliases.bash"
 }
 
-@test "bash-it: load aliases in order" {
+@test "    load aliases in order" {
 
   mkdir -p $BASH_IT/aliases/enabled
   mkdir -p $BASH_IT/plugins/enabled
@@ -46,7 +48,7 @@ local_setup () {
   assert_line -n 0 "alias test_alias='b'"
 }
 
-@test "bash-it: load aliases in priority order" {
+@test "    load aliases in priority order" {
   mkdir -p $BASH_IT/aliases/enabled
   mkdir -p $BASH_IT/plugins/enabled
 
@@ -69,7 +71,7 @@ local_setup () {
   assert_line -n 0 "alias test_alias='a'"
 }
 
-@test "bash-it: load aliases and plugins in priority order" {
+@test "    load aliases and plugins in priority order" {
   mkdir -p $BASH_IT/aliases/enabled
   mkdir -p $BASH_IT/plugins/enabled
 
@@ -94,7 +96,7 @@ local_setup () {
   assert_line -n 0 "alias test_alias='c'"
 }
 
-@test "bash-it: load aliases, plugins and completions in priority order" {
+@test "    load aliases, plugins and completions in priority order" {
   mkdir -p $BASH_IT/aliases/enabled
   mkdir -p $BASH_IT/plugins/enabled
   mkdir -p $BASH_IT/completion/enabled
@@ -121,7 +123,7 @@ local_setup () {
   assert_line -n 0 "alias test_alias='b'"
 }
 
-@test "bash-it: load aliases, plugins and completions in priority order, even if the priority says otherwise" {
+@test "    load aliases, plugins and completions in priority order, even if the priority says otherwise" {
   mkdir -p $BASH_IT/aliases/enabled
   mkdir -p $BASH_IT/plugins/enabled
   mkdir -p $BASH_IT/completion/enabled
@@ -148,7 +150,7 @@ local_setup () {
   assert_line -n 0 "alias test_alias='b'"
 }
 
-@test "bash-it: load aliases and plugins in priority order, with one alias higher than plugins" {
+@test "    load aliases and plugins in priority order, with one alias higher than plugins" {
   mkdir -p $BASH_IT/aliases/enabled
   mkdir -p $BASH_IT/plugins/enabled
 
@@ -175,7 +177,7 @@ local_setup () {
   assert_line -n 0 "alias test_alias='c'"
 }
 
-@test "bash-it: load global aliases in order" {
+@test "    load global aliases in order" {
   mkdir -p $BASH_IT/enabled
 
   ln -s $BASH_IT/plugins/available/base.plugin.bash $BASH_IT/enabled/250---base.plugin.bash
@@ -197,7 +199,7 @@ local_setup () {
   assert_line -n 0 "alias test_alias='b'"
 }
 
-@test "bash-it: load global aliases in priority order" {
+@test "    load global aliases in priority order" {
   mkdir -p $BASH_IT/enabled
 
   ln -s $BASH_IT/plugins/available/base.plugin.bash $BASH_IT/enabled/250---base.plugin.bash
@@ -219,7 +221,7 @@ local_setup () {
   assert_line -n 0 "alias test_alias='a'"
 }
 
-@test "bash-it: load global aliases and plugins in priority order" {
+@test "    load global aliases and plugins in priority order" {
   mkdir -p $BASH_IT/enabled
 
   ln -s $BASH_IT/plugins/available/base.plugin.bash $BASH_IT/enabled/250---base.plugin.bash
@@ -243,7 +245,7 @@ local_setup () {
   assert_line -n 0 "alias test_alias='c'"
 }
 
-@test "bash-it: load global aliases and plugins in priority order, with one alias higher than plugins" {
+@test "    load global aliases and plugins in priority order, with one alias higher than plugins" {
   mkdir -p $BASH_IT/enabled
 
   ln -s $BASH_IT/plugins/available/base.plugin.bash $BASH_IT/enabled/250---base.plugin.bash
@@ -269,7 +271,7 @@ local_setup () {
   assert_line -n 0 "alias test_alias='a'"
 }
 
-@test "bash-it: load global aliases and plugins in priority order, individual old directories are loaded later" {
+@test "    load global aliases and plugins in priority order, individual old directories are loaded later" {
   mkdir -p $BASH_IT/enabled
   mkdir -p $BASH_IT/aliases/enabled
 
@@ -299,7 +301,7 @@ local_setup () {
   assert_line -n 0 "alias test_alias='b'"
 }
 
-@test "bash-it: load enabled aliases from new structure, priority-based" {
+@test "    load enabled aliases from new structure, priority-based" {
   mkdir -p $BASH_IT/enabled
   ln -s $BASH_IT/aliases/available/atom.aliases.bash $BASH_IT/enabled/150---atom.aliases.bash
   assert_link_exist "$BASH_IT/enabled/150---atom.aliases.bash"
@@ -316,7 +318,7 @@ local_setup () {
   assert_success
 }
 
-@test "bash-it: load enabled aliases from old structure, priority-based" {
+@test "    load enabled aliases from old structure, priority-based" {
   mkdir -p $BASH_IT/aliases/enabled
   mkdir -p $BASH_IT/plugins/enabled
   ln -s $BASH_IT/aliases/available/atom.aliases.bash $BASH_IT/aliases/enabled/150---atom.aliases.bash
@@ -334,7 +336,7 @@ local_setup () {
   assert_success
 }
 
-@test "bash-it: load enabled aliases from old structure, without priorities" {
+@test "    load enabled aliases from old structure, without priorities" {
   mkdir -p $BASH_IT/aliases/enabled
   mkdir -p $BASH_IT/plugins/enabled
   ln -s $BASH_IT/aliases/available/atom.aliases.bash $BASH_IT/aliases/enabled/atom.aliases.bash

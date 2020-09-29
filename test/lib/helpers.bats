@@ -3,7 +3,6 @@
 load ../helper
 load ../../lib/composure
 load ../../lib/log
-load ../../lib/utilities
 load ../../lib/search
 load ../../plugins/available/base.plugin
 
@@ -96,11 +95,11 @@ local_setup () {
 
 @test "helpers: bash-it help aliases one alias enabled in global directory" {
   run bash-it enable alias "ag"
-  assert_line -n 0 'ag enabled with priority 150.'
+  assert_line -n 0 '[● ENABLED] ag enabled with priority 150.'
   assert_link_exist "$BASH_IT/enabled/150---ag.aliases.bash"
 
   run bash-it enable plugin "aws"
-  assert_line -n 0 'aws enabled with priority 250.'
+  assert_line -n 0 '[● ENABLED] aws enabled with priority 250.'
   assert_link_exist "$BASH_IT/enabled/250---aws.plugin.bash"
 
   run bash-it help aliases
@@ -116,13 +115,13 @@ local_setup () {
 
 @test "helpers: enable the curl aliases" {
   run _enable-alias "curl"
-  assert_line -n 0 'curl enabled with priority 150.'
+  assert_line -n 0 '[● ENABLED] curl enabled with priority 150.'
   assert_link_exist "$BASH_IT/enabled/150---curl.aliases.bash"
 }
 
 @test "helpers: enable the apm completion through the bash-it function" {
   run bash-it enable completion "apm"
-  assert_line -n 0 'apm enabled with priority 350.'
+  assert_line -n 0 '[● ENABLED] apm enabled with priority 350.'
   assert_link_exist "$BASH_IT/enabled/350---apm.completion.bash"
 }
 
@@ -134,13 +133,13 @@ local_setup () {
 
 @test "helpers: enable the node plugin" {
   run _enable-plugin "node"
-  assert_line -n 0 'node enabled with priority 250.'
+  assert_line -n 0 '[● ENABLED] node enabled with priority 250.'
   assert_link_exist "$BASH_IT/enabled/250---node.plugin.bash" "../plugins/available/node.plugin.bash"
 }
 
 @test "helpers: enable the node plugin through the bash-it function" {
   run bash-it enable plugin "node"
-  assert_line -n 0 'node enabled with priority 250.'
+  assert_line -n 0 '[● ENABLED] node enabled with priority 250.'
   assert_link_exist "$BASH_IT/enabled/250---node.plugin.bash"
 }
 
@@ -526,7 +525,7 @@ __migrate_all_components () {
 
 @test "helpers: enable the ansible aliases through the bash-it function" {
   run bash-it enable alias "ansible"
-  assert_line -n 0 'ansible enabled with priority 150.'
+  assert_line -n 0 '[● ENABLED] ansible enabled with priority 150.'
   assert_link_exist "$BASH_IT/enabled/150---ansible.aliases.bash"
 }
 
@@ -536,7 +535,7 @@ __migrate_all_components () {
 
 @test "helpers: describe the nvm plugin after enabling it" {
   run _enable-plugin "nvm"
-  assert_line -n 0 'nvm enabled with priority 225.'
+  assert_line -n 0 '[● ENABLED] nvm enabled with priority 225.'
   assert_link_exist "$BASH_IT/enabled/225---nvm.plugin.bash"
 
   _bash-it-plugins | grep "nvm" | grep "\[x\]"

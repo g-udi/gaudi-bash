@@ -24,10 +24,9 @@ if command -v parallel &> /dev/null \
   && { parallel -V 2> /dev/null | grep -q '^GNU\>'; }
 then
   # Expect to run at least on a dual-core CPU; slightly degraded performance shouldn't matter otherwise.
-  declare -i -r test_jobs_default
-  declare -i -r test_jobs_effective
+  declare -i -r test_jobs_default=2
+  declare -i test_jobs_effective
 
-  test_jobs_default=2
   test_jobs_effective="$(
     if [ "${TEST_JOBS:-detect}" = "detect" ] \
       && command -v nproc &> /dev/null
@@ -45,5 +44,5 @@ then
     "${test_dirs[@]}"
 else
   # Run `bats` in single-threaded mode.
-  exec "$bats_executable" ${CI:+--tap} "${test_dirs[@]}"
+  exec "$bats_executable" ${CI:+--tap} "${test_dirs[@]}" | parallel -j2
 fi

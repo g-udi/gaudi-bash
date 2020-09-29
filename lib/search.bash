@@ -54,7 +54,7 @@ _bash-it-search () {
   _param '2: [ term2 ]...'
   _example '$ _bash-it-search @git ruby -rvm rake bundler'
 
-  [[ -z "$(type _bash-it-array-contains-element 2>/dev/null)" ]] && source "${BASH_IT}/lib/utilities.bash"
+  [[ -z "$(type _bash-it-array-contains-element 2>/dev/null)" ]]
 
   local component
   export BASH_IT_SEARCH_USE_COLOR=true

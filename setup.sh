@@ -6,14 +6,15 @@ source "./lib/colors.bash"
 echo -e "\n[INFO] ${YELLOW}Getting bash version .... ${NC}\n"
 bash --version
 
-printf "\n%s${CYAN}%s\n${NC}\n" "
+echo -e "
 ██████╗  █████╗ ███████╗██╗  ██╗      ██╗████████╗
 ██╔══██╗██╔══██╗██╔════╝██║  ██║      ██║╚══██╔══╝
 ██████╔╝███████║███████╗███████║█████╗██║   ██║
 ██╔══██╗██╔══██║╚════██║██╔══██║╚════╝██║   ██║
 ██████╔╝██║  ██║███████║██║  ██║      ██║   ██║
 ╚═════╝ ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝      ╚═╝   ╚═╝
-" "Installing bash-it .."
+
+${CYAN}Installing bash-it ..${NC}"
 
 # Show how to use this installer
 show_usage () {
@@ -74,9 +75,9 @@ load_some () {
 backup_new () {
   test -w "$HOME/$CONFIG_FILE" &&
   cp -aL "$HOME/$CONFIG_FILE" "$HOME/$CONFIG_FILE.bak" &&
-  echo -e "${GREEN}Your original $CONFIG_FILE has been backed up to $CONFIG_FILE.bak${NC}"
+  echo -e "${GREEN}%s${NC}\n" "Your original $CONFIG_FILE has been backed up to $CONFIG_FILE.bak"
   sed "s|{{BASH_IT}}|$BASH_IT|" "$BASH_IT/template/bash_profile.template.bash" > "$HOME/$CONFIG_FILE"
-  echo -e "${GREEN}Copied the template $CONFIG_FILE into ~/$CONFIG_FILE, edit this file to customize bash-it${NC}"
+  echo -e "${YELLOW}%s${NC}\n" "Copied the template $CONFIG_FILE into ~/$CONFIG_FILE, edit this file to customize bash-it"
 }
 
 for param in "$@"; do
@@ -169,7 +170,6 @@ fi
 
 # Load dependencies for enabling components
 source "$BASH_IT/lib/composure.bash"
-source "$BASH_IT/lib/utilities.bash"
 cite _about _param _example _group _author _version
 source "$BASH_IT/lib/helpers.bash"
 
@@ -182,7 +182,7 @@ then
   done
 else
   echo ""
-  echo -e "${GREEN}Enabling reasonable defaults${NC}"
+  echo -e "${GREEN}Enabling reasonable defaults${NC}\n"
   _enable-completion bash-it
   _enable-completion system
   _enable-plugin base
@@ -192,7 +192,7 @@ fi
 
 echo ""
 echo -e "${GREEN}Installation finished successfully! Enjoy bash-it!${NC}"
-echo -e "${GREEN}To start using it, open a new tab or 'source "$HOME/$CONFIG_FILE"'.${NC}"
+echo -e "${MAGENTA}To start using it, open a new tab or 'source "$HOME/$CONFIG_FILE"'.${NC}"
 echo ""
 echo "To show the available aliases/completions/plugins, type one of the following:"
 echo "  bash-it show aliases"

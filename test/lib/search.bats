@@ -4,7 +4,6 @@ load ../helper
 load ../../lib/composure
 load ../../lib/log
 load ../../lib/helpers
-load ../../lib/utilities
 load ../../lib/search
 
 cite _about _param _example _group _author _version
