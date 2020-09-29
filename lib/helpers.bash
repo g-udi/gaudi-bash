@@ -181,8 +181,6 @@ _bash-it-describe () {
     file_type="$3"
     column_header="$4"
 
-    echo "file_type: $file_type"
-
     typeset f
 
     printf "\n%-20s%-10s%s\n" "$column_header" 'Enabled?' '  Description'
@@ -243,7 +241,7 @@ fi
 
 bash-it () {
     about 'bash-it help and maintenance'
-    param '1: verb [one of: help | show | enable | disable | migrate | list | update | search | version | reload | doctor ] '
+    param '1: verb [one of: help | show | enable | disable | migrate | update | search | version | reload | doctor ] '
     param '2: component type [one of: alias(es) | completion(s) | plugin(s) ] or search term(s)'
     param '3: specific component [optional]'
     example '$ bash-it show plugins'
@@ -251,7 +249,6 @@ bash-it () {
     example '$ bash-it enable plugin git [tmux]...'
     example '$ bash-it disable alias hg [tmux]...'
     example '$ bash-it migrate'
-    example '$ bash-it list'
     example '$ bash-it update'
     example '$ bash-it search [-|@]term1 [-|@]term2 ... [ -e/--enable ] [ -d/--disable ] [ -r/--refresh ] [ -c/--no-color ]'
     example '$ bash-it version'
