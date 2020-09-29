@@ -146,7 +146,7 @@ helper that is restricted to `teardown` or any function called
 indirectly from it.
 
 ```shell
-clean_up() {
+clean_up () {
   # Check caller.
   if batslib_is_caller --indirect 'teardown'; then
     echo "Must be called from \`teardown'" \
@@ -165,7 +165,7 @@ number, information only available in `setup`, `@test` or `teardown`, to
 distinguish entries. The following snippet implements this restriction.
 
 ```shell
-log_test() {
+log_test () {
   # Check caller.
   if ! ( batslib_is_caller --indirect 'setup' \
       || batslib_is_caller --indirect "$BATS_TEST_NAME" \

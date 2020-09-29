@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 
-_help-completions() {
+_help-completions () {
   _about 'summarize all completions available in bash-it'
   _group 'lib'
 
   _bash-it-completions
 }
 
-_help-aliases() {
+_help-aliases () {
     _about 'shows help for all aliases, or a specific alias group'
     _param '1: optional alias group'
     _example '$ alias-help'
@@ -43,7 +43,7 @@ _help-list-aliases () {
     cat $1 | metafor alias | sed "s/$/'/"
 }
 
-_help-plugins() {
+_help-plugins () {
     _about 'summarize all functions defined by enabled bash-it plugins'
     _group 'lib'
 

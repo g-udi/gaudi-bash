@@ -33,7 +33,7 @@ autoenv_init () {
   done
 }
 
-cd() {
+cd () {
   if builtin cd "$@"
   then
     autoenv_init "$@"

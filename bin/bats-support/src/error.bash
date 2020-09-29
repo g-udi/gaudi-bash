@@ -35,7 +35,7 @@
 #   STDIN - [=$@] message
 # Outputs:
 #   STDERR - message
-fail() {
+fail () {
   (( $# == 0 )) && batslib_err || batslib_err "$@"
   return 1
 }

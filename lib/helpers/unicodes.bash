@@ -3,7 +3,7 @@
 
 # Print out the set of supported Unicode characters for the terminal
 
-__fast_chr() {
+__fast_chr () {
     local __octal
     local __char
 

@@ -5,7 +5,7 @@ load test_helper
 INSTALL_DIR=
 BATS_ROOT=
 
-setup() {
+setup () {
   make_bats_test_suite_tmpdir
   INSTALL_DIR="$BATS_TEST_SUITE_TMPDIR/bats-core"
   BATS_ROOT="${BATS_TEST_DIRNAME%/*}"

@@ -2,7 +2,7 @@
 
 load 'test_helper'
 
-setup() {
+setup () {
   local -ir BATSLIB_TEMP_PRESERVE_ON_FAILURE=1
   temp_del "$TEST_TEMP_DIR"
 }

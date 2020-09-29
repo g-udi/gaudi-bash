@@ -1,9 +1,9 @@
-setup() {
+setup () {
   set -u
   echo "$unset_parameter"
 }
 
-teardown() {
+teardown () {
   echo "should not capture the next line"
   [ 1 -eq 2 ]
 }

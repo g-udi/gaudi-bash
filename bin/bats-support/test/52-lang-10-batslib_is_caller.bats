@@ -4,15 +4,15 @@ load 'test_helper'
 
 
 # Test functions
-test_func_lvl_2() {
+test_func_lvl_2 () {
   test_func_lvl_1 "$@"
 }
 
-test_func_lvl_1() {
+test_func_lvl_1 () {
   test_func_lvl_0 "$@"
 }
 
-test_func_lvl_0() {
+test_func_lvl_0 () {
   batslib_is_caller "$@"
 }
 
@@ -47,7 +47,7 @@ test_func_lvl_0() {
 #
 
 # Options
-test_i_indirect() {
+test_i_indirect () {
   run test_func_lvl_2 "$@"
   [ "$status" -eq 0 ]
   [ "${#lines[@]}" -eq 0 ]

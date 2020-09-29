@@ -6,7 +6,7 @@ load 'test_helper'
   true
 }
 
-teardown() {
+teardown () {
   TEST_TEMP_DIR="$(temp_make)"
   rm -r -- "$TEST_TEMP_DIR"
 }

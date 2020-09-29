@@ -6,6 +6,6 @@ load 'test_helper'
   TEST_TEMP_DIR="$(temp_make)"
 }
 
-teardown() {
+teardown () {
   rm -r -- "$TEST_TEMP_DIR"
 }

@@ -1,6 +1,6 @@
 LOG="$BATS_TEST_SUITE_TMPDIR/setup.log"
 
-setup() {
+setup () {
   echo "$BATS_TEST_NAME" >> "$LOG"
 }
 

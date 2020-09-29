@@ -1,4 +1,4 @@
-teardown() {
+teardown () {
   eval "( exit ${STATUS:-1} )"
 }
 

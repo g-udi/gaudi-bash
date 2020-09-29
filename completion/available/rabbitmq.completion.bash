@@ -1,7 +1,7 @@
 # This is a bash completion script for rabbitmqadmin.
 # Redirect it to a file, then source it or copy it to /etc/bash_completion.d
 # to get tab completion. rabbitmqadmin must be on your PATH for this to work.
-_rabbitmqadmin() {
+_rabbitmqadmin () {
     local cur prev opts base
     COMPREPLY=()
     cur="${COMP_WORDS[COMP_CWORD]}"

@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+
 
 # Make sure docker is installed
 _command_exists docker || return

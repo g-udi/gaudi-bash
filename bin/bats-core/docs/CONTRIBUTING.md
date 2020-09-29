@@ -275,14 +275,14 @@ The following are intended to prevent too-compact code:
 - For most functions, the first lines should use `local` declarations to
   assign the original positional parameters to more meaningful names, e.g.:
   ```bash
-  format_summary() {
+  format_summary () {
     local cmd_name="$1"
     local summary="$2"
     local longest_name_len="$3"
   ```
   For very short functions, this _may not_ be necessary, e.g.:
   ```bash
-  has_spaces() {
+  has_spaces () {
     [[ "$1" != "${1//[[:space:]]/}" ]]
   }
   ```

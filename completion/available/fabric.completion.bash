@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+
 #
 # Bash completion support for Fabric (http://fabfile.org/)
 #

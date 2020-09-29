@@ -97,5 +97,5 @@ _enable-thing () {
       _bash-it-reload
     fi
 
-    printf "${GREEN}%s${NC} %s %s${RED} (%s)${NC}\n" "[ENABLED]" "$subdirectory: $file_entity" "enabled with priority" "$use_load_priority"
+    printf "${GREEN}%s${NC} %s %s${RED} (%s)${NC}\n" "[● ENABLED]" "$subdirectory: $file_entity" "enabled with priority" "$use_load_priority"
 }

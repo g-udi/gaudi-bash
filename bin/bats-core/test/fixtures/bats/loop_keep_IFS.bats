@@ -1,5 +1,5 @@
 # see issue #89
-loop_func() {
+loop_func () {
   local search="none one two tree"
   local d
 

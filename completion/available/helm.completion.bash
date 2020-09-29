@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+
 
 # helm (Kubernetes Package Manager) completion
 

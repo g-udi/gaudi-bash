@@ -1,6 +1,6 @@
 LOG="$BATS_TEST_SUITE_TMPDIR/teardown.log"
 
-teardown() {
+teardown () {
   echo "$BATS_TEST_NAME" >> "$LOG"
 }
 

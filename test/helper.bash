@@ -8,34 +8,31 @@ unset BASH_IT_AUTOMATIC_RELOAD_AFTER_CONFIG_CHANGE
 
 export TEST_MAIN_DIR="${BATS_TEST_DIRNAME}/.."
 export TEST_DEPS_DIR="${TEST_DEPS_DIR-${TEST_MAIN_DIR}/../bin}"
-
-# be independent of git's system configuration
 export GIT_CONFIG_NOSYSTEM
 
 load "${TEST_DEPS_DIR}/bats-support/load.bash"
 load "${TEST_DEPS_DIR}/bats-assert/load.bash"
 load "${TEST_DEPS_DIR}/bats-file/load.bash"
 
-local_setup() {
+local_setup () {
   true
 }
 
-local_teardown() {
+local_teardown () {
   true
 }
 
-# This function sets up a local test fixture, i.e. a completely
-# fresh and isolated Bash-it directory. This is done to avoid
-# messing with your own Bash-it source directory.
+# This function sets up a local test fixture, i.e. a completely fresh and isolated bash-it directory.
+# This is done to avoid messing with your own bash-it source directory.
 # If you need this, call it in your .bats file's `local_setup` function.
-setup_test_fixture() {
+setup_test_fixture () {
   mkdir -p "$BASH_IT"
   lib_directory="$(cd "$(dirname "$0")" && pwd)"
   local src_topdir="$lib_directory/../../../.."
 
   if command -v rsync &> /dev/null
   then
-    # Use rsync to copy Bash-it to the temp folder
+    # Use rsync to copy bash-it to the temp folder
     rsync -qavrKL -d --delete-excluded --exclude=.git --exclude=enabled "$src_topdir" "$BASH_IT"
   else
     rm -rf "$BASH_IT"
@@ -61,7 +58,7 @@ setup_test_fixture() {
   export BASH_IT_TEST_HOME="$TEST_TEMP_DIR"
 }
 
-setup() {
+setup () {
   # The `temp_make` function from "bats-file" requires the tralston/bats-file fork,
   # since the original ztombol/bats-file's `temp_make` does not work on macOS.
   TEST_TEMP_DIR="$(temp_make --prefix 'bash-it-test-')"
@@ -91,7 +88,7 @@ setup() {
   local_setup
 }
 
-teardown() {
+teardown () {
   local_teardown
 
   rm -rf "${BASH_IT_TEST_DIR}"

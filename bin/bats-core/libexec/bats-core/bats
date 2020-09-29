@@ -3,17 +3,17 @@ set -e
 
 export BATS_VERSION='1.2.0'
 
-version() {
+version () {
   printf 'Bats %s\n' "$BATS_VERSION"
 }
 
-abort() {
+abort () {
   printf 'Error: %s\n' "$1" >&2
   usage >&2
   exit 1
 }
 
-usage() {
+usage () {
   local cmd="${0##*/}"
   local line
 
@@ -40,12 +40,12 @@ Usage: $cmd [-cr] [-f <regex>] [-j <jobs>] [-p | -t] <test>...
 END_OF_HELP_TEXT
 }
 
-expand_link() {
+expand_link () {
   readlink="$(type -p greadlink readlink | head -1)"
   "$readlink" -f "$1"
 }
 
-expand_path() {
+expand_path () {
   local path="${1%/}"
   local dirname="${path%/*}"
   local result="$2"

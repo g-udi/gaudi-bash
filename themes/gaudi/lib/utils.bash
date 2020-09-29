@@ -75,8 +75,8 @@ gaudi::render_prompt () {
 
 # Check usage of bash-preexec
 # USAGE:
-#   gaudi::__check_precmd_conflict <command>
-gaudi::check_precmd_conflict() {
+#   gaudi::check_precmd_conflict <command>
+gaudi::check_precmd_conflict () {
     local f
     for f in "${precmd_functions[@]}"; do
         if [[ "${f}" == "${1}" ]]; then
@@ -89,7 +89,7 @@ gaudi::check_precmd_conflict() {
 # Display seconds in human readable fromat
 # Based on http://stackoverflow.com/a/32164707/3859566
 # USAGE:
-#   spaceship::displaytime <seconds>
+#   gaudi::displaytime <seconds>
 gaudi::displaytime () {
   local T=$1
   local D=$((T/60/60/24))

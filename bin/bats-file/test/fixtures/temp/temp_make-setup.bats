@@ -2,7 +2,7 @@
 
 load 'test_helper'
 
-setup() {
+setup () {
   TEST_TEMP_DIR="$(temp_make)"
 }
 
@@ -10,6 +10,6 @@ setup() {
   true
 }
 
-teardown() {
+teardown () {
   rm -r -- "$TEST_TEMP_DIR"
 }

@@ -31,7 +31,7 @@
 #
 # To uninstall, just remove the line from your .bash_profile and .bashrc.
 
-_django_completion() {
+_django_completion () {
     COMPREPLY=( $( COMP_WORDS="${COMP_WORDS[*]}" \
                    COMP_CWORD=$COMP_CWORD \
 	               DJANGO_AUTO_COMPLETE=1 $1 ) )
@@ -39,7 +39,7 @@ _django_completion() {
 
 complete -F _django_completion -o default django-admin.py manage.py django-admin
 
-_python_django_completion() {
+_python_django_completion () {
     if [[ ${COMP_CWORD} -ge 2 ]]; then
         PYTHON_EXE=$( basename -- ${COMP_WORDS[0]} )
         echo $PYTHON_EXE | egrep "python([2-9]\.[0-9])?" >/dev/null 2>&1

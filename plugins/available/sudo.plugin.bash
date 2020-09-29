@@ -1,7 +1,7 @@
 cite about-plugin
 about-plugin 'Toggle sudo at the beginning of the current or the previous command by hitting the ESC key twice'
 
-function sudo-command-line() {
+sudo-command-line () {
   about "toggle sudo at the beginning of the current or the previous command by hitting the ESC key twice"
   group "sudo"
 

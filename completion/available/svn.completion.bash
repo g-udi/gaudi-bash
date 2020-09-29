@@ -33,7 +33,7 @@ shopt -s extglob
 
 # look for value associated to key from stdin in K/V hash file format
 # val=$(_svn_read_hashfile svn:realmstring < some/file)
-_svn_read_hashfile() {
+_svn_read_hashfile () {
   local tkey=$1 key= val=
   while true; do
     read tag len
@@ -59,7 +59,7 @@ _svn_read_hashfile() {
 
 # _svn_grcut shell-regular-expression
 # extract filenames from 'svn status' output
-_svn_grcut() {
+_svn_grcut () {
     local re=$1 line= old_IFS
     # fix IFS, so that leading spaces are not ignored by next read.
     # (there is a leading space in svn status output if only a prop is changed)
@@ -73,7 +73,7 @@ _svn_grcut() {
 
 # extract stuff from svn info output
 # _svn_info (URL|Repository Root)
-_svn_info() {
+_svn_info () {
   local what=$1 line=
   LANG=C LC_MESSAGES=C svn info --non-interactive 2> /dev/null | \
   while read line ; do
@@ -84,7 +84,7 @@ _svn_info() {
 # _svn_lls (dir|file|all) files...
 # list svn-managed files from list
 # some 'svn status --all-files' would be welcome here?
-_svn_lls() {
+_svn_lls () {
     local opt=$1 f=
     shift
     for f in "$@" ; do
@@ -150,7 +150,7 @@ _svn_lls() {
 # - url completion should select more cases where it is relevant
 # - url completion of http:// schemas could suggest sub directories?
 # - add completion for experimental 'obliterate' feature?
-_svn() {
+_svn () {
 	local cur cmds cmdOpts pOpts mOpts rOpts qOpts nOpts optsParam opt
 
 	COMPREPLY=()

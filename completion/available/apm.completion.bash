@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+
 
 # apm-bash-completion is written by Ugur Ozyilmazel [ref: https://github.com/vigo/apm-bash-completion]
 

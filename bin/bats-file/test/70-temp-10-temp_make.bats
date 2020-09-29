@@ -6,7 +6,7 @@ fixtures 'temp'
 
 # Correctness
 @test 'temp_make() <var>: returns 0, creates a temporary directory and displays its path' {
-  teardown() { rm -r -- "$TEST_TEMP_DIR"; }
+  teardown () { rm -r -- "$TEST_TEMP_DIR"; }
 
   TEST_TEMP_DIR="$(temp_make)"
 
@@ -50,8 +50,8 @@ fixtures 'temp'
 }
 
 # Options
-test_p_prefix() {
-  teardown() { rm -r -- "$TEST_TEMP_DIR"; }
+test_p_prefix () {
+  teardown () { rm -r -- "$TEST_TEMP_DIR"; }
 
   TEST_TEMP_DIR="$(temp_make "$@" 'test-')"
 
@@ -70,7 +70,7 @@ test_p_prefix() {
 }
 
 @test "temp_make() --prefix <prefix> <var>: works if <prefix> starts with a \`-'" {
-  teardown() { rm -r -- "$TEST_TEMP_DIR"; }
+  teardown () { rm -r -- "$TEST_TEMP_DIR"; }
 
   TEST_TEMP_DIR="$(temp_make --prefix -)"
 

@@ -44,7 +44,7 @@
 # Returns:
 #   0 - current function was called from the given function
 #   1 - otherwise
-batslib_is_caller() {
+batslib_is_caller () {
   local -i is_mode_direct=1
 
   # Handle options.

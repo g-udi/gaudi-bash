@@ -39,7 +39,7 @@
 #   1 - otherwise
 # Outputs:
 #   STDERR - details, on failure
-assert() {
+assert () {
   if ! "$@"; then
     batslib_print_kv_single 10 'expression' "$*" \
       | batslib_decorate 'assertion failed' \
@@ -61,7 +61,7 @@ assert() {
 #   1 - otherwise
 # Outputs:
 #   STDERR - details, on failure
-refute() {
+refute () {
   if "$@"; then
     batslib_print_kv_single 10 'expression' "$*" \
       | batslib_decorate 'assertion succeeded, but it was expected to fail' \
@@ -82,7 +82,7 @@ refute() {
 #   1 - otherwise
 # Outputs:
 #   STDERR - details, on failure
-assert_equal() {
+assert_equal () {
   if [[ $1 != "$2" ]]; then
     batslib_print_kv_single_or_multi 8 \
         'expected' "$2" \
@@ -105,7 +105,7 @@ assert_equal() {
 #   1 - otherwise
 # Outputs:
 #   STDERR - details, on failure
-assert_success() {
+assert_success () {
   if (( status != 0 )); then
     { local -ir width=6
       batslib_print_kv_single "$width" 'status' "$status"
@@ -132,7 +132,7 @@ assert_success() {
 #   1 - otherwise
 # Outputs:
 #   STDERR - details, on failure
-assert_failure() {
+assert_failure () {
   (( $# > 0 )) && local -r expected="$1"
   if (( status == 0 )); then
     batslib_print_kv_single_or_multi 6 'output' "$output" \
@@ -183,7 +183,7 @@ assert_failure() {
 # Outputs:
 #   STDERR - details, on failure
 #            error message, on error
-assert_output() {
+assert_output () {
   local -i is_mode_partial=0
   local -i is_mode_regexp=0
   local -i is_mode_nonempty=0
@@ -292,7 +292,7 @@ assert_output() {
 # Outputs:
 #   STDERR - details, on failure
 #            error message, on error
-refute_output() {
+refute_output () {
   local -i is_mode_partial=0
   local -i is_mode_regexp=0
   local -i is_mode_empty=0
@@ -414,7 +414,7 @@ refute_output() {
 #   STDERR - details, on failure
 #            error message, on error
 # FIXME(ztombol): Display `${lines[@]}' instead of `$output'!
-assert_line() {
+assert_line () {
   local -i is_match_line=0
   local -i is_mode_partial=0
   local -i is_mode_regexp=0
@@ -594,7 +594,7 @@ assert_line() {
 #   STDERR - details, on failure
 #            error message, on error
 # FIXME(ztombol): Display `${lines[@]}' instead of `$output'!
-refute_line() {
+refute_line () {
   local -i is_match_line=0
   local -i is_mode_partial=0
   local -i is_mode_regexp=0

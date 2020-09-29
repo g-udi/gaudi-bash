@@ -9,7 +9,7 @@ elif command -v 'readlink' >/dev/null; then
   BATS_READLINK='readlink'
 fi
 
-bats_resolve_absolute_root_dir() {
+bats_resolve_absolute_root_dir () {
   local cwd="$PWD"
   local path="$1"
   local result="$2"

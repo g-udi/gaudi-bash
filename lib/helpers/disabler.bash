@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-_on-disable-callback() {
+_on-disable-callback () {
     _about 'Calls the disabled plugin destructor, if present'
     _param '1: plugin name'
     _example '$ _on-disable-callback gitstatus'
@@ -90,5 +90,5 @@ _disable-thing () {
       _bash-it-reload
     fi
 
-    printf "${RED}%s${NC} %s\n" "[DISABLED]" "$subdirectory: $file_entity"
+    printf "${RED}%s${NC} %s\n" "[◯ DISABLED]" "$subdirectory: $file_entity"
 }

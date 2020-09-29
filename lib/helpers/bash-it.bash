@@ -21,7 +21,7 @@
 #   contains pear!
 #
 #
-_bash-it-array-contains-element() {
+_bash-it-array-contains-element () {
   local e
 
   for e in "${@:2}"; do
@@ -31,12 +31,12 @@ _bash-it-array-contains-element() {
 }
 
 # Dedupe a simple array of words without spaces.
-_bash-it-array-dedup() {
+_bash-it-array-dedup () {
   echo "$*" | tr ' ' '\n' | sort -u | tr '\n' ' '
 }
 
 # Outputs a full path of the grep found on the filesystem
-_bash-it-grep() {
+_bash-it-grep () {
   if [[ -z "${BASH_IT_GREP}" ]] ; then
     BASH_IT_GREP="$(which egrep || which grep || '/usr/bin/grep')"
     export BASH_IT_GREP

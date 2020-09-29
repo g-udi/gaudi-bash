@@ -10,7 +10,7 @@
 #
 # You should have received a copy of the CC0 Public Domain Dedication
 # along with this software. If not, see
-# <http://creativecommons.org/publicdomain/zero/1.0/>. 
+# <http://creativecommons.org/publicdomain/zero/1.0/>.
 #
 
 #
@@ -34,7 +34,7 @@
 #   STDIN - [=$@] message
 # Outputs:
 #   STDERR - message
-batslib_err() {
+batslib_err () {
   { if (( $# > 0 )); then
       echo "$@"
     else
@@ -59,7 +59,7 @@ batslib_err() {
 #   none
 # Outputs:
 #   STDOUT - number of lines
-batslib_count_lines() {
+batslib_count_lines () {
   local -i n_lines=0
   local line
   while IFS='' read -r line || [[ -n $line ]]; do
@@ -77,7 +77,7 @@ batslib_count_lines() {
 # Returns:
 #   0 - all strings are single-line
 #   1 - otherwise
-batslib_is_single_line() {
+batslib_is_single_line () {
   for string in "$@"; do
     (( $(batslib_count_lines "$string") > 1 )) && return 1
   done
@@ -99,7 +99,7 @@ batslib_is_single_line() {
 #   none
 # Outputs:
 #   STDOUT - length of longest key
-batslib_get_max_single_line_key_width() {
+batslib_get_max_single_line_key_width () {
   local -i max_len=-1
   while (( $# != 0 )); do
     local -i key_len="${#1}"
@@ -126,7 +126,7 @@ batslib_get_max_single_line_key_width() {
 #   none
 # Outputs:
 #   STDOUT - formatted key-value pairs
-batslib_print_kv_single() {
+batslib_print_kv_single () {
   local -ir col_width="$1"; shift
   while (( $# != 0 )); do
     printf '%-*s : %s\n' "$col_width" "$1" "$2"
@@ -150,7 +150,7 @@ batslib_print_kv_single() {
 #   none
 # Outputs:
 #   STDOUT - formatted key-value pairs
-batslib_print_kv_multi() {
+batslib_print_kv_multi () {
   while (( $# != 0 )); do
     printf '%s (%d lines):\n' "$1" "$( batslib_count_lines "$2" )"
     printf '%s\n' "$2"
@@ -179,7 +179,7 @@ batslib_print_kv_multi() {
 #   none
 # Outputs:
 #   STDOUT - formatted key-value pairs
-batslib_print_kv_single_or_multi() {
+batslib_print_kv_single_or_multi () {
   local -ir width="$1"; shift
   local -a pairs=( "$@" )
 
@@ -212,7 +212,7 @@ batslib_print_kv_single_or_multi() {
 #   STDIN - lines
 # Outputs:
 #   STDOUT - prefixed lines
-batslib_prefix() {
+batslib_prefix () {
   local -r prefix="${1:-  }"
   local line
   while IFS='' read -r line || [[ -n $line ]]; do
@@ -237,7 +237,7 @@ batslib_prefix() {
 #   STDIN - lines
 # Outputs:
 #   STDOUT - lines after marking
-batslib_mark() {
+batslib_mark () {
   local -r symbol="$1"; shift
   # Sort line numbers.
   set -- $( sort -nu <<< "$( printf '%d\n' "$@" )" )
@@ -270,7 +270,7 @@ batslib_mark() {
 #   STDIN - text
 # Outputs:
 #   STDOUT - decorated text
-batslib_decorate() {
+batslib_decorate () {
   echo
   echo "-- $1 --"
   cat -

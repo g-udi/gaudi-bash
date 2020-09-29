@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+
 
 # Load late to make sure `system` completion loads first
 # BASH_IT_LOAD_PRIORITY: 375

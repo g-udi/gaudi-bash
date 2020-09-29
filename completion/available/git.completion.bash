@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+
 
 # Only operate on MacOS since there are no linux paths
 if [[ "$(uname -s)" != 'Darwin' ]] ; then

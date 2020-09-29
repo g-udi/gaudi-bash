@@ -6,7 +6,7 @@ load 'test_helper'
   skip
 }
 
-teardown() {
+teardown () {
   local -ir BATSLIB_TEMP_PRESERVE_ON_FAILURE=1
   temp_del "$TEST_TEMP_DIR"
 }

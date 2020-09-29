@@ -36,7 +36,7 @@ __check_completion () {
   # Word index of the last word
   COMP_CWORD=$(( ${#COMP_WORDS[@]} - 1 ))
 
-  # Run the Bash-it completion function
+  # Run the bash-it completion function
   _bash-it-comp
 
   # Return the completion output

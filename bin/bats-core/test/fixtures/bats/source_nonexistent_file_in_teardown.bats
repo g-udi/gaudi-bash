@@ -1,4 +1,4 @@
-teardown() {
+teardown () {
   source "nonexistent file"
 }
 

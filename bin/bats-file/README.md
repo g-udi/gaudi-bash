@@ -110,7 +110,7 @@ path : /path/to/non-existent-file
 Fail if the given file or directory exists.
 
 ```bash
-@test 'assert_file_not_exist() {
+@test 'assert_file_not_exist () {
   assert_file_not_exist /path/to/existing-file
 }
 ```
@@ -152,7 +152,7 @@ path : /path/to/non-existent-directory
 Fail if the given directory exists.
 
 ```bash
-@test 'assert_dir_not_exist() {
+@test 'assert_dir_not_exist () {
   assert_dir_not_exist /path/to/existing-directory
 }
 ```
@@ -194,7 +194,7 @@ path : /path/to/non-existent-link-file
 Fail if the given symbolic link exists.
 
 ```bash
-@test 'assert_link_not_exist() {
+@test 'assert_link_not_exist () {
   assert_file_not_exist /path/to/existing-link-file
 }
 ```
@@ -236,7 +236,7 @@ path : /path/to/non-existent-block-file
 Fail if the given block special file exists.
 
 ```bash
-@test 'assert_block_not_exist() {
+@test 'assert_block_not_exist () {
   assert_file_not_exist /path/to/existing-block-file
 }
 ```
@@ -278,7 +278,7 @@ path : /path/to/non-existent-character-file
 Fail if the given character special file exists.
 
 ```bash
-@test 'assert_character_not_exist() {
+@test 'assert_character_not_exist () {
   assert_file_not_exist /path/to/existing-character-file
 }
 ```
@@ -320,7 +320,7 @@ path : /path/to/non-existent-socket
 Fail if the given socket exists.
 
 ```bash
-@test 'assert_socket_not_exist() {
+@test 'assert_socket_not_exist () {
   assert_file_not_exist /path/to/existing-socket
 }
 ```
@@ -431,7 +431,7 @@ path : /path/to/executable-file
 Fail if given user is not the owner of the given file.
 
 ```bash
-@test 'assert_file_owner() {
+@test 'assert_file_owner () {
   assert_file_owner $owner /path/to/owner
 }
 ```
@@ -452,7 +452,7 @@ owner : user
 Fail if given user is the owner of the given file.
 
 ```bash
-@test 'assert_not_file_owner() {
+@test 'assert_not_file_owner () {
   assert_not_file_owner $owner /path/to/notowner
 }
 ```
@@ -475,7 +475,7 @@ owner : $owner
 Fail if given file does not have given permission.
 
 ```bash
-@test 'assert_file_permission() {
+@test 'assert_file_permission () {
   assert_file_permission $permission /path/to/permission
 }
 ```
@@ -496,7 +496,7 @@ permission: $permission
 Fail if given file has given permission.
 
 ```bash
-@test 'assert_not_file_permission() {
+@test 'assert_not_file_permission () {
   assert_not_file_permission $permission /path/to/nopermission
 }
 ```
@@ -517,7 +517,7 @@ permission : $permission
 ### `assert_file_size_equals`
 Fail if the given file size does not match the input.
 ```bash
-@test 'assert_file_size_equals() {
+@test 'assert_file_size_equals () {
     assert_file_size_equals /path/to/non-empty-file bytecount
 }
 ```
@@ -533,7 +533,7 @@ On failure, the path and expected bytecount are displayed.
 Fail if file is not zero byte.
 
 ```bash
-@test 'assert_size_zero() {
+@test 'assert_size_zero () {
   assert_size_zero /path/to/zerobyte
 }
 ```
@@ -553,7 +553,7 @@ path : /path/to/notzerobyte
 Fail if file size is zero byte.
 
 ```bash
-@test 'assert_size_not_zero() {
+@test 'assert_size_not_zero () {
   assert_size_not_zero /path/to/notzerobyte
 }
 ```
@@ -575,7 +575,7 @@ path : /path/to/zerobyte
 Fail if group id is not set.
 
 ```bash
-@test 'assert_file_group_id_set() {
+@test 'assert_file_group_id_set () {
   assert_file_group_id_set /path/to/groupidset
 }
 ```
@@ -595,7 +595,7 @@ path : /path/to/groupidnotset
 Fail if group id is set.
 
 ```bash
-@test 'assert_file_not_group_id_set() {
+@test 'assert_file_not_group_id_set () {
   assert_file_not_group_id_set /path/to/groupidnotset
 }
 ```
@@ -617,7 +617,7 @@ path : /path/to/groupdidset
 Fail if user id is not set.
 
 ```bash
-@test 'assert_file_user_id_set() {
+@test 'assert_file_user_id_set () {
   assert_file_user_id_set /path/to/useridset
 }
 ```
@@ -637,7 +637,7 @@ path : /path/to/useridnotset
 Fail if user id is set.
 
 ```bash
-@test 'assert_file_not_user_id_set() {
+@test 'assert_file_not_user_id_set () {
   assert_file_not_user_id_set /path/to/groupidnotset
 }
 ```
@@ -659,7 +659,7 @@ path : /path/to/userdidset
 Fail if stickybit is not set.
 
 ```bash
-@test 'assert_sticky_bit() {
+@test 'assert_sticky_bit () {
   assert_sticky_bit /path/to/stickybit
 }
 ```
@@ -679,7 +679,7 @@ path : /path/to/notstickybit
 Fail if stickybit is set.
 
 ```bash
-@test 'assert_not_sticky_bit() {
+@test 'assert_not_sticky_bit () {
   assert_not_sticky_bit /path/to/notstickybit
 }
 ```
@@ -720,7 +720,7 @@ content-line-2
 ### `assert_file_not_empty`
 Fail if the given file or directory empty.
 ```bash
-@test 'assert_file_not_empty() {
+@test 'assert_file_not_empty () {
   assert_file_not_empty /path/to/non-empty-file
 }
 ```
@@ -738,7 +738,7 @@ path : /path/to/non-empty-file
 ### `assert_file_contains`
 Fail if the given file does not contain the regex.
 ```bash
-@test 'assert_file_contains() {
+@test 'assert_file_contains () {
     assert_file_contains /path/to/non-empty-file regex
 }
 ```
@@ -751,7 +751,7 @@ On failure, the path and expected regex are displayed.
 ### `assert_symlink_to`
 Fail if the given file is not a symbolic to a defined target.
 ```bash
-@test 'assert_symlink_to() {
+@test 'assert_symlink_to () {
   assert_symlink_to /path/to/source-file /path/to/symlink
 }
 ```
@@ -767,7 +767,7 @@ path : /path/to/symlink
 ### `assert_not_symlink_to`
 Fail if the given file is a symbolic to a defined target.
 ```bash
-@test 'assert_not_symlink_to() {
+@test 'assert_not_symlink_to () {
   assert_not_symlink_to /path/to/source-file /path/to/symlink
 }
 ```
@@ -811,7 +811,7 @@ The path of the directory is displayed on the standard output and is
 meant to be captured into a variable.
 
 ```bash
-setup() {
+setup () {
   TEST_TEMP_DIR="$(temp_make)"
 }
 ```
@@ -835,7 +835,7 @@ The directory name can be prefixed with an arbitrary string using the `--prefix
 <prefix>` option (`-p <prefix>` for short).
 
 ```bash
-setup() {
+setup () {
   TEST_TEMP_DIR="$(temp_make --prefix 'myapp-')"
 }
 ```
@@ -856,7 +856,7 @@ Generally speaking, the directory name is of the following form.
 Delete a temporary directory, typically created with `temp_make`.
 
 ```bash
-teardown() {
+teardown () {
   temp_del "$TEST_TEMP_DIR"
 }
 ```
@@ -934,7 +934,7 @@ setup {
   assert_file_exist "${TEST_TEMP_DIR}/path/to/non-existent-file"
 }
 
-teardown() {
+teardown () {
   temp_del "$TEST_TEMP_DIR"
 }
 ```

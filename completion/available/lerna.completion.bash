@@ -1,6 +1,6 @@
 #!/bin/bash
 # Lerna autocompletion.
-function _lerna_completions() {
+_lerna_completions () {
   local cur compls
 
   # The currently-being-completed word.

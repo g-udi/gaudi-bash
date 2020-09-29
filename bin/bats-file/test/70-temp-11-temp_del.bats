@@ -38,7 +38,7 @@ fixtures 'temp'
 
 # Environment variables
 @test "temp_del() <path>: returns 0 and does not delete <path> if \`BATSLIB_TEMP_PRESERVE' is set to \`1'" {
-  teardown() { rm -r -- "$TEST_TEMP_DIR"; }
+  teardown () { rm -r -- "$TEST_TEMP_DIR"; }
 
   TEST_TEMP_DIR="$(temp_make)"
   local -r BATSLIB_TEMP_PRESERVE=1
@@ -50,7 +50,7 @@ fixtures 'temp'
 }
 
 @test "temp_del() <path>: returns 0 and does not delete <path> if \`BATSLIB_TEMP_PRESERVE_ON_FAILURE' is set to \`1' and the test have failed" {
-  teardown() { rm -r -- "$TEST_TEMP_DIR"; }
+  teardown () { rm -r -- "$TEST_TEMP_DIR"; }
 
   TEST_TEMP_DIR="$(temp_make)"
   export TEST_TEMP_DIR
@@ -79,7 +79,7 @@ fixtures 'temp'
 }
 
 @test "temp_del() <path>: \`BATSLIB_TEMP_PRESERVE_ON_FAILURE' works when called from \`teardown'" {
-  teardown() { rm -r -- "$TEST_TEMP_DIR"; }
+  teardown () { rm -r -- "$TEST_TEMP_DIR"; }
 
   TEST_TEMP_DIR="$(temp_make)"
   export TEST_TEMP_DIR
@@ -90,7 +90,7 @@ fixtures 'temp'
 }
 
 @test "temp_del() <path>: \`BATSLIB_TEMP_PRESERVE_ON_FAILURE' does not work when called from \`main'" {
-  teardown() { rm -r -- "$TEST_TEMP_DIR"; }
+  teardown () { rm -r -- "$TEST_TEMP_DIR"; }
 
   TEST_TEMP_DIR="$(temp_make)"
   export TEST_TEMP_DIR
@@ -104,7 +104,7 @@ fixtures 'temp'
 }
 
 @test "temp_del() <path>: \`BATSLIB_TEMP_PRESERVE_ON_FAILURE' does not work when called from \`setup'" {
-  teardown() { rm -r -- "$TEST_TEMP_DIR"; }
+  teardown () { rm -r -- "$TEST_TEMP_DIR"; }
 
   TEST_TEMP_DIR="$(temp_make)"
   export TEST_TEMP_DIR
@@ -118,7 +118,7 @@ fixtures 'temp'
 }
 
 @test "temp_del() <path>: \`BATSLIB_TEMP_PRESERVE_ON_FAILURE' does not work when called from \`@test'" {
-  teardown() { rm -r -- "$TEST_TEMP_DIR"; }
+  teardown () { rm -r -- "$TEST_TEMP_DIR"; }
 
   TEST_TEMP_DIR="$(temp_make)"
   export TEST_TEMP_DIR

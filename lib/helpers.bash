@@ -9,28 +9,7 @@ cite _about _param _example _group _author _version
 # Load all the helper libraries
 for helper in ${BASH_IT}/lib/helpers/*.bash; do source $helper; done
 
-_bash-it-aliases () {
-    _about 'summarizes available bash_it aliases'
-    _group 'lib'
-
-    _bash-it-describe "aliases" "an" "alias" "Alias"
-}
-
-_bash-it-completions () {
-    _about 'summarizes available bash_it completions'
-    _group 'lib'
-
-    _bash-it-describe "completion" "a" "completion" "Completion"
-}
-
-_bash-it-plugins () {
-    _about 'summarizes available bash_it plugins'
-    _group 'lib'
-
-    _bash-it-describe "plugins" "a" "plugin" "Plugin"
-}
-
-_bash-it_update() {
+_bash-it_update () {
   _about 'updates bash-it'
   _group 'lib'
 
@@ -88,7 +67,7 @@ _bash-it_update() {
   cd "${old_pwd}" &> /dev/null || return
 }
 
-_bash-it-migrate() {
+_bash-it-migrate () {
   _about 'migrates bash-it configuration from a previous format to the current one'
   _group 'lib'
 
@@ -124,7 +103,7 @@ _bash-it-migrate() {
   fi
 }
 
-_bash-it-version() {
+_bash-it-version () {
   _about 'shows current bash-it version'
   _group 'lib'
 
@@ -147,7 +126,7 @@ _bash-it-version() {
   cd - &> /dev/null || return
 }
 
-_bash-it-reload() {
+_bash-it-reload () {
   _about 'reloads a profile file'
   _group 'lib'
 
@@ -165,12 +144,48 @@ _bash-it-reload() {
   popd &> /dev/null || return
 }
 
+_bash-it-aliases () {
+    _about 'summarizes available bash_it aliases'
+    _group 'lib'
+
+    _bash-it-describe "aliases" "an" "alias" "Alias"
+}
+
+_bash-it-completions () {
+    _about 'summarizes available bash_it completions'
+    _group 'lib'
+
+    _bash-it-describe "completion" "a" "completion" "Completion"
+}
+
+_bash-it-plugins () {
+    _about 'summarizes available bash_it plugins'
+    _group 'lib'
+
+    _bash-it-describe "plugins" "a" "plugin" "Plugin"
+}
+
+_bash-it-list () {
+  _about 'List available bash_it components'
+  _group 'lib'
+
+  for file_type in "aliases" "plugins" "completion"; do
+
+    [[ $file_type == *es ]] && file_type_singular=${file_type/es/}
+    [[ $file_type == *ns ]] && file_type_singular=${file_type/ns/n}
+
+    _bash-it-describe "$file_type" "a" "$file_type_singular" "${file_type_singular^}" true
+  done
+
+}
+
 _bash-it-describe () {
     _about 'summarizes available bash_it components'
     _param '1: subdirectory'
     _param '2: preposition'
     _param '3: file_type'
     _param '4: column_header'
+    _param '5: enabled'
     _example '$ _bash-it-describe "plugins" "a" "plugin" "Plugin"'
 
     subdirectory="$1"
@@ -178,7 +193,11 @@ _bash-it-describe () {
     file_type="$3"
     column_header="$4"
 
+    echo "file_type: $file_type"
+
     typeset f
+    typeset enabled=${4:-false}
+
     printf "\n%-20s%-10s%s\n" "$column_header" 'Enabled?' '  Description'
     printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -
     for f in "${BASH_IT}/$subdirectory/available/"*.bash
@@ -188,17 +207,19 @@ _bash-it-describe () {
         enabled_file=$(basename $f)
         enabled_files=$(sort <(compgen -G "${BASH_IT}/enabled/*$BASH_IT_LOAD_PRIORITY_SEPARATOR${enabled_file}") <(compgen -G "${BASH_IT}/$subdirectory/enabled/${enabled_file}") <(compgen -G "${BASH_IT}/$subdirectory/enabled/*$BASH_IT_LOAD_PRIORITY_SEPARATOR${enabled_file}") | wc -l)
 
-        if [ $enabled_files -gt 0 ]; then
-            printf "%-20s${GREEN}%-10s" "$(basename $f | sed -e 's/\(.*\)\..*\.bash/\1/g')" "  [●]"
-        else
-            printf "%-20s${RED}%-10s" "$(basename $f | sed -e 's/\(.*\)\..*\.bash/\1/g')" "  [◯]"
+        if [ "$enabled_files" -gt 0 ]; then
+            printf "%-20s${GREEN}%-10s${NC}%s\n" "$(basename "$f" | sed -e 's/\(.*\)\..*\.bash/\1/g')" "  [●]" "$(cat "$f" | metafor about-"$file_type")"
+        elif [ "$enabled" = "false" ]; then
+            printf "%-20s${RED}%-10s${NC}%s\n" "$(basename "$f" | sed -e 's/\(.*\)\..*\.bash/\1/g')" "  [◯]" "$(cat "$f" | metafor about-"$file_type")"
         fi
-        printf "${NC}\t%s\n" "$(cat $f | metafor about-$file_type)"
     done
-    printf '\n%s\n' "to enable $preposition $file_type, do:"
-    printf '%s\n' "$ bash-it enable $file_type  <$file_type name> [$file_type name]... -or- $ bash-it enable $file_type all"
-    printf '\n%s\n' "to disable $preposition $file_type, do:"
-    printf '%s\n' "$ bash-it disable $file_type <$file_type name> [$file_type name]... -or- $ bash-it disable $file_type all"
+
+    if [ "$enabled" = "false" ]; then
+      printf '\n%s\n' "to enable $preposition $file_type, do:"
+      printf '%s\n' "$ bash-it enable $file_type  <$file_type name> [$file_type name]... -or- $ bash-it enable $file_type all"
+      printf '\n%s\n' "to disable $preposition $file_type, do:"
+      printf '%s\n' "$ bash-it disable $file_type <$file_type name> [$file_type name]... -or- $ bash-it disable $file_type all"
+    fi
 }
 
 all_groups () {
@@ -235,7 +256,7 @@ fi
 
 bash-it () {
     about 'bash-it help and maintenance'
-    param '1: verb [one of: help | show | enable | disable | migrate | update | search | version | reload | doctor ] '
+    param '1: verb [one of: help | show | enable | disable | migrate | list | update | search | version | reload | doctor ] '
     param '2: component type [one of: alias(es) | completion(s) | plugin(s) ] or search term(s)'
     param '3: specific component [optional]'
     example '$ bash-it show plugins'
@@ -243,6 +264,7 @@ bash-it () {
     example '$ bash-it enable plugin git [tmux]...'
     example '$ bash-it disable alias hg [tmux]...'
     example '$ bash-it migrate'
+    example '$ bash-it list'
     example '$ bash-it update'
     example '$ bash-it search [-|@]term1 [-|@]term2 ... [ -e/--enable ] [ -d/--disable ] [ -r/--refresh ] [ -c/--no-color ]'
     example '$ bash-it version'
@@ -272,6 +294,8 @@ bash-it () {
         func=_bash-it_update;;
       migrate)
         func=_bash-it-migrate;;
+      list)
+        func=_bash-it-list;;
       version)
         func=_bash-it-version;;
       reload)
@@ -297,12 +321,11 @@ bash-it () {
     fi
 
     if [ x"$verb" == x"enable" ] || [ x"$verb" == x"disable" ]; then
-        # Automatically run a migration if required
         _bash-it-migrate
 
         for arg in "$@"
         do
-            $func $arg
+            $func "$arg"
         done
     else
         $func "$@"

@@ -14,7 +14,7 @@
 load test_helper
 
 # This would make a good candidate for a one-time setup/teardown per #39.
-setup() {
+setup () {
   make_bats_test_suite_tmpdir
   cd "$BATS_TEST_SUITE_TMPDIR"
   mkdir -p {usr/bin,opt/bats-core}

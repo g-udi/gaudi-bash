@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+
 
 _asdf () {
   local cur

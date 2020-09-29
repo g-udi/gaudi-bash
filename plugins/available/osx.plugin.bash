@@ -129,7 +129,7 @@ list-jvms () {
   done
 }
 
-pick-default-jvm  () {
+pick-default-jvm () {
   about 'Pick the default Java Virtual Machines in system-wide scope in macOS'
   example 'pick-default-jvm'
 

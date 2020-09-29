@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+
 # Completion for gem
 
 _installcomp () {

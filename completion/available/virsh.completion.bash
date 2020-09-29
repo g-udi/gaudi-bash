@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+
 # bash completion for virsh - main CLI of libvirt
 
 # This script provides bash completion for virsh,
@@ -6,7 +6,7 @@
 
 
 
-_contain_cmd() {
+_contain_cmd () {
     local e f
     local array1=($1) array2=($2)
 
@@ -25,7 +25,7 @@ _contain_cmd() {
     return
 }
 
-_virsh_list_networks() {
+_virsh_list_networks () {
     local flag_all=$1 flags
 
     if [ "$flag_all" -eq 1 ]; then
@@ -36,7 +36,7 @@ _virsh_list_networks() {
     virsh -q net-list $flags | cut -d\  -f2 | awk '{print $1}'
 }
 
-_virsh_list_domains() {
+_virsh_list_domains () {
     local flag_all=$1 flags
 
     if [ "$flag_all" -eq 1 ]; then
@@ -47,7 +47,7 @@ _virsh_list_domains() {
     virsh -q list $flags | cut -d\  -f7 | awk '{print $1}'
 }
 
-_virsh_list_pools() {
+_virsh_list_pools () {
     local flag_all=$1 flags
 
     if [ "$flag_all" -eq 1 ]; then
@@ -58,7 +58,7 @@ _virsh_list_pools() {
     virsh -q pool-list $flags | cut -d\  -f2 | awk '{print $1}'
 }
 
-_virsh_list_ifaces() {
+_virsh_list_ifaces () {
     local flag_all=$1 flags
 
     if [ "$flag_all" -eq 1 ]; then
@@ -69,7 +69,7 @@ _virsh_list_ifaces() {
     virsh -q iface-list $flags | cut -d\  -f2 | awk '{print $1}'
 }
 
-_virsh_list_nwfilters() {
+_virsh_list_nwfilters () {
 
     virsh -q nwfilter-list | cut -d\  -f4 | awk '{print $1}'
 }

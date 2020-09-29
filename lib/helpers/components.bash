@@ -3,7 +3,7 @@
 # Component-specific functions (component is either an alias, a plugin, or a completion).
 
 # display help text for the component
-_bash-it-component-help() {
+_bash-it-component-help () {
   local component
   local file
 
@@ -20,7 +20,7 @@ _bash-it-component-help() {
 }
 
 # caches the component in the /tmp directory
-_bash-it-component-cache-file() {
+_bash-it-component-cache-file () {
   local component
 
   component=$(_bash-it-pluralize-component "${1}")
@@ -32,7 +32,7 @@ _bash-it-component-cache-file() {
 }
 
 # pluralize component name for consistency especially for search
-_bash-it-pluralize-component() {
+_bash-it-pluralize-component () {
   local component="${1}"
   local len=$(( ${#component} - 1 ))
 
@@ -43,7 +43,7 @@ _bash-it-pluralize-component() {
 }
 
 # clean the component cache directory in /tmp
-_bash-it-clean-component-cache() {
+_bash-it-clean-component-cache () {
   local component="$1"
   local cache
   local -a BASH_IT_COMPONENTS=(aliases plugins completions)
@@ -61,14 +61,14 @@ _bash-it-clean-component-cache() {
 }
 
 # Returns an array of items within each compoenent
-_bash-it-component-list() {
+_bash-it-component-list () {
   local component="$1"
 
   _bash-it-component-help "${component}" | awk '{print $1}' | uniq | sort | tr '\n' ' '
 }
 
 # Returns an array of items matching a string within each compoenent
-_bash-it-component-list-matching() {
+_bash-it-component-list-matching () {
   local component="$1"; shift
   local term="$1"
 
@@ -76,14 +76,14 @@ _bash-it-component-list-matching() {
 }
 
 # Returns an array of enabled items within each compoenent
-_bash-it-component-list-enabled() {
+_bash-it-component-list-enabled () {
   local component="$1"
 
   _bash-it-component-help "${component}" | $(_bash-it-grep) -E  '\[x\]' | awk '{print $1}' | uniq | sort | tr '\n' ' '
 }
 
 # Returns an array of disabled items within each compoenent
-_bash-it-component-list-disabled() {
+_bash-it-component-list-disabled () {
   local component="$1"
 
   _bash-it-component-help "${component}" | $(_bash-it-grep) -E -v '\[x\]' | awk '{print $1}' | uniq | sort | tr '\n' ' '
@@ -97,7 +97,7 @@ _bash-it-component-list-disabled() {
 #
 # Examples:
 #    _bash-it-component-item-is-enabled alias git && echo "git alias is enabled"
-_bash-it-component-item-is-enabled() {
+_bash-it-component-item-is-enabled () {
   local component="$1"
   local item="$2"
 
@@ -112,7 +112,7 @@ _bash-it-component-item-is-enabled() {
 #
 # Examples:
 #    _bash-it-component-item-is-disabled alias git && echo "git aliases are disabled"
-_bash-it-component-item-is-disabled() {
+_bash-it-component-item-is-disabled () {
   local component="$1"
   local item="$2"
 

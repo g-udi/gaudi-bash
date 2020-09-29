@@ -443,7 +443,7 @@ END_OF_ERR_MSG
 }
 
 @test "execute exported function without breaking failing test output" {
-  exported_function() { return 0; }
+  exported_function () { return 0; }
   export -f exported_function
   run bats "$FIXTURE_ROOT/exported_function.bats"
   [ $status -eq 1 ]

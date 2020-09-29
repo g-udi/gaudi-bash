@@ -1,11 +1,11 @@
-#!/usr/bin/env bash
 
-_bash-it-comp-enable-disable() {
+
+_bash-it-comp-enable-disable () {
   local enable_disable_args="alias completion plugin"
   COMPREPLY=( $(compgen -W "${enable_disable_args}" -- ${cur}) )
 }
 
-_bash-it-comp-list-available-not-enabled() {
+_bash-it-comp-list-available-not-enabled () {
   subdirectory="$1"
 
   local available_things
@@ -26,7 +26,7 @@ _bash-it-comp-list-available-not-enabled() {
   COMPREPLY=( $(compgen -W "all ${available_things}" -- ${cur}) )
 }
 
-_bash-it-comp-list-enabled() {
+_bash-it-comp-list-enabled () {
   local subdirectory="$1"
   local suffix enabled_things
 
@@ -40,7 +40,7 @@ _bash-it-comp-list-enabled() {
   COMPREPLY=( $(compgen -W "all ${enabled_things}" -- ${cur}) )
 }
 
-_bash-it-comp-list-available() {
+_bash-it-comp-list-available () {
   subdirectory="$1"
 
   local enabled_things
@@ -53,7 +53,7 @@ _bash-it-comp-list-available() {
   COMPREPLY=( $(compgen -W "${enabled_things}" -- ${cur}) )
 }
 
-_bash-it-comp() {
+_bash-it-comp () {
   local cur prev opts
   COMPREPLY=()
   cur="${COMP_WORDS[COMP_CWORD]}"

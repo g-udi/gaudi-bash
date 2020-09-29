@@ -4,7 +4,7 @@ export BASH_IT_LOG_LEVEL_ERROR=1
 export BASH_IT_LOG_LEVEL_WARNING=2
 export BASH_IT_LOG_LEVEL_ALL=3
 
-_bash-it-get-component-name-from-path() {
+_bash-it-get-component-name-from-path () {
   # filename without path
   filename=${1##*/}
   # filename without path or priority
@@ -13,7 +13,7 @@ _bash-it-get-component-name-from-path() {
   echo ${filename%.*.bash}
 }
 
-_bash-it-get-component-type-from-path() {
+_bash-it-get-component-type-from-path () {
   # filename without path
   filename=${1##*/}
   # filename without path or priority
@@ -22,7 +22,7 @@ _bash-it-get-component-type-from-path() {
   echo ${filename} | cut -d '.' -f 2
 }
 
-_log_general() {
+_log_general () {
   about 'Internal function used for logging, uses BASH_IT_LOG_PREFIX as a prefix'
   param '1: color of the log level'
   param '2: log type to print before the prefix'
@@ -35,7 +35,7 @@ _log_general() {
   echo -e "$1$2${YELLOW}${BASH_IT_LOG_PREFIX}${NC} $3"
 }
 
-_log_debug() {
+_log_debug () {
   about 'log a debug message by echoing to the screen. needs BASH_IT_LOG_LEVEL >= BASH_IT_LOG_LEVEL_ALL'
   param '1: message to log'
   example '$ _log_debug "Loading plugin git..."'
@@ -45,7 +45,7 @@ _log_debug() {
   _log_general "${GREEN}" " [DEBUG] " "$1"
 }
 
-_log_warning() {
+_log_warning () {
   about 'log a message by echoing to the screen. needs BASH_IT_LOG_LEVEL >= BASH_IT_LOG_LEVEL_WARNING'
   param '1: message to log'
   example '$ _log_warning "git binary not found, disabling git plugin..."'
@@ -55,7 +55,7 @@ _log_warning() {
   _log_general "${YELLOW}" " [WARN] " "$1"
 }
 
-_log_error() {
+_log_error () {
   about 'log a message by echoing to the screen. needs BASH_IT_LOG_LEVEL >= BASH_IT_LOG_LEVEL_ERROR'
   param '1: message to log'
   example '$ _log_error "Failed to load git plugin..."'
@@ -65,7 +65,7 @@ _log_error() {
   _log_general "${RED}" " [ERROR] " "$1"
 }
 
-_log_component() {
+_log_component () {
   about 'log a component loading message by echoing to the screen the name and type'
   param '1: message to log'
   param '2: component type e.g., custom or builtin (default: builtin) '

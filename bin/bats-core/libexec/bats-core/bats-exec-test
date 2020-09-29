@@ -40,7 +40,7 @@ fi
 BATS_TEST_DIRNAME="${BATS_TEST_FILENAME%/*}"
 BATS_TEST_NAMES=()
 
-load() {
+load () {
   local name="$1"
   local filename
 
@@ -60,7 +60,7 @@ load() {
   source "${filename}"
 }
 
-run() {
+run () {
   local origFlags="$-"
   set +eET
   local origIFS="$IFS"
@@ -75,21 +75,21 @@ run() {
   set "-$origFlags"
 }
 
-setup() {
+setup () {
   return 0
 }
 
-teardown() {
+teardown () {
   return 0
 }
 
-skip() {
+skip () {
   BATS_TEST_SKIPPED="${1:-1}"
   BATS_TEST_COMPLETED=1
   exit 0
 }
 
-bats_test_begin() {
+bats_test_begin () {
   BATS_TEST_DESCRIPTION="$1"
   if [[ -n "$BATS_EXTENDED_SYNTAX" ]]; then
     printf 'begin %d %s\n' "$BATS_TEST_NUMBER" "$BATS_TEST_DESCRIPTION" >&3
@@ -97,12 +97,12 @@ bats_test_begin() {
   setup
 }
 
-bats_test_function() {
+bats_test_function () {
   local test_name="$1"
   BATS_TEST_NAMES+=("$test_name")
 }
 
-bats_capture_stack_trace() {
+bats_capture_stack_trace () {
   local test_file
   local funcname
   local i
@@ -125,7 +125,7 @@ bats_capture_stack_trace() {
   done
 }
 
-bats_print_stack_trace() {
+bats_print_stack_trace () {
   local frame
   local index=1
   local count="${#@}"
@@ -159,7 +159,7 @@ bats_print_stack_trace() {
   done
 }
 
-bats_print_failed_command() {
+bats_print_failed_command () {
   local frame="${BATS_STACK_TRACE[${#BATS_STACK_TRACE[@]}-1]}"
   local filename
   local lineno
@@ -179,16 +179,16 @@ bats_print_failed_command() {
   fi
 }
 
-bats_frame_lineno() {
+bats_frame_lineno () {
   printf -v "$2" '%s' "${1%% *}"
 }
 
-bats_frame_function() {
+bats_frame_function () {
   local __bff_function="${1#* }"
   printf -v "$2" '%s' "${__bff_function%% *}"
 }
 
-bats_frame_filename() {
+bats_frame_filename () {
   local __bff_filename="${1#* }"
   __bff_filename="${__bff_filename#* }"
 
@@ -198,7 +198,7 @@ bats_frame_filename() {
   printf -v "$2" '%s' "$__bff_filename"
 }
 
-bats_extract_line() {
+bats_extract_line () {
   local __bats_extract_line_line
   local __bats_extract_line_index=0
 
@@ -210,16 +210,16 @@ bats_extract_line() {
   done <"$1"
 }
 
-bats_strip_string() {
+bats_strip_string () {
   [[ "$1" =~ ^[[:space:]]*(.*)[[:space:]]*$ ]]
   printf -v "$2" '%s' "${BASH_REMATCH[1]}"
 }
 
-bats_trim_filename() {
+bats_trim_filename () {
   printf -v "$2" '%s' "${1#$BATS_CWD/}"
 }
 
-bats_debug_trap() {
+bats_debug_trap () {
   if [[ "${BASH_SOURCE[0]}" != "$1" ]]; then
     # The last entry in the stack trace is not useful when en error occured:
     # It is either duplicated (kinda correct) or has wrong line number (Bash < 4.4)
@@ -242,7 +242,7 @@ bats_debug_trap() {
 #
 # See `bats_exit_trap` for an additional EXIT error handling case when `$?`
 # isn't set properly during `teardown()` errors.
-bats_error_trap() {
+bats_error_trap () {
   local status="$?"
   if [[ -z "$BATS_TEST_COMPLETED" ]]; then
     BATS_ERROR_STATUS="${BATS_ERROR_STATUS:-$status}"
@@ -254,7 +254,7 @@ bats_error_trap() {
   fi
 }
 
-bats_teardown_trap() {
+bats_teardown_trap () {
   bats_error_trap
   local status=0
   teardown >>"$BATS_OUT" 2>&1 || status="$?"
@@ -268,7 +268,7 @@ bats_teardown_trap() {
   bats_exit_trap
 }
 
-bats_exit_trap() {
+bats_exit_trap () {
   local line
   local status
   local skipped=''
@@ -317,7 +317,7 @@ bats_exit_trap() {
   exit "$status"
 }
 
-bats_perform_test() {
+bats_perform_test () {
   BATS_TEST_NAME="$1"
   BATS_TEST_NUMBER="$2"
 
@@ -359,18 +359,18 @@ BATS_TMPNAME="$BATS_TMPDIR/bats.$$"
 BATS_PARENT_TMPNAME="$BATS_TMPDIR/bats.$PPID"
 BATS_OUT="${BATS_TMPNAME}.out"
 
-bats_preprocess_source() {
+bats_preprocess_source () {
   BATS_TEST_SOURCE="${BATS_TMPNAME}.src"
   bats-preprocess "$BATS_TEST_FILENAME" >"$BATS_TEST_SOURCE"
   trap 'bats_cleanup_preprocessed_source' ERR EXIT
   trap 'bats_cleanup_preprocessed_source; exit 1' INT
 }
 
-bats_cleanup_preprocessed_source() {
+bats_cleanup_preprocessed_source () {
   rm -f "$BATS_TEST_SOURCE"
 }
 
-bats_evaluate_preprocessed_source() {
+bats_evaluate_preprocessed_source () {
   if [[ -z "$BATS_TEST_SOURCE" ]]; then
     BATS_TEST_SOURCE="${BATS_PARENT_TMPNAME}.src"
   fi

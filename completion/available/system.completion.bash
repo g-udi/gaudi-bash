@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+
 
 # Loads the system's Bash completion modules.
 # If Homebrew is installed (OS X), it's Bash completion modules are loaded.

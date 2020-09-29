@@ -6,7 +6,7 @@ load ../../lib/composure
 local_setup () {
   setup_test_fixture
 
-  # Copy the test fixture to the Bash-it folder
+  # Copy the test fixture to the bash-it folder
   if command -v rsync &> /dev/null
   then
     rsync -a "$BASH_IT/test/fixtures/bash_it/" "$BASH_IT/"
@@ -23,6 +23,7 @@ local_setup () {
 }
 
 @test "bash-it: load aliases in order" {
+
   mkdir -p $BASH_IT/aliases/enabled
   mkdir -p $BASH_IT/plugins/enabled
 

@@ -37,11 +37,11 @@
 #
 # Example:
 #
-#   setup() {
+#   setup () {
 #     TEST_TEMP_DIR="$(temp_make --prefix 'myapp-')"
 #   }
 #
-#   teardown() {
+#   teardown () {
 #     temp_del "$TEST_TEMP_DIR"
 #   }
 #
@@ -60,7 +60,7 @@
 # Outputs:
 #   STDOUT - path of temporary directory
 #   STDERR - error messages
-temp_make() {
+temp_make () {
   # Check caller.
   if ! ( batslib_is_caller --indirect 'setup' \
       || batslib_is_caller --indirect "$BATS_TEST_NAME" \
@@ -129,11 +129,11 @@ temp_make() {
 #
 # Example:
 #
-#   setup() {
+#   setup () {
 #     TEST_TEMP_DIR="$(temp_make --prefix 'myapp-')"
 #   }
 #
-#   teardown() {
+#   teardown () {
 #     temp_del "$TEST_TEMP_DIR"
 #   }
 #
@@ -148,7 +148,7 @@ temp_make() {
 #   1 - otherwise
 # Outputs:
 #   STDERR - error messages
-temp_del() {
+temp_del () {
   local -r path="$1"
 
   # Environment variables.

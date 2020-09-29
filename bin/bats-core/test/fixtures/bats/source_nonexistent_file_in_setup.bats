@@ -1,8 +1,8 @@
-setup() {
+setup () {
   source "nonexistent file"
 }
 
-teardown() {
+teardown () {
   echo "should not capture the next line"
   [ 1 -eq 2 ]
 }

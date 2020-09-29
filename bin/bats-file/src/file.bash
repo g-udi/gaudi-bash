@@ -38,7 +38,7 @@
 #   1 - otherwise
 # Outputs:
 #   STDERR - details, on failure
-assert_exist() {
+assert_exist () {
   local -r file="$1"
   if [[ ! -e "$file" ]]; then
     local -r rem="$BATSLIB_FILE_PATH_REM"
@@ -62,7 +62,7 @@ assert_exist() {
 #   1 - otherwise
 # Outputs:
 #   STDERR - details, on failure
-assert_file_exist() {
+assert_file_exist () {
   local -r file="$1"
   if [[ ! -f "$file" ]]; then
     local -r rem="$BATSLIB_FILE_PATH_REM"
@@ -86,7 +86,7 @@ assert_file_exist() {
 #   1 - otherwise
 # Outputs:
 #   STDERR - details, on failure
-assert_dir_exist() {
+assert_dir_exist () {
   local -r file="$1"
   if [[ ! -d "$file" ]]; then
     local -r rem="$BATSLIB_FILE_PATH_REM"
@@ -110,7 +110,7 @@ assert_dir_exist() {
 #   1 - otherwise
 # Outputs:
 #   STDERR - details, on failure
-assert_block_exist() {
+assert_block_exist () {
   local -r file="$1"
   if [[ ! -b "$file" ]]; then
     local -r rem="$BATSLIB_FILE_PATH_REM"
@@ -134,7 +134,7 @@ assert_block_exist() {
 #   1 - otherwise
 # Outputs:
 #   STDERR - details, on failure
-assert_character_exist() {
+assert_character_exist () {
   local -r file="$1"
   if [[ ! -c "$file" ]]; then
     local -r rem="$BATSLIB_FILE_PATH_REM"
@@ -158,7 +158,7 @@ assert_character_exist() {
 #   1 - otherwise
 # Outputs:
 #   STDERR - details, on failure
-assert_link_exist() {
+assert_link_exist () {
   local -r file="$1"
   if [[ ! -L "$file" ]]; then
     local -r rem="$BATSLIB_FILE_PATH_REM"
@@ -182,7 +182,7 @@ assert_link_exist() {
 #   1 - otherwise
 # Outputs:
 #   STDERR - details, on failure
-assert_socket_exist() {
+assert_socket_exist () {
   local -r file="$1"
   if [[ ! -S "$file" ]]; then
     local -r rem="$BATSLIB_FILE_PATH_REM"
@@ -206,7 +206,7 @@ assert_socket_exist() {
 #   1 - otherwise
 # Outputs:
 #   STDERR - details, on failure
-assert_fifo_exist() {
+assert_fifo_exist () {
   local -r file="$1"
   if [[ ! -p "$file" ]]; then
     local -r rem="$BATSLIB_FILE_PATH_REM"
@@ -230,7 +230,7 @@ assert_fifo_exist() {
 #   1 - otherwise
 # Outputs:
 #   STDERR - details, on failure
-assert_file_executable() {
+assert_file_executable () {
   local -r file="$1"
   if [[ ! -x "$file" ]]; then
     local -r rem="$BATSLIB_FILE_PATH_REM"
@@ -255,7 +255,7 @@ assert_file_executable() {
 #   1 - otherwise
 # Outputs:
 #   STDERR - details, on failure
-assert_files_equal() {
+assert_files_equal () {
   local -r file1="$1"
   local -r file2="$2"
   if ! `cmp -s "$file1" "$file2"` ; then
@@ -280,7 +280,7 @@ assert_files_equal() {
 #   1 - otherwise
 # Outputs:
 #   STDERR - details, on failure
-assert_file_owner() {
+assert_file_owner () {
   local -r owner="$1"
   local -r file="$2"
   if [[ `uname` == "Darwin" ]]; then
@@ -319,7 +319,7 @@ fi
 #   1 - otherwise
 # Outputs:
 #   STDERR - details, on failure
-assert_file_permission() {
+assert_file_permission () {
   local -r permission="$1"
   local -r file="$2"
   if [[ `uname` == "Darwin" ]]; then
@@ -355,7 +355,7 @@ fi
 #   1 - otherwise
 # Outputs:
 #   STDERR - details, on failure
-assert_size_zero() {
+assert_size_zero () {
   local -r file="$1"
     if [[ `uname` == "Darwin" ]]; then
     mkfile 2k ${TEST_FIXTURE_ROOT}/dir/notzerobyte
@@ -391,7 +391,7 @@ fi
 #   1 - otherwise
 # Outputs:
 #   STDERR - details, on failure
-assert_file_group_id_set() {
+assert_file_group_id_set () {
   local -r file="$1"
   if [[ ! -g "$file" ]]; then
     local -r rem="$BATSLIB_FILE_PATH_REM"
@@ -415,7 +415,7 @@ assert_file_group_id_set() {
 #   1 - otherwise
 # Outputs:
 #   STDERR - details, on failure
-assert_file_user_id_set() {
+assert_file_user_id_set () {
   local -r file="$1"
   if [[ ! -u "$file" ]]; then
     local -r rem="$BATSLIB_FILE_PATH_REM"
@@ -439,7 +439,7 @@ assert_file_user_id_set() {
 #   1 - otherwise
 # Outputs:
 #   STDERR - details, on failure
-assert_sticky_bit() {
+assert_sticky_bit () {
   local -r file="$1"
   if [[ ! -k "$file" ]]; then
     local -r rem="$BATSLIB_FILE_PATH_REM"
@@ -459,7 +459,7 @@ assert_sticky_bit() {
 #   1 - otherwise
 # Outputs:
 #   STDERR - details, on failure
-assert_symlink_to() {
+assert_symlink_to () {
   local -r sourcefile="$1"
   local -r link="$2"
   # If OS is linux
@@ -481,7 +481,7 @@ assert_symlink_to() {
     fi
   # If OS is OSX
   elif [[ `uname` == "Darwin" ]]; then
-    function readlinkf() {
+    function readlinkf () {
     TARGET_FILE=$1
     cd `dirname $TARGET_FILE`
     TARGET_FILE=`basename $TARGET_FILE`
@@ -529,7 +529,7 @@ assert_symlink_to() {
 #   1 - otherwise
 # Outputs:
 #   STDERR - details, on failure
-assert_file_size_equals() {
+assert_file_size_equals () {
   local -r file="$1"
   local -r expectedsize="$2"
   local -r size=$( wc -c "$file" | awk '{print $1}' )
@@ -555,7 +555,7 @@ assert_file_size_equals() {
 #   1 - otherwise
 # Outputs:
 #   STDERR - details, on failure
-assert_file_contains() {
+assert_file_contains () {
   local -r file="$1"
   local -r regex="$2"
   if ! grep -q "$regex" "$file"; then
@@ -579,7 +579,7 @@ assert_file_contains() {
 #   1 - otherwise
 # Outputs:
 #   STDERR - details, on failure
-assert_file_empty() {
+assert_file_empty () {
   local -r file="$1"
   if [[ -s "$file" ]]; then
     local -r rem="$BATSLIB_FILE_PATH_REM"
@@ -605,7 +605,7 @@ assert_file_empty() {
 #   1 - otherwise
 # Outputs:
 #   STDERR - details, on failure
-assert_not_exist() {
+assert_not_exist () {
   local -r file="$1"
   if [[ -e "$file" ]]; then
     local -r rem="$BATSLIB_FILE_PATH_REM"
@@ -629,7 +629,7 @@ assert_not_exist() {
 #   1 - otherwise
 # Outputs:
 #   STDERR - details, on failure
-assert_file_not_exist() {
+assert_file_not_exist () {
   local -r file="$1"
   if [[ -f "$file" ]]; then
     local -r rem="$BATSLIB_FILE_PATH_REM"
@@ -653,7 +653,7 @@ assert_file_not_exist() {
 #   1 - otherwise
 # Outputs:
 #   STDERR - details, on failure
-assert_dir_not_exist() {
+assert_dir_not_exist () {
   local -r file="$1"
   if [[ -d "$file" ]]; then
     local -r rem="$BATSLIB_FILE_PATH_REM"
@@ -677,7 +677,7 @@ assert_dir_not_exist() {
 #   1 - otherwise
 # Outputs:
 #   STDERR - details, on failure
-assert_block_not_exist() {
+assert_block_not_exist () {
   local -r file="$1"
   if [[ -b "$file" ]]; then
     local -r rem="$BATSLIB_FILE_PATH_REM"
@@ -701,7 +701,7 @@ assert_block_not_exist() {
 #   1 - otherwise
 # Outputs:
 #   STDERR - details, on failure
-assert_character_not_exist() {
+assert_character_not_exist () {
   local -r file="$1"
   if [[ -c "$file" ]]; then
     local -r rem="$BATSLIB_FILE_PATH_REM"
@@ -725,7 +725,7 @@ assert_character_not_exist() {
 #   1 - otherwise
 # Outputs:
 #   STDERR - details, on failure
-assert_link_not_exist() {
+assert_link_not_exist () {
   local -r file="$1"
   if [[ -L "$file" ]]; then
     local -r rem="$BATSLIB_FILE_PATH_REM"
@@ -749,7 +749,7 @@ assert_link_not_exist() {
 #   1 - otherwise
 # Outputs:
 #   STDERR - details, on failure
-assert_socket_not_exist() {
+assert_socket_not_exist () {
   local -r file="$1"
   if [[ -S "$file" ]]; then
     local -r rem="$BATSLIB_FILE_PATH_REM"
@@ -773,7 +773,7 @@ assert_socket_not_exist() {
 #   1 - otherwise
 # Outputs:
 #   STDERR - details, on failure
-assert_fifo_not_exist() {
+assert_fifo_not_exist () {
   local -r file="$1"
   if [[ -p "$file" ]]; then
     local -r rem="$BATSLIB_FILE_PATH_REM"
@@ -797,7 +797,7 @@ assert_fifo_not_exist() {
 #   1 - otherwise
 # Outputs:
 #   STDERR - details, on failure
-assert_file_not_executable() {
+assert_file_not_executable () {
   local -r file="$1"
   if [[ -x "$file" ]]; then
     local -r rem="$BATSLIB_FILE_PATH_REM"
@@ -821,7 +821,7 @@ assert_file_not_executable() {
 #   1 - otherwise
 # Outputs:
 #   STDERR - details, on failure
-assert_not_file_owner() {
+assert_not_file_owner () {
   local -r owner="$1"
   local -r file="$2"
   if [[ `uname` == "Darwin" ]]; then
@@ -860,7 +860,7 @@ fi
 #   1 - otherwise
 # Outputs:
 #   STDERR - details, on failure
-assert_not_file_permission() {
+assert_not_file_permission () {
   local -r permission="$1"
   local -r file="$2"
   if [[ `uname` == "Darwin" ]]; then
@@ -891,7 +891,7 @@ assert_not_file_permission() {
 #   1 - otherwise
 # Outputs:
 #   STDERR - details, on failure
-assert_files_not_equal() {
+assert_files_not_equal () {
   local -r file1="$1"
   local -r file2="$2"
   if `cmp -s "$file1" "$file2"` ; then
@@ -916,7 +916,7 @@ assert_files_not_equal() {
 #   1 - otherwise
 # Outputs:
 #   STDERR - details, on failure
-assert_size_not_zero() {
+assert_size_not_zero () {
   local -r file="$1"
   if [[ `uname` == "Darwin" ]]; then
   mkfile 2k ${TEST_FIXTURE_ROOT}/dir/notzerobyte
@@ -953,7 +953,7 @@ fi
 #   1 - otherwise
 # Outputs:
 #   STDERR - details, on failure
-assert_file_not_group_id_set() {
+assert_file_not_group_id_set () {
   local -r file="$1"
   if [ -g "$file" ]; then
     local -r rem="$BATSLIB_FILE_PATH_REM"
@@ -978,7 +978,7 @@ assert_file_not_group_id_set() {
 #   1 - otherwise
 # Outputs:
 #   STDERR - details, on failure
-assert_file_not_user_id_set() {
+assert_file_not_user_id_set () {
   local -r file="$1"
   if [ -u "$file" ]; then
     local -r rem="$BATSLIB_FILE_PATH_REM"
@@ -1002,7 +1002,7 @@ assert_file_not_user_id_set() {
 #   1 - otherwise
 # Outputs:
 #   STDERR - details, on failure
-assert_no_sticky_bit() {
+assert_no_sticky_bit () {
   local -r file="$1"
   if [ -k "$file" ]; then
     local -r rem="$BATSLIB_FILE_PATH_REM"
@@ -1022,7 +1022,7 @@ assert_no_sticky_bit() {
 #   1 - otherwise
 # Outputs:
 #   STDERR - details, on failure
-assert_not_symlink_to() {
+assert_not_symlink_to () {
   local -r sourcefile="$1"
   local -r link="$2"
   # If OS is linux
@@ -1042,7 +1042,7 @@ assert_not_symlink_to() {
     fi
   # If OS is OSX
   elif [[ `uname` == "Darwin" ]]; then
-  function readlinkf() {
+  function readlinkf () {
     TARGET_FILE=$1
     cd `dirname $TARGET_FILE`
     TARGET_FILE=`basename $TARGET_FILE`
@@ -1088,7 +1088,7 @@ assert_not_symlink_to() {
 #   1 - otherwise
 # Outputs:
 #   STDERR - details, on failure
-assert_file_not_empty() {
+assert_file_not_empty () {
   local -r file="$1"
   if [[ ! -s "$file" ]]; then
     local -r rem="$BATSLIB_FILE_PATH_REM"

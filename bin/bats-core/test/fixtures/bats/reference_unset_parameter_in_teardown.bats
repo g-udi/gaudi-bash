@@ -1,4 +1,4 @@
-teardown() {
+teardown () {
   set -u
   echo "$unset_parameter"
 }

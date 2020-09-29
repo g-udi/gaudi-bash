@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+
 
 # minikube (Local Kubernetes) completion
 
