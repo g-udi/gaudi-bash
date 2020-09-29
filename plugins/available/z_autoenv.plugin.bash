@@ -9,8 +9,8 @@ else __array_offset=1
 fi
 
 autoenv_init () {
-  typeset home _file
-  typeset -a _files
+  local home _file
+  local -a _files
 
   home="$(dirname "$HOME")"
 

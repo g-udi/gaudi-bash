@@ -78,12 +78,12 @@ _bash-it-migrate () {
   do
     for f in `sort <(compgen -G "${BASH_IT}/$file_type/enabled/*.bash")`
     do
-      typeset ff=$(basename $f)
+      local ff=$(basename $f)
 
       # Get the type of component from the extension
-      typeset single_type=$(echo $ff | sed -e 's/.*\.\(.*\)\.bash/\1/g' | sed 's/aliases/alias/g')
+      local single_type=$(echo $ff | sed -e 's/.*\.\(.*\)\.bash/\1/g' | sed 's/aliases/alias/g')
       # Cut off the optional "250---" prefix and the suffix
-      typeset component_name=$(echo $ff | sed -e 's/[0-9]*[-]*\(.*\)\..*\.bash/\1/g')
+      local component_name=$(echo $ff | sed -e 's/[0-9]*[-]*\(.*\)\..*\.bash/\1/g')
 
       migrated_something=true
 
@@ -180,7 +180,7 @@ _bash-it-describe () {
     file_type="$3"
     column_header="$4"
 
-    typeset f
+    local f
 
     printf "\n%-20s%-10s%s\n" "$column_header" 'Enabled?' '  Description'
     printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -
@@ -210,11 +210,11 @@ all_groups () {
     about 'displays all unique metadata groups'
     group 'lib'
 
-    typeset func
-    typeset file=$(mktemp -t composure.XXXX)
-    for func in $(_typeset_functions)
+    local func
+    local file=$(mktemp -t composure.XXXX)
+    for func in $(_local_functions)
     do
-        typeset -f $func | metafor group >> $file
+        local -f $func | metafor group >> $file
     done
     cat $file | sort | uniq
     rm $file
@@ -253,11 +253,11 @@ bash-it () {
     example '$ bash-it version'
     example '$ bash-it reload'
     example '$ bash-it doctor errors|warnings|all'
-    typeset verb=${1:-}
+    local verb=${1:-}
     shift
-    typeset component=${1:-}
+    local component=${1:-}
     shift
-    typeset func
+    local func
 
     case $verb in
       show)

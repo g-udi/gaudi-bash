@@ -24,7 +24,7 @@ _help-aliases () {
         esac
         cat "${BASH_IT}/aliases/$alias_path" | metafor alias | sed "s/$/'/"
     else
-        typeset f
+        local f
 
         for f in `sort <(compgen -G "${BASH_IT}/aliases/enabled/*") <(compgen -G "${BASH_IT}/enabled/*.aliases.bash")`
         do
@@ -38,7 +38,7 @@ _help-aliases () {
 }
 
 _help-list-aliases () {
-    typeset file=$(basename $1 | sed -e 's/[0-9]*[-]*\(.*\)\.aliases\.bash/\1/g')
+    local file=$(basename $1 | sed -e 's/[0-9]*[-]*\(.*\)\.aliases\.bash/\1/g')
     printf '\n\n%s:\n' "${file}"
     cat $1 | metafor alias | sed "s/$/'/"
 }
@@ -48,22 +48,22 @@ _help-plugins () {
     _group 'lib'
 
     printf '%s' 'please wait, building help...'
-    typeset grouplist=$(mktemp -t grouplist.XXXXXX)
-    typeset func
-    for func in $(_typeset_functions)
+    local grouplist=$(mktemp -t grouplist.XXXXXX)
+    local func
+    for func in $(_local_functions)
     do
-        typeset group="$(typeset -f $func | metafor group)"
+        local group="$(local -f $func | metafor group)"
         if [[ -z "$group" ]]; then
             group='misc'
         fi
-        typeset about="$(typeset -f $func | metafor about)"
+        local about="$(local -f $func | metafor about)"
         _letterpress "$about" $func >> $grouplist.$group
         echo $grouplist.$group >> $grouplist
     done
 
     printf '\r%s\n' '                              '
-    typeset group
-    typeset gfile
+    local group
+    local gfile
     for gfile in $(cat $grouplist | sort | uniq)
     do
         printf '%s\n' "${gfile##*.}:"
