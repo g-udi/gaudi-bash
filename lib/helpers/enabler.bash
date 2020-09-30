@@ -61,7 +61,8 @@ _enable-thing () {
             _enable-thing $subdirectory $file_type $to_enable $load_priority
         done
     else
-        local to_enable=$(command ls "${BASH_IT}/$subdirectory/available/"$file_entity.*bash 2>/dev/null | head -1)
+        local to_enable
+        to_enable=$(command ls "${BASH_IT}/$subdirectory/available/"$file_entity.*bash 2>/dev/null | head -1)
         if [[ -z "$to_enable" ]]; then
             printf '%s\n' "sorry, $file_entity does not appear to be an available $file_type."
             return
@@ -69,13 +70,15 @@ _enable-thing () {
 
         to_enable=$(basename $to_enable)
         # Check for existence of the file using a wildcard, since we don't know which priority might have been used when enabling it.
-        local enabled_plugin=$(command ls "${BASH_IT}/$subdirectory/enabled/"{[0-9][0-9][0-9]$BASH_IT_LOAD_PRIORITY_SEPARATOR$to_enable,$to_enable} 2>/dev/null | head -1)
+        local enabled_plugin
+        enabled_plugin=$(command ls "${BASH_IT}/$subdirectory/enabled/"{[0-9][0-9][0-9]$BASH_IT_LOAD_PRIORITY_SEPARATOR$to_enable,$to_enable} 2>/dev/null | head -1)
         if [[ ! -z "$enabled_plugin" ]] ; then
           printf '%s\n' "$file_entity is already enabled."
           return
         fi
 
-        local enabled_plugin_global=$(command compgen -G "${BASH_IT}/enabled/[0-9][0-9][0-9]$BASH_IT_LOAD_PRIORITY_SEPARATOR$to_enable" 2>/dev/null | head -1)
+        local enabled_plugin_global
+        enabled_plugin_global=$(command compgen -G "${BASH_IT}/enabled/[0-9][0-9][0-9]$BASH_IT_LOAD_PRIORITY_SEPARATOR$to_enable" 2>/dev/null | head -1)
         if [[ ! -z "$enabled_plugin_global" ]] ; then
           printf '%s\n' "$file_entity is already enabled."
           return

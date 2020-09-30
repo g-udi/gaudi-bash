@@ -4,8 +4,7 @@
 # Print out the set of supported Unicode characters for the terminal
 
 __fast_chr () {
-    local __octal
-    local __char
+    local __octal __char
 
     printf -v __octal '%03o' $1
     printf -v __char \\$__octal

@@ -38,7 +38,9 @@ _help-aliases () {
 }
 
 _help-list-aliases () {
-    local file=$(basename $1 | sed -e 's/[0-9]*[-]*\(.*\)\.aliases\.bash/\1/g')
+    local file
+
+    file=$(basename $1 | sed -e 's/[0-9]*[-]*\(.*\)\.aliases\.bash/\1/g')
     printf '\n\n%s:\n' "${file}"
     cat $1 | metafor alias | sed "s/$/'/"
 }
@@ -48,22 +50,24 @@ _help-plugins () {
     _group 'lib'
 
     printf '%s' 'please wait, building help...'
-    local grouplist=$(mktemp -t grouplist.XXXXXX)
-    local func
+    local grouplist func
+
+    grouplist=$(mktemp -t grouplist.XXXXXX)
     for func in $(_local_functions)
     do
-        local group="$(local -f $func | metafor group)"
+        local group
+        group="$(local -f $func | metafor group)"
         if [[ -z "$group" ]]; then
             group='misc'
         fi
-        local about="$(local -f $func | metafor about)"
+        local about
+        about="$(local -f $func | metafor about)"
         _letterpress "$about" $func >> $grouplist.$group
         echo $grouplist.$group >> $grouplist
     done
 
     printf '\r%s\n' '                              '
-    local group
-    local gfile
+    local group gfile
     for gfile in $(cat $grouplist | sort | uniq)
     do
         printf '%s\n' "${gfile##*.}:"

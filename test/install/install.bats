@@ -3,7 +3,6 @@
 load ../helper
 load ../../lib/composure
 
-# Determine which config file to use based on OS.
 case $OSTYPE in
   darwin*)
     export BASH_IT_CONFIG_FILE=.bash_profile
@@ -27,14 +26,12 @@ local_setup () {
   ./setup.sh --silent
 
   assert_file_exist "$BASH_IT_TEST_HOME/$BASH_IT_CONFIG_FILE"
-  ln -s $BASH_IT/plugins/available/todo.plugin.bash $BASH_IT/plugins/enabled/todo.plugin.bash
-  assert_link_exist "$BASH_IT/plugins/enabled/todo.plugin.bash"
-  # assert_link_exist "$BASH_IT/enabled/350---todo.plugin.bash"
-  # assert_link_exist "$BASH_IT/enabled/150---general.aliases.bash"
-  # assert_link_exist "$BASH_IT/enabled/250---base.plugin.bash"
-  # assert_link_exist "$BASH_IT/enabled/365---alias-completion.plugin.bash"
-  # assert_link_exist "$BASH_IT/enabled/350---bash-it.completion.bash"
-  # assert_link_exist "$BASH_IT/enabled/350---system.completion.bash"
+
+  assert_link_exist "$BASH_IT/enabled/150-general.aliases.bash"
+  assert_link_exist "$BASH_IT/enabled/250-base.plugin.bash"
+  assert_link_exist "$BASH_IT/enabled/365-alias-completion.plugin.bash"
+  assert_link_exist "$BASH_IT/enabled/350-bash-it.completion.bash"
+  assert_link_exist "$BASH_IT/enabled/350-system.completion.bash"
 }
 
 @test "install: verify that a backup file is created" {

@@ -78,12 +78,13 @@ _bash-it-migrate () {
   do
     for f in `sort <(compgen -G "${BASH_IT}/$file_type/enabled/*.bash")`
     do
-      local ff=$(basename $f)
+      local ff single_type component_name
+      ff=$(basename $f)
 
       # Get the type of component from the extension
-      local single_type=$(echo $ff | sed -e 's/.*\.\(.*\)\.bash/\1/g' | sed 's/aliases/alias/g')
+      single_type=$(echo $ff | sed -e 's/.*\.\(.*\)\.bash/\1/g' | sed 's/aliases/alias/g')
       # Cut off the optional "250---" prefix and the suffix
-      local component_name=$(echo $ff | sed -e 's/[0-9]*[-]*\(.*\)\..*\.bash/\1/g')
+      component_name=$(echo $ff | sed -e 's/[0-9]*[-]*\(.*\)\..*\.bash/\1/g')
 
       migrated_something=true
 
@@ -192,9 +193,9 @@ _bash-it-describe () {
         enabled_files=$(sort <(compgen -G "${BASH_IT}/enabled/*$BASH_IT_LOAD_PRIORITY_SEPARATOR${enabled_file}") <(compgen -G "${BASH_IT}/$subdirectory/enabled/${enabled_file}") <(compgen -G "${BASH_IT}/$subdirectory/enabled/*$BASH_IT_LOAD_PRIORITY_SEPARATOR${enabled_file}") | wc -l)
 
         if [[ "$enabled_files" -gt 0 ]]; then
-            printf "%-20s${GREEN}%-10s${NC}%s\n" "$(basename "$f" | sed -e 's/\(.*\)\..*\.bash/\1/g')" "  [●]" "$(cat $f | metafor about-"$file_type")"
+            printf "%-20s${GREEN}%-10s${NC}%s\n" "$(basename "$f" | sed -e 's/\(.*\)\..*\.bash/\1/g')" "  [●]" "    $(cat $f | metafor about-"$file_type")"
         elif [[ "$5" = "all" ]]; then
-            printf "%-20s${RED}%-10s${NC}%s\n" "$(basename "$f" | sed -e 's/\(.*\)\..*\.bash/\1/g')" "  [◯]" "$(cat $f | metafor about-"$file_type")"
+            printf "%-20s${RED}%-10s${NC}%s\n" "$(basename "$f" | sed -e 's/\(.*\)\..*\.bash/\1/g')" "  [◯]" "    $(cat $f | metafor about-"$file_type")"
         fi
     done
 
@@ -210,8 +211,8 @@ all_groups () {
     about 'displays all unique metadata groups'
     group 'lib'
 
-    local func
-    local file=$(mktemp -t composure.XXXX)
+    local func file
+    file=$(mktemp -t composure.XXXX)
     for func in $(_local_functions)
     do
         local -f $func | metafor group >> $file

@@ -4,8 +4,7 @@
 
 # display help text for the component
 _bash-it-component-help () {
-  local component
-  local file
+  local component file
 
   component=$(_bash-it-pluralize-component "${1}")
   file=$(_bash-it-component-cache-file ${component})
@@ -21,10 +20,10 @@ _bash-it-component-help () {
 
 # caches the component in the /tmp directory
 _bash-it-component-cache-file () {
-  local component
+  local component file
 
   component=$(_bash-it-pluralize-component "${1}")
-  local file="${BASH_IT}/tmp/cache/${component}"
+  file="${BASH_IT}/tmp/cache/${component}"
 
   [[ -f ${file} ]] || mkdir -p "$(dirname ${file})"
 

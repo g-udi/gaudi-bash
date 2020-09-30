@@ -7,18 +7,12 @@
 # test libraries
 bats
 
-# bash-it enabled items (functions, completions, aliases)
+# bash-it enabled items and custom and temporary files
 */enabled/*
 enabled/*
-/enabled
-
-# Custom and temporary files
-tmp/
 custom/*
-lib/custom.bash
-aliases/custom.aliases.bash
-completion/custom.completion.bash
-plugins/custom.plugins.bash
+/enabled
+tmp/
 
 # OS specific files (mainly OSX)
 .DS_Store

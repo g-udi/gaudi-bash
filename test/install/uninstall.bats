@@ -3,7 +3,6 @@
 load ../helper
 load ../../lib/composure
 
-# Determine which config file to use based on OS.
 case $OSTYPE in
   darwin*)
     export BASH_IT_CONFIG_FILE=.bash_profile

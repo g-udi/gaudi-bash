@@ -20,6 +20,17 @@ _command_exists () {
   type $1 &> /dev/null || (_log_warning "$msg" && return 1) ;
 }
 
+# Reads input from the prompt and ensure no empty value
+# It will enter a new line as a cosmetic only if there an entry that is not empty
+# e.g., read_input
+_read_input() {
+  unset REPLY
+  while ! [[ $REPLY =~ ^[yY]$ ]] && ! [[ $REPLY =~ ^[nN]$ ]]; do
+    read -p "${1} " -n 1 </dev/tty;
+    ! [[ -z $REPLY ]] && echo ""
+  done
+}
+
 # Handle the different ways of running `sed` without generating a backup file based on OS
 # - GNU sed (Linux) uses `-i`
 # - BSD sed (macOS) uses `-i ''`
