@@ -1,19 +1,15 @@
 [submodule "bin/bats-core"]
 	path = bin/bats-core
 	url = https://github.com/bats-core/bats-core
-	branch = tags/v1.2.0
 [submodule "bin/bats-support"]
 	path = bin/bats-support
 	url = https://github.com/bats-core/bats-support
-	branch = tags/v0.3.0
 [submodule "bin/bats-assert"]
 	path = bin/bats-assert
 	url = https://github.com/bats-core/bats-assert
-	branch = tags/v2.0.0
 [submodule "bin/bats-file"]
 	path = bin/bats-file
 	url = https://github.com/bats-core/bats-file
-	branch = tags/v0.3.0
 [submodule "bin/composure"]
 	path = bin/composure
 	url = git@github.com:erichs/composure.git
