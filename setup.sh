@@ -134,7 +134,7 @@ if ! [[ $no_modify_config ]]; then
     sed "s|{{BASH_IT}}|$BASH_IT|" "$BASH_IT/template/bash_profile.template.bash" > "$HOME/$CONFIG_FILE"
     printf "${YELLOW}%s${NC}\n" "Copied the template $CONFIG_FILE into ~/$CONFIG_FILE, edit this file to customize bash-it"
   fi
-  
+
 
 fi
 
@@ -155,6 +155,7 @@ else
   echo -e "${GREEN}Enabling reasonable defaults${NC}\n"
   _enable-completion bash-it
   _enable-completion system
+  _enable-completion git
   _enable-plugin base
   _enable-plugin alias-completion
   _enable-alias general
@@ -165,9 +166,12 @@ echo -e "${GREEN}Installation finished successfully! Enjoy bash-it!${NC}"
 echo -e "${MAGENTA}To start using it, open a new tab or 'source "$HOME/$CONFIG_FILE"'.${NC}"
 echo ""
 echo "To show the available aliases/completions/plugins, type one of the following:"
+echo "  bash-it show"
 echo "  bash-it show aliases"
 echo "  bash-it show completions"
 echo "  bash-it show plugins"
 echo ""
 echo "To avoid issues and to keep your shell lean, please enable only features you really want to use."
 echo "Enabling everything can lead to issues"
+
+bash-it reload
