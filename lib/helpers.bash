@@ -4,14 +4,14 @@
 BASH_IT_LOAD_PRIORITY_SEPARATOR="-"
 
 # support 'plumbing' metadata
-cite _about _param _example _group _author _version
+cite about param example group _author _version
 
 # Load all the helper libraries
 for helper in ${BASH_IT}/lib/helpers/*.bash; do source $helper; done
 
 _bash-it_update () {
-  _about 'updates bash-it'
-  _group 'lib'
+  about 'updates bash-it'
+  group 'lib'
 
   local old_pwd="${PWD}"
 
@@ -68,8 +68,8 @@ _bash-it_update () {
 }
 
 _bash-it-migrate () {
-  _about 'migrates bash-it configuration from a previous format to the current one'
-  _group 'lib'
+  about 'migrates bash-it configuration from a previous format to the current one'
+  group 'lib'
 
   declare migrated_something
   migrated_something=false
@@ -105,8 +105,8 @@ _bash-it-migrate () {
 }
 
 _bash-it-version () {
-  _about 'shows current bash-it version'
-  _group 'lib'
+  about 'shows current bash-it version'
+  group 'lib'
 
   cd "${BASH_IT}" || return
 
@@ -128,8 +128,8 @@ _bash-it-version () {
 }
 
 _bash-it-reload () {
-  _about 'reloads a profile file'
-  _group 'lib'
+  about 'reloads a profile file'
+  group 'lib'
 
   pushd "${BASH_IT}" &> /dev/null || return
 
@@ -146,12 +146,12 @@ _bash-it-reload () {
 }
 
 _bash-it-show () {
-  _about 'List available bash_it components or allow filtering for a specific type e.g., plugin, alias'
-  _group 'lib'
+  about 'List available bash_it components or allow filtering for a specific type e.g., plugin, alias'
+  group 'lib'
 
   __build-describe () {
     local _component=$1 file_type_singular=$1 _mode=$2
-    
+
     [[ "$_component" == *es ]] && file_type_singular=${_component/es/}
     [[ "$_component" == *ns ]] && file_type_singular=${_component/ns/n}
 
@@ -168,13 +168,13 @@ _bash-it-show () {
 }
 
 _bash-it-describe () {
-    _about 'summarizes available bash_it components'
-    _param '1: subdirectory'
-    _param '2: preposition'
-    _param '3: file_type'
-    _param '4: column_header'
-    _param '5: enabled'
-    _example '$ _bash-it-describe "plugins" "a" "plugin" "Plugin"'
+    about 'summarizes available bash_it components'
+    param '1: subdirectory'
+    param '2: preposition'
+    param '3: file_type'
+    param '4: column_header'
+    param '5: enabled'
+    example '$ _bash-it-describe "plugins" "a" "plugin" "Plugin"'
 
     subdirectory="$1"
     preposition="$2"
@@ -207,13 +207,13 @@ _bash-it-describe () {
     fi
 }
 
-all_groups () {
+allgroups () {
     about 'displays all unique metadata groups'
     group 'lib'
 
     local func file
     file=$(mktemp -t composure.XXXX)
-    for func in $(_local_functions)
+    for func in $(_typeset_functions)
     do
         local -f $func | metafor group >> $file
     done
@@ -231,7 +231,7 @@ then
 
     if ! [[ $PATH =~ (^|:)$1($|:) ]] ; then
       if [[ "$2" = "after" ]] ; then
-        export PATH=$PATH:$1
+        export PATH=$PATH:$1command_exists
       else
         export PATH=$1:$PATH
       fi
@@ -290,7 +290,7 @@ bash-it () {
         return;;
     esac
 
-    # pluralize component if necessary
+    # pluralize component if necessary (handle plugin == plugins)
     if ! _is_function $func; then
         if _is_function ${func}s; then
             func=${func}s

@@ -49,12 +49,12 @@
 #
 
 _bash-it-search () {
-  _about 'searches for given terms amongst bash-it plugins, aliases and completions'
-  _param '1: term1'
-  _param '2: [[ term2 ]]...'
-  _example '$ _bash-it-search @git ruby -rvm rake bundler'
+  about 'searches for given terms amongst bash-it plugins, aliases and completions'
+  param '1: term1'
+  param '2: [[ term2 ]]...'
+  example '$ _bash-it-search @git ruby -rvm rake bundler'
 
-  [[ -z "$(type _bash-it-array-contains-element 2>/dev/null)" ]]
+  [[ -z "$(type array-contains 2>/dev/null)" ]]
 
   local component
   export BASH_IT_SEARCH_USE_COLOR=true
@@ -112,18 +112,18 @@ _bash-it-search-component () {
 
   shift
 
-  _about 'searches for given terms amongst a given component'
-  _param '1: component type, one of: [[ aliases | plugins | completions ]]'
-  _param '2: term1 term2 @term3'
-  _param '3: [-]term4 [-]term5 ...'
-  _example '$ _bash-it-search-component aliases @git rake bundler -chruby'
+  about 'searches for given terms amongst a given component'
+  param '1: component type, one of: [[ aliases | plugins | completions ]]'
+  param '2: term1 term2 @term3'
+  param '3: [-]term4 [-]term5 ...'
+  example '$ _bash-it-search-component aliases @git rake bundler -chruby'
 
   # if one of the search terms is --enable or --disable, we will apply this action to the matches further down.
   local component_singular action action_func
   local -a search_commands=(enable disable)
 
   for search_command in "${search_commands[@]}"; do
-    if $(_bash-it-array-contains-element "--${search_command}" "$@"); then
+    if $(array-contains "--${search_command}" "$@"); then
       component_singular=${component}
       # handle aliases -> alias and plugins -> plugin
       component_singular=${component_singular/es/}
@@ -161,7 +161,7 @@ _bash-it-search-component () {
     elif [[ "${term:0:1}" == "-"  ]] ; then
       negative_terms=("${negative_terms[@]}" "${search_term}")
     elif [[ "${term:0:1}" == "@"  ]] ; then
-      if $(_bash-it-array-contains-element "${search_term}" "${component_list[@]}"); then
+      if $(array-contains "${search_term}" "${component_list[@]}"); then
         exact_terms=("${exact_terms[@]}" "${search_term}")
       fi
     else
@@ -169,7 +169,7 @@ _bash-it-search-component () {
     fi
   done
 
-  local -a total_matches=( $(_bash-it-array-dedup "${exact_terms[@]}" "${partial_terms[@]}") )
+  local -a total_matches=( $(array-dedupe "${exact_terms[@]}" "${partial_terms[@]}") )
 
   unset matches
   declare -a matches=()

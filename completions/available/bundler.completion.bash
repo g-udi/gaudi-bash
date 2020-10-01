@@ -72,7 +72,7 @@ __bundle () {
                 _filedir -d
                 return;;
             --standalone | --with | --without)
-                __bundle_complete_groups
+                __bundle_completegroups
                 return;;
             --trust-policy)
                 options="HighSecurity MediumSecurity LowSecurity
@@ -151,7 +151,7 @@ __bundle () {
         update)
             case $prev in
             --group)
-                __bundle_complete_groups
+                __bundle_completegroups
                 return;;
             *)
                 options=($(__bundle_exec_ruby 'puts Bundler.definition.specs.to_hash.keys'))
@@ -162,7 +162,7 @@ __bundle () {
             -F | --format)
                 options="dot jpg png svg";;
             -W | --without)
-                __bundle_complete_groups
+                __bundle_completegroups
                 return;;
             esac
             ;;
@@ -197,11 +197,11 @@ __bundle_get_command () {
 #
 # Multiple groups can be entered, separated either by spaces or by colons.
 # Input is read from $cur, and the result is directly written to $COMPREPLY.
-__bundle_complete_groups () {
+__bundle_completegroups () {
     # Group being currently written
-    local cur_group=${cur##*[[ :]}
+    local curgroup=${cur##*[[ :]}
     # All groups written before
-    local prefix=${cur%"$cur_group"}
+    local prefix=${cur%"$curgroup"}
     local groups=$(__bundle_exec_ruby 'puts Bundler.definition.dependencies.map(&:groups).reduce(:|).map(&:to_s)')
     if [[ ! $groups ]]; then
         COMPREPLY=()
@@ -212,7 +212,7 @@ __bundle_complete_groups () {
     local excluded=$'\ndefault\n'${prefix//[: \'\"\\]/$'\n'}
     # Include them twice to ensure they are duplicates
     groups=$groups$excluded$excluded
-    COMPREPLY=($(compgen -W "$(sort <<<"$groups" | uniq -u)" -- "$cur_group"))
+    COMPREPLY=($(compgen -W "$(sort <<<"$groups" | uniq -u)" -- "$curgroup"))
     # Prepend prefix to all entries
     COMPREPLY=("${COMPREPLY[@]/#/$prefix}")
     __ltrim_colon_completions "$cur"

@@ -1,17 +1,17 @@
 #!/usr/bin/env bash
 
 _help-completions () {
-  _about 'summarize all completions available in bash-it'
-  _group 'lib'
+  about 'summarize all completions available in bash-it'
+  group 'lib'
 
-  _bash-it-completions
+  _bash-it-show completions
 }
 
 _help-aliases () {
-    _about 'shows help for all aliases, or a specific alias group'
-    _param '1: optional alias group'
-    _example '$ alias-help'
-    _example '$ alias-help git'
+    about 'shows help for all aliases, or a specific alias group'
+    param '1: optional alias group'
+    example '$ alias-help'
+    example '$ alias-help git'
 
     if [[ -n "$1" ]]; then
         case $1 in
@@ -46,14 +46,14 @@ _help-list-aliases () {
 }
 
 _help-plugins () {
-    _about 'summarize all functions defined by enabled bash-it plugins'
-    _group 'lib'
+    about 'summarize all functions defined by enabled bash-it plugins'
+    group 'lib'
 
     printf '%s' 'please wait, building help...'
     local grouplist func
 
     grouplist=$(mktemp -t grouplist.XXXXXX)
-    for func in $(_local_functions)
+    for func in $(_typeset_functions)
     do
         local group
         group="$(local -f $func | metafor group)"
@@ -79,15 +79,15 @@ _help-plugins () {
 }
 
 _help-update () {
-  _about 'help message for update command'
-  _group 'lib'
+  about 'help message for update command'
+  group 'lib'
 
   echo "Check for a new version of bash-it and update it."
 }
 
 _help-migrate () {
-  _about 'help message for migrate command'
-  _group 'lib'
+  about 'help message for migrate command'
+  group 'lib'
 
   printf "${MAGENTA}%s${NC}\n" "Migrates internal bash-it structure to the latest version in case of changes"
   printf "${GREEN}%s${NC} %s ${GREEN}%s${NC}, ${GREEN}%s${NC} or ${GREEN}%s${NC}" "'migrate'" "command is run automatically when calling" "'update'" "'enable'" "'disable'"

@@ -140,7 +140,7 @@ fi
 
 # Load dependencies for enabling components
 source "$BASH_IT/lib/composure.bash"
-cite _about _param _example _group _author _version
+cite about param example group _author _version
 source "$BASH_IT/lib/helpers.bash"
 
 if [[ $interactive ]] && ! [[ $silent ]] ;
@@ -159,6 +159,7 @@ else
   _enable-plugin base
   _enable-plugin alias-completion
   _enable-alias general
+  _enable-alias gls
 fi
 
 echo ""
@@ -174,4 +175,4 @@ echo ""
 echo "To avoid issues and to keep your shell lean, please enable only features you really want to use."
 echo "Enabling everything can lead to issues"
 
-bash-it reload
+source "$CONFIG_FILE"

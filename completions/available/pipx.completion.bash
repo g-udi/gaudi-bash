@@ -1,4 +1,4 @@
-cite about-plugin
+cite about-completion
 about-completion 'Install and Run Python Applications in Isolated Environments'
 
 # Activate pipx completions

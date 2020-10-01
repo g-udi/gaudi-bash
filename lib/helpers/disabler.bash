@@ -1,49 +1,49 @@
 #!/usr/bin/env bash
 
 _on-disable-callback () {
-    _about 'Calls the disabled plugin destructor, if present'
-    _param '1: plugin name'
-    _example '$ _on-disable-callback gitstatus'
-    _group 'lib'
+    about 'Calls the disabled plugin destructor, if present'
+    param '1: plugin name'
+    example '$ _on-disable-callback gitstatus'
+    group 'lib'
 
     callback=$1_on_disable
     _command_exists $callback && $callback
 }
 
 _disable-plugin () {
-    _about 'disables bash_it plugin'
-    _param '1: plugin name'
-    _example '$ disable-plugin rvm'
-    _group 'lib'
+    about 'disables bash_it plugin'
+    param '1: plugin name'
+    example '$ disable-plugin rvm'
+    group 'lib'
 
     _disable-thing "plugins" "plugin" $1
     _on-disable-callback $1
 }
 
 _disable-alias () {
-    _about 'disables bash_it alias'
-    _param '1: alias name'
-    _example '$ disable-alias git'
-    _group 'lib'
+    about 'disables bash_it alias'
+    param '1: alias name'
+    example '$ disable-alias git'
+    group 'lib'
 
     _disable-thing "aliases" "alias" $1
 }
 
 _disable-completion () {
-    _about 'disables bash_it completion'
-    _param '1: completion name'
-    _example '$ disable-completion git'
-    _group 'lib'
+    about 'disables bash_it completion'
+    param '1: completion name'
+    example '$ disable-completion git'
+    group 'lib'
 
-    _disable-thing "completion" "completion" $1
+    _disable-thing "completions" "completion" $1
 }
 
 _disable-thing () {
-    _about 'disables a bash_it component'
-    _param '1: subdirectory'
-    _param '2: file_type'
-    _param '3: file_entity'
-    _example '$ _disable-thing "plugins" "plugin" "ssh"'
+    about 'disables a bash_it component'
+    param '1: subdirectory'
+    param '2: file_type'
+    param '3: file_entity'
+    example '$ _disable-thing "plugins" "plugin" "ssh"'
 
     subdirectory="$1"
     file_type="$2"

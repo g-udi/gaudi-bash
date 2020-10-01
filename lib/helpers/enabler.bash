@@ -5,40 +5,40 @@ BASH_IT_LOAD_PRIORITY_DEFAULT_PLUGIN=${BASH_IT_LOAD_PRIORITY_DEFAULT_PLUGIN:-250
 BASH_IT_LOAD_PRIORITY_DEFAULT_COMPLETION=${BASH_IT_LOAD_PRIORITY_DEFAULT_COMPLETION:-350}
 
 _enable-plugin () {
-    _about 'enables bash_it plugin'
-    _param '1: plugin name'
-    _example '$ enable-plugin rvm'
-    _group 'lib'
+    about 'enables bash_it plugin'
+    param '1: plugin name'
+    example '$ enable-plugin rvm'
+    group 'lib'
 
     _enable-thing "plugins" "plugin" $1 $BASH_IT_LOAD_PRIORITY_DEFAULT_PLUGIN
 }
 
 _enable-alias () {
-    _about 'enables bash_it alias'
-    _param '1: alias name'
-    _example '$ enable-alias git'
-    _group 'lib'
+    about 'enables bash_it alias'
+    param '1: alias name'
+    example '$ enable-alias git'
+    group 'lib'
 
     _enable-thing "aliases" "alias" $1 $BASH_IT_LOAD_PRIORITY_DEFAULT_ALIAS
 }
 
 _enable-completion () {
-    _about 'enables bash_it completion'
-    _param '1: completion name'
-    _example '$ enable-completion git'
-    _group 'lib'
+    about 'enables bash_it completion'
+    param '1: completion name'
+    example '$ enable-completion git'
+    group 'lib'
 
-    _enable-thing "completion" "completion" $1 $BASH_IT_LOAD_PRIORITY_DEFAULT_COMPLETION
+    _enable-thing "completions" "completion" $1 $BASH_IT_LOAD_PRIORITY_DEFAULT_COMPLETION
 }
 
 _enable-thing () {
-    cite _about _param _example
-    _about 'enables a bash_it component'
-    _param '1: subdirectory'
-    _param '2: file_type'
-    _param '3: file_entity'
-    _param '4: load priority'
-    _example '$ _enable-thing "plugins" "plugin" "ssh" "150"'
+    cite about param example
+    about 'enables a bash_it component'
+    param '1: subdirectory'
+    param '2: file_type'
+    param '3: file_entity'
+    param '4: load priority'
+    example '$ _enable-thing "plugins" "plugin" "ssh" "150"'
 
     subdirectory="$1"
     file_type="$2"

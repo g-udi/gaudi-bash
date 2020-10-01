@@ -7,12 +7,12 @@ _bash-it-component-help () {
   local component file
 
   component=$(_bash-it-pluralize-component "${1}")
-  file=$(_bash-it-component-cache-file ${component})
+  file=$(_bash-it-component-cache-file "${component}")
 
   if [[ ! -s "${file}" || -z $(find "${file}" -mmin -300) ]] ; then
     rm -f "${file}" 2>/dev/null
-    local func="_bash-it-${component}"
-    ${func} | $(_bash-it-grep) -E '   \[' | cat > ${file}
+    # local func=_bash-it-show "${component}"
+    _bash-it-show "${component}" | $(_bash-it-grep) -E '   \[' | cat > "${file}"
   fi
 
   cat "${file}"
@@ -25,9 +25,9 @@ _bash-it-component-cache-file () {
   component=$(_bash-it-pluralize-component "${1}")
   file="${BASH_IT}/tmp/cache/${component}"
 
-  [[ -f ${file} ]] || mkdir -p "$(dirname ${file})"
+  [[ -f ${file} ]] || mkdir -p "$(dirname "${file}")"
 
-  printf "${file}"
+  printf "%s" "${file}"
 }
 
 # pluralize component name for consistency especially for search
@@ -38,7 +38,7 @@ _bash-it-pluralize-component () {
   [[ ${component:${len}:1} != 's' ]] && component="${component}s"
   [[ ${component} == "alias" ]] && component="aliases"
 
-  printf ${component}
+  printf "%s" "${component}"
 }
 
 # clean the component cache directory in /tmp
@@ -52,7 +52,7 @@ _bash-it-clean-component-cache () {
       _bash-it-clean-component-cache "${component}"
     done
   else
-    cache="$(_bash-it-component-cache-file ${component})"
+    cache=$(_bash-it-component-cache-file "${component}")
     if [[ -f "${cache}" ]] ; then
       rm -f "${cache}"
     fi
