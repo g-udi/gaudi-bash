@@ -223,7 +223,7 @@ all_groups () {
 
 if ! type pathmunge > /dev/null 2>&1
 then
-  function pathmunge () {
+  pathmunge () {
     about 'prevent duplicate directories in you PATH variable'
     group 'helpers'
     example 'pathmunge /path/to/dir is equivalent to PATH=/path/to/dir:$PATH'
