@@ -6,16 +6,18 @@
 _bash-it-component-help () {
   local component file
 
-  component=$(_bash-it-pluralize-component "${1}")
-  file=$(_bash-it-component-cache-file "${component}")
+  if [[ -n "$1" ]]; then
+    component=$(_bash-it-pluralize-component "${1}")
+    file=$(_bash-it-component-cache-file "${component}")
 
-  if [[ ! -s "${file}" || -z $(find "${file}" -mmin -300) ]] ; then
-    rm -f "${file}" 2>/dev/null
-    # local func=_bash-it-show "${component}"
-    _bash-it-show "${component}" | $(_bash-it-grep) -E '   \[' | cat > "${file}"
+    if [[ ! -s "${file}" || -z $(find "${file}" -mmin -300) ]] ; then
+      rm -f "${file}" 2>/dev/null
+      _bash-it-show "${component}" | $(_bash-it-grep) -E '   \[' | cat > "${file}"
+    fi
+    cat "${file}"
+  else
+    return 1
   fi
-
-  cat "${file}"
 }
 
 # caches the component in the /tmp directory

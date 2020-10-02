@@ -2,6 +2,12 @@
 
 load ../helper
 
+load ../../lib/composure
+
+cite about param example group
+
+load ../../lib/helpers
+load ../../lib/helpers/bash-it
 load ../../lib/helpers/components
 
 local_setup () {
@@ -16,6 +22,24 @@ local_setup () {
       -mindepth 1 -maxdepth 1 \
       -exec cp -r {} "$BASH_IT/" \;
   fi
+}
+
+# echo "AAAAAA" >&2
+# _bash-it-component-help plugin
+# _bash-it-component-help alias >&2
+
+# _bash-it-component-help plugin >&2
+
+@test "bash-it helpers: _bash-it-component-help: should display components help" {
+  # should fail when no component is passed
+  run _bash-it-component-help
+  assert_failure
+
+  # should display plugins help
+  run _bash-it-component-help plugin
+  assert_success
+  assert_output --partial "base                  [ ]     miscellaneous tools"
+
 }
 
 @test "bash-it helpers: _bash-it-pluralize-component: should pluralise the argument" {
@@ -42,13 +66,13 @@ local_setup () {
 
   load "$BASH_IT/bash_it.sh"
 
-  run alias test_alias &> /dev/null
-  assert_success
-  assert_line -n 0 "alias test_alias='a'"
-
-  run _bash-it-component-item-is-enabled alias test_alias
+  # run alias test_alias &> /dev/null
   # assert_success
-  # assert_output "test_alias is enabled"
+  # assert_line -n 0 "alias test_alias='a'"
+
+  run _bash-it-component-item-is-enabled alias test_alias && echo "test_alias is enabled"
+  assert_success
+  assert_output "test_alias is enabled"
 
 }
 
