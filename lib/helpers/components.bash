@@ -2,7 +2,7 @@
 
 # Component-specific functions (component is either an alias, a plugin, or a completion).
 
-# display help text for the component
+# Display help text for the component
 _bash-it-component-help () {
   local component file
 
@@ -20,7 +20,7 @@ _bash-it-component-help () {
   fi
 }
 
-# caches the component in the /tmp directory
+# Caches the component in the /tmp directory
 _bash-it-component-cache-file () {
   local component file
 
@@ -32,10 +32,12 @@ _bash-it-component-cache-file () {
   printf "%s" "${file}"
 }
 
-# pluralize component name for consistency especially for search
+# Pluralize component name for consistency especially for search
 _bash-it-pluralize-component () {
   local component="${1}"
   local len=$(( ${#component} - 1 ))
+
+  [[ -n $component ]] || return 1
 
   [[ ${component:${len}:1} != 's' ]] && component="${component}s"
   [[ ${component} == "alias" ]] && component="aliases"
@@ -43,7 +45,19 @@ _bash-it-pluralize-component () {
   printf "%s" "${component}"
 }
 
-# clean the component cache directory in /tmp
+# Singularize component name for consistency
+_bash-it-singularize-component () {
+  local component="${1}"
+
+  # Handle aliases -> alias and plugins -> plugin, etc.
+  component_singular=${component/s/}
+  [[ "$component" == *es ]] && component_singular=${component/es/}
+  [[ "$component" == *ns ]] && component_singular=${component/ns/n}
+
+  printf "%s" "${component_singular}"
+}
+
+# Clean the component cache directory in /tmp
 _bash-it-clean-component-cache () {
   local component="$1"
   local cache

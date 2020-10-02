@@ -1,17 +1,25 @@
 #!/usr/bin/env bash
-# shellcheck disable=SC1090
+# shellcheck disable=SC1090,SC2034
 
-BASH_IT_LOAD_PRIORITY_SEPARATOR="-"
+BASH_IT_LOAD_PRIORITY_SEPARATOR="|"
 
-# support 'plumbing' metadata
-cite about param example group _author _version
+cite about param example group
 
 # Load all the helper libraries
-for helper in ${BASH_IT}/lib/helpers/*.bash; do source $helper; done
+for helper in "${BASH_IT}"/lib/helpers/*.bash; do source "$helper"; done
 
-_bash-it_update () {
-  about 'updates bash-it'
-  group 'lib'
+# @function     _bash-it-update
+# @description  Updates the bash-it installation by fetching latest code from the remote git
+#               will prompt the user to accept pulling the updates by showing the latest commit log
+# @return       Status message to indicate the outcome
+#               remote update success: bash-it successfully updated!
+#               remote update fail: bash-it is up to date, nothing to do!
+#               remote update error: Error updating bash-it, please, check if your bash-it installation folder (${BASH_IT}) is clean
+#               user skip: Skipping upgrade
+_bash-it-update () {
+
+  about "Updates the bash-it installation by fetching latest code from the remote git"
+  group "bash-it:core"
 
   local old_pwd="${PWD}"
 
@@ -29,84 +37,42 @@ _bash-it_update () {
   if [[ -n "${status}" ]]; then
 
     for i in $(git rev-list --merges --first-parent master..${BASH_IT_REMOTE}); do
-      num_of_lines=$(git log -1 --format=%B $i | awk 'NF' | wc -l)
+      num_of_lines=$(git log -1 --format=%B "$i" | awk 'NF' | wc -l)
       if [[ $num_of_lines -eq 1 ]]; then
         description="%s"
       else
         description="%b"
       fi
-      git log --format="%h: $description (%an)" -1 $i
+      git log --format="%h: $description (%an)" -1 "$i"
     done
-    echo ""
-    read -e -n 1 -p "Would you like to update to $(git log -1 --format=%h origin/master)? [Y/n] " RESP
-    case $RESP in
-      [yY]|"")
-        git pull --rebase &> /dev/null
-        if [[ $? -eq 0 ]]; then
-          echo "bash-it successfully updated."
-          echo ""
-          echo "Migrating your installation to the latest version now..."
-          _bash-it-migrate
-          echo ""
-          echo "All done, enjoy!"
-          bash-it reload
-        else
-          echo "Error updating bash-it, please, check if your bash-it installation folder (${BASH_IT}) is clean."
-        fi
-        ;;
-      [nN])
-        echo "Not upgrading…"
-        ;;
-      *)
-        echo -e "\033[91mPlease choose y or n.\033[m"
-        ;;
-      esac
+
+    _read_input "Would you like to update to $(git log -1 --format=%h origin/master)? [Y/n]"
+    if [[ $REPLY =~ ^[yY]$ ]]; then
+      git pull --rebase &> /dev/null
+      if [[ $? -eq 0 ]]; then
+        printf "${GREEN}%s${NC}\n" "bash-it successfully updated!"
+        bash-it reload
+      else
+        printf "${RED}%s${NC}\n" "Error updating bash-it, please, check if your bash-it installation folder (${BASH_IT}) is clean"
+      fi
+    else
+      printf "${YELLOW}%s${NC}\n" "Skipping upgrade :("
+    fi
   else
     echo "bash-it is up to date, nothing to do!"
   fi
   cd "${old_pwd}" &> /dev/null || return
 }
 
-_bash-it-migrate () {
-  about 'migrates bash-it configuration from a previous format to the current one'
-  group 'lib'
-
-  declare migrated_something
-  migrated_something=false
-
-  for file_type in "aliases" "plugins" "completion"
-  do
-    for f in `sort <(compgen -G "${BASH_IT}/$file_type/enabled/*.bash")`
-    do
-      local ff single_type component_name
-      ff=$(basename $f)
-
-      # Get the type of component from the extension
-      single_type=$(echo $ff | sed -e 's/.*\.\(.*\)\.bash/\1/g' | sed 's/aliases/alias/g')
-      # Cut off the optional "250---" prefix and the suffix
-      component_name=$(echo $ff | sed -e 's/[0-9]*[-]*\(.*\)\..*\.bash/\1/g')
-
-      migrated_something=true
-
-      echo "Migrating $single_type $component_name."
-
-      disable_func="_disable-$single_type"
-      enable_func="_enable-$single_type"
-
-      $disable_func $component_name
-      $enable_func $component_name
-    done
-  done
-
-  if [[ "$migrated_something" = "true" ]]; then
-    echo ""
-    echo "If any migration errors were reported, please try the following: reload && bash-it migrate"
-  fi
-}
-
+# @function     _bash-it-version
+# @description  Prints the bash-it version
+#               Shows current git SHA, commit hash and the remote that was compared against
+# @return       Current git SHA e.g., Current git SHA: 47d1e26 on 2020-10-01T17:50:08-07:00
+#               Last git commit link e.g., git@github.com:ahmadassaf/bash-it/commit/47d1e26
+#               Latest remote e.g., Compare to latest: git@github.com:ahmadassaf/bash-it/compare/47d1e26...master
 _bash-it-version () {
-  about 'shows current bash-it version'
-  group 'lib'
+  about "Shows current bash-it version with the Current git SHA and commit hash"
+  group "bash-it:core"
 
   cd "${BASH_IT}" || return
 
@@ -127,9 +93,12 @@ _bash-it-version () {
   cd - &> /dev/null || return
 }
 
+# @function     _bash-it-reload
+# @description  Reloads the bash profile
+#               Reloads the profile that corresponds to the correct OS type (.bashrc, .bash_profile)
 _bash-it-reload () {
-  about 'reloads a profile file'
-  group 'lib'
+  about "Reloads the bash profile that corresponds to the correct OS type (.bashrc, .bash_profile)"
+  group "bash-it:core"
 
   pushd "${BASH_IT}" &> /dev/null || return
 
@@ -145,144 +114,110 @@ _bash-it-reload () {
   popd &> /dev/null || return
 }
 
+# @function     _bash-it-show
+# @description  Shows a list of all items of a component (alias, plugin, completion)
+#               If no param was passed, shows all enabled components across.
+#               Components descriptions are retrieved via the composure metadata 'about'
+# @param $1     component: (of type aliases, plugins, completions)
+# @param $2     mode <enabled, all>: either show all available components or filter only for enabled ones
+# @return       A table showing each component name, status (enabled/disabled) and description
 _bash-it-show () {
-  about 'List available bash_it components or allow filtering for a specific type e.g., plugin, alias'
-  group 'lib'
-
-  __build-describe () {
-    local _component=$1 file_type_singular=$1 _mode=$2
-
-    [[ "$_component" == *es ]] && file_type_singular=${_component/es/}
-    [[ "$_component" == *ns ]] && file_type_singular=${_component/ns/n}
-
-    _bash-it-describe "$_component" "a" "$file_type_singular" "${file_type_singular^}" "$_mode"
-  }
+  about "List available bash_it components or allow filtering for a specific type e.g., plugins, aliases, completions"
+  group "bash-it:core"
 
   if [[ -n "$1" ]]; then
-    __build-describe "$(_bash-it-pluralize-component "$1")" "all"
+    _bash-it-describe "$1" "all"
   else
-    for file_type in "aliases" "plugins" "completion"; do
-      __build-describe "$file_type" "enabled"
+    for file_type in "aliases" "plugins" "completions"; do
+      _bash-it-describe "$file_type" "enabled"
     done
   fi
 }
 
-_bash-it-describe () {
-    about 'summarizes available bash_it components'
-    param '1: subdirectory'
-    param '2: preposition'
-    param '3: file_type'
-    param '4: column_header'
-    param '5: enabled'
-    example '$ _bash-it-describe "plugins" "a" "plugin" "Plugin"'
+# @function     _bash-it-backup
+# @description  Backs up enabled components (plugins, aliases, completions)
+#               The function writes "enable" commands into a file in $BASH_IT/tmp/enabled.bash-it.backup
+# @return       $BASH_IT/tmp/enabled.bash-it.backup file with 'bash-it enable' commands
+_bash-it-backup () {
+  about "backs up enabled components (plugins, aliases, completions)"
+  group "bash-it:core"
 
-    subdirectory="$1"
-    preposition="$2"
-    file_type="$3"
-    column_header="$4"
+  # Clear out the existing backup file
+  echo -n "" > "${BASH_IT}/tmp/enabled.bash-it.backup"
 
-    local f
+  for _file in "${BASH_IT}"/enabled/*.bash; do
+    local _component _type
 
-    printf "\n%-20s%-10s%s\n" "$column_header" 'Enabled?' '  Description'
-    printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -
-    for f in "${BASH_IT}/$subdirectory/available/"*.bash
-    do
-        # Check for both the old format without the load priority, and the extended format with the priority
-        declare enabled_files enabled_file
-        enabled_file=$(basename $f)
-        enabled_files=$(sort <(compgen -G "${BASH_IT}/enabled/*$BASH_IT_LOAD_PRIORITY_SEPARATOR${enabled_file}") <(compgen -G "${BASH_IT}/$subdirectory/enabled/${enabled_file}") <(compgen -G "${BASH_IT}/$subdirectory/enabled/*$BASH_IT_LOAD_PRIORITY_SEPARATOR${enabled_file}") | wc -l)
+    _component="$(echo "$_file" | sed -e 's/.*|\(.*\).bash.*/\1/')"
+    _type=$(_bash-it-singularize-component "${_component##*.}")
+    _component=${_component%%.*}
 
-        if [[ "$enabled_files" -gt 0 ]]; then
-            printf "%-20s${GREEN}%-10s${NC}%s\n" "$(basename "$f" | sed -e 's/\(.*\)\..*\.bash/\1/g')" "  [●]" "    $(cat $f | metafor about-"$file_type")"
-        elif [[ "$5" = "all" ]]; then
-            printf "%-20s${RED}%-10s${NC}%s\n" "$(basename "$f" | sed -e 's/\(.*\)\..*\.bash/\1/g')" "  [◯]" "    $(cat $f | metafor about-"$file_type")"
-        fi
-    done
+    echo "Backing up $_type: ${_component}"
+    printf "%s\n" "bash-it enable ${_type} ${_component}" >> "${BASH_IT}/tmp/enabled.bash-it.backup"
 
-    if [[ "$5" = "all" ]]; then
-      printf '\n%s\n' "to enable $preposition $file_type, do:"
-      printf '%s\n' "$ bash-it enable $file_type  <$file_type name> [$file_type name]... -or- $ bash-it enable $file_type all"
-      printf '\n%s\n' "to disable $preposition $file_type, do:"
-      printf '%s\n' "$ bash-it disable $file_type <$file_type name> [$file_type name]... -or- $ bash-it disable $file_type all"
-    fi
+  done
 }
 
-allgroups () {
-    about 'displays all unique metadata groups'
-    group 'lib'
+# @function     _bash-it-restore
+# @description  Restores enabled bash-it components
+#               The function gets the list of enabled commands from the backup file in $BASH_IT/tmp/enabled.bash-it.backup
+# @return       Status message to indicate the outcome
+_bash-it-restore () {
+  about "restores enabled components (plugins, aliases, completions)"
+  group "bash-it:core"
 
-    local func file
-    file=$(mktemp -t composure.XXXX)
-    for func in $(_typeset_functions)
-    do
-        local -f $func | metafor group >> $file
-    done
-    cat $file | sort | uniq
-    rm $file
+  ! [[ -f "${BASH_IT}/tmp/enabled.bash-it.backup" ]] && echo -e "${RED}No valid backup file found :(${NC}" && return
+
+  while IFS= read -r line; do
+    $line
+  done < "${BASH_IT}/tmp/enabled.bash-it.backup"
 }
 
-if ! type pathmunge > /dev/null 2>&1
-then
-  pathmunge () {
-    about 'prevent duplicate directories in you PATH variable'
-    group 'helpers'
-    example 'pathmunge /path/to/dir is equivalent to PATH=/path/to/dir:$PATH'
-    example 'pathmunge /path/to/dir after is equivalent to PATH=$PATH:/path/to/dir'
-
-    if ! [[ $PATH =~ (^|:)$1($|:) ]] ; then
-      if [[ "$2" = "after" ]] ; then
-        export PATH=$PATH:$1command_exists
-      else
-        export PATH=$1:$PATH
-      fi
-    fi
-  }
-fi
 
 bash-it () {
     about 'bash-it help and maintenance'
-    param '1: verb [one of: help | show | enable | disable | migrate | update | search | version | reload | doctor ]] '
+
+    param '1: verb [one of: help | backup | show | enable | disable | update | restore | search | version | reload | doctor ]] '
     param '2: component type [one of: alias(es) | completion(s) | plugin(s) ]] or search term(s)'
     param '3: specific component [optional]'
+
     example '$ bash-it show plugins'
     example '$ bash-it help aliases'
     example '$ bash-it enable plugin git [tmux]...'
     example '$ bash-it disable alias hg [tmux]...'
-    example '$ bash-it migrate'
     example '$ bash-it update'
+    example '$ bash-it backup'
     example '$ bash-it search [-|@]term1 [-|@]term2 ... [[ -e/--enable ]] [[ -d/--disable ]] [[ -r/--refresh ]] [[ -c/--no-color ]]'
     example '$ bash-it version'
     example '$ bash-it reload'
     example '$ bash-it doctor errors|warnings|all'
-    local verb=${1:-}
-    shift
-    local component=${1:-}
-    shift
+
+    local verb=${1:-} && shift
+    local component=${1:-} && shift
     local func
 
     case $verb in
       show)
-        _bash-it-show $component "$@"
-        return;;
+        func=_bash-it-show;;
       enable)
-        func=_enable-$component;;
+        func=_bash-it-enable;;
       disable)
-        func=_disable-$component;;
+        func=_bash-it-disable;;
       help)
         func=_help-$component;;
       doctor)
         func=_bash-it-doctor-$component;;
       search)
-        _bash-it-search $component "$@"
+        _bash-it-search "$component" "$@"
         return;;
       update)
-        func=_bash-it_update;;
-      migrate)
-        func=_bash-it-migrate;;
-      list)
-        func=_bash-it-list;;
+        func=_bash-it-update;;
       version)
         func=_bash-it-version;;
+      backup)
+        func=_bash-it-backup;;
+      restore)
+        func=_bash-it-restore;;
       reload)
         func=_bash-it-reload;;
       *)
@@ -290,29 +225,10 @@ bash-it () {
         return;;
     esac
 
-    # pluralize component if necessary (handle plugin == plugins)
-    if ! _is_function $func; then
-        if _is_function ${func}s; then
-            func=${func}s
-        else
-            if _is_function ${func}es; then
-                func=${func}es
-            else
-                echo "oops! $component is not a valid option!"
-                reference bash-it
-                return
-            fi
-        fi
-    fi
-
+    # Handle the multiple arguments passed to enable/disable and run the function on each
     if [[ x"$verb" == x"enable" ]] || [[ x"$verb" == x"disable" ]]; then
-        _bash-it-migrate
-
-        for arg in "$@"
-        do
-            $func "$arg"
-        done
+      $func "$(_bash-it-pluralize-component "$component")" "$@"
     else
-        $func "$@"
+      $func "$(_bash-it-pluralize-component "$component")"
     fi
 }

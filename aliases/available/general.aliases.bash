@@ -5,7 +5,7 @@ about-alias 'general aliases'
 alias _="sudo"
 
 # count items
-alias count="ls -1 | wc -l"
+alias count="ls -1 | grep "^.\*$" -c"
 
 # colored grep
 # Need to check an existing file for a pattern that will be found to ensure

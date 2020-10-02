@@ -5,11 +5,11 @@ BASH_IT_LOG_PREFIX="[THEME]"
 
 # LSCOLORS
 
-# The value of this variable describes what color to use for which attribute when colors are enabled with CLICOLOR.  This string is a concatenation of pairs of
-# the format fb, where f is the foreground color and b is the background color.
-
+# The value of this variable describes what color to use for which attribute when colors are enabled with CLICOLOR.
+# This string is a concatenation of pairs of the format fb, where f is the foreground color and b is the background color.
+#
 # The color designators are as follows:
-
+#
 #     a     black
 #     b     red
 #     c     green
@@ -27,11 +27,11 @@ BASH_IT_LOG_PREFIX="[THEME]"
 #     G     bold cyan
 #     H     bold light grey; looks like bright white
 #     x     default foreground or background
-
+#
 # Note that the above are standard ANSI colors.  The actual display may differ depending on the color capabilities of the terminal in use.
-
+#
 # The order of the attributes are as follows:
-
+#
 #     1.   directory
 #     2.   symbolic link
 #     3.   socket
@@ -43,19 +43,17 @@ BASH_IT_LOG_PREFIX="[THEME]"
 #     9.   executable with setgid bit set
 #     10.  directory writable to others, with sticky bit
 #     11.  directory writable to others, without sticky bit
-
-# The default is `exfxcxdxbxegedabagacad`, i.e. blue foreground and default background for regular directories, black foreground and red background for setuid
-# executables, etc.
-
-
-
-
+#
+# The default is `exfxcxdxbxegedabagacad`, i.e. blue foreground and default background for regular directories, black foreground and red background for setuid executables, etc.
+#
+#
+#
 # # LS_COLORS
-
+#
 # LS_COLORS='di=1:fi=0:ln=31:pi=5:so=5:bd=5:cd=5:or=31'
-
+#
 # The parameters for LS_COLORS (di, fi, ln, pi, etc) refer to different file types:
-
+#
 #     di 	Directory
 #     fi 	File
 #     ln 	Symbolic Link
@@ -66,11 +64,11 @@ BASH_IT_LOG_PREFIX="[THEME]"
 #     or 	Symbolic Link pointing to a non-existent file (orphan)
 #     mi 	Non-existent file pointed to by a symbolic link (visible when you type ls -l)
 #     ex 	File which is executable (ie. has 'x' set in permissions).
-
+#
 # ### Color Codes
-
+#
 # Through trial and error I worked out the color codes for `LS_COLORS` to be:
-
+#
 #     0 =	Default Colour
 #     1 =	Bold
 #     4 =	Underlined
@@ -106,15 +104,14 @@ BASH_IT_LOG_PREFIX="[THEME]"
 #     105 =	Light Purple Background
 #     106 =	Turquoise Background
 
-# These codes can also be combined with one another:
-# di=5;34;43
-# alternatively use: http://geoff.greer.fm/lscolors/
+# These codes can also be combined with one another: di=5;34;43
+# Alternatively use: http://geoff.greer.fm/lscolors/
 
 # Enable coloring of your terminal by using ANSI color sequences to distinguish file types
 export CLICOLOR=1
 export LSCOLORS='cxfxdxgxbxegedabagacad'
 
-# colored grep
+# Colored grep
 GREP_OPTIONS="--color=auto"
 alias grep='grep $GREP_OPTIONS'
 

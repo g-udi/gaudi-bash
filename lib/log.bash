@@ -5,21 +5,15 @@ export BASH_IT_LOG_LEVEL_WARNING=2
 export BASH_IT_LOG_LEVEL_ALL=3
 
 _bash-it-get-component-name-from-path () {
-  # filename without path
-  filename=${1##*/}
-  # filename without path or priority
-  filename=${filename##*---}
-  # filename without path, priority or extension
-  echo ${filename%.*.bash}
+  filename=${1##*/}                                         # File name without path
+  filename=${filename##*$BASH_IT_LOAD_PRIORITY_SEPARATOR}   # File name without path or priority
+  echo ${filename%.*.bash}                                  # File name without path, priority or extension
 }
 
 _bash-it-get-component-type-from-path () {
-  # filename without path
-  filename=${1##*/}
-  # filename without path or priority
-  filename=${filename##*---}
-  # extension
-  echo ${filename} | cut -d '.' -f 2
+  filename=${1##*/}                                         # File name without path
+  filename=${filename##*$BASH_IT_LOAD_PRIORITY_SEPARATOR}   # File name without path or priority
+  echo ${filename} | cut -d '.' -f 2                        # File extension
 }
 
 _log_general () {
@@ -29,7 +23,7 @@ _log_general () {
   param '3: message to log'
   group 'log'
 
-  # if no BASH_IT_LOG_PREFIX is defined fallback to [CORE]
+  # If no BASH_IT_LOG_PREFIX is defined fallback to [CORE]
   BASH_IT_LOG_PREFIX=${BASH_IT_LOG_PREFIX:-"[CORE]"}
 
   echo -e "$1$2${YELLOW}${BASH_IT_LOG_PREFIX}${NC} $3"

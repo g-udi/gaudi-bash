@@ -2,9 +2,9 @@
 
 # Bash History Handling
 
-shopt -s histappend                                      # append to bash_history if Terminal.app quits
-export HISTCONTROL=${HISTCONTROL:-ignorespace:erasedups} # erase duplicates; alternative option: export HISTCONTROL=ignoredups
-export HISTSIZE=${HISTSIZE:-5000}                        # resize history size
+shopt -s histappend                                      # Append to bash_history if Terminal.app quits
+export HISTCONTROL=${HISTCONTROL:-ignorespace:erasedups} # Erase duplicates; alternative option: export HISTCONTROL=ignoredups
+export HISTSIZE=${HISTSIZE:-5000}                        # Resize history size
 export AUTOFEATURE=${AUTOFEATURE:-true autotest}         # Cucumber / Autotest integration
 
 rh () {

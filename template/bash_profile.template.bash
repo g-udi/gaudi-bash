@@ -4,7 +4,7 @@
 export BASH_IT="{{BASH_IT}}"
 
 # Lock and Load a custom theme file
-# location /.bash_it/themes/
+# Location /.bash_it/themes/
 export BASH_IT_THEME='gaudi'
 
 # Don't check mail when opening terminal.
@@ -14,7 +14,7 @@ unset MAILCHECK
 export SCM_CHECK=true
 
 # (Advanced): Uncomment this to make Bash-it reload itself automatically
-# after enabling or disabling aliases, plugins, and completions.
+# After enabling or disabling aliases, plugins, and completions.
 export BASH_IT_AUTOMATIC_RELOAD_AFTER_CONFIG_CHANGE=1
 
 # Uncomment this to make Bash-it create alias reload [ref: https://github.com/Bash-it/bash-it/issues/1120]

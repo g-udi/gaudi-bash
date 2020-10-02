@@ -3,8 +3,8 @@
 #
 # Search by Konstantin Gredeskoul «github.com/kigster»
 #
-# This function returns list of aliases, plugins and completions in bash-it,
-# whose name or description matches one of the search terms provided as arguments.
+# This function returns list of aliases, plugins and completions in bash-it.
+# Name or description should match one of the search terms provided as arguments.
 #
 # Usage:
 #    ❯ bash-it search [-|@]term1 [-|@]term2 ... \
@@ -118,14 +118,14 @@ _bash-it-search-component () {
   param '3: [-]term4 [-]term5 ...'
   example '$ _bash-it-search-component aliases @git rake bundler -chruby'
 
-  # if one of the search terms is --enable or --disable, we will apply this action to the matches further down.
+  # If one of the search terms is --enable or --disable, we will apply this action to the matches further down.
   local component_singular action action_func
   local -a search_commands=(enable disable)
 
   for search_command in "${search_commands[@]}"; do
     if $(array-contains "--${search_command}" "$@"); then
       component_singular=${component}
-      # handle aliases -> alias and plugins -> plugin
+      # Handle aliases -> alias and plugins -> plugin
       component_singular=${component_singular/es/}
       component_singular=${component_singular/ns/n}
 
@@ -135,18 +135,17 @@ _bash-it-search-component () {
     fi
   done
 
-   # passed on the command line
   local -a terms=("$@")
 
   unset exact_terms
   unset partial_terms
   unset negative_terms
 
-  # terms that should be included only if they match exactly
+  # Terms that should be included only if they match exactly
   local -a exact_terms=()
-  # terms that should be included if they match partially
+  # Terms that should be included if they match partially
   local -a partial_terms=()
-  # negated partial terms that should be excluded
+  # Negated partial terms that should be excluded
   local -a negative_terms=()
 
   unset component_list

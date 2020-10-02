@@ -4,7 +4,7 @@
 # A collection of reusable functions
 
 # Check if the passed parameter is a function
-# sets $? to true if parameter is the name of a function
+# Sets $? to true if parameter is the name of a function
 _is_function () {
   [[ -n "$(LANG=C type -t "$1" 2>/dev/null | grep 'function')" ]]
 }
@@ -37,6 +37,7 @@ _read_input() {
 #
 # To use this in bash-it for inline replacements with `sed`, use the following syntax:
 # sed "${BASH_IT_SED_IparamETERS[@]}" -e "..." file
+#
 BASH_IT_SED_IparamETERS=(-i)
 case "$(uname)" in
   Darwin*) BASH_IT_SED_IparamETERS=(-i "")
@@ -51,9 +52,8 @@ elif [[ -s /Applications/Preview.app ]]; then
   PREVIEW="/Applications/Preview.app"
 fi
 
-# This function searches an array for an exact match against the term passed
-# as the first argument to the function. This function exits as soon as
-# a match is found.
+# This function searches an array for an exact match against the term passed as the first argument to the function.
+# This function exits as soon as a match is found.
 #
 # Returns:
 #   0 when a match is found, otherwise 1.
@@ -68,7 +68,6 @@ fi
 #       echo "contains pear!"
 #     fi
 #   contains pear!
-#
 #
 array-contains () {
   local e match="$1"
@@ -117,3 +116,29 @@ clean-string () {
 array-dedupe () {
   clean-string "$(echo "$*" | tr ' ' '\n' | sort -u | tr '\n' ' ')" "all"
 }
+
+# Prevent duplicate directories in you PATH variable
+#
+# Example:
+#
+# pathmunge /path/to/dir is equivalent to PATH=/path/to/dir:$PATH
+# pathmunge /path/to/dir after is equivalent to PATH=$PATH:/path/to/dir
+#
+if ! type pathmunge > /dev/null 2>&1
+then
+  pathmunge () {
+    IFS=':' local -a 'a=($1)'
+    local i=${#a[@]}
+    while [[ $i -gt 0 ]] ; do
+      i=$(( i - 1 ))
+      p=${a[i]}
+      if ! [[ $PATH =~ (^|:)$p($|:) ]] ; then
+        if [[ "$2" = "after" ]] ; then
+          export PATH=$PATH:$p
+        else
+          export PATH=$p:$PATH
+        fi
+      fi
+    done
+  }
+fi

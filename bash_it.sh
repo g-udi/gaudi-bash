@@ -18,18 +18,20 @@ source "${BASH_IT}/lib/composure.bash"
 source "${BASH_IT}/lib/log.bash"
 
 # Load all the libraries
-for lib in ${BASH_IT}/lib/*.bash; do
+for lib in "${BASH_IT}"/lib/*.bash; do
   [[ "$lib" != "${BASH_IT}/lib/appearance.bash" ]] && _log_component "$lib" "library" && source "$lib"
 done
 
 # Load the reloader script that will load all enabled components
 source "${BASH_IT}/scripts/reloader.bash"
+
 # Load enabled aliases, completion, plugins
 for file_type in "aliases" "plugins" "completion"; do source "${BASH_IT}/scripts/reloader.bash" "skip" "$file_type"; done
+
 # Load custom aliases, completions, plugins
-_log_debug "Loading general custom files..."
 CUSTOM_LIB="${BASH_IT_CUSTOM:=${BASH_IT}/custom}/*.bash ${BASH_IT_CUSTOM:=${BASH_IT}/custom}/**/*.bash"
-for custom in ${CUSTOM_LIB}; do [[ -e "${custom}" ]] && _log_component $custom "custom" && source $custom; done
+for custom in ${CUSTOM_LIB}; do [[ -e "${custom}" ]] && _log_component "$custom" "custom" && source "$custom"; done
+
 # Load the bash theme
 source "${BASH_IT}/lib/appearance.bash"
 
