@@ -8,7 +8,7 @@ Stop polluting your `~/bin` directory and your `.bashrc` file, fork/clone bash-i
 
 ## Contributing
 
-Please take a look at the [Contribution Guidelines](CONTRIBUTING.md) before reporting a bug or providing a new feature.
+Please take a look at the [Contribution Guidelines](CONTRIBUTING.md) before reporting a bug or providing a new feature :pray:
 
 The [Development Guidelines](DEVELOPMENT.md) have more information on some of the internal workings of bash-it,
 please feel free to read through this page if you're interested in how bash-it loads its components.
