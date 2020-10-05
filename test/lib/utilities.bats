@@ -8,7 +8,7 @@
 # cite about param example group _author _version
 
 # local_setup () {
-#   setup_test_fixture
+#   prepare
 # }
 
 # has_match () {

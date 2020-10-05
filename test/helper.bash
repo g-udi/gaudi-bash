@@ -1,39 +1,31 @@
-unset BASH_IT_THEME
-unset GIT_HOSTING
-unset NGINX_PATH
-unset IRC_CLIENT
-unset TODO
-unset SCM_CHECK
-unset BASH_IT_AUTOMATIC_RELOAD_AFTER_CONFIG_CHANGE
-
-export TEST_MAIN_DIR="${BATS_TEST_DIRNAME}/.."
-export TEST_DEPS_DIR="${TEST_DEPS_DIR-${TEST_MAIN_DIR}/../bin}"
 export GIT_CONFIG_NOSYSTEM
 
-load "${TEST_DEPS_DIR}/bats-support/load.bash"
-load "${TEST_DEPS_DIR}/bats-assert/load.bash"
-load "${TEST_DEPS_DIR}/bats-file/load.bash"
 
-local_setup () {
+local_setup() {
   true
 }
 
-local_teardown () {
+local_teardown() {
   true
 }
 
 # This function sets up a local test fixture, i.e. a completely fresh and isolated bash-it directory.
 # This is done to avoid messing with your own bash-it source directory.
 # If you need this, call it in your .bats file's `local_setup` function.
-setup_test_fixture () {
+prepare () {
+  local lib_directory  src_topdir
+
+  # Create the bash_it folder in the temp test directory
   mkdir -p "$BASH_IT"
+
+  # Get the root folder of bash_it by traversing from the bats lib location
   lib_directory="$(cd "$(dirname "$0")" && pwd)"
-  local src_topdir="$lib_directory/../../../.."
+  src_topdir="$lib_directory/../../../.."
 
   if command -v rsync &> /dev/null
   then
     # Use rsync to copy bash-it to the temp folder
-    rsync -qavrKL -d --delete-excluded --exclude=.git --exclude=enabled "$src_topdir" "$BASH_IT"
+    rsync -qavrKL -d --delete-excluded --exclude=.git "$src_topdir" "$BASH_IT"
   else
     rm -rf "$BASH_IT"
     mkdir -p "$BASH_IT"
@@ -44,32 +36,28 @@ setup_test_fixture () {
       -exec cp -r {} "$BASH_IT" \;
   fi
 
-  rm -rf "$BASH_IT"/enabled
-  rm -rf "$BASH_IT"/aliases/enabled
-  rm -rf "$BASH_IT"/completion/enabled
-  rm -rf "$BASH_IT"/plugins/enabled
-
-  mkdir -p "$BASH_IT"/enabled
-  mkdir -p "$BASH_IT"/aliases/enabled
-  mkdir -p "$BASH_IT"/completion/enabled
-  mkdir -p "$BASH_IT"/plugins/enabled
-
-  # Some tests use the BASH_IT_TEST_HOME variable, e.g. install/uninstall
-  export BASH_IT_TEST_HOME="$TEST_TEMP_DIR"
+  rm -rf "$BASH_IT/enabled"
+  mkdir -p "$BASH_IT/enabled"
 }
 
 setup () {
-  # The `temp_make` function from "bats-file" requires the tralston/bats-file fork,
-  # since the original ztombol/bats-file's `temp_make` does not work on macOS.
+
+  # TEST_MAIN_DIR Points to the 'test' folder location e.g., $HOME/.bash_it/test/
+  export TEST_MAIN_DIR="${BATS_TEST_DIRNAME}/.."
+  # TEST_DEPS_DIR will point to the folder where the bats git submodules are
+  export TEST_DEPS_DIR="${TEST_DEPS_DIR-${TEST_MAIN_DIR}/../bin}"
+
+  load "${TEST_DEPS_DIR}/bats-support/load.bash"
+  load "${TEST_DEPS_DIR}/bats-assert/load.bash"
+  load "${TEST_DEPS_DIR}/bats-file/load.bash"
+
+  # Create a temp directory with a 'bash-it-test-' prefix
   TEST_TEMP_DIR="$(temp_make --prefix 'bash-it-test-')"
+
+  export BATSLIB_FILE_PATH_REM="#${TEST_TEMP_DIR}"
+  export BATSLIB_FILE_PATH_ADD='<temp>'
+  export BASH_IT="${TEST_TEMP_DIR}/.bash_it"
   export TEST_TEMP_DIR
-
-  export BASH_IT_TEST_DIR="${TEST_TEMP_DIR}/.bash_it"
-
-  export BASH_IT_ROOT="${BASH_IT_TEST_DIR}/root"
-  export BASH_IT=$BASH_IT_TEST_DIR
-
-  mkdir -p -- "${BASH_IT_ROOT}"
 
   # Some tools, e.g. `git` use configuration files from the $HOME directory,
   # which interferes with our tests. The only way to keep `git` from doing this
@@ -91,6 +79,8 @@ setup () {
 teardown () {
   local_teardown
 
-  rm -rf "${BASH_IT_TEST_DIR}"
+  rm -rf "${BASH_IT}"
   temp_del "${TEST_TEMP_DIR}"
 }
+
+

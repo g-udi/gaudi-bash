@@ -2,7 +2,7 @@
 # shellcheck disable=SC1090,SC1091,SC2034
 
 # Initialize Bash It
-BASH_IT_LOG_PREFIX="[CORE]"
+BASH_IT_LOG_PREFIX="CORE"
 
 # Only set $BASH_IT if it's not already set
 if [[ -z "$BASH_IT" ]];
@@ -26,7 +26,7 @@ done
 source "${BASH_IT}/scripts/reloader.bash"
 
 # Load enabled aliases, completion, plugins
-for file_type in "aliases" "plugins" "completion"; do source "${BASH_IT}/scripts/reloader.bash" "skip" "$file_type"; done
+for file_type in "aliases" "plugin" "completion"; do source "${BASH_IT}/scripts/reloader.bash" "skip" "$file_type"; done
 
 # Load custom aliases, completions, plugins
 CUSTOM_LIB="${BASH_IT_CUSTOM:=${BASH_IT}/custom}/*.bash ${BASH_IT_CUSTOM:=${BASH_IT}/custom}/**/*.bash"

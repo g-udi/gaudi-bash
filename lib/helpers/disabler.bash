@@ -25,7 +25,17 @@ _bash-it-disable () {
     type=$(_bash-it-pluralize-component "$1")
     component="$2"
 
-    [[ "$type" = "alls" ]] && [[ -z "$component"  ]] && echo -e "${RED}Please enter a valid component to disable (all) for ${NC}" && return
+    # Capture if the user prompted for a disable all and iterate on all components
+    if [[ "$type" = "alls" ]] && [[ -z "$component"  ]]; then
+      _read_input "This will disable all bash-it components (aliases, plugins and completions). Are you sure you want to proceed? [yY/nN]"
+      if [[ $REPLY =~ ^[yY]$ ]]; then
+        for file_type in "aliases" "plugins" "completions"; do
+          _bash-it-disable "$file_type" "all"
+        done
+      fi
+      return
+    fi
+
     [[ -z "$component" ]] && echo "${RED}Please enter a valid $(_bash-it-singularize-component "$1")(s) to disable${NC}" && return
 
     if [[ "$component" = "all" ]]; then

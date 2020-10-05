@@ -11,7 +11,7 @@ cite about param example group _author _version
 load ../../lib/helpers
 
 local_setup () {
-  setup_test_fixture
+  prepare
 }
 
 # @test "helpers: _command_exists function exists" {

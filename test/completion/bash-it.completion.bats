@@ -5,7 +5,7 @@
 # load ../../completion/available/bash-it.completion
 
 # local_setup () {
-#   setup_test_fixture
+#   prepare
 # }
 
 # @test "completion: ensure that the _bash-it-comp function is available" {

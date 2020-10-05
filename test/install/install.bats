@@ -13,48 +13,61 @@
 # esac
 
 # local_setup () {
-#   setup_test_fixture
+#   prepare
 # }
 
 # @test "install: verify that the install script exists" {
+#   assert_file_exist "$BASH_IT/install.sh"
+# }
+
+# @test "install: verify that the setup script exists" {
 #   assert_file_exist "$BASH_IT/setup.sh"
 # }
 
-# @test "install: run the install script silently" {
+# @test "install: run the install script silently [1] skip prompts" {
+#   ./setup.sh --silent
+#   refute_output
+# }
+
+# @test "install: run the install script silently [2] config file exists" {
 #   cd "$BASH_IT"
 
 #   ./setup.sh --silent
+#   assert_file_exist "$HOME/$BASH_IT_CONFIG_FILE"
+# }
 
-#   assert_file_exist "$BASH_IT_TEST_HOME/$BASH_IT_CONFIG_FILE"
+# @test "install: run the install script silently [3] enable sane defaults" {
+#   cd "$BASH_IT"
 
-#   assert_link_exist "$BASH_IT/enabled/150-general.aliases.bash"
-#   assert_link_exist "$BASH_IT/enabled/250-base.plugin.bash"
-#   assert_link_exist "$BASH_IT/enabled/365-alias-completion.plugin.bash"
-#   assert_link_exist "$BASH_IT/enabled/350-bash-it.completion.bash"
-#   assert_link_exist "$BASH_IT/enabled/350-system.completion.bash"
+#   ./setup.sh -s
+
+#   assert_link_exist "$BASH_IT/enabled/150___general.aliases.bash"
+#   assert_link_exist "$BASH_IT/enabled/250___base.plugins.bash"
+#   assert_link_exist "$BASH_IT/enabled/365___alias-completion.plugins.bash"
+#   assert_link_exist "$BASH_IT/enabled/350___bash-it.completions.bash"
+#   assert_link_exist "$BASH_IT/enabled/350___system.completions.bash"
+# }
+
+# @test "install: run the install script silently and don't modify configs" {
+#   cd "$BASH_IT"
+
+#   ./setup.sh --silent --no_modify_config
+#   assert_file_not_exist "$HOME/$BASH_IT_CONFIG_FILE"
 # }
 
 # @test "install: verify that a backup file is created" {
 #   cd "$BASH_IT"
 
-#   touch "$BASH_IT_TEST_HOME/$BASH_IT_CONFIG_FILE"
-#   echo "test file content" > "$BASH_IT_TEST_HOME/$BASH_IT_CONFIG_FILE"
-#   local md5_orig=$(md5sum "$BASH_IT_TEST_HOME/$BASH_IT_CONFIG_FILE" | awk '{print $1}')
+#   touch "$HOME/$BASH_IT_CONFIG_FILE"
+#   echo "test file content" > "$HOME/$BASH_IT_CONFIG_FILE"
+#   local md5_orig=$(md5sum "$HOME/$BASH_IT_CONFIG_FILE" | awk '{print $1}')
 
 #   ./setup.sh --silent
 
-#   assert_file_exist "$BASH_IT_TEST_HOME/$BASH_IT_CONFIG_FILE"
-#   assert_file_exist "$BASH_IT_TEST_HOME/$BASH_IT_CONFIG_FILE.bak"
+#   assert_file_exist "$HOME/$BASH_IT_CONFIG_FILE"
+#   assert_file_exist "$HOME/$BASH_IT_CONFIG_FILE.bak"
 
-#   local md5_bak=$(md5sum "$BASH_IT_TEST_HOME/$BASH_IT_CONFIG_FILE.bak" | awk '{print $1}')
+#   local md5_bak=$(md5sum "$HOME/$BASH_IT_CONFIG_FILE.bak" | awk '{print $1}')
 
 #   assert_equal "$md5_orig" "$md5_bak"
-# }
-
-# @test "install: verify that silent and interactive can not be used at the same time" {
-#   cd "$BASH_IT"
-
-#   run ./setup.sh --silent --interactive
-
-#   assert_failure
 # }

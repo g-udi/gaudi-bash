@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC1090,SC2034
 
-BASH_IT_LOAD_PRIORITY_SEPARATOR="|"
+export BASH_IT_LOAD_PRIORITY_SEPARATOR="___"
 
 cite about param example group
 

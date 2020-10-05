@@ -11,7 +11,7 @@
 # load ../../lib/helpers/components
 
 # local_setup () {
-#   setup_test_fixture
+#   prepare
 
 #   # Copy the test fixture to the bash-it folder
 #   if command -v rsync &> /dev/null

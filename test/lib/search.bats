@@ -19,7 +19,7 @@
 # load ../../lib/helpers
 
 # local_setup () {
-#   setup_test_fixture
+#   prepare
 
 #   export OLD_PATH="$PATH"
 #   export PATH="/usr/bin:/bin:/usr/sbin"

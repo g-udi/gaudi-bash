@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC1090,SC2034
 
-BASH_IT_LOG_PREFIX="[THEME]"
+BASH_IT_LOG_PREFIX="THEME"
 
 # LSCOLORS
 
@@ -120,7 +120,7 @@ if [[ -n $BASH_IT_THEME ]]; then
   source "$BASH_IT/themes/$BASH_IT_THEME/$BASH_IT_THEME.theme.bash"
 fi
 
-_log_debug "Loading \"${BASH_IT_THEME}\" theme"
+_log_component "$BASH_IT_THEME" "theme"
 if [[ $PROMPT ]]; then
   export PS1="\[""$PROMPT""\]"
 fi

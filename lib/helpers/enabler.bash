@@ -22,7 +22,17 @@ _bash-it-enable () {
     component="$2"
     load_priority="${!_load_priority}"
 
-    [[ "$type" = "alls" ]] && [[ -z "$component"  ]] && echo -e "${RED}Please enter a valid component to enable (all) for ${NC}" && return
+    # Capture if the user prompted for a disable all and iterate on all components
+    if [[ "$type" = "alls" ]] && [[ -z "$component"  ]]; then
+      _read_input "This will enable all bash-it components (aliases, plugins and completions). Are you sure you want to proceed? [yY/nN]"
+      if [[ $REPLY =~ ^[yY]$ ]]; then
+        for file_type in "aliases" "plugins" "completions"; do
+          _bash-it-enable "$file_type" "all"
+        done
+      fi
+      return
+    fi
+
     [[ -z "$component" ]] && echo "${RED}Please enter a valid $(_bash-it-singularize-component "$type")(s) to enable${NC}" && return
 
     if [[ "$component" = "all" ]]; then

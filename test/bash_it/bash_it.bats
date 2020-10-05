@@ -1,11 +1,11 @@
-#!/usr/bin/env bats
+# #!/usr/bin/env bats
 
-load ../helper
+# load ../helper
 
-load ../../lib/composure
+# load ../../lib/composure
 
 # local_setup () {
-#   setup_test_fixture
+#   prepare
 
 #   # Copy the test fixture to the bash-it folder
 #   if command -v rsync &> /dev/null
@@ -28,14 +28,11 @@ load ../../lib/composure
 #   mkdir -p $BASH_IT/enabled
 #   mkdir -p $BASH_IT/enabled
 
-#   ln -s $BASH_IT/plugins/available/base.plugin.bash "$BASH_IT/enabled/250|base.plugin.bash"
-#   assert_link_exist "$BASH_IT/enabled/250|base.plugin.bash"
+#   ln -s $BASH_IT/aliases/available/a.aliases.bash "$BASH_IT/enabled/150___a.aliases.bash"
+#   assert_link_exist "$BASH_IT/enabled/150___a.aliases.bash"
 
-#   ln -s $BASH_IT/aliases/available/a.aliases.bash "$BASH_IT/enabled/150|a.aliases.bash"
-#   assert_link_exist "$BASH_IT/enabled/150|a.aliases.bash"
-
-#   ln -s $BASH_IT/aliases/available/b.aliases.bash "$BASH_IT/enabled/150|b.aliases.bash"
-#   assert_link_exist "$BASH_IT/enabled/150|b.aliases.bash"
+#   ln -s $BASH_IT/aliases/available/b.aliases.bash "$BASH_IT/enabled/150___b.aliases.bash"
+#   assert_link_exist "$BASH_IT/enabled/150___b.aliases.bash"
 
 #   # The `test_alias` alias should not exist
 #   run alias test_alias &> /dev/null
@@ -52,14 +49,11 @@ load ../../lib/composure
 #   mkdir -p $BASH_IT/enabled
 #   mkdir -p $BASH_IT/enabled
 
-#   ln -s $BASH_IT/plugins/available/base.plugin.bash $BASH_IT/enabled/250|base.plugin.bash
-#   assert_link_exist "$BASH_IT/enabled/250|base.plugin.bash"
+#   ln -s $BASH_IT/aliases/available/a.aliases.bash $BASH_IT/enabled/175___a.aliases.bash
+#   assert_link_exist "$BASH_IT/enabled/175___a.aliases.bash"
 
-#   ln -s $BASH_IT/aliases/available/a.aliases.bash $BASH_IT/enabled/175|a.aliases.bash
-#   assert_link_exist "$BASH_IT/enabled/175|a.aliases.bash"
-
-#   ln -s $BASH_IT/aliases/available/b.aliases.bash $BASH_IT/enabled/150|b.aliases.bash
-#   assert_link_exist "$BASH_IT/enabled/150|b.aliases.bash"
+#   ln -s $BASH_IT/aliases/available/b.aliases.bash $BASH_IT/enabled/150___b.aliases.bash
+#   assert_link_exist "$BASH_IT/enabled/150___b.aliases.bash"
 
 #   # The `test_alias` alias should not exist
 #   run alias test_alias &> /dev/null
@@ -75,17 +69,14 @@ load ../../lib/composure
 # @test "core: load aliases and plugins in priority order" {
 #   mkdir -p $BASH_IT/enabled
 
-#   ln -s $BASH_IT/plugins/available/base.plugin.bash $BASH_IT/enabled/250|base.plugin.bash
-#   assert_link_exist "$BASH_IT/enabled/250|base.plugin.bash"
+#   ln -s $BASH_IT/aliases/available/a.aliases.bash $BASH_IT/enabled/150___a.aliases.bash
+#   assert_link_exist "$BASH_IT/enabled/150___a.aliases.bash"
 
-#   ln -s $BASH_IT/aliases/available/a.aliases.bash $BASH_IT/enabled/150|a.aliases.bash
-#   assert_link_exist "$BASH_IT/enabled/150|a.aliases.bash"
+#   ln -s $BASH_IT/aliases/available/b.aliases.bash $BASH_IT/enabled/150___b.aliases.bash
+#   assert_link_exist "$BASH_IT/enabled/150___b.aliases.bash"
 
-#   ln -s $BASH_IT/aliases/available/b.aliases.bash $BASH_IT/enabled/150|b.aliases.bash
-#   assert_link_exist "$BASH_IT/enabled/150|b.aliases.bash"
-
-#   ln -s $BASH_IT/plugins/available/c.plugin.bash $BASH_IT/enabled/250|c.plugin.bash
-#   assert_link_exist "$BASH_IT/enabled/250|c.plugin.bash"
+#   ln -s $BASH_IT/plugins/available/c.plugin.bash $BASH_IT/enabled/250___c.plugins.bash
+#   assert_link_exist "$BASH_IT/enabled/250___c.plugins.bash"
 
 #   # The `test_alias` alias should not exist
 #   run alias test_alias &> /dev/null
@@ -101,17 +92,14 @@ load ../../lib/composure
 # @test "core: load aliases, plugins and completions in priority order" {
 #   mkdir -p $BASH_IT/enabled
 
-#   ln -s $BASH_IT/plugins/available/base.plugin.bash "$BASH_IT/enabled/250|base.plugin.bash"
-#   assert_link_exist "$BASH_IT/enabled/250|base.plugin.bash"
+#   ln -s $BASH_IT/aliases/available/a.aliases.bash $BASH_IT/enabled/150___a.aliases.bash
+#   assert_link_exist "$BASH_IT/enabled/150___a.aliases.bash"
 
-#   ln -s $BASH_IT/aliases/available/a.aliases.bash $BASH_IT/enabled/150|a.aliases.bash
-#   assert_link_exist "$BASH_IT/enabled/150|a.aliases.bash"
+#   ln -s $BASH_IT/aliases/available/b.aliases.bash $BASH_IT/enabled/350___b.completions.bash
+#   assert_link_exist "$BASH_IT/enabled/350___b.completions.bash"
 
-#   ln -s $BASH_IT/aliases/available/b.aliases.bash $BASH_IT/enabled/350|b.completion.bash
-#   assert_link_exist "$BASH_IT/enabled/350|b.completion.bash"
-
-#   ln -s $BASH_IT/plugins/available/c.plugin.bash $BASH_IT/enabled/250|c.plugin.bash
-#   assert_link_exist "$BASH_IT/enabled/250|c.plugin.bash"
+#   ln -s $BASH_IT/plugins/available/c.plugin.bash $BASH_IT/enabled/250___c.plugins.bash
+#   assert_link_exist "$BASH_IT/enabled/250___c.plugins.bash"
 
 #   # The `test_alias` alias should not exist
 #   run alias test_alias &> /dev/null
@@ -128,17 +116,14 @@ load ../../lib/composure
 # @test "core: load aliases, plugins and completions in priority order, even if the priority says otherwise" {
 #   mkdir -p $BASH_IT/enabled
 
-#   ln -s $BASH_IT/plugins/available/base.plugin.bash $BASH_IT/enabled/250|base.plugin.bash
-#   assert_link_exist "$BASH_IT/enabled/250|base.plugin.bash"
+#   ln -s $BASH_IT/aliases/available/a.aliases.bash $BASH_IT/enabled/450___a.aliases.bash
+#   assert_link_exist "$BASH_IT/enabled/450___a.aliases.bash"
 
-#   ln -s $BASH_IT/aliases/available/a.aliases.bash $BASH_IT/enabled/450|a.aliases.bash
-#   assert_link_exist "$BASH_IT/enabled/450|a.aliases.bash"
+#   ln -s $BASH_IT/aliases/available/b.aliases.bash $BASH_IT/enabled/350___b.completions.bash
+#   assert_link_exist "$BASH_IT/enabled/350___b.completions.bash"
 
-#   ln -s $BASH_IT/aliases/available/b.aliases.bash $BASH_IT/enabled/350|b.completion.bash
-#   assert_link_exist "$BASH_IT/enabled/350|b.completion.bash"
-
-#   ln -s $BASH_IT/plugins/available/c.plugin.bash $BASH_IT/enabled/950|c.plugin.bash
-#   assert_link_exist "$BASH_IT/enabled/950|c.plugin.bash"
+#   ln -s $BASH_IT/plugins/available/c.plugin.bash $BASH_IT/enabled/950___c.plugins.bash
+#   assert_link_exist "$BASH_IT/enabled/950___c.plugins.bash"
 
 #   # The `test_alias` alias should not exist
 #   run alias test_alias &> /dev/null
@@ -155,17 +140,14 @@ load ../../lib/composure
 # @test "core: load aliases and plugins in priority order, with one alias higher than plugins" {
 #   mkdir -p $BASH_IT/enabled
 
-#   ln -s $BASH_IT/plugins/available/base.plugin.bash $BASH_IT/enabled/250|base.plugin.bash
-#   assert_link_exist "$BASH_IT/enabled/250|base.plugin.bash"
+#   ln -s $BASH_IT/aliases/available/a.aliases.bash $BASH_IT/enabled/350___a.aliases.bash
+#   assert_link_exist "$BASH_IT/enabled/350___a.aliases.bash"
 
-#   ln -s $BASH_IT/aliases/available/a.aliases.bash $BASH_IT/enabled/350|a.aliases.bash
-#   assert_link_exist "$BASH_IT/enabled/350|a.aliases.bash"
+#   ln -s $BASH_IT/aliases/available/b.aliases.bash $BASH_IT/enabled/150___b.aliases.bash
+#   assert_link_exist "$BASH_IT/enabled/150___b.aliases.bash"
 
-#   ln -s $BASH_IT/aliases/available/b.aliases.bash $BASH_IT/enabled/150|b.aliases.bash
-#   assert_link_exist "$BASH_IT/enabled/150|b.aliases.bash"
-
-#   ln -s $BASH_IT/plugins/available/c.plugin.bash $BASH_IT/enabled/250|c.plugin.bash
-#   assert_link_exist "$BASH_IT/enabled/250|c.plugin.bash"
+#   ln -s $BASH_IT/plugins/available/c.plugin.bash $BASH_IT/enabled/250___c.plugins.bash
+#   assert_link_exist "$BASH_IT/enabled/250___c.plugins.bash"
 
 #   # The `test_alias` alias should not exist
 #   run alias test_alias &> /dev/null
@@ -179,12 +161,3 @@ load ../../lib/composure
 #   # are loaded one by one.
 #   assert_line -n 0 "alias test_alias='c'"
 # }
-
-@test "core: koko" {
-
-  bash-it enable plugin base &> /dev/null
-  assert_success
-  bash-it enable plugin base >&2
-ls "$BASH_IT/enabled"  >&2
-  assert_link_exist "$BASH_IT/enabled/250|base.plugin.bash"
-}

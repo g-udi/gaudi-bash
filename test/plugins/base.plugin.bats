@@ -44,8 +44,8 @@
 # }
 
 # @test 'plugins base: lsgrep()' {
-#   for i in 1 2 3; do mkdir -p "${BASH_IT_TEST_DIR}/${i}"; done
-#   cd $BASH_IT_TEST_DIR
+#   for i in 1 2 3; do mkdir -p "${BASH_IT}/${i}"; done
+#   cd $BASH_IT
 #   run lsgrep 2
 #   assert_success
 #   assert_equal $output 2
