@@ -13,13 +13,12 @@ export BASH_IT_LOG_ERROR_COLOR=${RED}
 source "$BASH_IT/lib/helpers/components.bash"
 
 # @function     _bash-it-get-component-name-from-path
-# @description  Get a component name from a component path
-#
+# @description  get a component name from a component path
 # @param $1     component path: filesystem path for the component e.g., /Users/ahmadassaf/.bash_it/lib/colors.plugins.bash
 # @return       component name stripped from the extension e.g., colors
 _bash-it-get-component-name-from-path () {
   about "get a component name from a component path"
-  group "bash-it:log"
+  group "bash-it:core"
 
   local file_name component_name
 
@@ -29,13 +28,12 @@ _bash-it-get-component-name-from-path () {
 }
 
 # @function     _bash-it-get-component-type-from-path
-# @description  Get a component type from a component path in a singular form (alias, plugin, completion)
-#
+# @description  get a component type from a component path in a singular form (alias, plugin, completion)
 # @param $1     component path: filesystem path for the component e.g., /Users/ahmadassaf/.bash_it/lib/colors.plugins.bash
 # @return       component type in singular form e.g., plugin
 _bash-it-get-component-type-from-path () {
   about "get a component type from a component path in a singular form (alias, plugin, completion)"
-  group "bash-it:log"
+  group "bash-it:core"
 
   local filename
 
@@ -45,18 +43,18 @@ _bash-it-get-component-type-from-path () {
 }
 
 # @function     _log_general
-# @description  Logs a message to terminal
-#               Uses BASH_IT_LOG_PREFIX as a prefix or fallbacks to [CORE] if not defined
+# @description  logs a message to terminal
+#               uses BASH_IT_LOG_PREFIX as a prefix or fallbacks to [CORE] if not defined
 # @param $1     log type: log type of: DEBUG, WARN, ERROR
 # @param $2     log message: the log message to print
-# @return       A message printed in the terminal
+# @return       message printed in the terminal
 _log_general () {
   about "internal function used for logging, uses BASH_IT_LOG_PREFIX as a prefix"
-  group "bash-it:log"
+  group "bash-it:core"
 
   [[ -z $1 ]] && return
 
-  # If no BASH_IT_LOG_PREFIX is defined fallback to [CORE]
+  # When no BASH_IT_LOG_PREFIX is defined fallback to [CORE]
   BASH_IT_LOG_PREFIX=${BASH_IT_LOG_PREFIX:-"CORE"}
 
   local log_type log_color log_prefix
@@ -70,13 +68,13 @@ _log_general () {
 
 # @function     _log_debug
 # @description  log a debug message by echoing to the screen
-#               Needs BASH_IT_LOG_LEVEL >= BASH_IT_LOG_LEVEL_ALL"
-#               Used the default debug color defined in BASH_IT_LOG_DEBUG_COLOR
+#               needs BASH_IT_LOG_LEVEL >= BASH_IT_LOG_LEVEL_ALL"
+#               used the default debug color defined in BASH_IT_LOG_DEBUG_COLOR
 # @param $1     log message: message to be logged
-# @return       A log message printed in the terminal
+# @return       log message printed in the terminal
 _log_debug () {
   about "log a debug message by echoing to the screen"
-  group "bash-it:log"
+  group "bash-it:core"
 
   [[ "$BASH_IT_LOG_LEVEL" -ge $BASH_IT_LOG_LEVEL_ALL ]] || return 0
   _log_general "$1" debug
@@ -84,13 +82,13 @@ _log_debug () {
 
 # @function     _log_warning
 # @description  log a wraning message by echoing to the screen
-#               Needs BASH_IT_LOG_LEVEL >= BASH_IT_LOG_LEVEL_WARNING"
-#               Used the default warning color defined in BASH_IT_LOG_WARN_COLOR
+#               needs BASH_IT_LOG_LEVEL >= BASH_IT_LOG_LEVEL_WARNING"
+#               used the default warning color defined in BASH_IT_LOG_WARN_COLOR
 # @param $1     log message: message to be logged
-# @return       A log message printed in the terminal
+# @return       log message printed in the terminal
 _log_warning () {
   about "log a warning message by echoing to the screen"
-  group "bash-it:log"
+  group "bash-it:core"
 
   [[ "$BASH_IT_LOG_LEVEL" -ge $BASH_IT_LOG_LEVEL_WARNING ]] || return 0
   _log_general "$1" warning
@@ -98,31 +96,30 @@ _log_warning () {
 
 # @function     _log_error
 # @description  log an error message by echoing to the screen
-#               Needs BASH_IT_LOG_LEVEL >= BASH_IT_LOG_LEVEL_ERROR"
-#               Used the default error color defined in BASH_IT_LOG_ERROR_COLOR
+#               needs BASH_IT_LOG_LEVEL >= BASH_IT_LOG_LEVEL_ERROR"
+#               used the default error color defined in BASH_IT_LOG_ERROR_COLOR
 # @param $1     log message: message to be logged
-# @return       A log message printed in the terminal
+# @return       log message printed in the terminal
 _log_error () {
   about "log an error message by echoing to the screen"
-  group "bash-it:log"
+  group "bash-it:core"
 
   [[ "$BASH_IT_LOG_LEVEL" -ge $BASH_IT_LOG_LEVEL_ERROR ]] || return 0
   _log_general "$1" error
 }
 
 # @function     _log_component
-# @description  Component-aware log proxy that logs a message when components are loaded
-#               The function print a log message using the _log_general function with the extractec component name and type
-#
+# @description  component-aware log proxy that logs a message when components are loaded
+#               the function print a log message using the _log_general function with the extractec component name and type
 # @param $1     component path: filesystem path for the component e.g., /Users/ahmadassaf/.bash_it/lib/colors.plugins.bash
 # @param $2     component type: component type e.g., library, custom, theme, component (default: component)
-#                 library: a bash-it core library file e.g., colors, appearence, etc.
-#                 component: a bash-it component of any of the types: alias, plugin or completion
-#                 custom: a bash-it custom component of any type
-# @return       A message (log) printed in the terminal
+#                 - library: a bash-it core library file e.g., colors, appearence, etc.
+#                 - component: a bash-it component of any of the types: alias, plugin or completion
+#                 - custom: a bash-it custom component of any type
+# @return       message (log) printed in the terminal
 _log_component () {
   about "log a component loading message by echoing to the screen the name and type"
-  group "bash-it:log"
+  group "bash-it:core"
 
   [[ "$BASH_IT_LOG_LEVEL" -ge $BASH_IT_LOG_LEVEL_ERROR ]] || return 0
 

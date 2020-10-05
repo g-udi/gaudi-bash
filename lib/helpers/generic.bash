@@ -3,27 +3,44 @@
 
 # A collection of reusable functions
 
-# Check if the passed parameter is a function
-# Sets $? to true if parameter is the name of a function
+# @function     _is_function
+# @description  check if the passed parameter is a function
+#               sets $? to true if parameter is the name of a function
+# @return       status code success (0) if the function is found or fails othwerwise
 _is_function () {
+  about "check if the passed parameter is a function"
+  group "bash-it:core"
+
   [[ -n "$(LANG=C type -t "$1" 2>/dev/null | grep 'function')" ]]
 }
 
-# Check if the command passed as the argument exists
-# A second param can be passed (optional) for a log message to include when command not found
-#
-# Example:
-# _command_exists ls && echo exists
-#
+# @function     _command_exists
+# @description  check if the command passed as the argument exists
+# @param $1     command: the command to check
+# @param $2     message (optional) for a log message to include when the command not found
+# @return       status code success (0) if the function is found or fails othwerwise
+# @example      ❯ _command_exists ls && echo exists
 _command_exists () {
-  local msg="${2:-Command "$1" does not exist!}"
+  about "check if the command passed as the argument exists"
+  group "bash-it:core"
 
-  type "$1" &> /dev/null || (_log_warning "$msg" && return 1) ;
+  local msg
+
+  msg="${2:-"command $1 does not exist!"}"
+  type "$1" &> /dev/null || (echo "$msg" && return 1) ;
 }
 
-# Reads input from the prompt and ensure no empty value
-# It will enter a new line as a cosmetic only if there an entry that is not empty
+# @function     _read_input
+# @description  reads input from the prompt for a yes/no (one character) input
+#               ensure no empty response will be passed by looping the read prompt unitl a valid non empty response is entered
+#               will enter a new line as a cosmetic only if there an entry that is not empty
+# @param $1     message: the input prompt message to display
+# @return       REPLY entered by the user
+# @example      ❯ _read_input "would you like to update bash-it?"
 _read_input() {
+  about "reads input from the prompt for a yes/no (one character) input"
+  group "bash-it:core"
+
   unset REPLY
   while ! [[ $REPLY =~ ^[yY]$ ]] && ! [[ $REPLY =~ ^[nN]$ ]]; do
     read -rp "${1} " -n 1 </dev/tty;
@@ -31,45 +48,26 @@ _read_input() {
   done
 }
 
-# Handle the different ways of running `sed` without generating a backup file based on OS
-# - GNU sed (Linux) uses `-i`
-# - BSD sed (macOS) uses `-i ''`
+# @function     _array-contains
+# @description  searches an array for an exact match against the term passed as the first argument to the function
+#               the function exits as soon as a match is found
+# @param $1     item: the item to search for
+# @param $2     array <array>: the array to search in
+# @return       status code success (0) if the function is found or fails othwerwise
+# @example
+#   ❯  declare -a fruits=(apple orange pear mandarin)
 #
-# To use this in bash-it for inline replacements with `sed`, use the following syntax:
-# sed "${BASH_IT_SED_IparamETERS[@]}" -e "..." file
+#   ❯  _array-contains apple "${fruits[@]}" && echo 'contains apple'
+#   ❯ contains apple
 #
-BASH_IT_SED_IparamETERS=(-i)
-case "$(uname)" in
-  Darwin*) BASH_IT_SED_IparamETERS=(-i "")
-esac
-
-# Adding Support for other OSes
-PREVIEW="less"
-
-if [[ -s /usr/bin/gloobus-preview ]]; then
-  PREVIEW="gloobus-preview"
-elif [[ -s /Applications/Preview.app ]]; then
-  PREVIEW="/Applications/Preview.app"
-fi
-
-# This function searches an array for an exact match against the term passed as the first argument to the function.
-# This function exits as soon as a match is found.
-#
-# Returns:
-#   0 when a match is found, otherwise 1.
-#
-# Examples:
-#   $ declare -a fruits=(apple orange pear mandarin)
-#
-#   $ array-contains apple "${fruits[@]}" && echo 'contains apple'
-#   contains apple
-#
-#   $ if $(array-contains pear "${fruits[@]}"); then
+#   ❯  if $(_array-contains pear "${fruits[@]}"); then
 #       echo "contains pear!"
 #     fi
-#   contains pear!
-#
-array-contains () {
+#   ❯ contains pear!
+_array-contains () {
+  about "searches an array for an exact match against the term passed as the first argument to the function"
+  group "bash-it:core"
+
   local e match="$1"
 
   shift
@@ -77,21 +75,31 @@ array-contains () {
   return 1
 }
 
-# Clean a string from whitespaces give a passed cleaning mode
-#   all: trim all leading and trailing whitespaces
-#   leading: trim all leading spaces
-#   trailing: trim all trailing spaces
-#   any: trim any whitespace in the string
+# @function     _clean-string
+# @description  cleans a string from whitespaces given a passed cleaning mode
+# @param $1     text: the string to clean
+# @param $2     mode: the cleaning mode
+#                 - all: trim all leading and trailing whitespaces
+#                 - leading: trim all leading spaces
+#                 - trailing: trim all trailing spaces
+#                 - any: trim any whitespace in the string
+# @return       status code success (0) if the function is found or fails othwerwise
+# @example
+#   ❯ _clean-string " test test test " "all"
+#   ❯ 'test test test'
 #
-# Examples:
+#   _clean-string " test test test " "leading"
+#   ❯  'test test test '
 #
-# FOO=' test test test '
-# clean-string $FOO "all" -> 'test test test'
-# clean-string $FOO "leading" -> 'test test test '
-# clean-string $FOO "trailing" -> ' test test test'
-# clean-string $FOO "any" -> 'testtesttest'
+#   ❯ _clean-string " test test test " "trailing"
+#   ❯ ' test test test'
 #
-clean-string () {
+#   ❯ _clean-string " test test test " "any"
+#   ❯ 'testtesttest'
+_clean-string () {
+  about "cleans a string from whitespaces give a passed cleaning mode"
+  group "bash-it:core"
+
   local mode=${2:-"all"}
 
   if [[ $mode = "all" ]]; then
@@ -105,25 +113,29 @@ clean-string () {
   fi
 }
 
-# Creates a concatinated array of unique and sorted elements
+# @function     _array-dedupe
+# @description  creates a concatinated array of unique and sorted elements
+# @param $1     origin <array>: the source array
+# @param $2     target <array>: the target array
+# @return       the unique concatinated array
+# @example
+#   ❯ declare -a array_a=(apple orange pear mandarin)
+#   ❯ declare -a array_b=(apple pear apricot cucumber orange)
 #
-# Example:
-# declare -a array_a=(apple orange pear mandarin)
-# declare -a array_b=(apple pear apricot cucumber orange)
-#
-# array-dedupe "${array_a[@]}" "${array_b[@]}" -> "apple apricot cucumber mandarin orange pear"
-#
-array-dedupe () {
-  clean-string "$(echo "$*" | tr ' ' '\n' | sort -u | tr '\n' ' ')" "all"
+#   ❯ _array-dedupe "${array_a[@]}" "${array_b[@]}"
+#   ❯ apple apricot cucumber mandarin orange pear
+_array-dedupe () {
+  about "creates a concatinated array of unique and sorted elements"
+  group "bash-it:core"
+
+  _clean-string "$(echo "$*" | tr ' ' '\n' | sort -u | tr '\n' ' ')" "all"
 }
 
 # Prevent duplicate directories in you PATH variable
 #
 # Example:
-#
 # pathmunge /path/to/dir is equivalent to PATH=/path/to/dir:$PATH
 # pathmunge /path/to/dir after is equivalent to PATH=$PATH:/path/to/dir
-#
 if ! type pathmunge > /dev/null 2>&1
 then
   pathmunge () {
@@ -141,4 +153,24 @@ then
       fi
     done
   }
+fi
+
+# Handle the different ways of running `sed` without generating a backup file based on OS
+# - GNU sed (Linux) uses `-i`
+# - BSD sed (macOS) uses `-i ''`
+#
+# In order to use this in bash-it for inline replacements with `sed`, use the following syntax:
+# ❯ sed "${BASH_IT_SED_I_PARAMETERS[@]}" -e "..." file
+BASH_IT_SED_I_PARAMETERS=(-i)
+case "$(uname)" in
+  Darwin*) BASH_IT_SED_I_PARAMETERS=(-i "")
+esac
+
+# Adding Support for other OSes
+PREVIEW="less"
+
+if [[ -s /usr/bin/gloobus-preview ]]; then
+  PREVIEW="gloobus-preview"
+elif [[ -s /Applications/Preview.app ]]; then
+  PREVIEW="/Applications/Preview.app"
 fi

@@ -5,11 +5,10 @@ BASH_IT_LOAD_PRIORITY_DEFAULT_PLUGINS=${BASH_IT_LOAD_PRIORITY_DEFAULT_PLUGINS:-2
 BASH_IT_LOAD_PRIORITY_DEFAULT_COMPLETIONS=${BASH_IT_LOAD_PRIORITY_DEFAULT_COMPLETIONS:-350}
 
 # @function     _bash-it-enable
-# @description  Enables a component
-#
+# @description  enables a component
 # @param $1     component type: bash-it component of type aliases, plugins, completions
 # @param $2     component name: bash-it component name .e.g., base, git
-# @return       A message to indicate the outcome
+# @return       message to indicate the outcome
 _bash-it-enable () {
     about "enable a bash-it component (plugin, component, alias)"
     group "bash-it:core"
@@ -69,7 +68,7 @@ _bash-it-enable () {
 
     _bash-it-clean-component-cache "${type}"
 
-    printf "${GREEN}%s${NC} %s %s${RED} (%s)${NC}\n" "[● ENABLED]" "$type: $component" "enabled with priority" "$use_load_priority"
+    printf "${GREEN}%s${NC} %s %s${RED} (%s)${NC}\n" "◉ ENABLED" "$(_bash-it-singularize-component "$type"): $component" "enabled with priority" "$use_load_priority"
 
     if [[ -n "$BASH_IT_AUTOMATIC_RELOAD_AFTER_CONFIG_CHANGE" ]]; then
       _bash-it-reload

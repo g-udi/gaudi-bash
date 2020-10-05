@@ -12,7 +12,7 @@
 # }
 
 # has_match () {
-#   $(array-contains ${@}) && echo "has" "$1"
+#   $(_array-contains ${@}) && echo "has" "$1"
 # }
 
 # item_enabled () {
@@ -30,7 +30,7 @@
 
 # @test "_bash-it-component-item-is-enabled() - for an enabled/disabled item" {
 #   run bash-it enable alias svn
-#   assert_line -n 0 '[● ENABLED] svn enabled with priority 150.'
+#   assert_line -n 0 '[● ENABLED] alias: svn enabled with priority (150)'
 
 #   run item_enabled alias svn
 #   assert_line -n 0 'alias svn is enabled'
@@ -49,7 +49,7 @@
 
 # @test "_bash-it-component-item-is-disabled() - for an enabled/disabled item" {
 #   run bash-it enable alias svn
-#   assert_line -n 0 '[● ENABLED] svn enabled with priority 150.'
+#   assert_line -n 0 '[● ENABLED] alias: svn enabled with priority (150)'
 
 #   run item_disabled alias svn
 #   assert_line -n 0 ''
@@ -61,31 +61,31 @@
 #   assert_line -n 0 'alias svn is disabled'
 # }
 
-# @test "array-contains() - when match is found, and is the first" {
+# @test "_array-contains() - when match is found, and is the first" {
 #   declare -a fruits=(apple pear orange mandarin)
 #   run has_match apple "${fruits[@]}"
 #   assert_line -n 0 'has apple'
 # }
 
-# @test "array-contains() - when match is found, and is the last" {
+# @test "_array-contains() - when match is found, and is the last" {
 #   declare -a fruits=(apple pear orange mandarin)
 #   run has_match mandarin "${fruits[@]}"
 #   assert_line -n 0 'has mandarin'
 # }
 
-# @test "array-contains() - when match is found, and is in the middle" {
+# @test "_array-contains() - when match is found, and is in the middle" {
 #   declare -a fruits=(apple pear orange mandarin)
 #   run has_match pear "${fruits[@]}"
 #   assert_line -n 0 'has pear'
 # }
 
-# @test "array-contains() - when match is found, and it has spaces" {
+# @test "_array-contains() - when match is found, and it has spaces" {
 #   declare -a fruits=(apple pear orange mandarin "yellow watermelon")
 #   run has_match "yellow watermelon" "${fruits[@]}"
 #   assert_line -n 0 'has yellow watermelon'
 # }
 
-# @test "array-contains() - when match is not found" {
+# @test "_array-contains() - when match is not found" {
 #   declare -a fruits=(apple pear orange mandarin)
 #   run has_match xyz "${fruits[@]}"
 #   assert_line -n 0 ''

@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC2034,SC1090,SC2091,SC2207
+
+
+# @function _bash-it-search
+# @description  This function returns list of aliases, plugins and completions in bash-it.
+#               Name or description should match one of the search terms provided as arguments.
 #
-# Search by Konstantin Gredeskoul «github.com/kigster»
-#
-# This function returns list of aliases, plugins and completions in bash-it.
-# Name or description should match one of the search terms provided as arguments.
-#
-# Usage:
+# @usage:
 #    ❯ bash-it search [-|@]term1 [-|@]term2 ... \
 #       [[ --enable   | -e ]] \
 #       [[ --disable  | -d ]] \
@@ -19,7 +19,7 @@
 #    At the moment only --help, --enable and --disable are supported.
 #    An '@' sign indicates an exact (not partial) match.
 #
-# Examples:
+# @example
 #    ❯ bash-it search ruby rbenv rvm gem rake
 #          aliases:  bundler
 #          plugins:  chruby chruby-auto ruby rbenv rvm ruby
@@ -47,18 +47,15 @@
 #          plugins:  git ruby
 #      completions:  git
 #
-
 _bash-it-search () {
-  about 'searches for given terms amongst bash-it plugins, aliases and completions'
-  param '1: term1'
-  param '2: [[ term2 ]]...'
-  example '$ _bash-it-search @git ruby -rvm rake bundler'
+  about "searches for given terms amongst bash-it plugins, aliases and completions"
+  group "bash-it:core"
 
-  [[ -z "$(type array-contains 2>/dev/null)" ]]
+  [[ -z "$(type _array-contains 2>/dev/null)" ]]
 
-  local component
   export BASH_IT_SEARCH_USE_COLOR=true
   export BASH_IT_GREP=${BASH_IT_GREP:-$(which egrep)}
+
   declare -a BASH_IT_COMPONENTS=(aliases plugins completions)
 
   if [[ -z "$*" ]] ; then
@@ -89,48 +86,48 @@ _bash-it-search () {
   return 0
 }
 
-_bash-it-is-partial-match () {
-  local component="$1"
-  local term="$2"
-
-  _bash-it-component-help "${component}" | $(_bash-it-grep) -E -i -q -- "${term}"
-}
-
+# @function     _bash-it-component-term-matches-negation
+# @description  Matches the negation of the search term entered
+#
+# @param $1     search match: the search results mathces
+# @param $2     negation terms <array>: the terms we need to negate/remove from the search matches (result set)
+# @return       String of search results without the negated terms
+# @example      ❯ _bash-it-component-term-matches-negation "${match}" "${negative_terms[@]}"
 _bash-it-component-term-matches-negation () {
+  about "matches the negation of the search term entered"
+  group "bash-it:core"
+
   local match="$1"; shift
   local negative
 
   for negative in "$@"; do
     [[ "${match}" =~ ${negative} ]] && return 0
   done
-
   return 1
 }
 
+# @function     _bash-it-component-component
+# @description  Searches a component to match the search terms
+#
+# @param $1     component: the component to search in e.g., alias, completion, plugin
+# @param $2     search terms: the terms we want to search for
+# @return       Results that match our search term
+# @example      ❯ _bash-it-search-component aliases @git rake bundler -chruby
 _bash-it-search-component () {
-  local component="$1"
+  about "searches for given terms amongst a given component"
+  group "bash-it:core"
 
-  shift
-
-  about 'searches for given terms amongst a given component'
-  param '1: component type, one of: [[ aliases | plugins | completions ]]'
-  param '2: term1 term2 @term3'
-  param '3: [-]term4 [-]term5 ...'
-  example '$ _bash-it-search-component aliases @git rake bundler -chruby'
+  local component="$1"; shift
 
   # If one of the search terms is --enable or --disable, we will apply this action to the matches further down.
   local component_singular action action_func
   local -a search_commands=(enable disable)
 
+  # check if the arguments has a --enable or --disable flags passed
   for search_command in "${search_commands[@]}"; do
-    if $(array-contains "--${search_command}" "$@"); then
-      component_singular=${component}
-      # Handle aliases -> alias and plugins -> plugin
-      component_singular=${component_singular/es/}
-      component_singular=${component_singular/ns/n}
-
+    if $(_array-contains "--${search_command}" "$@"); then
       action="${search_command}"
-      action_func="_${action}-${component_singular}"
+      action_func="_${action}-${component}"
       break
     fi
   done
@@ -160,7 +157,7 @@ _bash-it-search-component () {
     elif [[ "${term:0:1}" == "-"  ]] ; then
       negative_terms=("${negative_terms[@]}" "${search_term}")
     elif [[ "${term:0:1}" == "@"  ]] ; then
-      if $(array-contains "${search_term}" "${component_list[@]}"); then
+      if $(_array-contains "${search_term}" "${component_list[@]}"); then
         exact_terms=("${exact_terms[@]}" "${search_term}")
       fi
     else
@@ -168,7 +165,7 @@ _bash-it-search-component () {
     fi
   done
 
-  local -a total_matches=( $(array-dedupe "${exact_terms[@]}" "${partial_terms[@]}") )
+  local -a total_matches=( $(_array-dedupe "${exact_terms[@]}" "${partial_terms[@]}") )
 
   unset matches
   declare -a matches=()
@@ -294,6 +291,10 @@ _bash-it-erase-term () {
   done
 }
 
+# @function     _bash-it-search-help
+# @description  Displays the bash-it search help
+#
+# @return       Help manual for the search function
 _bash-it-search-help () {
   printf "${NC}%s" "
 

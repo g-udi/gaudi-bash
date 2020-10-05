@@ -34,7 +34,7 @@ load ../../lib/log
 
 }
 
-@test "bash-it log: _bash-it-get-component-type-from-path extract component name from path" {
+@test "bash-it log: _bash-it-get-component-type-from-path extract component type from path" {
   run _bash-it-get-component-type-from-path "/Users/ahmadassaf/.bash_it/lib/alias-completions.plugins.bash"
   assert_success
   assert_output "plugin"
@@ -205,42 +205,42 @@ load ../../lib/log
   assert_output " [ DEBUG ] [LOADER] Loading theme: gaudi"
 }
 
-@test "lib log: basic debug logging with BASH_IT_LOG_LEVEL_ALL" {
+@test "bash-it log: basic debug logging with BASH_IT_LOG_LEVEL_ALL" {
   BASH_IT_LOG_LEVEL=$BASH_IT_LOG_LEVEL_ALL
 
   run _log_debug "test test test"
   assert_output " [ DEBUG ] [CORE] test test test"
 }
 
-@test "lib log: basic warning logging with BASH_IT_LOG_LEVEL_ALL" {
+@test "bash-it log: basic warning logging with BASH_IT_LOG_LEVEL_ALL" {
   BASH_IT_LOG_LEVEL=$BASH_IT_LOG_LEVEL_ALL
 
   run _log_warning "test test test"
   assert_output " [ WARNING ] [CORE] test test test"
 }
 
-@test "lib log: basic error logging with BASH_IT_LOG_LEVEL_ALL" {
+@test "bash-it log: basic error logging with BASH_IT_LOG_LEVEL_ALL" {
   BASH_IT_LOG_LEVEL=$BASH_IT_LOG_LEVEL_ALL
 
   run _log_error "test test test"
   assert_output " [ ERROR ] [CORE] test test test"
 }
 
-@test "lib log: basic debug logging with BASH_IT_LOG_LEVEL_WARNING" {
+@test "bash-it log: basic debug logging with BASH_IT_LOG_LEVEL_WARNING" {
   BASH_IT_LOG_LEVEL=$BASH_IT_LOG_LEVEL_WARNING
 
   run _log_debug "test test test"
   refute_output
 }
 
-@test "lib log: basic warning logging with BASH_IT_LOG_LEVEL_WARNING" {
+@test "bash-it log: basic warning logging with BASH_IT_LOG_LEVEL_WARNING" {
   BASH_IT_LOG_LEVEL=$BASH_IT_LOG_LEVEL_WARNING
 
   run _log_warning "test test test"
   assert_output " [ WARNING ] [CORE] test test test"
 }
 
-@test "lib log: basic error logging with BASH_IT_LOG_LEVEL_WARNING" {
+@test "bash-it log: basic error logging with BASH_IT_LOG_LEVEL_WARNING" {
   BASH_IT_LOG_LEVEL=$BASH_IT_LOG_LEVEL_WARNING
 
   run _log_error "test test test"
@@ -248,43 +248,43 @@ load ../../lib/log
 }
 
 
-@test "lib log: basic debug logging with BASH_IT_LOG_LEVEL_ERROR" {
+@test "bash-it log: basic debug logging with BASH_IT_LOG_LEVEL_ERROR" {
   BASH_IT_LOG_LEVEL=$BASH_IT_LOG_LEVEL_ERROR
 
   run _log_debug "test test test"
   refute_output
 }
 
-@test "lib log: basic warning logging with BASH_IT_LOG_LEVEL_ERROR" {
+@test "bash-it log: basic warning logging with BASH_IT_LOG_LEVEL_ERROR" {
   BASH_IT_LOG_LEVEL=$BASH_IT_LOG_LEVEL_ERROR
 
   run _log_warning "test test test"
   refute_output
 }
 
-@test "lib log: basic error logging with BASH_IT_LOG_LEVEL_ERROR" {
+@test "bash-it log: basic error logging with BASH_IT_LOG_LEVEL_ERROR" {
   BASH_IT_LOG_LEVEL=$BASH_IT_LOG_LEVEL_ERROR
 
   run _log_error "test test test"
   assert_output " [ ERROR ] [CORE] test test test"
 }
 
-@test "lib log: basic debug silent logging" {
+@test "bash-it log: basic debug silent logging" {
   run _log_debug "test test test"
   refute_output
 }
 
-@test "lib log: basic warning silent logging" {
+@test "bash-it log: basic warning silent logging" {
   run _log_warning "test test test"
   refute_output
 }
 
-@test "lib log: basic error silent logging" {
+@test "bash-it log: basic error silent logging" {
   run _log_error "test test test"
   refute_output
 }
 
-@test "lib log: logging with prefix" {
+@test "bash-it log: logging with prefix" {
   BASH_IT_LOG_LEVEL=$BASH_IT_LOG_LEVEL_ALL
   BASH_IT_LOG_PREFIX="nice: prefix:"
 

@@ -6,7 +6,7 @@
 # load ../../lib/helpers
 # load ../../lib/search
 
-# cite about param example group _author _version
+# cite about param example group
 
 # load ../../plugins/available/base.plugin
 # load ../../aliases/available/git.aliases

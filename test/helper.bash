@@ -61,15 +61,13 @@ setup () {
 
   # Some tools, e.g. `git` use configuration files from the $HOME directory,
   # which interferes with our tests. The only way to keep `git` from doing this
-  # seems to set HOME explicitly to a separate location.
-  # Refer to https://git-scm.com/docs/git-config#FILES.
+  # seems to set HOME explicitly to a separate location [ref: https://git-scm.com/docs/git-config#FILES]
   unset XDG_CONFIG_HOME
   export HOME="${TEST_TEMP_DIR}"
   mkdir -p "${HOME}"
 
-  # For `git` tests to run well, user name and email need to be set.
-  # Refer to https://git-scm.com/docs/git-commit#_commit_information.
-  # This goes to the test-specific config, due to the $HOME overridden above.
+  # For `git` tests to run well, user name and email need to be set [ref: https://git-scm.com/docs/git-commit#_commit_information]
+  # This goes to the test-specific config, due to the $HOME overridden above
   git config --global user.name "John Doe"
   git config --global user.email "johndoe@example.com"
 

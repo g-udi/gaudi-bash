@@ -35,6 +35,10 @@ __unichr () {
     echo -n "$REPLY$s"
 }
 
+# @function     _getUnicodes
+# @description  prints all 4-digit Unicode characters in bash
+#               can be used to display built-in unicodes that can be used in bash scripts
+# @return       string showing all 4-digit unicodes characters
 _getUnicodes () {
   printf "\n%s\n\n" "Getting all unicode characters..."
   for (( i=0x2500; i<0x2600; i++ )); do

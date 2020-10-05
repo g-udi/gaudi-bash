@@ -84,11 +84,3 @@ _help-update () {
 
   echo "Check for a new version of bash-it and update it."
 }
-
-_help-migrate () {
-  about 'help message for migrate command'
-  group 'lib'
-
-  printf "${MAGENTA}%s${NC}\n" "Migrates internal bash-it structure to the latest version in case of changes"
-  printf "${GREEN}%s${NC} %s ${GREEN}%s${NC}, ${GREEN}%s${NC} or ${GREEN}%s${NC}" "'migrate'" "command is run automatically when calling" "'update'" "'enable'" "'disable'"
-}

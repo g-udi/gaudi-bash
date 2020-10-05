@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 
 # @function     _on-disable-callback
-# @description  Calls the disabled plugin destructor, if present
-#
+# @description  calls the disabled plugin destructor, if present
 # @param $1     component name: bash-it component name .e.g., base, git
 _on-disable-callback () {
     callback=$1_on_disable
@@ -10,11 +9,10 @@ _on-disable-callback () {
 }
 
 # @function     _bash-it-disable
-# @description  Disables a component
-#
+# @description  disables a component
 # @param $1     component type: bash-it component of type aliases, plugins, completions
 # @param $2     component name: bash-it component name .e.g., base, git
-# @return       A message to indicate the outcome
+# @return       message to indicate the outcome
 _bash-it-disable () {
     about "disable a bash-it component (plugin, component, alias)"
     group "bash-it:core"

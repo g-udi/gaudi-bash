@@ -9,9 +9,9 @@ cite about param example group
 for helper in "${BASH_IT}"/lib/helpers/*.bash; do source "$helper"; done
 
 # @function     _bash-it-update
-# @description  Updates the bash-it installation by fetching latest code from the remote git
+# @description  updates the bash-it installation by fetching latest code from the remote git
 #               will prompt the user to accept pulling the updates by showing the latest commit log
-# @return       Status message to indicate the outcome
+# @return       status message to indicate the outcome
 #               remote update success: bash-it successfully updated!
 #               remote update fail: bash-it is up to date, nothing to do!
 #               remote update error: Error updating bash-it, please, check if your bash-it installation folder (${BASH_IT}) is clean
@@ -65,11 +65,11 @@ _bash-it-update () {
 }
 
 # @function     _bash-it-version
-# @description  Prints the bash-it version
-#               Shows current git SHA, commit hash and the remote that was compared against
-# @return       Current git SHA e.g., Current git SHA: 47d1e26 on 2020-10-01T17:50:08-07:00
-#               Last git commit link e.g., git@github.com:ahmadassaf/bash-it/commit/47d1e26
-#               Latest remote e.g., Compare to latest: git@github.com:ahmadassaf/bash-it/compare/47d1e26...master
+# @description  prints the bash-it version
+#               shows current git SHA, commit hash and the remote that was compared against
+# @return       current git SHA e.g., Current git SHA: 47d1e26 on 2020-10-01T17:50:08-07:00
+#               last git commit link e.g., git@github.com:ahmadassaf/bash-it/commit/47d1e26
+#               latest remote e.g., Compare to latest: git@github.com:ahmadassaf/bash-it/compare/47d1e26...master
 _bash-it-version () {
   about "Shows current bash-it version with the Current git SHA and commit hash"
   group "bash-it:core"
@@ -94,8 +94,8 @@ _bash-it-version () {
 }
 
 # @function     _bash-it-reload
-# @description  Reloads the bash profile
-#               Reloads the profile that corresponds to the correct OS type (.bashrc, .bash_profile)
+# @description  reloads the bash profile
+#               reloads the profile that corresponds to the correct OS type (.bashrc, .bash_profile)
 _bash-it-reload () {
   about "Reloads the bash profile that corresponds to the correct OS type (.bashrc, .bash_profile)"
   group "bash-it:core"
@@ -115,12 +115,12 @@ _bash-it-reload () {
 }
 
 # @function     _bash-it-show
-# @description  Shows a list of all items of a component (alias, plugin, completion)
-#               If no param was passed, shows all enabled components across.
-#               Components descriptions are retrieved via the composure metadata 'about'
+# @description  shows a list of all items of a component (alias, plugin, completion)
+#               if no param was passed, shows all enabled components across.
+#               components descriptions are retrieved via the composure metadata 'about'
 # @param $1     component: (of type aliases, plugins, completions)
 # @param $2     mode <enabled, all>: either show all available components or filter only for enabled ones
-# @return       A table showing each component name, status (enabled/disabled) and description
+# @return       table showing each component name, status (enabled/disabled) and description
 _bash-it-show () {
   about "List available bash_it components or allow filtering for a specific type e.g., plugins, aliases, completions"
   group "bash-it:core"
@@ -135,8 +135,8 @@ _bash-it-show () {
 }
 
 # @function     _bash-it-backup
-# @description  Backs up enabled components (plugins, aliases, completions)
-#               The function writes "enable" commands into a file in $BASH_IT/tmp/enabled.bash-it.backup
+# @description  backs up enabled components (plugins, aliases, completions)
+#               the function writes "enable" commands into a file in $BASH_IT/tmp/enabled.bash-it.backup
 # @return       $BASH_IT/tmp/enabled.bash-it.backup file with 'bash-it enable' commands
 _bash-it-backup () {
   about "backs up enabled components (plugins, aliases, completions)"
@@ -159,9 +159,9 @@ _bash-it-backup () {
 }
 
 # @function     _bash-it-restore
-# @description  Restores enabled bash-it components
-#               The function gets the list of enabled commands from the backup file in $BASH_IT/tmp/enabled.bash-it.backup
-# @return       Status message to indicate the outcome
+# @description  restores enabled bash-it components
+#               the function gets the list of enabled commands from the backup file in $BASH_IT/tmp/enabled.bash-it.backup
+# @return       status message to indicate the outcome
 _bash-it-restore () {
   about "restores enabled components (plugins, aliases, completions)"
   group "bash-it:core"
@@ -192,8 +192,8 @@ bash-it () {
     example '$ bash-it reload'
     example '$ bash-it doctor errors|warnings|all'
 
-    local verb=${1:-} && shift
-    local component=${1:-} && shift
+    local verb=${1:-}; shift
+    local component=${1:-}; shift
     local func
 
     case $verb in
@@ -225,7 +225,7 @@ bash-it () {
         return;;
     esac
 
-    # Handle the multiple arguments passed to enable/disable and run the function on each
+    # handle the multiple arguments passed to enable/disable and run the function on each
     if [[ x"$verb" == x"enable" ]] || [[ x"$verb" == x"disable" ]]; then
       $func "$(_bash-it-pluralize-component "$component")" "$@"
     else
