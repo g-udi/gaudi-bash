@@ -2,38 +2,15 @@
 
 # Component-specific functions (component is either an alias, a plugin, or a completion).
 
-# Display help text for the component
-_bash-it-component-help () {
-  local component file
-
-  if [[ -n "$1" ]]; then
-    component=$(_bash-it-pluralize-component "${1}")
-    file=$(_bash-it-component-cache-file "${component}")
-
-    if [[ ! -s "${file}" || -z $(find "${file}" -mmin -300) ]] ; then
-      rm -f "${file}" 2>/dev/null
-      _bash-it-show "${component}" | $(_bash-it-grep) -E '   \[' | cat > "${file}"
-    fi
-    cat "${file}"
-  else
-    return 1
-  fi
-}
-
-# Caches the component in the /tmp directory
-_bash-it-component-cache-file () {
-  local component file
-
-  component=$(_bash-it-pluralize-component "${1}")
-  file="${BASH_IT}/tmp/cache/${component}"
-
-  [[ -f ${file} ]] || mkdir -p "$(dirname "${file}")"
-
-  printf "%s" "${file}"
-}
-
-# Pluralize component name for consistency especially for search
+# @function     _bash-it-pluralize-component
+# @description  pluralize component name for consistency especially for search
+# @param $1     component: the command type
+# @return       plural form of the component type
+# @example      ❯ _bash-it-pluralize-component plugin
 _bash-it-pluralize-component () {
+  about "pluralize component name for consistency especially for search"
+  group "bash-it:core"
+
   local component="${1}"
   local len=$(( ${#component} - 1 ))
 
@@ -45,34 +22,33 @@ _bash-it-pluralize-component () {
   printf "%s" "${component}"
 }
 
-# Singularize component name for consistency
+# @function     _bash-it-singularize-component
+# @description  singularize component name for consistency especially for search
+# @param $1     component: the command type
+# @return       singular form of the component type
+# @example      ❯ _bash-it-singularize-component plugins
 _bash-it-singularize-component () {
+  about "singularize component name for consistency especially for search"
+  group "bash-it:core"
+
   local component="${1}"
 
   # Handle aliases -> alias and plugins -> plugin, etc.
-  component_singular=${component/s/}
   [[ "$component" == *es ]] && component_singular=${component/es/}
   [[ "$component" == *ns ]] && component_singular=${component/ns/n}
 
-  printf "%s" "${component_singular}"
+  printf "%s" "${component_singular:-$component}"
 }
 
-# Clean the component cache directory in /tmp
-_bash-it-clean-component-cache () {
-  local component="$1"
-  local cache
-  local -a BASH_IT_COMPONENTS=(aliases plugins completions)
-
-  if [[ -z ${component} ]] ; then
-    for component in "${BASH_IT_COMPONENTS[@]}" ; do
-      _bash-it-clean-component-cache "${component}"
-    done
-  else
-    cache=$(_bash-it-component-cache-file "${component}")
-    if [[ -f "${cache}" ]] ; then
-      rm -f "${cache}"
-    fi
+_bash-it-component-help () {
+  local component=$(_bash-it-pluralize-component "${1}")
+  local file=$(_bash-it-component-cache-file ${component})
+  if [[ ! -s "${file}" || -z $(find "${file}" -mmin -300) ]] ; then
+    rm -f "${file}" 2>/dev/null
+    local func="_bash-it-${component}"
+    ${func} | $(_bash-it-grep) -E '   \[' | cat > ${file}
   fi
+  cat "${file}"
 }
 
 # Returns an array of items within each compoenent

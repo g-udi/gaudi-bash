@@ -6,7 +6,7 @@ load ../../lib/log
 load ../../lib/search
 load ../../plugins/available/base.plugin
 
-cite about param example group _author _version
+cite about param example group
 
 load ../../lib/helpers
 
