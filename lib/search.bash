@@ -69,7 +69,7 @@ _bash-it-search () {
       _bash-it-search-help
       return 0
     elif [[ ${word} == "--refresh" || ${word} == "-r" ]]; then
-      _bash-it-clean-component-cache
+      _bash-it-component-cache-clean
     elif [[ ${word} == "--no-color" || ${word} == '-c' ]]; then
       export BASH_IT_SEARCH_USE_COLOR=false
     else
@@ -258,7 +258,7 @@ _bash-it-search-result () {
       printf "${color_off}"
     done
 
-    [[ ${modified} -gt 0 ]] && _bash-it-clean-component-cache ${component}
+    [[ ${modified} -gt 0 ]] && _bash-it-component-cache-clean ${component}
     printf "\n"
   fi
 }

@@ -50,7 +50,7 @@ _bash-it-disable () {
         fi
     fi
 
-    _bash-it-clean-component-cache "${type}"
+    _bash-it-component-cache-clean "${type}"
 
     printf "${RED}%s${NC} %s\n" "[◯ DISABLED]" "$type: $component"
 

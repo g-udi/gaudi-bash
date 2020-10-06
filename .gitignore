@@ -3,6 +3,7 @@
 .idea
 *.sublime-workspace
 *.sublime-project
+.vscode
 
 # test libraries
 bats

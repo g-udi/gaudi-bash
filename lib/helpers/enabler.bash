@@ -66,7 +66,7 @@ _bash-it-enable () {
         ln -s ../"$type"/available/"$_component" "${BASH_IT}/enabled/${use_load_priority}${BASH_IT_LOAD_PRIORITY_SEPARATOR}${_component}"
     fi
 
-    _bash-it-clean-component-cache "${type}"
+    _bash-it-component-cache-clean "${type}"
 
     printf "${GREEN}%s${NC} %s %s${RED} (%s)${NC}\n" "◉ ENABLED" "$(_bash-it-singularize-component "$type"): $component" "enabled with priority" "$use_load_priority"
 
