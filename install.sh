@@ -7,7 +7,7 @@ fi
 
 
 if [[ -d "$BASH_IT" ]]; then
-    printf "You already have bash-it installed..\\n"
+    echo "You already have bash-it installed.."
     unset REPLY
     while ! [[ $REPLY =~ ^[yY]$ ]] && ! [[ $REPLY =~ ^[nN]$ ]]; do
         read -rp "Do you want to set up a fresh installation of bash-it? " -n 1 </dev/tty;
@@ -20,8 +20,6 @@ if [[ -d "$BASH_IT" ]]; then
         git -C "$BASH_IT" pull
     fi
 else
-    echo "Pulling a fresh gaudi-bash"
-    
     # Prevent the cloned repository from having insecure permissions. Failing to do
     # so causes compinit() calls to fail with "command not found: compdef" errors
     # for users with insecure umasks (e.g., "002", allowing group writability). Note

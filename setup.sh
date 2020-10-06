@@ -1,9 +1,16 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC1090,SC1091,SC2034
 
-source "./lib/colors.bash"
-source "./lib/composure.bash"; cite about group
-source "./lib/helpers/utils.bash"
+_read_input() {
+  about "reads input from the prompt for a yes/no (one character) input"
+  group "bash-it:core"
+
+  unset REPLY
+  while ! [[ $REPLY =~ ^[yY]$ ]] && ! [[ $REPLY =~ ^[nN]$ ]]; do
+    read -rp "${1} " -n 1 </dev/tty;
+    [[ -n $REPLY ]] && echo ""
+  done
+}
 
 case $OSTYPE in
   darwin*)
