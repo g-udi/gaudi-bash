@@ -40,8 +40,8 @@ local_setup () {
   _plugins_cache=$(_bash-it-component-cache-add plugins)
   _aliases_cache=$(_bash-it-component-cache-add aliases)
 
-  touch "${_plugins_cache}"/_plugins_cache
-  touch "${_aliases_cache}"/aliases
+  touch "${_plugins_cache}"
+  touch "${_aliases_cache}"
 
   assert_file_exist "$HOME/.bash_it/tmp/cache/plugins"
   assert_file_exist "$HOME/.bash_it/tmp/cache/aliases"
@@ -49,6 +49,6 @@ local_setup () {
   _bash-it-component-cache-clean
   assert_success
   assert_dir_exist "$HOME/.bash_it/tmp/cache"
-  refute_file_exist "$HOME/.bash_it/tmp/cache/plugins"
-  refute_file_exist "$HOME/.bash_it/tmp/cache/aliases"
+  assert_file_not_exist "$HOME/.bash_it/tmp/cache/plugins"
+  assert_file_not_exist "$HOME/.bash_it/tmp/cache/aliases"
 }

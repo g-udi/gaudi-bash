@@ -1,13 +1,16 @@
 #!/usr/bin/env bash
 
 # @function     _bash-it-component-cache-add
-# @description  caches the component view in the /tmp directory
+# @description  gets the component cache path in the /tmp directory
+#               will create a cache folder if doesn't exist in /tmp
 # @param $1     type: the component type
-# @return       cache file
+# @return       returns the cache file path
 # @example      ❯ _bash-it-component-cache-add plugin
 _bash-it-component-cache-add () {
-  about "caches the component view in the /tmp directory"
+  about "gets the component cache path in the /tmp directory"
   group "bash-it:core"
+
+  [[ -z $1 ]] && return 1
 
   local component file
 
