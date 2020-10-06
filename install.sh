@@ -20,6 +20,7 @@ if [ -d "$BASH_IT" ]; then
         git -C $BASH_IT pull
     fi
 else
+    echo "Pulling in a fresh gaudi-bash"
     # Prevent the cloned repository from having insecure permissions. Failing to do
     # so causes compinit() calls to fail with "command not found: compdef" errors
     # for users with insecure umasks (e.g., "002", allowing group writability). Note
@@ -27,7 +28,7 @@ else
     # precedence over umasks except for filesystems mounted with option "noacl".
     umask g-w,o-w
 
-    env git clone --depth=1 --recurse-submodules https://github.com/ahmadassaf/bash-it.git "$BASH_IT" || {
+    env git clone --depth=1 --recurse-submodules https://github.com/ahmadassaf/gaudi-bash.git "$BASH_IT" || {
         printf "Error: Cloning of gaudi into this machine failed :(\\n"
         exit 1
     }
