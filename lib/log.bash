@@ -121,7 +121,7 @@ _log_component () {
   about "log a component loading message by echoing to the screen the name and type"
   group "bash-it:core"
 
-  [[ "$BASH_IT_LOG_LEVEL" -ge $BASH_IT_LOG_LEVEL_ERROR ]] || return 0
+  [[ "$BASH_IT_LOG_LEVEL" -ge $BASH_IT_LOG_LEVEL_ALL ]] || return 0
 
   local type component_path component_name component_type
 

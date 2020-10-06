@@ -19,7 +19,7 @@ _bash-it-disable () {
 
     local type component
 
-    # Make sure the component is pluarised in case this function is called directly e.g., for unit tests
+    # Make sure the component is pluarized in case this function is called directly e.g., for unit tests
     type=$(_bash-it-pluralize-component "$1")
     component="$2"
 
@@ -41,12 +41,12 @@ _bash-it-disable () {
     else
         local _component
 
-        _component=$(command ls $ "${BASH_IT}/enabled/"[0-9]*"$BASH_IT_LOAD_PRIORITY_SEPARATOR$component.$type.bash" 2>/dev/null | head -1)
+        _component=$(command ls $ "${BASH_IT}/components/enabled/"[0-9]*"$BASH_IT_LOAD_PRIORITY_SEPARATOR$component.$type.bash" 2>/dev/null | head -1)
         if [[ -z "$_component" ]]; then
           printf '%s\n' "sorry, $_component does not appear to be an enabled $type"
-          rm "${BASH_IT}/$type/enabled/$(basename "$_component")"
+          rm "${BASH_IT}/$type/components/enabled/$(basename "$_component")"
         else
-          rm "${BASH_IT}/enabled/$(basename "$_component")"
+          rm "${BASH_IT}/components/enabled/$(basename "$_component")"
         fi
     fi
 

@@ -36,34 +36,34 @@ _bash-it-enable () {
 
     if [[ "$component" = "all" ]]; then
         local _component
-        for _component in "${BASH_IT}/$type/available/"*.bash
+        for _component in "${BASH_IT}/components/$type/"*.bash
         do
           _bash-it-enable "$type" "$(basename "$_component" ."$type".bash)"
         done
     else
         local _component
 
-        _component=$(command ls "${BASH_IT}/$type/available/$component".*bash 2>/dev/null | head -1)
+        _component=$(command ls "${BASH_IT}/components/$type/$component".*bash 2>/dev/null | head -1)
         if [[ -z "$_component" ]]; then
             printf "${GREEN}%s ${NC}${RED}%s${NC}\n" "$component" "does not appear to be an available $(_bash-it-singularize-component "$type")"
             return
         fi
         _component=$(basename "$_component")
         local enabled_component
-        enabled_component=$(command compgen -G "${BASH_IT}/enabled/[0-9][0-9][0-9]$BASH_IT_LOAD_PRIORITY_SEPARATOR$_component" 2>/dev/null | head -1)
+        enabled_component=$(command compgen -G "${BASH_IT}/components/enabled/[0-9][0-9][0-9]$BASH_IT_LOAD_PRIORITY_SEPARATOR$_component" 2>/dev/null | head -1)
         if [[ -n "$enabled_component" ]] ; then
           printf "${GREEN}%s${NC}\n" "$component is already enabled"
           return
         fi
 
-        mkdir -p "${BASH_IT}/enabled"
+        mkdir -p "${BASH_IT}/components/enabled"
 
         # Load the priority from the file if it present there
         declare local_file_priority use_load_priority
-        local_file_priority=$(grep -E "^# BASH_IT_LOAD_PRIORITY:" "${BASH_IT}/$type/available/$_component" | awk -F': ' '{ print $2 }')
+        local_file_priority=$(grep -E "^# BASH_IT_LOAD_PRIORITY:" "${BASH_IT}/components/$type/$_component" | awk -F': ' '{ print $2 }')
         use_load_priority=${local_file_priority:-$load_priority}
 
-        ln -s ../"$type"/available/"$_component" "${BASH_IT}/enabled/${use_load_priority}${BASH_IT_LOAD_PRIORITY_SEPARATOR}${_component}"
+        ln -s "${BASH_IT}"/components/"$type"/"$_component" "${BASH_IT}/components/enabled/${use_load_priority}${BASH_IT_LOAD_PRIORITY_SEPARATOR}${_component}"
     fi
 
     _bash-it-component-cache-clean "${type}"

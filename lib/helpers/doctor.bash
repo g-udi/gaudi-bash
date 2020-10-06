@@ -1,40 +1,21 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC2034
 
+# @function     _bash-it-doctor
+# @description  reloads a profile file with a BASH_IT_LOG_LEVEL set
+# @param $1     log level: log level to show of warning, errors or all (default: all)
+# @return       bash-it log messages
 _bash-it-doctor () {
   about 'reloads a profile file with a BASH_IT_LOG_LEVEL set'
-  param '1: BASH_IT_LOG_LEVEL argument: "errors" "warnings" "all"'
-  group 'lib'
+  group 'bash-it:core'
 
-  BASH_IT_LOG_LEVEL=$1
+  local _log_level
+
+  _log_level=${1:-all}
+  _log_level="BASH_IT_LOG_LEVEL_${_log_level/s/}"
+  _log_level=${_log_level^^}
+
+  export BASH_IT_LOG_LEVEL=${!_log_level}
   _bash-it-reload
   unset BASH_IT_LOG_LEVEL
-}
-
-_bash-it-doctor-all () {
-  about 'reloads a profile file with error, warning and debug logs'
-  group 'lib'
-
-  _bash-it-doctor $BASH_IT_LOG_LEVEL_ALL
-}
-
-_bash-it-doctor-warnings () {
-  about 'reloads a profile file with error and warning logs'
-  group 'lib'
-
-  _bash-it-doctor $BASH_IT_LOG_LEVEL_WARNING
-}
-
-_bash-it-doctor-errors () {
-  about 'reloads a profile file with error logs'
-  group 'lib'
-
-  _bash-it-doctor $BASH_IT_LOG_LEVEL_ERROR
-}
-
-_bash-it-doctor- () {
-  about 'default bash-it doctor behavior, behaves like bash-it doctor all'
-  group 'lib'
-
-  _bash-it-doctor-all
 }

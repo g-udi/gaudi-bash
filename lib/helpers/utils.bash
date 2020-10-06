@@ -6,7 +6,7 @@
 # @function     _is_function
 # @description  check if the passed parameter is a function
 #               sets $? to true if parameter is the name of a function
-# @return       status code success (0) if the function is found or fails othwerwise
+# @return       status code success (0) if the function is found or fails otherwise
 _is_function () {
   about "check if the passed parameter is a function"
   group "bash-it:core"
@@ -18,7 +18,7 @@ _is_function () {
 # @description  check if the command passed as the argument exists
 # @param $1     command: the command to check
 # @param $2     message (optional) for a log message to include when the command not found
-# @return       status code success (0) if the function is found or fails othwerwise
+# @return       status code success (0) if the function is found or fails otherwise
 # @example      ❯ _command_exists ls && echo exists
 _command_exists () {
   about "check if the command passed as the argument exists"
@@ -32,7 +32,7 @@ _command_exists () {
 
 # @function     _read_input
 # @description  reads input from the prompt for a yes/no (one character) input
-#               ensure no empty response will be passed by looping the read prompt unitl a valid non empty response is entered
+#               ensure no empty response will be passed by looping the read prompt until a valid non empty response is entered
 #               will enter a new line as a cosmetic only if there an entry that is not empty
 # @param $1     message: the input prompt message to display
 # @return       REPLY entered by the user
@@ -53,7 +53,7 @@ _read_input() {
 #               the function exits as soon as a match is found
 # @param $1     item: the item to search for
 # @param $2     array <array>: the array to search in
-# @return       status code success (0) if the function is found or fails othwerwise
+# @return       status code success (0) if the function is found or fails otherwise
 # @example
 #   ❯  declare -a fruits=(apple orange pear mandarin)
 #
@@ -76,14 +76,14 @@ _array-contains () {
 }
 
 # @function     _clean-string
-# @description  cleans a string from whitespaces given a passed cleaning mode
+# @description  cleans a string from whitespace given a passed cleaning mode
 # @param $1     text: the string to clean
 # @param $2     mode: the cleaning mode
-#                 - all: trim all leading and trailing whitespaces
+#                 - all: trim all leading and trailing whitespace
 #                 - leading: trim all leading spaces
 #                 - trailing: trim all trailing spaces
 #                 - any: trim any whitespace in the string
-# @return       status code success (0) if the function is found or fails othwerwise
+# @return       status code success (0) if the function is found or fails otherwise
 # @example
 #   ❯ _clean-string " test test test " "all"
 #   ❯ 'test test test'
@@ -97,7 +97,7 @@ _array-contains () {
 #   ❯ _clean-string " test test test " "any"
 #   ❯ 'testtesttest'
 _clean-string () {
-  about "cleans a string from whitespaces give a passed cleaning mode"
+  about "cleans a string from whitespace give a passed cleaning mode"
   group "bash-it:core"
 
   local mode=${2:-"all"}
@@ -114,10 +114,10 @@ _clean-string () {
 }
 
 # @function     _array-dedupe
-# @description  creates a concatinated array of unique and sorted elements
+# @description  creates a concatenated array of unique and sorted elements
 # @param $1     origin <array>: the source array
 # @param $2     target <array>: the target array
-# @return       the unique concatinated array
+# @return       the unique concatenated array
 # @example
 #   ❯ declare -a array_a=(apple orange pear mandarin)
 #   ❯ declare -a array_b=(apple pear apricot cucumber orange)
@@ -125,7 +125,7 @@ _clean-string () {
 #   ❯ _array-dedupe "${array_a[@]}" "${array_b[@]}"
 #   ❯ apple apricot cucumber mandarin orange pear
 _array-dedupe () {
-  about "creates a concatinated array of unique and sorted elements"
+  about "creates a concatenated array of unique and sorted elements"
   group "bash-it:core"
 
   _clean-string "$(echo "$*" | tr ' ' '\n' | sort -u | tr '\n' ' ')" "all"

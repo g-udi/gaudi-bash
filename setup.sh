@@ -2,7 +2,8 @@
 # shellcheck disable=SC1090,SC1091,SC2034
 
 source "./lib/colors.bash"
-source "./lib/helpers/generic.bash"
+source "./lib/composure.bash"; cite about group
+source "./lib/helpers/utils.bash"
 
 case $OSTYPE in
   darwin*)
@@ -100,11 +101,13 @@ fi
 
 # Load dependencies for enabling components
 source "$BASH_IT/lib/composure.bash"
-# Allow access for composure specifc syntax to other functions
-cite about param example group _author _version
+# Allow access for composure specific syntax to other functions
+cite about param example group
 
 source "$BASH_IT/lib/helpers.bash"
 
+# Check if the folder is a valid git and pull all submodules
+[[ -d "$BASH_IT/.git" ]] && git submodule update --init --recursive
 
 echo -e  "\n${MAGENTA}Enabling reasonable defaults${NC}"
 
@@ -130,5 +133,3 @@ To show the available aliases/completions/plugins, type one of the following:
 To avoid issues and to keep your shell lean, please enable only features you really want to use.
 Enabling everything can lead to issues
 "
-
-source "$HOME/$CONFIG_FILE"

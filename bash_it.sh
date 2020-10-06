@@ -29,7 +29,7 @@ source "${BASH_IT}/scripts/reloader.bash"
 for file_type in "aliases" "plugin" "completion"; do source "${BASH_IT}/scripts/reloader.bash" "skip" "$file_type"; done
 
 # Load custom aliases, completions, plugins
-CUSTOM_LIB="${BASH_IT_CUSTOM:=${BASH_IT}/custom}/*.bash ${BASH_IT_CUSTOM:=${BASH_IT}/custom}/**/*.bash"
+CUSTOM_LIB="${BASH_IT_CUSTOM:=${BASH_IT}/components/custom}/*.bash ${BASH_IT_CUSTOM:=${BASH_IT}/components/custom}/**/*.bash"
 for custom in ${CUSTOM_LIB}; do [[ -e "${custom}" ]] && _log_component "$custom" "custom" && source "$custom"; done
 
 # Load the bash theme

@@ -145,7 +145,7 @@ _bash-it-backup () {
   # Clear out the existing backup file
   echo -n "" > "${BASH_IT}/tmp/enabled.bash-it.backup"
 
-  for _file in "${BASH_IT}"/enabled/*.bash; do
+  for _file in "${BASH_IT}"/components/enabled/*.bash; do
     local _component _type
 
     _component="$(echo "$_file" | sed -e 's/.*|\(.*\).bash.*/\1/')"
@@ -206,10 +206,7 @@ bash-it () {
       help)
         func=_help-$component;;
       doctor)
-        func=_bash-it-doctor-$component;;
-      search)
-        _bash-it-search "$component" "$@"
-        return;;
+        func=_bash-it-doctor;;
       update)
         func=_bash-it-update;;
       version)
@@ -220,6 +217,9 @@ bash-it () {
         func=_bash-it-restore;;
       reload)
         func=_bash-it-reload;;
+      search)
+        _bash-it-search "$component" "$@"
+        return;;
       *)
         reference bash-it
         return;;

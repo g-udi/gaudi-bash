@@ -23,7 +23,7 @@ if [[ -d "$BASH_IT" ]]; then
         # precedence over umasks except for filesystems mounted with option "noacl".
         umask g-w,o-w
 
-        env git clone --depth=1 https://github.com/ahmadassaf/bash-it.git "$BASH_IT" || {
+        env git clone --depth=1 --recurse-submodules https://github.com/ahmadassaf/bash-it.git "$BASH_IT" || {
             printf "Error: Cloning of gaudi into this machine failed :(\\n"
             exit 1
         }

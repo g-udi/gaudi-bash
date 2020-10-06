@@ -39,13 +39,13 @@ local_setup () {
 @test "bash-it install: run the install script silently and enable sane defaults" {
   cd "$BASH_IT"
 
-  ./setup.sh -s
+  ./setup.sh --silent
 
-  assert_link_exist "$BASH_IT/enabled/150___general.aliases.bash"
-  assert_link_exist "$BASH_IT/enabled/250___base.plugins.bash"
-  assert_link_exist "$BASH_IT/enabled/365___alias-completion.plugins.bash"
-  assert_link_exist "$BASH_IT/enabled/350___bash-it.completions.bash"
-  assert_link_exist "$BASH_IT/enabled/350___system.completions.bash"
+  assert_file_exist "$BASH_IT/components/enabled/150___general.aliases.bash"
+  assert_file_exist "$BASH_IT/components/enabled/250___base.plugins.bash"
+  assert_file_exist "$BASH_IT/components/enabled/365___alias-completion.plugins.bash"
+  assert_file_exist "$BASH_IT/components/enabled/350___bash-it.completions.bash"
+  assert_file_exist "$BASH_IT/components/enabled/350___system.completions.bash"
 }
 
 @test "bash-it install: run the install script silently and don't modify configs" {

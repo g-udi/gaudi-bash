@@ -27,7 +27,7 @@ _bash-it-describe () {
     about "summarizes available bash_it components"
     group "bash-it:core"
 
-    # Make sure the component is pluarised in case this function is called directly e.g., for unit tests
+    # Make sure the component is pluralized in case this function is called directly e.g., for unit tests
     component=$(_bash-it-pluralize-component "$1")
     component_type="$(_bash-it-singularize-component "$component")"
     mode="${2:-"all"}"
@@ -36,12 +36,12 @@ _bash-it-describe () {
     printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -
 
     local __file
-    for __file in "${BASH_IT}/$component/available/"*.bash
+    for __file in "${BASH_IT}/components/$component/"*.bash
     do
         # Check for both the old format without the load priority, and the extended format with the priority
         declare enabled_files enabled_file
         enabled_file=$(basename "$__file")
-        enabled_files=$(sort <(compgen -G "${BASH_IT}/enabled/*$BASH_IT_LOAD_PRIORITY_SEPARATOR${enabled_file}") | wc -l)
+        enabled_files=$(sort <(compgen -G "${BASH_IT}/components/enabled/*$BASH_IT_LOAD_PRIORITY_SEPARATOR${enabled_file}") | wc -l)
 
         if [[ "$enabled_files" -gt 0 ]]; then
             printf "%-20s${GREEN}%-10s${NC}%s\n" "$(basename "$__file" | sed -e 's/\(.*\)\..*\.bash/\1/g')" "  ◉" "    $(cat $__file | metafor about-"$component_type")"
