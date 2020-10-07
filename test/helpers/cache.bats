@@ -20,7 +20,7 @@ local_setup () {
 @test "bash-it helpers: cache: _bash-it-component-cache-add should return a new cache file in /tmp directory for a singular component" {
   run _bash-it-component-cache-add alias
   assert_success
-  assert_output "$HOME/.bash_it/tmp/cache/aliases"
+  assert_output "$HOME/.bash_it/tmp/cache/alias"
 }
 
 @test "bash-it helpers: cache: _bash-it-component-cache-add should return a new cache file in /tmp directory" {

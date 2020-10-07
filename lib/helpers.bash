@@ -126,7 +126,7 @@ _bash-it-show () {
   group "bash-it:core"
 
   if [[ -n "$1" ]]; then
-    _bash-it-describe "$1" "all"
+    _bash-it-describe "$1" "$2"
   else
     for file_type in "aliases" "plugins" "completions"; do
       _bash-it-describe "$file_type" "enabled"
@@ -225,10 +225,5 @@ bash-it () {
         return;;
     esac
 
-    # handle the multiple arguments passed to enable/disable and run the function on each
-    if [[ x"$verb" == x"enable" ]] || [[ x"$verb" == x"disable" ]]; then
-      $func "$(_bash-it-pluralize-component "$component")" "$@"
-    else
-      $func "$(_bash-it-pluralize-component "$component")"
-    fi
+    $func "$(_bash-it-pluralize-component "$component")" "$@"
 }

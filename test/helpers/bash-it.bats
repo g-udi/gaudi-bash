@@ -1,111 +1,111 @@
-#!/usr/bin/env bats
+# #!/usr/bin/env bats
 
-load ../helper
-load ../../lib/composure
+# load ../helper
+# load ../../lib/composure
 
-cite about param example group
+# cite about param example group
 
-load ../../lib/helpers
-load ../../lib/helpers/bash-it
+# load ../../lib/helpers
+# load ../../lib/helpers/bash-it
 
-local_setup () {
-  prepare
+# local_setup () {
+#   prepare
 
-  # Copy the test fixture to the bash-it folder
-  if command -v rsync &> /dev/null
-  then
-    rsync -a "$BASH_IT/test/fixtures/bash_it/" "$BASH_IT/"
-  else
-    find "$BASH_IT/test/fixtures/bash_it" \
-      -mindepth 1 -maxdepth 1 \
-      -exec cp -r {} "$BASH_IT/" \;
-  fi
-}
-
-@test "bash-it helpers: _bash-it-describe: should display proper table headers" {
-
-  # Should display plugins help (we are piping to sed to remove redundant white spaces for consistency)
-  _get-description-header () {
-    echo "$(_bash-it-describe "$1")" | head -n 2 | sed 's/  */ /g'
-  }
-
-  # Make sure the columns headers are capitalized
-  run _get-description-header plugin
-  assert_success
-  assert_line --index 0 "Plugin Enabled? Description"
-  refute_line --index 0 "plugin Enabled? Description"
-
-  run _get-description-header plugins
-  assert_line --index 0 "Plugin Enabled? Description"
-  refute_line --index 0 "plugin Enabled? Description"
-
-  run _get-description-header aliases
-  assert_success
-  assert_line --index 0 "Alias Enabled? Description"
-  refute_line --index 0 "alias Enabled? Description"
-}
-
-# @test "bash-it helpers: _bash-it-describe: should display a component name and description" {
-#   run _bash-it-describe plugins
-#   assert_success
-#   assert_output --partial "base"
-#   assert_output --partial "miscellaneous tools"
+#   # Copy the test fixture to the bash-it folder
+#   if command -v rsync &> /dev/null
+#   then
+#     rsync -a "$BASH_IT/test/fixtures/bash_it/" "$BASH_IT/"
+#   else
+#     find "$BASH_IT/test/fixtures/bash_it" \
+#       -mindepth 1 -maxdepth 1 \
+#       -exec cp -r {} "$BASH_IT/" \;
+#   fi
 # }
 
-@test "bash-it helpers: _bash-it-describe: should list all plugins (enabled/disabled)" {
+# @test "bash-it helpers: _bash-it-describe: should display proper table headers" {
 
-  local BASH_IT_DESCRIPTION_MIN_LINE_COUNT=2
+#   # Should display plugins help (we are piping to sed to remove redundant white spaces for consistency)
+#   _get-description-header () {
+#     echo "$(_bash-it-describe "$1")" | head -n 2 | sed 's/  */ /g'
+#   }
 
-  # Returns true if the no. lines for description is more than the BASH_IT_DESCRIPTION_MIN_LINE_COUNT
-  _check-results-count () {
-    [[ $(_bash-it-describe "$1" | grep "^.*$" -c) -gt $BASH_IT_DESCRIPTION_MIN_LINE_COUNT ]] && return 0
-    return 1
-  }
+#   # Make sure the columns headers are capitalized
+#   run _get-description-header plugin
+#   assert_success
+#   assert_line --index 0 "Plugin Enabled? Description"
+#   refute_line --index 0 "plugin Enabled? Description"
 
-  # Make sure we have a number of results more than 3 (header, separator and base plugin)
-  run _check-results-count plugins
-  assert_success
+#   run _get-description-header plugins
+#   assert_line --index 0 "Plugin Enabled? Description"
+#   refute_line --index 0 "plugin Enabled? Description"
 
-  bash-it disable all &> /dev/null
-  run _check-results-count plugins
-  assert_success
-}
+#   run _get-description-header aliases
+#   assert_success
+#   assert_line --index 0 "Alias Enabled? Description"
+#   refute_line --index 0 "alias Enabled? Description"
+# }
 
-@test "bash-it helpers: _bash-it-describe: should list all aliases (enabled/disabled)" {
+# # @test "bash-it helpers: _bash-it-describe: should display a component name and description" {
+# #   run _bash-it-describe plugins
+# #   assert_success
+# #   assert_output --partial "base"
+# #   assert_output --partial "miscellaneous tools"
+# # }
 
-  local BASH_IT_DESCRIPTION_MIN_LINE_COUNT=2
+# @test "bash-it helpers: _bash-it-describe: should list all plugins (enabled/disabled)" {
 
-  # Returns true if the no. lines for description is more than the BASH_IT_DESCRIPTION_MIN_LINE_COUNT
-  _check-results-count () {
-    [[ $(_bash-it-describe "$1" | grep "^.*$" -c) -gt $BASH_IT_DESCRIPTION_MIN_LINE_COUNT ]] && return 0
-    return 1
-  }
+#   local BASH_IT_DESCRIPTION_MIN_LINE_COUNT=2
 
-  run _check-results-count aliases
-  assert_success
-  run _check-results-count completion
-  assert_success
+#   # Returns true if the no. lines for description is more than the BASH_IT_DESCRIPTION_MIN_LINE_COUNT
+#   _check-results-count () {
+#     [[ $(_bash-it-describe "$1" | grep "^.*$" -c) -gt $BASH_IT_DESCRIPTION_MIN_LINE_COUNT ]] && return 0
+#     return 1
+#   }
 
-  bash-it disable all &> /dev/null
-  run _check-results-count aliases
-  assert_success
-}
+#   # Make sure we have a number of results more than 3 (header, separator and base plugin)
+#   run _check-results-count plugins
+#   assert_success
+
+#   bash-it disable all &> /dev/null
+#   run _check-results-count plugins
+#   assert_success
+# }
+
+# @test "bash-it helpers: _bash-it-describe: should list all aliases (enabled/disabled)" {
+
+#   local BASH_IT_DESCRIPTION_MIN_LINE_COUNT=2
+
+#   # Returns true if the no. lines for description is more than the BASH_IT_DESCRIPTION_MIN_LINE_COUNT
+#   _check-results-count () {
+#     [[ $(_bash-it-describe "$1" | grep "^.*$" -c) -gt $BASH_IT_DESCRIPTION_MIN_LINE_COUNT ]] && return 0
+#     return 1
+#   }
+
+#   run _check-results-count aliases
+#   assert_success
+#   run _check-results-count completion
+#   assert_success
+
+#   bash-it disable all &> /dev/null
+#   run _check-results-count aliases
+#   assert_success
+# }
 
 
-@test "bash-it helpers: _bash-it-describe: should list all completions (enabled/disabled)" {
+# @test "bash-it helpers: _bash-it-describe: should list all completions (enabled/disabled)" {
 
-  local BASH_IT_DESCRIPTION_MIN_LINE_COUNT=2
+#   local BASH_IT_DESCRIPTION_MIN_LINE_COUNT=2
 
-  # Returns true if the no. lines for description is more than the BASH_IT_DESCRIPTION_MIN_LINE_COUNT
-  _check-results-count () {
-    [[ $(_bash-it-describe "$1" | grep "^.*$" -c) -gt $BASH_IT_DESCRIPTION_MIN_LINE_COUNT ]] && return 0
-    return 1
-  }
+#   # Returns true if the no. lines for description is more than the BASH_IT_DESCRIPTION_MIN_LINE_COUNT
+#   _check-results-count () {
+#     [[ $(_bash-it-describe "$1" | grep "^.*$" -c) -gt $BASH_IT_DESCRIPTION_MIN_LINE_COUNT ]] && return 0
+#     return 1
+#   }
 
-  run _check-results-count completion
-  assert_success
+#   run _check-results-count completion
+#   assert_success
 
-  bash-it disable all &> /dev/null
-  run _check-results-count completions
-  assert_success
-}
+#   bash-it disable all &> /dev/null
+#   run _check-results-count completions
+#   assert_success
+# }

@@ -12,13 +12,10 @@ _bash-it-component-cache-add () {
 
   [[ -z $1 ]] && return 1
 
-  local component file
+  local file
 
-  component="${1}"
-  file="${BASH_IT}/tmp/cache/${component}"
-
+  file="${BASH_IT}/tmp/cache/${1}"
   [[ -f ${file} ]] || mkdir -p "$(dirname "${file}")"
-
   printf "%s" "${file}"
 }
 

@@ -32,7 +32,7 @@ _bash-it-describe () {
     # Make sure the component is pluralized in case this function is called directly e.g., for unit tests
     component=$(_bash-it-pluralize-component "$1")
     component_type="$(_bash-it-singularize-component "$component")"
-    mode="${2:-"all"}"
+    mode=${2:-"all"}
 
     printf "\n%-20s%-10s%s\n" "${component_type^}" 'Enabled?' '  Description'
     printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -
