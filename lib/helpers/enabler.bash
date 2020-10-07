@@ -15,7 +15,7 @@ _bash-it-enable () {
 
     local type component load_priority
 
-    # Make sure the component is pluarised in case this function is called directly e.g., for unit tests
+    # Make sure the component is pluralized in case this function is called directly e.g., for unit tests
     type=$(_bash-it-pluralize-component "$1")
     _load_priority="BASH_IT_LOAD_PRIORITY_DEFAULT_${type^^}"
     component="$2"

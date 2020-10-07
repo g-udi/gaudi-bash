@@ -148,7 +148,7 @@ _bash-it-backup () {
   for _file in "${BASH_IT}"/components/enabled/*.bash; do
     local _component _type
 
-    _component="$(echo "$_file" | sed -e 's/.*|\(.*\).bash.*/\1/')"
+    _component="$(echo "$_file" | sed -e 's/.*___\(.*\).bash.*/\1/')"
     _type=$(_bash-it-singularize-component "${_component##*.}")
     _component=${_component%%.*}
 

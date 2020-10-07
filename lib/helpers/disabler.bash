@@ -37,7 +37,7 @@ _bash-it-disable () {
     [[ -z "$component" ]] && echo "${RED}Please enter a valid $(_bash-it-singularize-component "$1")(s) to disable${NC}" && return
 
     if [[ "$component" = "all" ]]; then
-      find "${BASH_IT}/enabled" -name "*.${type}.bash" -exec rm {} \;
+      find "${BASH_IT}/components/enabled" -name "*.${type}.bash" -exec rm {} \;
     else
         local _component
 

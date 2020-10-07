@@ -27,7 +27,10 @@ _bash-it-describe () {
     about "describes bash-it components by listing the component, description and its status (enabled vs. disabled)"
     group "bash-it:core"
 
+    declare -a BASH_IT_DESCRIBE_MODES=(enabled all)
+
     __check-function-parameters "$1" || return 1
+    [[ -n "$2" ]] && ! _array-contains "$2" "${BASH_IT_DESCRIBE_MODES[@]}" && echo "unsupported describe mode" && return 1
 
     # Make sure the component is pluralized in case this function is called directly e.g., for unit tests
     component=$(_bash-it-pluralize-component "$1")
