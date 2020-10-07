@@ -1,0 +1,27 @@
+# Editors specific files
+.atom-build.json
+.idea
+*.sublime-workspace
+*.sublime-project
+.vscode
+
+# test libraries
+bats
+
+# bash-it enabled items and custom and temporary files
+*/enabled/*
+enabled/*
+custom/*
+/enabled
+tmp/
+
+# OS specific files (mainly OSX)
+.DS_Store
+
+# Misc. dotfiles
+.rvmrc
+*.swp
+.*.un~
+
+
+
