@@ -14,7 +14,7 @@ _bash-it-component-cache-add () {
 
   local component file
 
-  component=$(_bash-it-pluralize-component "${1}")
+  component="${1}"
   file="${BASH_IT}/tmp/cache/${component}"
 
   [[ -f ${file} ]] || mkdir -p "$(dirname "${file}")"
@@ -42,7 +42,7 @@ _bash-it-component-cache-clean () {
   else
     cache=$(_bash-it-component-cache-add "${component}")
     if [[ -f "${cache}" ]] ; then
-      rm -f "${cache}"
+      rm -f "${cache}" && rm -f "${cache}-enabled"
     fi
   fi
 }

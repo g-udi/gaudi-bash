@@ -5,7 +5,7 @@
 # @param $1     component name: bash-it component name .e.g., base, git
 _on-disable-callback () {
     callback=$1_on_disable
-    _command_exists "$callback" && $callback
+    _command_exists "$callback" &>/dev/null && $callback
 }
 
 # @function     _bash-it-disable
@@ -19,7 +19,7 @@ _bash-it-disable () {
 
     local type component
 
-    # Make sure the component is pluarized in case this function is called directly e.g., for unit tests
+    # Make sure the component is pluralized in case this function is called directly e.g., for unit tests
     type=$(_bash-it-pluralize-component "$1")
     component="$2"
 

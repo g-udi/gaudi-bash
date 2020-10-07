@@ -27,7 +27,7 @@ _bash-it-describe () {
     about "describes bash-it components by listing the component, description and its status (enabled vs. disabled)"
     group "bash-it:core"
 
-    __check-component-parameter "$1" || return 1
+    __check-function-parameters "$1" || return 1
 
     # Make sure the component is pluralized in case this function is called directly e.g., for unit tests
     component=$(_bash-it-pluralize-component "$1")
@@ -37,20 +37,28 @@ _bash-it-describe () {
     printf "\n%-20s%-10s%s\n" "${component_type^}" 'Enabled?' '  Description'
     printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -
 
-    local __file
-    for __file in "${BASH_IT}/components/$component/"*.bash
-    do
-        # Check for both the old format without the load priority, and the extended format with the priority
-        declare enabled_files enabled_file
-        enabled_file=$(basename "$__file")
-        enabled_files=$(sort <(compgen -G "${BASH_IT}/components/enabled/*$BASH_IT_LOAD_PRIORITY_SEPARATOR${enabled_file}") | wc -l)
+    file=$(_bash-it-component-cache-add "${component}-enabled")
+    [[ "$mode" = "all" ]] && file=${file/-enabled/}
 
-        if [[ "$enabled_files" -gt 0 ]]; then
-            printf "%-20s${GREEN}%-10s${NC}%s\n" "$(basename "$__file" | sed -e 's/\(.*\)\..*\.bash/\1/g')" "  ◉" "    $(cat $__file | metafor about-"$component_type")"
-        elif [[ "$mode" = "all" ]]; then
-            printf "%-20s${RED}%-10s${NC}%s\n" "$(basename "$__file" | sed -e 's/\(.*\)\..*\.bash/\1/g')" "  ◯" "    $(cat $__file | metafor about-"$component_type")"
-        fi
-    done
+    if [[ ! -s "${file}" || -z $(find "${file}" -mmin -300) ]] ; then
+      rm -f "${file}" 2>/dev/null
+        local __file
+        for __file in "${BASH_IT}/components/$component/"*.bash
+        do
+            # Check for both the old format without the load priority, and the extended format with the priority
+            declare enabled_files enabled_file
+            enabled_file=$(basename "$__file")
+            enabled_files=$(sort <(compgen -G "${BASH_IT}/components/enabled/*$BASH_IT_LOAD_PRIORITY_SEPARATOR${enabled_file}") | wc -l)
+
+            if [[ "$enabled_files" -gt 0 ]]; then
+                printf "%-20s${GREEN}%-10s${NC}%s\n" "$(basename "$__file" | sed -e 's/\(.*\)\..*\.bash/\1/g')" "  ◉" "    $(cat $__file | metafor about-"$component_type")" 2>&1 | tee -a "${file}"
+            elif [[ "$mode" = "all" ]]; then
+                printf "%-20s${RED}%-10s${NC}%s\n" "$(basename "$__file" | sed -e 's/\(.*\)\..*\.bash/\1/g')" "  ◯" "    $(cat $__file | metafor about-"$component_type")" 2>&1 | tee -a "${file}"
+            fi
+        done
+    else
+      cat "${file}"
+    fi
 
     if [[ "$mode" = "all" ]]; then
       echo ""

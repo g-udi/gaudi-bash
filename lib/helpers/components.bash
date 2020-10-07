@@ -4,12 +4,12 @@ export BASH_IT_COMPONENT_TYPES=(plugins aliases completions)
 
 # Component-specific functions (component is either an alias, a plugin, or a completion).
 
-# @function     __check-component-parameter
+# @function     __check-function-parameters
 # @description  check the passed parameter to make sure its valid and matches a component type
 # @param $1     component: the component type (plugin, alias, completion)
 # @return       success (0) or failure status (1)
-# @example      ❯ __check-component-parameter plugin
-__check-component-parameter () {
+# @example      ❯ __check-function-parameters plugin
+__check-function-parameters () {
   about "check the passed parameter to make sure its valid and matches a component type"
   group "bash-it:core"
 
@@ -47,7 +47,7 @@ _bash-it-singularize-component () {
   about "singularize component name for consistency especially for search"
   group "bash-it:core"
 
-  __check-component-parameter "$1" || return 1
+  __check-function-parameters "$1" || return 1
 
   local component="${1}"
 
@@ -72,22 +72,18 @@ _bash-it-component-help () {
 
   local type component file
 
-  __check-component-parameter "$1" || return 1
+  __check-function-parameters "$1" || return 1
 
   type=$(_bash-it-pluralize-component "${1}")
   component="$2"
-  file=$(_bash-it-component-cache-add "${type}")
+  help=$(_bash-it-show "$type" | tail -n +4)
 
-  if [[ ! -s "${file}" || -z $(find "${file}" -mmin -300) ]] ; then
-    rm -f "${file}" 2>/dev/null
-    _bash-it-show "$type" | tail -n +4 | cat > "${file}"
-  fi
   # If there is a component passed then grep the type list
   if [[ -n $component ]]; then
-    grep "$component" "${file}" && return 0
+    printf "$help" | grep "${component}" && return 0
     return 1
   fi
-  cat "${file}"
+  printf "${help}"
 }
 
 # @function     _bash-it-component-list
@@ -99,7 +95,7 @@ _bash-it-component-list () {
   about "returns a list of items within each component (plugin, alias, completion)"
   group "bash-it:core"
 
-  __check-component-parameter "$1" || return 1
+  __check-function-parameters "$1" || return 1
   _bash-it-component-help "$1" | awk '{print $1}' | uniq | sort | tr '\n' ' '
 }
 
@@ -113,7 +109,7 @@ _bash-it-component-list-matching () {
   about "returns a list of items within each component (plugin, alias, completion) that match a string "
   group "bash-it:core"
 
-  __check-component-parameter "$1" || return 1
+  __check-function-parameters "$1" || return 1
   if [[ -n "$1" ]] && [[ -n "$2" ]]; then
     local match
     match=$(_bash-it-component-help "$1" | $(_bash-it-grep) -E -- "$2" | awk '{print $1}' | uniq | sort | tr '\n' ' ')
@@ -131,7 +127,7 @@ _bash-it-component-list-enabled () {
   about "returns a list of enabled items within each component (plugin, alias, completion)"
   group "bash-it:core"
 
-  __check-component-parameter "$1" || return 1
+  __check-function-parameters "$1" || return 1
   _bash-it-component-help "${1}" | $(_bash-it-grep) -E '◉' | awk '{print $1}' | uniq | sort | tr '\n' ' '
 }
 
@@ -144,7 +140,7 @@ _bash-it-component-list-disabled () {
   about "returns a list of disabled items within each component (plugin, alias, completion)"
   group "bash-it:core"
 
-  __check-component-parameter "$1" || return 1
+  __check-function-parameters "$1" || return 1
   _bash-it-component-help "${1}" | $(_bash-it-grep) -E  '◯' | awk '{print $1}' | uniq | sort | tr '\n' ' '
 }
 
@@ -159,7 +155,7 @@ _bash-it-component-item-is-enabled () {
   about "checks if a given item is enabled for a particular component/file-type"
   group "bash-it:core"
 
-  __check-component-parameter "$1" || return 1
+  __check-function-parameters "$1" || return 1
   if [[ -n "$1" ]] && [[ -n "$2" ]]; then
     _bash-it-component-list-enabled "$1" | tr ' ' '\n' |  $(_bash-it-grep) -E -q -- "^${2}$"
   else
@@ -178,7 +174,7 @@ _bash-it-component-item-is-disabled () {
   about "checks if a given item is disabled for a particular component/file-type"
   group "bash-it:core"
 
-  __check-component-parameter "$1" || return 1
+  __check-function-parameters "$1" || return 1
   if [[ -n "$1" ]] && [[ -n "$2" ]]; then
     _bash-it-component-list-disabled "$1" | tr ' ' '\n' |  $(_bash-it-grep) -E -q -- "^${2}$"
   else

@@ -1,7 +1,6 @@
 #!/usr/bin/env bats
 
 load ../helper
-
 load ../../lib/composure
 
 cite about param example group
@@ -44,24 +43,16 @@ local_setup () {
   assert_success
   assert_line --index 0 "Alias Enabled? Description"
   refute_line --index 0 "alias Enabled? Description"
-
 }
 
-@test "bash-it helpers: _bash-it-describe: should display a component name" {
-  run _bash-it-describe plugins
-  assert_success
-  assert_output --partial "base"
+# @test "bash-it helpers: _bash-it-describe: should display a component name and description" {
+#   run _bash-it-describe plugins
+#   assert_success
+#   assert_output --partial "base"
+#   assert_output --partial "miscellaneous tools"
+# }
 
-}
-
-@test "bash-it helpers: _bash-it-describe: should display a component description" {
-  run _bash-it-describe plugins
-  assert_success
-  assert_output --partial "miscellaneous tools"
-
-}
-
-@test "bash-it helpers: _bash-it-describe: should list all components (enabled/disabled)" {
+@test "bash-it helpers: _bash-it-describe: should list all plugins (enabled/disabled)" {
 
   local BASH_IT_DESCRIPTION_MIN_LINE_COUNT=2
 
@@ -74,13 +65,47 @@ local_setup () {
   # Make sure we have a number of results more than 3 (header, separator and base plugin)
   run _check-results-count plugins
   assert_success
+
+  bash-it disable all &> /dev/null
+  run _check-results-count plugins
+  assert_success
+}
+
+@test "bash-it helpers: _bash-it-describe: should list all aliases (enabled/disabled)" {
+
+  local BASH_IT_DESCRIPTION_MIN_LINE_COUNT=2
+
+  # Returns true if the no. lines for description is more than the BASH_IT_DESCRIPTION_MIN_LINE_COUNT
+  _check-results-count () {
+    [[ $(_bash-it-describe "$1" | grep "^.*$" -c) -gt $BASH_IT_DESCRIPTION_MIN_LINE_COUNT ]] && return 0
+    return 1
+  }
+
   run _check-results-count aliases
   assert_success
   run _check-results-count completion
   assert_success
 
   bash-it disable all &> /dev/null
-  run _check-results-count plugins
+  run _check-results-count aliases
+  assert_success
+}
+
+
+@test "bash-it helpers: _bash-it-describe: should list all completions (enabled/disabled)" {
+
+  local BASH_IT_DESCRIPTION_MIN_LINE_COUNT=2
+
+  # Returns true if the no. lines for description is more than the BASH_IT_DESCRIPTION_MIN_LINE_COUNT
+  _check-results-count () {
+    [[ $(_bash-it-describe "$1" | grep "^.*$" -c) -gt $BASH_IT_DESCRIPTION_MIN_LINE_COUNT ]] && return 0
+    return 1
+  }
+
+  run _check-results-count completion
   assert_success
 
+  bash-it disable all &> /dev/null
+  run _check-results-count completions
+  assert_success
 }

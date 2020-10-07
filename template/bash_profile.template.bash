@@ -5,7 +5,7 @@ export BASH_IT="{{BASH_IT}}"
 
 # Lock and Load a custom theme file
 # Location /.bash_it/themes/
-export BASH_IT_THEME='gaudi'
+export BASH_IT_THEME="gaudi"
 
 # Don't check mail when opening terminal.
 unset MAILCHECK
