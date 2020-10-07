@@ -7,7 +7,7 @@
 # @description  outputs a full path of the grep found on the filesystem
 # @return       Path to the egrep, grep bin e.g., /usr/bin/egrep
 _bash-it-grep () {
-  about "Outputs a full path of the grep found on the filesystem"
+  about "outputs a full path of the grep found on the filesystem"
   group "bash-it:core"
 
   if [[ -z "${BASH_IT_GREP}" ]] ; then
@@ -21,11 +21,13 @@ _bash-it-grep () {
 # @description  describes bash-it components by listing the component, description and its status (enabled vs. disabled)
 #               the function can display all the items for a specific component (alias, plugin or completion) passed as a param
 # @param $1     component: (of type aliases, plugins, completions)
-# @param $2     mode <enabled, all>: either show all available components or filter only for enabled ones
+# @param $2     mode <enabled, all>: either show all available components or filter only for enabled ones (default: all)
 # @return       table showing each component name, status (enabled/disabled) and description
 _bash-it-describe () {
-    about "summarizes available bash_it components"
+    about "describes bash-it components by listing the component, description and its status (enabled vs. disabled)"
     group "bash-it:core"
+
+    __check-component-parameter "$1" || return 1
 
     # Make sure the component is pluralized in case this function is called directly e.g., for unit tests
     component=$(_bash-it-pluralize-component "$1")

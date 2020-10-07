@@ -7,36 +7,14 @@ load ../../lib/composure
 cite about param example group
 
 load ../../lib/helpers
-load ../../lib/helpers/bash-it
 load ../../lib/helpers/components
+load ../../lib/helpers/cache
 
 local_setup () {
   prepare
-
-  # Copy the test fixture to the bash-it folder
-  if command -v rsync &> /dev/null
-  then
-    rsync -a "$BASH_IT/test/fixtures/bash_it/" "$BASH_IT/"
-  else
-    find "$BASH_IT/test/fixtures/bash_it" \
-      -mindepth 1 -maxdepth 1 \
-      -exec cp -r {} "$BASH_IT/" \;
-  fi
 }
 
-# @test "bash-it helpers: _bash-it-component-help: should display components help" {
-#   # should fail when no component is passed
-#   run _bash-it-component-help
-#   assert_failure
-
-#   # should display plugins help
-#   run _bash-it-component-help plugin
-#   assert_success
-#   assert_output --partial "base                  [ ]     miscellaneous tools"
-
-# }
-
-@test "bash-it helpers: components: _bash-it-pluralize-component: should pluralise the argument" {
+@test "bash-it helpers: components: _bash-it-pluralize-component: should pluralize the argument" {
 
   run  _bash-it-pluralize-component "alias"
   assert_success
@@ -77,122 +55,255 @@ local_setup () {
   assert_success
   assert_output "completion"
 }
-# @test "bash-it helpers: _bash-it-component-item-is-enabled: should check enabled component" {
 
-#   mkdir -p $BASH_IT/aliases/enabled
+@test "bash-it helpers: _bash-it-component-help: should fail if no component was passed" {
+  # should fail when no component is passed
+  run _bash-it-component-help
+  assert_failure
+}
 
-#   ln -s $BASH_IT/aliases/available/a.aliases.bash $BASH_IT/enabled/150---a.aliases.bash
-#   assert_link_exist "$BASH_IT/enabled/150---a.aliases.bash"
+@test "bash-it helpers: _bash-it-component-help: should fail if no valid component was passed" {
+  # should fail when no component is passed
+  run _bash-it-component-help INVALID
+  assert_failure
+}
 
-#   load "$BASH_IT/bash_it.sh"
+@test "bash-it helpers: _bash-it-component-help: should create cache file for component on the first run" {
+  _bash-it-component-cache-clean
+  assert_file_not_exist "$HOME/.bash_it/tmp/cache/plugins"
+  run _bash-it-component-help plugin
+  assert_file_exist "$HOME/.bash_it/tmp/cache/plugins"
+}
 
-#   # run alias test_alias &> /dev/null
-#   # assert_success
-#   # assert_line -n 0 "alias test_alias='a'"
+@test "bash-it helpers: _bash-it-component-help: should display plugins help" {
 
-#   run _bash-it-component-item-is-enabled alias test_alias && echo "test_alias is enabled"
-#   assert_success
-#   assert_output "test_alias is enabled"
+  run _bash-it-component-help plugin
+  assert_success
+  assert_output --partial "alias-completion"
+  assert_output --partial "git helper function"
+  assert_output --partial "autojump"
+  refute_output --partial "FAIL"
 
-# }
+  run _bash-it-component-help plugins
+  assert_success
+  assert_output --partial "alias-completion"
+}
 
-# # @test "bash-it helpers: _bash-it-component-item-is-disabled: should check disabled component" {
+@test "bash-it helpers: _bash-it-component-help: should display a plugin help passed as the second param" {
+  run _bash-it-component-help plugin base
+  assert_success
+  assert_line --partial "base"
+  assert_output --partial "miscellaneous tools"
+}
 
-# #   mkdir -p $BASH_IT/aliases/enabled
+@test "bash-it helpers: _bash-it-component-help: should fail if the plugin passed as the second param doesn't exist" {
+  run _bash-it-component-help plugin FAIL
+  assert_failure
+}
 
-# #   ln -s $BASH_IT/aliases/available/a.aliases.bash $BASH_IT/aliases/enabled/150---a.aliases.bash
-# #   assert_link_exist "$BASH_IT/aliases/enabled/150---a.aliases.bash"
-# #   ln -s $BASH_IT/aliases/available/b.aliases.bash $BASH_IT/aliases/enabled/150---b.aliases.bash
-# #   assert_link_exist "$BASH_IT/aliases/enabled/150---b.aliases.bash"
+@test "bash-it helpers: _bash-it-component-help: should display aliases help" {
+  run _bash-it-component-help alias osx
+  assert_success
+  assert_output --partial "osx"
+  assert_output --partial "osx-specific aliases"
+}
 
-# #   # The `test_alias` alias should not exist
-# #   run alias test_alias &> /dev/null
-# #   assert_failure
+@test "bash-it helpers: _bash-it-component-help: should display an alias help passed as the second param" {
+  run _bash-it-component-help plugin base
+  assert_success
+  assert_line --partial "base"
+  assert_output --partial "miscellaneous tools"
+}
 
-# #   load "$BASH_IT/bash_it.sh"
+@test "bash-it helpers: _bash-it-component-help: should fail if the alias passed as the second param doesn't exist" {
+  run _bash-it-component-help aliases FAIL
+  assert_failure
+}
 
-# #   run alias test_alias &> /dev/null
-# #   assert_success
-# #   assert_line -n 0 "alias test_alias='b'"
-# # }
+@test "bash-it helpers: _bash-it-component-help: should display completions help" {
+  run _bash-it-component-help completions
+  assert_success
+  assert_output --partial "bash-it"
+  assert_output --partial "git"
+  assert_output --partial "install and run python applications in isolated environments"
+  refute_output --partial "FAIL"
 
+  run _bash-it-component-help aliases
+  assert_success
+  assert_output --partial "bash-it"
+}
 
-# has_match () {
-#   $(_array-contains ${@}) && echo "has" "$1"
-# }
+@test "bash-it helpers: _bash-it-component-help: should display a completion help passed as the second param" {
+  run _bash-it-component-help completion pipx
+  assert_success
+  assert_output --partial "pipx"
+  assert_output --partial "install and run python applications in isolated environments"
+}
 
-# item_enabled () {
-#   $(_bash-it-component-item-is-enabled ${@}) && echo "$1" "$2" "is enabled"
-# }
+@test "bash-it helpers: _bash-it-component-help: should fail if the completion passed as the second param doesn't exist" {
+  run _bash-it-component-help completions FAIL
+  assert_failure
+}
 
-# item_disabled () {
-#   $(_bash-it-component-item-is-disabled ${@}) && echo "$1" "$2" "is disabled"
-# }
+@test "bash-it helpers: _bash-it-component-list: should fail if the no component was passed" {
+  run _bash-it-component-list
+  assert_failure
+}
 
-# @test "_bash-it-component-item-is-enabled() - for a disabled item" {
-#   run item_enabled aliases svn
-#   assert_line -n 0 ''
-# }
+@test "bash-it helpers: _bash-it-component-list: should fail if the an invalid component was passed" {
+  run _bash-it-component-list INVALID
+  assert_failure
+}
 
-# @test "_bash-it-component-item-is-enabled() - for an enabled/disabled item" {
-#   run bash-it enable alias svn
-#   assert_line -n 0 '[● ENABLED] alias: svn enabled with priority (150)'
+@test "bash-it helpers: _bash-it-component-list: should show a list of components (as an array)" {
+  run _bash-it-component-list plugins
+  assert_success
 
-#   run item_enabled alias svn
-#   assert_line -n 0 'alias svn is enabled'
+  # Check if the output is an array and the first element matched the alias-completion plugin
+  IFS=', ' read -r -a array <<< "$output"
+  run echo "${array[0]-not array}"
+  assert_output "alias-completion"
+}
 
-#   run bash-it disable alias svn
-#   assert_line -n 0 'svn disabled.'
+@test "bash-it helpers: _bash-it-component-list-matching: should fail if the no component was passed" {
+  run _bash-it-component-list-matching
+  assert_failure
+}
 
-#   run item_enabled alias svn
-#   assert_line -n 0 ''
-# }
+@test "bash-it helpers: _bash-it-component-list-matching: should fail if the an invalid component was passed" {
+  run _bash-it-component-list-matching INVALID
+  assert_failure
+}
 
-# @test "_bash-it-component-item-is-disabled() - for a disabled item" {
-#   run item_disabled alias svn
-#   assert_line -n 0 'alias svn is disabled'
-# }
+@test "bash-it helpers: _bash-it-component-list-matching: should fail if no valid match was found" {
+  run _bash-it-component-list-matching plugin NO_MATCH
+  assert_failure
+}
 
-# @test "_bash-it-component-item-is-disabled() - for an enabled/disabled item" {
-#   run bash-it enable alias svn
-#   assert_line -n 0 '[● ENABLED] alias: svn enabled with priority (150)'
+@test "bash-it helpers: _bash-it-component-list-matching: should show a list of matched components (as an array)" {
+  run _bash-it-component-list-matching plugins base
+  assert_success
 
-#   run item_disabled alias svn
-#   assert_line -n 0 ''
+  # Check if the output is an array and the first element matched the alias-completion plugin
+  IFS=', ' read -r -a array <<< "$output"
+  run echo "${array[0]-not array}"
+  assert_output "base"
 
-#   run bash-it disable alias svn
-#   assert_line -n 0 'svn disabled.'
+  # Check the output array length
+  run echo "${#array[@]}"
+  assert_output 1
 
-#   run item_disabled alias svn
-#   assert_line -n 0 'alias svn is disabled'
-# }
+  run _bash-it-component-list-matching plugins node
+  assert_success
 
-# @test "_array-contains() - when match is found, and is the first" {
-#   declare -a fruits=(apple pear orange mandarin)
-#   run has_match apple "${fruits[@]}"
-#   assert_line -n 0 'has apple'
-# }
+  # Check if the output is an array and the first element matched the alias-completion plugin
+  IFS=', ' read -r -a array <<< "$output"
+  run echo "${array[0]-not array}"
+  assert_output "node"
+}
 
-# @test "_array-contains() - when match is found, and is the last" {
-#   declare -a fruits=(apple pear orange mandarin)
-#   run has_match mandarin "${fruits[@]}"
-#   assert_line -n 0 'has mandarin'
-# }
+@test "bash-it helpers: _bash-it-component-list-enabled: should fail if the no component was passed" {
+  run _bash-it-component-list-enabled
+  assert_failure
+}
 
-# @test "_array-contains() - when match is found, and is in the middle" {
-#   declare -a fruits=(apple pear orange mandarin)
-#   run has_match pear "${fruits[@]}"
-#   assert_line -n 0 'has pear'
-# }
+@test "bash-it helpers: _bash-it-component-list-enabled: should fail if the no valid component was passed" {
+  run _bash-it-component-list-enabled INVALID
+  assert_failure
+}
 
-# @test "_array-contains() - when match is found, and it has spaces" {
-#   declare -a fruits=(apple pear orange mandarin "yellow watermelon")
-#   run has_match "yellow watermelon" "${fruits[@]}"
-#   assert_line -n 0 'has yellow watermelon'
-# }
+@test "bash-it helpers: _bash-it-component-list-enabled: should return a list of enabled components" {
+  run _bash-it-component-list-enabled plugins
+  assert_success
 
-# @test "_array-contains() - when match is not found" {
-#   declare -a fruits=(apple pear orange mandarin)
-#   run has_match xyz "${fruits[@]}"
-#   assert_line -n 0 ''
-# }
+  # Check if the output is an array and the first element matched the alias-completion plugin
+  IFS=', ' read -r -a array <<< "$output"
+  run echo "${array[0]-not array}"
+  assert_output "alias-completion"
+  run echo "${array[1]-not array}"
+  assert_output "base"
+}
+
+@test "bash-it helpers: _bash-it-component-list-disabled: should fail if the no component was passed" {
+  run _bash-it-component-list-disabled
+  assert_failure
+}
+
+@test "bash-it helpers: _bash-it-component-list-disabled: should fail if the no valid component was passed" {
+  run _bash-it-component-list-disabled INVALID
+  assert_failure
+}
+
+@test "bash-it helpers: _bash-it-component-list-disabled: should return a list of disabled components" {
+  run _bash-it-component-list-disabled plugins
+  assert_success
+
+  # Check if the output is an array and the first element matched the alias-completion plugin
+  IFS=', ' read -r -a array <<< "$output"
+  run echo "${array[0]-not array}"
+  refute_output "alias-completion"
+  run echo "${array[0]-not array}"
+  assert_output "autojump"
+}
+
+@test "bash-it helpers: _bash-it-component-item-is-enabled: should fail if the no component was passed" {
+  run _bash-it-component-item-is-enabled
+  assert_failure
+}
+
+@test "bash-it helpers: _bash-it-component-item-is-enabled: should fail if the no valid component was passed" {
+  run _bash-it-component-item-is-enabled INVALID
+  assert_failure
+}
+
+@test "bash-it helpers: _bash-it-component-item-is-enabled: should fail if the item passed is not enabled" {
+  run _bash-it-component-item-is-enabled plugin git
+  assert_failure
+}
+
+@test "bash-it helpers: _bash-it-component-item-is-enabled: should succeed if the item passed is enabled" {
+  run _bash-it-component-item-is-enabled plugin base
+  assert_success
+}
+
+@test "bash-it helpers: _bash-it-component-item-is-enabled: should check enabled component" {
+
+  run _bash-it-component-item-is-enabled plugin git
+  assert_failure
+
+  run _bash-it-enable plugin git
+  assert_success
+  run _bash-it-component-item-is-enabled plugin git
+  assert_success
+}
+
+@test "bash-it helpers: _bash-it-component-item-is-disabled: should fail if the no component was passed" {
+  run _bash-it-component-item-is-disabled
+  assert_failure
+}
+
+@test "bash-it helpers: _bash-it-component-item-is-disabled: should fail if the no valid component was passed" {
+  run _bash-it-component-item-is-disabled INVALID
+  assert_failure
+}
+
+@test "bash-it helpers: _bash-it-component-item-is-disabled: should fail if the item passed is not disabled" {
+  run _bash-it-component-item-is-disabled plugin base
+  assert_failure
+}
+
+@test "bash-it helpers: _bash-it-component-item-is-disabled: should succeed if the item passed is disabled" {
+  run _bash-it-component-item-is-disabled plugin git
+  assert_success
+}
+
+@test "bash-it helpers: _bash-it-component-item-is-disabled: should check disabled component" {
+
+  run _bash-it-component-item-is-disabled plugin git
+  assert_success
+
+  run _bash-it-enable plugin git
+  assert_success
+  run _bash-it-component-item-is-disabled plugin git
+  assert_failure
+}

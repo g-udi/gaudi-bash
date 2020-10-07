@@ -65,6 +65,13 @@ local_setup () {
   assert_success
 }
 
+@test "bash-it helpers: utils: _array-contains: should be successful if an element that has spaces is found in array" {
+  declare -a fruits=(apple orange pear mandarin "yellow melon")
+
+  run _array-contains "yellow melon" "${fruits[@]}"
+  assert_success
+}
+
 @test "bash-it helpers: utils: _array-contains: should fail if an element is not found in array" {
   declare -a fruits=(apple orange pear mandarin)
 

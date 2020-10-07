@@ -39,10 +39,10 @@ source "${BASH_IT}/lib/appearance.bash"
 if ! command -v reload &>/dev/null && [[ -n "$BASH_IT_RELOAD_LEGACY" ]]; then
   case $OSTYPE in
     darwin*)
-      alias reload='source ~/.bash_profile'
+      alias reload="source ~/.bash_profile"
       ;;
     *)
-      alias reload='source ~/.bashrc'
+      alias reload="source ~/.bashrc"
       ;;
   esac
 fi
