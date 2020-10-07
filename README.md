@@ -1,4 +1,4 @@
-# bash-it
+# gaudi-bash
 
 **bash-it** is a mash up of my own bash commands and scripts, other bash stuff I have found and a shameless ripoff of [oh-my-zsh](https://github.com/robbyrussell/oh-my-zsh) includes autocompletion, themes, aliases, custom functions, a few stolen pieces from Steve Losh, and more.
 
