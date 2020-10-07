@@ -5,7 +5,7 @@ then
   BASH_IT="$HOME/.bash_it"
 fi
 
-install-bash-it () {
+__install () {
   # Prevent the cloned repository from having insecure permissions. Failing to do
   # so causes compinit() calls to fail with "command not found: compdef" errors
   # for users with insecure umasks (e.g., "002", allowing group writability). Note
@@ -34,7 +34,7 @@ if [[ -d "$BASH_IT" ]]; then
         echo "Running a bash-it update to pull latest changes ..."
         git -C "$BASH_IT" pull
     fi
-    install-bash-it
+    __install
 else
-  install-bash-it
+  __install
 fi
