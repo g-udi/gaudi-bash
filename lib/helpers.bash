@@ -46,7 +46,7 @@ _bash-it-update () {
       git log --format="%h: $description (%an)" -1 "$i"
     done
 
-    _read_input "Would you like to update to $(git log -1 --format=%h origin/master)? [Y/n]"
+    _read_input "Would you like to update to $(git log -1 --format=%h origin/master) - $(git log -1 --format=%B origin/master)? [Y/n]"
     if [[ $REPLY =~ ^[yY]$ ]]; then
       git pull --rebase &> /dev/null
       if [[ $? -eq 0 ]]; then

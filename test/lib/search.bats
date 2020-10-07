@@ -1,87 +1,79 @@
-# #!/usr/bin/env bats
+#!/usr/bin/env bats
 
-# load ../helper
-# load ../../lib/composure
-# load ../../lib/log
-# load ../../lib/helpers
-# load ../../lib/search
+load ../helper
 
-# cite about param example group
+load ../../lib/composure
 
-# load ../../plugins/available/base.plugin
-# load ../../aliases/available/git.aliases
-# load ../../plugins/available/ruby.plugin
-# load ../../plugins/available/rails.plugin
-# load ../../completion/available/bundler.completion
-# load ../../completion/available/gem.completion
-# load ../../completion/available/rake.completion
+cite about param example group
 
-# load ../../lib/helpers
+load ../../lib/helpers
+load ../../lib/search
 
-# local_setup () {
-#   prepare
+local_setup () {
+  prepare
 
-#   export OLD_PATH="$PATH"
-#   export PATH="/usr/bin:/bin:/usr/sbin"
-# }
+  export OLD_PATH="$PATH"
+  export PATH="/usr/bin:/bin:/usr/sbin"
+}
 
-# local_teardown () {
-#   export PATH="$OLD_PATH"
-#   unset OLD_PATH
-# }
+local_teardown () {
+  export PATH="$OLD_PATH"
+  unset OLD_PATH
+}
 
-# @test "search: plugin base" {
-#   export BASH_IT_SEARCH_USE_COLOR=false
-#   run _bash-it-search-component 'plugins' 'base'
-#   assert_line -n 0 '      plugins:  base  '
-# }
+@test "search: plugin base" {
+  export BASH_IT_SEARCH_USE_COLOR=false
+  run _bash-it-search-component 'plugins' 'base'
+  assert_line -n 0 '      plugins:  base ✓  '
+}
 
-# @test "search: git" {
-#   run _bash-it-search 'git' --no-color
-#   assert_line -n 0 '      aliases:  git   gitsvn  '
-#   assert_line -n 1 -p '      plugins:'
-#   for plugin in "autojump" "git" "gitstatus" "git-subrepo" "jgitflow" "jump"
-#   do
-#     echo $plugin
-#     assert_line -n 1 -p $plugin
-#   done
-#   assert_line -n 2 '  completions:  git   git_flow   git_flow_avh  '
-# }
+@test "search: git" {
+  run _bash-it-search 'git' --no-color
+  assert_line -n 0 '      aliases:  git   gitsvn  '
+  assert_line -n 1 -p '      plugins:'
 
-# @test "search: ruby gem bundle rake rails" {
-#   run _bash-it-search rails ruby gem bundler rake --no-color
+  for plugin in "autojump" "git" "gitstatus" "git-subrepo" "jgitflow" "jump"
+  do
+    echo $plugin
+    assert_line -n 1 -p $plugin
+  done
+  assert_line -n 2 '  completions:  git ✓ ︎ git_extras   git_flow   git_flow_avh  '
+}
 
-#   assert_line -n 0 '      aliases:  bundler   rails  '
-#   assert_line -n 1 '      plugins:  chruby   chruby-auto   rails   ruby  '
-#   assert_line -n 2 '  completions:  bundler   gem   rake  '
-# }
+@test "search: ruby gem bundle rake rails" {
+  run _bash-it-search rails ruby gem bundler rake --no-color
 
-# @test "search: rails ruby gem bundler rake -chruby" {
-#   run _bash-it-search rails ruby gem bundler rake -chruby --no-color
+  assert_line -n 0 '      aliases:  bundler   rails  '
+  assert_line -n 1 '      plugins:  chruby   ruby  '
+  assert_line -n 2 '  completions:  bundler   gem   rake  '
+}
 
-#   assert_line -n 0 '      aliases:  bundler   rails  '
-#   assert_line -n 1 '      plugins:  rails   ruby  '
-#   assert_line -n 2 '  completions:  bundler   gem   rake  '
-# }
+@test "search: rails ruby gem bundler rake -chruby" {
+  run _bash-it-search rails ruby gem bundler rake -chruby --no-color
 
-# @test "search: @git" {
-#   run _bash-it-search '@git' --no-color
-#   assert_line -n 0 '      aliases:  git  '
-#   assert_line -n 1 '      plugins:  git  '
-#   assert_line -n 2 '  completions:  git  '
-# }
+  assert_line -n 0 '      aliases:  bundler   rails  '
+  assert_line -n 1 '      plugins:  ruby  '
+  assert_line -n 2 '  completions:  bundler   gem   rake  '
+}
 
-# @test "search: @git --enable / --disable" {
-#   set -e
-#   run _bash-it-search '@git' --enable --no-color
-#   run _bash-it-search '@git' --no-color
+@test "search: @git" {
+  run _bash-it-search '@git' --no-color
+  assert_line -n 0 '      aliases:  git  '
+  assert_line -n 1 '      plugins:  git  '
+  assert_line -n 2 '  completions:  git ✓  '
+}
 
-#   [[ "${lines[0]}"  =~ '✓' ]]
+@test "search: @git --enable / --disable" {
+  set -e
+  run _bash-it-search '@git' --enable --no-color
+  run _bash-it-search '@git' --no-color
 
-#   run _bash-it-search '@git' --disable --no-color
-#   run _bash-it-search '@git' --no-color
+  [[ "${lines[0]}"  =~ '✓' ]]
 
-#   assert_line -n 0 '      aliases:  git  '
-#   assert_line -n 0 '      aliases:  git  '
-#   assert_line -n 2 '  completions:  git  '
-# }
+  run _bash-it-search '@git' --disable --no-color
+  run _bash-it-search '@git' --no-color
+
+  assert_line -n 0 '      aliases:  git  '
+  assert_line -n 0 '      aliases:  git  '
+  assert_line -n 2 '  completions:  git  '
+}
