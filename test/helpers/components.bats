@@ -12,6 +12,9 @@ load ../../lib/helpers/cache
 
 local_setup () {
   prepare
+
+  cd "$BASH_IT"
+  ./setup.sh --silent
 }
 
 @test "bash-it helpers: components: components: __check-function-parameters: should success when passing a valid component" {
