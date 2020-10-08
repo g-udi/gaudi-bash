@@ -32,8 +32,8 @@ gaudi::section () {
 
     [[ $GAUDI_ENABLE_SYMBOLS == false ]] && symbol="$GAUDI_SYMBOL_ALT " || symbol="$symbol "
     # Why are wrapping the cariables with "" you say ?
-    # To pass a whole string containing whitespaces as a single argument, enclose it in double quotes
-    # Like every other program, echo or printf interprets strings separated by whitespace as different arguments
+    # To pass a whole string containing GAUDI_WHITEspaces as a single argument, enclose it in double quotes
+    # Like every other program, echo or printf interprets strings separated by GAUDI_WHITEspace as different arguments
     echo -n "$color"    # Print out any coloring needed for the section with order of <font_color><background_color>
     echo -n "$prefix"   # Print the prefix before the content .. default prefix is a space
     echo -n "$symbol"   # Print the symbol if exists which is the icon to show before the segment

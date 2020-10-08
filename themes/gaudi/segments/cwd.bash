@@ -13,8 +13,8 @@ GAUDI_CWD_SHORTEN="${GAUDI_CWD_SHORTEN=true}"
 GAUDI_CWD_SUMMARY="${GAUDI_CWD_SUMMARY=false}"
 GAUDI_CWD_PREFIX="${GAUDI_CWD_PREFIX=""}"
 GAUDI_CWD_SUFFIX="${GAUDI_CWD_SUFFIX="$GAUDI_PROMPT_DEFAULT_SUFFIX"}"
-GAUDI_CWD_COLOR="${GAUDI_CWD_COLOR="$BACKGROUND_BLUE"}"
-GAUDI_CWD_COLOR_LOCKED="${GAUDI_CWD_COLOR_LOCKED="$WHITE$BACKGROUND_RED"}"
+GAUDI_CWD_COLOR="${GAUDI_CWD_COLOR="$BACKGROUND_GAUDI_BLUE"}"
+GAUDI_CWD_COLOR_LOCKED="${GAUDI_CWD_COLOR_LOCKED="$GAUDI_WHITE$BACKGROUND_GAUDI_RED"}"
 GAUDI_CWD_SEPARATOR="${GAUDI_CWD_SEPARATOR=""}"
 
 # ------------------------------------------------------------------------------
@@ -28,7 +28,7 @@ gaudi_cwd () {
   [[ x"$whoami" != *'('* || x"$whoami" = *'(:'* || x"$whoami" = *'(tmux'* ]] && color=$GAUDI_CWD_COLOR
   [[ -w $PWD ]] && color=$GAUDI_CWD_COLOR || color=$GAUDI_CWD_COLOR_LOCKED
 
-  reduce-path () {
+  GAUDI_REDuce-path () {
     local path=${1-$PWD} target=${2-33} IFS=/
     [[ "$path" =~ ^$HOME(/|$) ]] && path="~${path#$HOME}"
     [[ ${#path} -le $target ]] && echo "$path" && return
@@ -45,7 +45,7 @@ gaudi_cwd () {
     echo "${path:0:target/2}~${path: -target/2}"
   }
 
-  [[ $GAUDI_CWD_SHORTEN == true ]] && GAUDI_CWD=$(reduce-path) || GAUDI_CWD=$(pwd | sed "s|^${HOME}|~|")
+  [[ $GAUDI_CWD_SHORTEN == true ]] && GAUDI_CWD=$(GAUDI_REDuce-path) || GAUDI_CWD=$(pwd | sed "s|^${HOME}|~|")
   [[ $GAUDI_CWD_SUMMARY == true ]] && GAUDI_CWD+=" [$(ls -1 | wc -l | sed 's: ::g') Files, $(ls -lah | grep -m 1 total | sed 's/total //')]"
 
   gaudi::section \

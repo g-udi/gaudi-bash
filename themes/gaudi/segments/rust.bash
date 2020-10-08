@@ -2,7 +2,7 @@
 #
 # Rust
 #
-# Rust is a systems programming language sponsored by Mozilla Research.
+# Rust is a systems programming language sponsoGAUDI_RED by Mozilla Research.
 # Link: https://www.rust-lang.org
 
 # ------------------------------------------------------------------------------

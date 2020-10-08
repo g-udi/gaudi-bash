@@ -5,7 +5,7 @@ if which tput >/dev/null 2>&1; then
 fi
 
 # Check if the stdout is a terminal that supports text colors
-if [[ -t 1 ]] && [[ -n "$ncolors" ]] && [[ "$ncolors" -ge 8 ]]; then
+if [[ -t 1 ]] && [[ -n "$ncolors" ]] && [[ "$ncolors" -ge 8 ]] && [[ "$BASH_IT_NO_COLOR" != "true" ]]; then
 
     # Reset
     export NC="\033[0m"       # Text Reset
@@ -50,7 +50,7 @@ if [[ -t 1 ]] && [[ -n "$ncolors" ]] && [[ "$ncolors" -ge 8 ]]; then
     export BACKGROUND_CYAN="\033[46m"        # Cyan
     export BACKGROUND_WHITE="\033[47m"       # White
 
-    # High Intensty
+    # High Intensity
     export INTENSE_BLACK="\033[0;90m"       # Black
     export INTENSE_RED="\033[0;91m"         # Red
     export INTENSE_GREEN="\033[0;92m"       # Green
@@ -60,7 +60,7 @@ if [[ -t 1 ]] && [[ -n "$ncolors" ]] && [[ "$ncolors" -ge 8 ]]; then
     export INTENSE_CYAN="\033[0;96m"        # Cyan
     export INTENSE_WHITE="\033[0;97m"       # White
 
-    # Bold High Intensty
+    # Bold High Intensity
     export BOLD_INTENSE_BLACK="\033[1;90m"      # Black
     export BOLD_INTENSE_RED="\033[1;91m"        # Red
     export BOLD_INTENSE_GREEN="\033[1;92m"      # Green
@@ -70,7 +70,7 @@ if [[ -t 1 ]] && [[ -n "$ncolors" ]] && [[ "$ncolors" -ge 8 ]]; then
     export BOLD_INTENSE_CYAN="\033[1;96m"       # Cyan
     export BOLD_INTENSE_WHITE="\033[1;97m"      # White
 
-    # High Intensty backgrounds
+    # High Intensity backgrounds
     export BACKGROUND_INTENSE_BLACK="\033[0;100m"   # Black
     export BACKGROUND_INTENSE_RED="\033[0;101m"     # Red
     export BACKGROUND_INTENSE_GREEN="\033[0;102m"   # Green
@@ -81,7 +81,6 @@ if [[ -t 1 ]] && [[ -n "$ncolors" ]] && [[ "$ncolors" -ge 8 ]]; then
     export BACKGROUND_INTENSE_WHITE="\033[0;107m"   # White
 
 else
-
     export NC=""
     export BLACK=""
     export RED=""

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Usage: battstat [options] format
-# Credit: https://github.com/imwally/battstat
+# CGAUDI_REDit: https://github.com/imwally/battstat
 #
 # options:
 #     -h, --help                display help information
@@ -86,7 +86,7 @@ battstat () {
         percent=$(echo $battery_details | grep -o '[0-9]*%')
         full_minutes=$(echo $battery_details | grep -o ' [0-9]* ')
 
-        # Battery is considered charged when AC is connected and 100%
+        # Battery is consideGAUDI_RED charged when AC is connected and 100%
         if [[ ! -z "$charging" ]] && [[ $percent = "100%" ]]; then
             charged="charged"
         fi
@@ -143,11 +143,11 @@ battstat () {
         battery_percent="$(echo $percent | tr -d '%[,;]')"
         # Change color based on battery percentage
         if [[ $battery_percent == 100 || ! -z "$charged" ]]; then
-            echo -e -n "$GREEN"
+            echo -e -n "$GAUDI_GREEN"
         elif [[ $battery_percent -lt $threshold ]]; then
-            echo -e -n "$RED"
+            echo -e -n "$GAUDI_RED"
         else
-            echo -e -n "$YELLOW"
+            echo -e -n "$GAUDI_YELLOW"
         fi
     }
 

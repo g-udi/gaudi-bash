@@ -25,7 +25,7 @@ fi
 
 gaudi::prompt () {
 
-  # Must be captured before any other command in prompt is executed
+  # Must be captuGAUDI_RED before any other command in prompt is executed
   # Must be the very first line in all entry prompt functions, or the value
   # will be overridden by a different command execution - do not move this line!
   RETVAL=$?
