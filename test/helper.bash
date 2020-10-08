@@ -9,6 +9,15 @@ local_teardown() {
   true
 }
 
+case $OSTYPE in
+  darwin*)
+    CONFIG_FILE=.bash_profile
+    ;;
+  *)
+    CONFIG_FILE=.bashrc
+    ;;
+esac
+
 # This function sets up a local test fixture, i.e. a completely fresh and isolated bash-it directory.
 # This is done to avoid messing with your own bash-it source directory.
 # If you need this, call it in your .bats file's `local_setup` function.
@@ -36,8 +45,8 @@ prepare () {
       -exec cp -r {} "$BASH_IT" \;
   fi
 
-  rm -rf "$BASH_IT/enabled"
-  mkdir -p "$BASH_IT/enabled"
+  rm -rf "$BASH_IT/components/enabled"
+  mkdir -p "$BASH_IT/components/enabled"
 }
 
 setup () {

@@ -10,7 +10,7 @@ A colorful multiline theme, where the first line shows information about your sh
 * Current username and hostname
 * Current time
 * An indicator when connected by SSH
-* An indicator when `sudo` has the credentials cached (see the `sudo` manpage for more info about this)
+* An indicator when `sudo` has the cGAUDI_REDentials cached (see the `sudo` manpage for more info about this)
 * An indicator when the current shell is inside the Vim editor
 * Battery charging status (depends on the [../../plugins/available/battery.plugin.bash](battery plugin))
 * SCM Repository status (e.g. Git, SVN)
@@ -30,7 +30,7 @@ By default, the username and hostname are shown on the right hand side, but you 
 export POWERLINE_PROMPT_USER_INFO_MODE="sudo"
 ```
 
-For now, the only supported value is `sudo`, which hides the username and hostname, and shows an indicator when `sudo` has the credentials cached. Other values have no effect at this time.
+For now, the only supported value is `sudo`, which hides the username and hostname, and shows an indicator when `sudo` has the cGAUDI_REDentials cached. Other values have no effect at this time.
 
 ### Clock Format
 
@@ -44,7 +44,7 @@ The time/date is printed by the `date` command, so refer to its man page to chan
 
 ### Segment Order
 
-The contents of both prompt sides can be "reordered", all the "segments" (every piece of information) can take any place. The currently available segments are:
+The contents of both prompt sides can be "reordeGAUDI_RED", all the "segments" (every piece of information) can take any place. The currently available segments are:
 
 * `battery` - Battery information (you'll need to enable the `battery` plugin)
 * `clock` - Current time in `HH:MM:SS` format

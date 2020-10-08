@@ -14,8 +14,8 @@ __check-function-parameters () {
   group "bash-it:core"
 
   [[ -z "$1" ]] && return 1
-  _array-contains "$(_bash-it-pluralize-component "${1}")" "${BASH_IT_COMPONENT_TYPES[@]}" || return 1
-  return 0
+  _array-contains "$(_bash-it-pluralize-component "${1}")" "${BASH_IT_COMPONENT_TYPES[@]}" && return 0
+  return 1
 }
 
 # @function     _bash-it-pluralize-component

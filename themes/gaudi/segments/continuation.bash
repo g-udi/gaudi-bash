@@ -10,7 +10,7 @@
 GAUDI_CHAR_PREFIX="${GAUDI_CHAR_PREFIX=""}"
 GAUDI_CHAR_SUFFIX="${GAUDI_CHAR_SUFFIX="\\t"}"
 GAUDI_CHAR_SYMBOL="${GAUDI_CHAR_SYMBOL="\\uf6d7"}"
-GAUDI_CHAR_COLOR="${GAUDI_CHAR_COLOR_SUCCESS="$YELLOW"}"
+GAUDI_CHAR_COLOR="${GAUDI_CHAR_COLOR_SUCCESS="$GAUDI_YELLOW"}"
 
 # ------------------------------------------------------------------------------
 # Section

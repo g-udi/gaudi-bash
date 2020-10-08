@@ -21,6 +21,9 @@ _bash-it-enable () {
     component="$2"
     load_priority="${!_load_priority}"
 
+    __check-function-parameters "$type" || printf "${RED}%s${NC}" "Please enter a valid component to enable"
+    __check-function-parameters "$type" || return 1
+
     # Capture if the user prompted for a disable all and iterate on all components
     if [[ "$type" = "alls" ]] && [[ -z "$component"  ]]; then
       _read_input "This will enable all bash-it components (aliases, plugins and completions). Are you sure you want to proceed? [yY/nN]"
@@ -32,7 +35,7 @@ _bash-it-enable () {
       return
     fi
 
-    [[ -z "$component" ]] && echo "${RED}Please enter a valid $(_bash-it-singularize-component "$type")(s) to enable${NC}" && return
+    [[ -z "$component" ]] && printf "${RED}%s${NC}" "Please enter a valid $(_bash-it-singularize-component "$type")(s) to enable" && return 1
 
     if [[ "$component" = "all" ]]; then
         local _component
@@ -44,10 +47,9 @@ _bash-it-enable () {
         local _component
 
         _component=$(command ls "${BASH_IT}/components/$type/$component".*bash 2>/dev/null | head -1)
-        if [[ -z "$_component" ]]; then
-            printf "${GREEN}%s ${NC}${RED}%s${NC}\n" "$component" "does not appear to be an available $(_bash-it-singularize-component "$type")"
-            return
-        fi
+
+        [[ -z "$_component" ]] && printf "${GREEN}%s ${NC}${RED}%s${NC}\n" "$component" "does not appear to be an available $(_bash-it-singularize-component "$type")" && return 1
+
         _component=$(basename "$_component")
         local enabled_component
         enabled_component=$(command compgen -G "${BASH_IT}/components/enabled/[0-9][0-9][0-9]$BASH_IT_LOAD_PRIORITY_SEPARATOR$_component" 2>/dev/null | head -1)

@@ -4,6 +4,14 @@ load ../helper
 
 load ../../lib/composure
 
+cite about group
+
+load ../../lib/helpers
+load ../../lib/helpers/cache
+load ../../lib/helpers/components
+load ../../lib/helpers/utils
+load ../../lib/helpers/enabler
+
 local_setup () {
   prepare
 
@@ -18,16 +26,43 @@ local_setup () {
   fi
 }
 
-# @test "core: verify that the test fixture is available" {
-#   assert_file_exist "$BASH_IT/aliases/available/a.aliases.bash"
-#   assert_file_exist "$BASH_IT/aliases/available/b.aliases.bash"
-# }
+@test "bash-it helpers: _bash-it-enable: verify that the test fixture is available" {
+  assert_file_exist "$BASH_IT/aliases/a.aliases.bash"
+  assert_file_exist "$BASH_IT/aliases/b.aliases.bash"
+}
 
-# @test "the koko test" {
-#   load "$BASH_IT/bash_it.sh"
-#   run bash-it enable plugin base
+@test "bash-it helpers: _bash-it-enable: should fail if no valid component type was passed" {
+  run _bash-it-enable
+  assert_failure
+  assert_output --partial "Please enter a valid component to enable"
+}
+
+@test "bash-it helpers: _bash-it-enable: should fail if no valid component was passed" {
+  run _bash-it-enable plugin
+  assert_failure
+  assert_output --partial "Please enter a valid plugin(s) to enable"
+}
+
+@test "bash-it helpers: _bash-it-enable: should fail if component was not found" {
+  run _bash-it-enable plugin INVALID
+  assert_failure
+  assert_output --partial "INVALID"
+  assert_output --partial "does not appear to be an available plugin"
+}
+
+@test "bash-it helpers: _bash-it-enable: should display appropriate message when trying to enable an already enabled component" {
+  run _bash-it-enable plugin base
+  assert_success
+  assert_output --partial "base is already enabled"
+  assert_file_exist "$BASH_IT/components/enabled/250___base.plugins.bash"
+}
+
+# @test "bash-it helpers: _bash-it-enable: should successfully enable a component" {
+#   run _bash-it-enable plugin git
 #   assert_success
-#   assert_link_exist "$BASH_IT/enabled/250___base.plugins.bash"
+#   assert_output --partial "git enabled with priority (250)"
+#   assert_file_exist "$BASH_IT/components/enabled/250___git.plugins.bash"
+#   run _bash-it-disable git
 # }
 
 # @test "core: load aliases in order" {
