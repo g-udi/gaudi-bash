@@ -14,7 +14,7 @@ __check-function-parameters () {
   group "bash-it:core"
 
   [[ -z "$1" ]] && return 1
-  _array-contains $(_bash-it-pluralize-component "${1}") "${BASH_IT_COMPONENT_TYPES[@]}" || return 1
+  _array-contains "$(_bash-it-pluralize-component "${1}")" "${BASH_IT_COMPONENT_TYPES[@]}" || return 1
   return 0
 }
 
@@ -70,7 +70,7 @@ _bash-it-component-help () {
   about "show the about description for a component"
   group "bash-it:core"
 
-  local type component file
+  local type component
 
   __check-function-parameters "$1" || return 1
 
@@ -80,10 +80,10 @@ _bash-it-component-help () {
 
   # If there is a component passed then grep the type list
   if [[ -n $component ]]; then
-    printf "$help" | grep "${component}" && return 0
+    printf "%s" "$help" | grep "${component}" && return 0
     return 1
   fi
-  printf "${help}"
+  printf "%s" "${help}"
 }
 
 # @function     _bash-it-component-list

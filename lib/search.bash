@@ -1,11 +1,10 @@
 #!/usr/bin/env bash
-# shellcheck disable=SC2034,SC1090,SC2091,SC2207
+# shellcheck disable=SC2034,SC1090,SC2091,SC2207,SC2059
 
 
 # @function _bash-it-search
-# @description  This function returns list of aliases, plugins and completions in bash-it.
-#               Name or description should match one of the search terms provided as arguments.
-#
+# @description  returns list of aliases, plugins and completions in bash-it
+#               name or description should match one of the search terms provided as arguments
 # @usage:
 #    ❯ bash-it search [-|@]term1 [-|@]term2 ... \
 #       [[ --enable   | -e ]] \
@@ -22,13 +21,13 @@
 # @example
 #    ❯ bash-it search ruby rbenv rvm gem rake
 #          aliases:  bundler
-#          plugins:  chruby chruby-auto ruby rbenv rvm ruby
-#      completions:  rvm gem rake
+#          plugins:  chruby rbenv ruby rvm
+#      completions:  gem rake rvm
 #
 #    ❯ bash-it search ruby rbenv rvm gem rake -chruby
 #          aliases:  bundler
-#          plugins:  ruby rbenv rvm ruby
-#      completions:  rvm gem rake
+#          plugins:  rbenv ruby rvm
+#      completions:  gem rake rvm
 #
 # Examples of enabling or disabling results of the search:
 #
@@ -87,9 +86,8 @@ _bash-it-search () {
 }
 
 # @function     _bash-it-component-term-matches-negation
-# @description  Matches the negation of the search term entered
-#
-# @param $1     search match: the search results mathces
+# @description  matches the negation of the search term entered
+# @param $1     search match: the search results matches
 # @param $2     negation terms <array>: the terms we need to negate/remove from the search matches (result set)
 # @return       String of search results without the negated terms
 # @example      ❯ _bash-it-component-term-matches-negation "${match}" "${negative_terms[@]}"
@@ -107,8 +105,7 @@ _bash-it-component-term-matches-negation () {
 }
 
 # @function     _bash-it-component-component
-# @description  Searches a component to match the search terms
-#
+# @description  searches a component to match the search terms
 # @param $1     component: the component to search in e.g., alias, completion, plugin
 # @param $2     search terms: the terms we want to search for
 # @return       Results that match our search term
@@ -127,7 +124,7 @@ _bash-it-search-component () {
   for search_command in "${search_commands[@]}"; do
     if $(_array-contains "--${search_command}" "$@"); then
       action="${search_command}"
-      action_func="_${action}-${component}"
+      action_func="_bash-it-${action} ${component}"
       break
     fi
   done
@@ -177,11 +174,19 @@ _bash-it-search-component () {
     fi
     ( ${include_match} ) && matches=("${matches[@]}" "${match}")
   done
-  _bash-it-search-result "${component}" "${action}" "${action_func}" "${matches[@]}"
+  _bash-it-search-print-result "${component}" "${action}" "${action_func}" "${matches[@]}"
   unset matches final_matches terms
 }
 
-_bash-it-search-result () {
+# @function     _bash-it-search-print-result
+# @description  prints the results of search result
+# @param $1     component: the component to search in e.g., alias, completion, plugin
+# @param $2     action: the action to apply on the results (enable or disable)
+# @param $3     action function: the function to apply for the action e.g., _bash-it-enable <component_name>
+# @param $4     search terms: the search result terms
+# @return       print the search results formatted and colored
+# @example      ❯ _bash-it-search-print-result "${component}" "${action}" "${action_func}" "${matches[@]}"
+_bash-it-search-print-result () {
   local component="$1"; shift
   local action="$1"; shift
   local action_func="$1"; shift
@@ -191,17 +196,17 @@ _bash-it-search-result () {
   color_sep=':'
 
   ( ${BASH_IT_SEARCH_USE_COLOR} ) && {
-    color_component='\e[1;34m'
-    color_enable='\e[1;32m'
+    color_component="${BLUE}"
+    color_enable="${GREEN}"
     suffix_enable=''
     suffix_disable=''
-    color_disable='\e[0;0m'
-    color_off='\e[0;0m'
+    color_disable="${NC}"
+    color_off="${NC}"
   }
 
   ( ${BASH_IT_SEARCH_USE_COLOR} ) || {
     color_component=''
-    suffix_enable=' ✓ ︎'
+    suffix_enable=' ✓ '
     suffix_disable='  '
     color_enable=''
     color_disable=''
@@ -221,14 +226,14 @@ _bash-it-search-result () {
 
       local match_color compatible_action suffix opposite_suffix
 
-      (( ${enabled} )) && {
+      (( "${enabled}" )) && {
         match_color=${color_enable}
         suffix=${suffix_enable}
         opposite_suffix=${suffix_disable}
         compatible_action="disable"
       }
 
-      (( ${enabled} )) || {
+      (( "${enabled}" )) || {
         match_color=${color_disable}
         suffix=${suffix_disable}
         opposite_suffix=${suffix_enable}
@@ -242,58 +247,29 @@ _bash-it-search-result () {
       printf " ${match_color}${match}${suffix}"
       if [[ "${action}" == "${compatible_action}" ]]; then
         if [[ ${action} == "enable" && ${BASH_IT_SEARCH_USE_COLOR} == false ]]; then
-          _bash-it-flash-term ${len} "${match}${suffix}"
+          printf "${match}${suffix}"
         else
-          _bash-it-erase-term ${len}
+          _bash-it-erase-term "${len}"
         fi
         modified=1
-        result=$(${action_func} ${match})
+        result=$(${action_func} "${match}")
         local temp="color_${compatible_action}"
 
         match_color=${!temp}
-        _bash-it-rewind ${len}
+        _bash-it-rewind "${len}"
         printf "${match_color}${match}${opposite_suffix}"
       fi
 
       printf "${color_off}"
     done
 
-    [[ ${modified} -gt 0 ]] && _bash-it-component-cache-clean ${component}
+    [[ ${modified} -gt 0 ]] && _bash-it-component-cache-clean "${component}"
     printf "\n"
   fi
 }
 
-_bash-it-rewind () {
-  local len="$1"
-  printf "\033[${len}D"
-}
-
-_bash-it-flash-term () {
-  local len="$1"
-  local match="$2"
-  local delay=0.1
-  local color
-
-  for color in ${BLUE} ${GREEN} ; do
-    sleep ${delay}
-    _bash-it-rewind "${len}"
-    printf "${color}${match}"
-  done
-}
-
-_bash-it-erase-term () {
-  local len="$1"
-  _bash-it-rewind ${len}
-  for a in {0..30}; do
-    [[ ${a} -gt ${len} ]] && break
-    printf "%.*s" $a " "
-    sleep 0.05
-  done
-}
-
 # @function     _bash-it-search-help
-# @description  Displays the bash-it search help
-#
+# @description  displays the bash-it search help
 # @return       Help manual for the search function
 _bash-it-search-help () {
   printf "${NC}%s" "
@@ -327,11 +303,11 @@ ${YELLOW}DESCRIPTION${NC}
         eg. '@git' would only match aliases, plugins and completions named 'git'.
 
 ${YELLOW}FLAGS${NC}
-   --enable   | -e    ${MAGENTA}Enable all matching componenents.${NC}
-   --disable  | -d    ${MAGENTA}Disable all matching componenents.${NC}
-   --help     | -h    ${MAGENTA}Print this help.${NC}
-   --refresh  | -r    ${MAGENTA}Force a refresh of the search cache.${NC}
-   --no-color | -c    ${MAGENTA}Disable color output and use monochrome text.${NC}
+   --enable   | -e    ${MAGENTA}Enable all matching componenents${NC}
+   --disable  | -d    ${MAGENTA}Disable all matching componenents${NC}
+   --help     | -h    ${MAGENTA}Print this help${NC}
+   --refresh  | -r    ${MAGENTA}Force a refresh of the search cache${NC}
+   --no-color | -c    ${MAGENTA}Disable color output and use monochrome text${NC}
 
 ${YELLOW}EXAMPLES${NC}
 
