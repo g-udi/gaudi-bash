@@ -1,3 +1,5 @@
+# shellcheck disable=SC2034
+
 export GIT_CONFIG_NOSYSTEM
 
 

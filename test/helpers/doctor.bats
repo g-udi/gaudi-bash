@@ -5,11 +5,13 @@ load ../../lib/composure
 
 cite about group
 
+load ../../lib/helpers
 load ../../lib/helpers/doctor
 
 local_setup () {
   prepare
 
+  cd "$BASH_IT"
   ./setup.sh --silent
   load "$BASH_IT"/bash_it.sh
 }
