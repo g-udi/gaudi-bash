@@ -34,17 +34,22 @@ _bash-it-disable () {
       return
     fi
 
-    [[ -z "$component" ]] && printf "${RED}%s${NC}" "Please enter a valid $(_bash-it-singularize-component "$1")(s) to disable" && return
+    __check-function-parameters "$type" || printf "${RED}%s${NC}" "Please enter a valid component to disable"
+    __check-function-parameters "$type" || return 1
 
     if [[ "$component" = "all" ]]; then
       find "${BASH_IT}/components/enabled" -name "*.${type}.bash" -exec rm {} \;
     else
+
+        [[ -z "$component" ]] && printf "${RED}%s${NC}" "Please enter a valid $(_bash-it-singularize-component "$type")(s) to disable" && return 1
+
         local _component
 
         _component=$(command ls $ "${BASH_IT}/components/enabled/"[0-9]*"$BASH_IT_LOAD_PRIORITY_SEPARATOR$component.$type.bash" 2>/dev/null | head -1)
+
         if [[ -z "$_component" ]]; then
-          printf '%s\n' "sorry, $_component does not appear to be an enabled $type"
-          rm "${BASH_IT}/$type/components/enabled/$(basename "$_component")"
+          echo -e "${GREEN}$component${NC} ${RED}does not appear to be an enabled $(_bash-it-singularize-component "$type")${NC}"
+          return 1
         else
           rm "${BASH_IT}/components/enabled/$(basename "$_component")"
         fi

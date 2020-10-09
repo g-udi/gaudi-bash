@@ -18,7 +18,7 @@ source "$BASH_IT/lib/helpers/components.bash"
 # @return       component name stripped from the extension e.g., colors
 _bash-it-get-component-name-from-path () {
   about "get a component name from a component path"
-  group "bash-it:core"
+  group "bash-it:log"
 
   local file_name component_name
 
@@ -33,7 +33,7 @@ _bash-it-get-component-name-from-path () {
 # @return       component type in singular form e.g., plugin
 _bash-it-get-component-type-from-path () {
   about "get a component type from a component path in a singular form (alias, plugin, completion)"
-  group "bash-it:core"
+  group "bash-it:log"
 
   local filename
 
@@ -50,7 +50,7 @@ _bash-it-get-component-type-from-path () {
 # @return       message printed in the terminal
 _log_general () {
   about "internal function used for logging, uses BASH_IT_LOG_PREFIX as a prefix"
-  group "bash-it:core"
+  group "bash-it:log"
 
   [[ -z $1 ]] && return
 
@@ -74,7 +74,7 @@ _log_general () {
 # @return       log message printed in the terminal
 _log_debug () {
   about "log a debug message by echoing to the screen"
-  group "bash-it:core"
+  group "bash-it:log"
 
   [[ "$BASH_IT_LOG_LEVEL" -ge $BASH_IT_LOG_LEVEL_ALL ]] || return 0
   _log_general "$1" debug
@@ -88,7 +88,7 @@ _log_debug () {
 # @return       log message printed in the terminal
 _log_warning () {
   about "log a warning message by echoing to the screen"
-  group "bash-it:core"
+  group "bash-it:log"
 
   [[ "$BASH_IT_LOG_LEVEL" -ge $BASH_IT_LOG_LEVEL_WARNING ]] || return 0
   _log_general "$1" warning
@@ -102,7 +102,7 @@ _log_warning () {
 # @return       log message printed in the terminal
 _log_error () {
   about "log an error message by echoing to the screen"
-  group "bash-it:core"
+  group "bash-it:log"
 
   [[ "$BASH_IT_LOG_LEVEL" -ge $BASH_IT_LOG_LEVEL_ERROR ]] || return 0
   _log_general "$1" error
@@ -119,7 +119,7 @@ _log_error () {
 # @return       message (log) printed in the terminal
 _log_component () {
   about "log a component loading message by echoing to the screen the name and type"
-  group "bash-it:core"
+  group "bash-it:log"
 
   [[ "$BASH_IT_LOG_LEVEL" -ge $BASH_IT_LOG_LEVEL_ALL ]] || return 0
 
