@@ -12,6 +12,7 @@ cite about param example group
 load ../../lib/log
 
 @test "bash-it log: _bash-it-get-component-name-from-path extract component name from path" {
+
   run _bash-it-get-component-name-from-path "/Users/ahmadassaf/.bash_it/lib/alias-completions.plugins.bash"
   assert_success
   assert_output "alias-completions"
@@ -35,6 +36,7 @@ load ../../lib/log
 }
 
 @test "bash-it log: _bash-it-get-component-type-from-path extract component type from path" {
+
   run _bash-it-get-component-type-from-path "/Users/ahmadassaf/.bash_it/lib/alias-completions.plugins.bash"
   assert_success
   assert_output "plugin"
@@ -62,18 +64,21 @@ load ../../lib/log
 }
 
 @test "bash-it log: _log_general should not log anything if no message is passed" {
+
   run _log_general
   assert_success
   refute_output
 }
 
 @test "bash-it log: _log_general should print default prefix and type if only a message is passed" {
+
   run _log_general "this is a test log"
   assert_success
   assert_output " [ GENERAL ] [CORE] this is a test log"
 }
 
 @test "bash-it log: _log_general should print default type and custom prefix" {
+
   BASH_IT_LOG_PREFIX="TEST"
 
   run _log_general "this is a test log"
@@ -82,6 +87,7 @@ load ../../lib/log
 }
 
 @test "bash-it log: _log_general should print custom type and custom prefix" {
+
   BASH_IT_LOG_PREFIX="TEST"
 
   run _log_general "this is a test log" "debug"
@@ -90,12 +96,14 @@ load ../../lib/log
 }
 
 @test "bash-it log: _log_general should print default prefix and custom type" {
+
   run _log_general "this is a test log" "debug"
   assert_success
   assert_output " [ DEBUG ] [CORE] this is a test log"
 }
 
 @test "bash-it log: _log_debug should print a debug log message" {
+
   BASH_IT_LOG_LEVEL=$BASH_IT_LOG_LEVEL_ALL
 
   run _log_debug "this is a test log"
@@ -109,6 +117,7 @@ load ../../lib/log
 }
 
 @test "bash-it log: _log_warn should print a warn log message" {
+
   BASH_IT_LOG_LEVEL=$BASH_IT_LOG_LEVEL_WARNING
 
   run _log_warning "this is a test log"
@@ -122,6 +131,7 @@ load ../../lib/log
 }
 
 @test "bash-it log: _log_error should print an error log message" {
+
   BASH_IT_LOG_LEVEL=$BASH_IT_LOG_LEVEL_ERROR
 
   run _log_error "this is a test log"
@@ -135,6 +145,7 @@ load ../../lib/log
 }
 
 @test "bash-it log: _log_component should log proper loading message for bash-it components" {
+
   BASH_IT_LOG_LEVEL=$BASH_IT_LOG_LEVEL_ALL
 
   run _log_component "/Users/ahmadassaf/.bash_it/enabled/150___alias-completion.plugins.bash"
@@ -177,6 +188,7 @@ load ../../lib/log
 }
 
 @test "bash-it log: _log_component should log proper loading message for bash-it libraries, themes and custom components" {
+
   BASH_IT_LOG_LEVEL=$BASH_IT_LOG_LEVEL_ALL
 
   run _log_component "/Users/ahmadassaf/.bash_it/enabled/colors.bash" "library"
@@ -193,6 +205,7 @@ load ../../lib/log
 }
 
 @test "bash-it log: _log_component should log proper loading message for bash-it libraries, themes and custom components with a custom prefix" {
+
   BASH_IT_LOG_LEVEL=$BASH_IT_LOG_LEVEL_ALL
   BASH_IT_LOG_PREFIX="LOADER"
 
@@ -206,6 +219,7 @@ load ../../lib/log
 }
 
 @test "bash-it log: basic debug logging with BASH_IT_LOG_LEVEL_ALL" {
+
   BASH_IT_LOG_LEVEL=$BASH_IT_LOG_LEVEL_ALL
 
   run _log_debug "test test test"
@@ -213,6 +227,7 @@ load ../../lib/log
 }
 
 @test "bash-it log: basic warning logging with BASH_IT_LOG_LEVEL_ALL" {
+
   BASH_IT_LOG_LEVEL=$BASH_IT_LOG_LEVEL_ALL
 
   run _log_warning "test test test"
@@ -220,6 +235,7 @@ load ../../lib/log
 }
 
 @test "bash-it log: basic error logging with BASH_IT_LOG_LEVEL_ALL" {
+
   BASH_IT_LOG_LEVEL=$BASH_IT_LOG_LEVEL_ALL
 
   run _log_error "test test test"
@@ -227,6 +243,7 @@ load ../../lib/log
 }
 
 @test "bash-it log: basic debug logging with BASH_IT_LOG_LEVEL_WARNING" {
+
   BASH_IT_LOG_LEVEL=$BASH_IT_LOG_LEVEL_WARNING
 
   run _log_debug "test test test"
@@ -234,6 +251,7 @@ load ../../lib/log
 }
 
 @test "bash-it log: basic warning logging with BASH_IT_LOG_LEVEL_WARNING" {
+
   BASH_IT_LOG_LEVEL=$BASH_IT_LOG_LEVEL_WARNING
 
   run _log_warning "test test test"
@@ -241,6 +259,7 @@ load ../../lib/log
 }
 
 @test "bash-it log: basic error logging with BASH_IT_LOG_LEVEL_WARNING" {
+
   BASH_IT_LOG_LEVEL=$BASH_IT_LOG_LEVEL_WARNING
 
   run _log_error "test test test"
@@ -249,6 +268,7 @@ load ../../lib/log
 
 
 @test "bash-it log: basic debug logging with BASH_IT_LOG_LEVEL_ERROR" {
+
   BASH_IT_LOG_LEVEL=$BASH_IT_LOG_LEVEL_ERROR
 
   run _log_debug "test test test"
@@ -256,6 +276,7 @@ load ../../lib/log
 }
 
 @test "bash-it log: basic warning logging with BASH_IT_LOG_LEVEL_ERROR" {
+
   BASH_IT_LOG_LEVEL=$BASH_IT_LOG_LEVEL_ERROR
 
   run _log_warning "test test test"
@@ -263,6 +284,7 @@ load ../../lib/log
 }
 
 @test "bash-it log: basic error logging with BASH_IT_LOG_LEVEL_ERROR" {
+
   BASH_IT_LOG_LEVEL=$BASH_IT_LOG_LEVEL_ERROR
 
   run _log_error "test test test"
@@ -270,21 +292,25 @@ load ../../lib/log
 }
 
 @test "bash-it log: basic debug silent logging" {
+
   run _log_debug "test test test"
   refute_output
 }
 
 @test "bash-it log: basic warning silent logging" {
+
   run _log_warning "test test test"
   refute_output
 }
 
 @test "bash-it log: basic error silent logging" {
+
   run _log_error "test test test"
   refute_output
 }
 
 @test "bash-it log: logging with prefix" {
+
   BASH_IT_LOG_LEVEL=$BASH_IT_LOG_LEVEL_ALL
   BASH_IT_LOG_PREFIX="nice: prefix:"
 

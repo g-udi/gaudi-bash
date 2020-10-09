@@ -17,19 +17,23 @@ local_setup () {
 }
 
 @test "bash-it install: verify that the install script exists" {
+
   assert_file_exist "$BASH_IT/install.sh"
 }
 
 @test "bash-it install: verify that the setup script exists" {
+
   assert_file_exist "$BASH_IT/setup.sh"
 }
 
 @test "bash-it install: run the install script silently by skipping prompts" {
+
   ./setup.sh --silent
   refute_output
 }
 
 @test "bash-it install: run the install script silently and check that config file exists" {
+
   cd "$BASH_IT"
 
   ./setup.sh --silent
@@ -37,6 +41,7 @@ local_setup () {
 }
 
 @test "bash-it install: run the install script silently and enable sane defaults" {
+
   cd "$BASH_IT"
 
   ./setup.sh --silent
@@ -49,13 +54,16 @@ local_setup () {
 }
 
 @test "bash-it install: run the install script silently and don't modify configs" {
-  cd "$BASH_IT"
+  rm -rf "$HOME/$BASH_IT_CONFIG_FILE"
 
+  cd "$BASH_IT"
   ./setup.sh --silent --no_modify_config
+
   assert_file_not_exist "$HOME/$BASH_IT_CONFIG_FILE"
 }
 
 @test "bash-it install: verify that a backup file is created" {
+
   cd "$BASH_IT"
 
   touch "$HOME/$BASH_IT_CONFIG_FILE"

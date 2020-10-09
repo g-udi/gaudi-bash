@@ -12,6 +12,7 @@ local_setup () {
 }
 
 @test "bash-it helpers: utils: _is_function: should return a success status if the passed argument is a function" {
+
   test_function () {
     echo "I am a test!"
   }
@@ -21,38 +22,45 @@ local_setup () {
 }
 
 @test "bash-it helpers: utils: _is_function: should return a fail status if the passed argument is not a function" {
+
   run _is_function "I am a test!"
   assert_failure
 }
 
 @test "bash-it helpers: utils: _command_exists function exists" {
+
   run type -a _command_exists &> /dev/null
   assert_success
 }
 
 @test "bash-it helpers: utils: _command_exists function positive test ls" {
+
   run _command_exists ls
   assert_success
 }
 
 @test "bash-it helpers: utils: _command_exists function negative test" {
+
   run _command_exists __addfkds_dfdsjdf
   assert_failure
 }
 
 @test "bash-it helpers: utils: _command_exists function negative test with a default message" {
+
   run _command_exists a
   assert_failure
   assert_output "command a does not exist!"
 }
 
 @test "bash-it helpers: utils: _command_exists function negative test with a custom message" {
+
   run _command_exists a "this function doesn't exist"
   assert_failure
   assert_output "this function doesn't exist"
 }
 
 @test "bash-it helpers: utils: _array-contains: should be successful if an element is found in array" {
+
   declare -a fruits=(apple orange pear mandarin)
 
   run _array-contains "pear" "${fruits[@]}"
@@ -66,6 +74,7 @@ local_setup () {
 }
 
 @test "bash-it helpers: utils: _array-contains: should be successful if an element that has spaces is found in array" {
+
   declare -a fruits=(apple orange pear mandarin "yellow melon")
 
   run _array-contains "yellow melon" "${fruits[@]}"
@@ -73,6 +82,7 @@ local_setup () {
 }
 
 @test "bash-it helpers: utils: _array-contains: should fail if an element is not found in array" {
+
   declare -a fruits=(apple orange pear mandarin)
 
   run _array-contains "cucumber" "${fruits[@]}"
@@ -82,7 +92,8 @@ local_setup () {
   assert_failure
 }
 
-@test "bash-it helpers: utils: _clean-string: should trim all whitespaces" {
+@test "bash-it helpers: utils: _clean-string: should trim all whitespace" {
+
   local _test=" test test test "
 
   run _clean-string "$_test" "any" &> /dev/null
@@ -90,7 +101,8 @@ local_setup () {
   assert_output "testtesttest"
 }
 
-@test "bash-it helpers: utils: _clean-string: should trim trailing whitespaces" {
+@test "bash-it helpers: utils: _clean-string: should trim trailing whitespace" {
+
   local _test=" test test test "
 
   run _clean-string "$_test" "trailing" &> /dev/null
@@ -99,6 +111,7 @@ local_setup () {
 }
 
 @test "bash-it helpers: utils: _clean-string: should trim leading and trailing spaces" {
+
   local _test=" test test test "
 
   run _clean-string "$_test" "all" &> /dev/null
@@ -107,6 +120,7 @@ local_setup () {
 }
 
 @test "bash-it helpers: utils: _clean-string: should trim leading spaces" {
+
   local _test=" test test test "
 
   run _clean-string "$_test" "leading" &> /dev/null
@@ -115,6 +129,7 @@ local_setup () {
 }
 
 @test "bash-it helpers: utils: _array-dedupe: should remove duplicates from array and return it sorted" {
+
   declare -a array_a=(apple orange pear mandarin)
   declare -a array_b=(apple pear apricot cucumber orange)
 

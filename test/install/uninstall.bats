@@ -17,10 +17,12 @@ local_setup () {
 }
 
 @test "bash-it uninstall: verify that the uninstall script exists" {
+
   assert_file_exist "$BASH_IT/uninstall.sh"
 }
 
 @test "bash-it uninstall: run the uninstall script with an existing backup file" {
+
   cd "$BASH_IT"
 
   echo "test file content for backup" > "$HOME/$BASH_IT_CONFIG_FILE.bak"
@@ -41,6 +43,7 @@ local_setup () {
 }
 
 @test "bash-it uninstall: run the uninstall script without an existing backup file" {
+
   cd "$BASH_IT"
 
   echo "test file content for original file" > "$HOME/$BASH_IT_CONFIG_FILE"

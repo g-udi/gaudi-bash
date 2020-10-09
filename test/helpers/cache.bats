@@ -13,23 +13,27 @@ local_setup () {
 }
 
 @test "bash-it helpers: cache: _bash-it-component-cache-add should fail if no component type was passed" {
+
   run _bash-it-component-cache-add
   assert_failure
 }
 
 @test "bash-it helpers: cache: _bash-it-component-cache-add should return a new cache file in /tmp directory for a singular component" {
+
   run _bash-it-component-cache-add alias
   assert_success
   assert_output "$HOME/.bash_it/tmp/cache/alias"
 }
 
 @test "bash-it helpers: cache: _bash-it-component-cache-add should return a new cache file in /tmp directory" {
+
   run _bash-it-component-cache-add plugins
   assert_success
   assert_output "$HOME/.bash_it/tmp/cache/plugins"
 }
 
 @test "bash-it helpers: cache: _bash-it-component-cache-add should create a cache folder" {
+
   run _bash-it-component-cache-add plugins
   assert_success
   assert_output "$HOME/.bash_it/tmp/cache/plugins"
@@ -37,6 +41,7 @@ local_setup () {
 }
 
 @test "bash-it helpers: cache: _bash-it-component-cache-clean should clear the cache folder" {
+
   _plugins_cache=$(_bash-it-component-cache-add plugins)
   _aliases_cache=$(_bash-it-component-cache-add aliases)
 
