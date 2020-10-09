@@ -20,5 +20,8 @@ export BASH_IT_AUTOMATIC_RELOAD_AFTER_CONFIG_CHANGE=1
 # Uncomment this to make Bash-it create alias reload [ref: https://github.com/Bash-it/bash-it/issues/1120]
 export BASH_IT_RELOAD_LEGACY=0
 
+# Uncomment this to show bash-it debug logs
+# export BASH_IT_LOG_LEVEL=3
+
 # Load Bash It
 source $BASH_IT/bash_it.sh

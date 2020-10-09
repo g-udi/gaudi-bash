@@ -48,7 +48,7 @@
 #
 _bash-it-search () {
   about "searches for given terms amongst bash-it plugins, aliases and completions"
-  group "bash-it:core"
+  group "bash-it:search"
 
   [[ -z "$(type _array-contains 2>/dev/null)" ]]
 
@@ -93,7 +93,7 @@ _bash-it-search () {
 # @example      ❯ _bash-it-component-term-matches-negation "${match}" "${negative_terms[@]}"
 _bash-it-component-term-matches-negation () {
   about "matches the negation of the search term entered"
-  group "bash-it:core"
+  group "bash-it:search"
 
   local match="$1"; shift
   local negative
@@ -112,7 +112,7 @@ _bash-it-component-term-matches-negation () {
 # @example      ❯ _bash-it-search-component aliases @git rake bundler -chruby
 _bash-it-search-component () {
   about "searches for given terms amongst a given component"
-  group "bash-it:core"
+  group "bash-it:search"
 
   local component="$1"; shift
 
@@ -272,7 +272,8 @@ _bash-it-search-print-result () {
 # @description  displays the bash-it search help
 # @return       Help manual for the search function
 _bash-it-search-help () {
-  printf "${NC}%s" "
+
+printf "${NC}%b" "
 
 ${YELLOW}USAGE${NC}
 

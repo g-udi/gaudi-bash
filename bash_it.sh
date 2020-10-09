@@ -22,11 +22,8 @@ for lib in "${BASH_IT}"/lib/*.bash; do
   [[ "$lib" != "${BASH_IT}/lib/appearance.bash" ]] && _log_component "$lib" "library" && source "$lib"
 done
 
-# Load the reloader script that will load all enabled components
-source "${BASH_IT}/scripts/reloader.bash"
-
-# Load enabled aliases, completion, plugins
-for file_type in "aliases" "plugin" "completion"; do source "${BASH_IT}/scripts/reloader.bash" "skip" "$file_type"; done
+# Load the loader that will load all enabled components
+source "${BASH_IT}/scripts/loader.bash"
 
 # Load custom aliases, completions, plugins
 CUSTOM_LIB="${BASH_IT_CUSTOM:=${BASH_IT}/components/custom}/*.bash ${BASH_IT_CUSTOM:=${BASH_IT}/components/custom}/**/*.bash"

@@ -11,7 +11,7 @@ export BASH_IT_COMPONENT_TYPES=(plugins aliases completions)
 # @example      ❯ __check-function-parameters plugin
 __check-function-parameters () {
   about "check the passed parameter to make sure its valid and matches a component type"
-  group "bash-it:core"
+  group "bash-it:core:components"
 
   [[ -z "$1" ]] && return 1
   _array-contains "$(_bash-it-pluralize-component "${1}")" "${BASH_IT_COMPONENT_TYPES[@]}" && return 0
@@ -25,7 +25,7 @@ __check-function-parameters () {
 # @example      ❯ _bash-it-pluralize-component plugin
 _bash-it-pluralize-component () {
   about "pluralize component name for consistency especially for search"
-  group "bash-it:core"
+  group "bash-it:core:components"
 
   local component="${1}"
   local len=$(( ${#component} - 1 ))
@@ -45,7 +45,7 @@ _bash-it-pluralize-component () {
 # @example      ❯ _bash-it-singularize-component plugins
 _bash-it-singularize-component () {
   about "singularize component name for consistency especially for search"
-  group "bash-it:core"
+  group "bash-it:core:components"
 
   __check-function-parameters "$1" || return 1
 
@@ -68,7 +68,7 @@ _bash-it-singularize-component () {
 # @example      ❯ _bash-it-component-help plugins git
 _bash-it-component-help () {
   about "show the about description for a component"
-  group "bash-it:core"
+  group "bash-it:core:components"
 
   local type component
 
@@ -93,7 +93,7 @@ _bash-it-component-help () {
 # @example      ❯ _bash-it-component-list plugins
 _bash-it-component-list () {
   about "returns a list of items within each component (plugin, alias, completion)"
-  group "bash-it:core"
+  group "bash-it:core:components"
 
   __check-function-parameters "$1" || return 1
   _bash-it-component-help "$1" | awk '{print $1}' | uniq | sort | tr '\n' ' '
@@ -107,7 +107,7 @@ _bash-it-component-list () {
 # @example      ❯ _bash-it-component-list-matching plugins git
 _bash-it-component-list-matching () {
   about "returns a list of items within each component (plugin, alias, completion) that match a string "
-  group "bash-it:core"
+  group "bash-it:core:components"
 
   __check-function-parameters "$1" || return 1
   if [[ -n "$1" ]] && [[ -n "$2" ]]; then
@@ -125,7 +125,7 @@ _bash-it-component-list-matching () {
 # @example      ❯ _bash-it-component-list-enabled plugins
 _bash-it-component-list-enabled () {
   about "returns a list of enabled items within each component (plugin, alias, completion)"
-  group "bash-it:core"
+  group "bash-it:core:components"
 
   __check-function-parameters "$1" || return 1
   _bash-it-component-help "${1}" | $(_bash-it-grep) -E '◉' | awk '{print $1}' | uniq | sort | tr '\n' ' '
@@ -138,7 +138,7 @@ _bash-it-component-list-enabled () {
 # @example      ❯ _bash-it-component-list-disabled plugins
 _bash-it-component-list-disabled () {
   about "returns a list of disabled items within each component (plugin, alias, completion)"
-  group "bash-it:core"
+  group "bash-it:core:components"
 
   __check-function-parameters "$1" || return 1
   _bash-it-component-help "${1}" | $(_bash-it-grep) -E  '◯' | awk '{print $1}' | uniq | sort | tr '\n' ' '
@@ -153,7 +153,7 @@ _bash-it-component-list-disabled () {
 # @example      ❯ _bash-it-component-item-is-enabled alias git && echo "git alias is enabled"
 _bash-it-component-item-is-enabled () {
   about "checks if a given item is enabled for a particular component/file-type"
-  group "bash-it:core"
+  group "bash-it:core:components"
 
   __check-function-parameters "$1" || return 1
   if [[ -n "$1" ]] && [[ -n "$2" ]]; then
@@ -172,7 +172,7 @@ _bash-it-component-item-is-enabled () {
 # @example      ❯ _bash-it-component-item-is-disabled alias git && echo "git aliases are disabled"
 _bash-it-component-item-is-disabled () {
   about "checks if a given item is disabled for a particular component/file-type"
-  group "bash-it:core"
+  group "bash-it:core:components"
 
   __check-function-parameters "$1" || return 1
   if [[ -n "$1" ]] && [[ -n "$2" ]]; then

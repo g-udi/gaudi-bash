@@ -8,7 +8,7 @@
 # @example      ❯ _bash-it-component-cache-add plugin
 _bash-it-component-cache-add () {
   about "gets the component cache path in the /tmp directory"
-  group "bash-it:core"
+  group "bash-it:core:cache"
 
   [[ -z $1 ]] && return 1
 
@@ -26,7 +26,7 @@ _bash-it-component-cache-add () {
 # @example      ❯ _bash-it-component-cache-clean
 _bash-it-component-cache-clean () {
   about "caches the component view in the /tmp directory"
-  group "bash-it:core"
+  group "bash-it:core:cache"
 
   local component="$1"
   local cache

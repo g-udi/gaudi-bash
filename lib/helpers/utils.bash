@@ -9,7 +9,7 @@
 # @return       status code success (0) if the function is found or fails otherwise
 _is_function () {
   about "check if the passed parameter is a function"
-  group "bash-it:core"
+  group "bash-it:core:utils"
 
   [[ -n "$(LANG=C type -t "$1" 2>/dev/null | grep 'function')" ]]
 }
@@ -22,7 +22,7 @@ _is_function () {
 # @example      ❯ _command_exists ls && echo exists
 _command_exists () {
   about "check if the command passed as the argument exists"
-  group "bash-it:core"
+  group "bash-it:core:utils"
 
   local msg
 
@@ -39,7 +39,7 @@ _command_exists () {
 # @example      ❯ _read_input "would you like to update bash-it?"
 _read_input() {
   about "reads input from the prompt for a yes/no (one character) input"
-  group "bash-it:core"
+  group "bash-it:core:utils"
 
   unset REPLY
   while ! [[ $REPLY =~ ^[yY]$ ]] && ! [[ $REPLY =~ ^[nN]$ ]]; do
@@ -66,7 +66,7 @@ _read_input() {
 #   ❯ contains pear!
 _array-contains () {
   about "searches an array for an exact match against the term passed as the first argument to the function"
-  group "bash-it:core"
+  group "bash-it:core:utils"
 
   local e match="$1"
 
@@ -98,7 +98,7 @@ _array-contains () {
 #   ❯ 'testtesttest'
 _clean-string () {
   about "cleans a string from whitespace give a passed cleaning mode"
-  group "bash-it:core"
+  group "bash-it:core:utils"
 
   local mode=${2:-"all"}
 
@@ -126,7 +126,7 @@ _clean-string () {
 #   ❯ apple apricot cucumber mandarin orange pear
 _array-dedupe () {
   about "creates a concatenated array of unique and sorted elements"
-  group "bash-it:core"
+  group "bash-it:core:utils"
 
   _clean-string "$(echo "$*" | tr ' ' '\n' | sort -u | tr '\n' ' ')" "all"
 }

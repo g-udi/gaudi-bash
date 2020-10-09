@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# shellcheck disable=SC1090,SC2034
+# shellcheck disable=SC1090,SC2034,SC2001
 
 export BASH_IT_LOAD_PRIORITY_SEPARATOR="___"
 
@@ -86,9 +86,9 @@ _bash-it-version () {
   BASH_IT_GIT_VERSION_INFO="$(git log --pretty=format:'%h on %aI' -n 1)"
   BASH_IT_GIT_SHA=${BASH_IT_GIT_VERSION_INFO%% *}
 
-  echo "Current git SHA: ${GREEN}$BASH_IT_GIT_VERSION_INFO${NC}"
-  echo "${MAGENTA}$BASH_IT_GIT_URL/commit/$BASH_IT_GIT_SHA${NC}"
-  echo "Compare to latest: ${YELLOW}$BASH_IT_GIT_URL/compare/$BASH_IT_GIT_SHA...master${NC}"
+  echo -e "Current git SHA: ${GREEN}$BASH_IT_GIT_VERSION_INFO${NC}"
+  echo -e "${MAGENTA}$BASH_IT_GIT_URL/commit/$BASH_IT_GIT_SHA${NC}"
+  echo -e "Compare to latest: ${YELLOW}$BASH_IT_GIT_URL/compare/$BASH_IT_GIT_SHA...master${NC}"
 
   cd - &> /dev/null || return
 }
@@ -114,11 +114,28 @@ _bash-it-reload () {
   popd &> /dev/null || return
 }
 
+# @function     _bash-it-help
+# @description  shows help command of a component (alias, plugin, completion)
+# @param $1     type: component type of: aliases, plugins, completions
+# @param $2     component: component name to show help for
+# @return       help list for each component
+#               completions: show list of completion components in the bash-it show table
+#               aliases: show list of aliases in either 1) all enabled aliases if no alias was passed or 2) a specific alias
+#               plugins: show function descriptions of either 1) all enabled plugins if no plugin was passed or 2) a specific plugin
+_bash-it-help () {
+  __check-function-parameters "$1" || return 1
+
+  local type component
+
+  type="$(_bash-it-pluralize-component "$1")"
+  _command_exists _help-"${type}" && _help-"${type}" "$2"
+}
+
 # @function     _bash-it-show
 # @description  shows a list of all items of a component (alias, plugin, completion)
 #               if no param was passed, shows all enabled components across.
 #               components descriptions are retrieved via the composure metadata 'about'
-# @param $1     component: (of type aliases, plugins, completions)
+# @param $1     type: component type of: aliases, plugins, completions
 # @param $2     mode <enabled, all>: either show all available components or filter only for enabled ones
 # @return       table showing each component name, status (enabled/disabled) and description
 _bash-it-show () {
@@ -148,7 +165,7 @@ _bash-it-backup () {
   for _file in "${BASH_IT}"/components/enabled/*.bash; do
     local _component _type
 
-    _component="$(echo "$_file" | sed -e 's/.*___\(.*\).bash.*/\1/')"
+    _component="$(echo "$_file" | sed -e "s/.*$BASH_IT_LOAD_PRIORITY_SEPARATOR\(.*\).bash.*/\1/")"
     _type=$(_bash-it-singularize-component "${_component##*.}")
     _component=${_component%%.*}
 
@@ -175,8 +192,6 @@ _bash-it-restore () {
 
 
 bash-it () {
-    about 'bash-it help and maintenance'
-
     param '1: verb [one of: help | backup | show | enable | disable | update | restore | search | version | reload | doctor ]] '
     param '2: component type [one of: alias(es) | completion(s) | plugin(s) ]] or search term(s)'
     param '3: specific component [optional]'
@@ -204,7 +219,8 @@ bash-it () {
       disable)
         func=_bash-it-disable;;
       help)
-        func=_help-$component;;
+        _bash-it-help "$component" "$@"
+        return;;
       doctor)
         func=_bash-it-doctor;;
       update)
