@@ -18,6 +18,7 @@ local_setup () {
 }
 
 @test "bash-it helpers: components: components: __check-function-parameters: should success when passing a valid component" {
+
   run __check-function-parameters "plugin"
   assert_success
 
@@ -80,18 +81,22 @@ local_setup () {
 }
 
 @test "bash-it helpers: components: _bash-it-component-help: should fail if no component was passed" {
+
   run _bash-it-component-help
   assert_failure
 }
 
 @test "bash-it helpers: components: _bash-it-component-help: should fail if no valid component was passed" {
+
   run _bash-it-component-help INVALID
   assert_failure
 }
 
 @test "bash-it helpers: components: _bash-it-component-help: should create cache file for component on the first run" {
+
   _bash-it-component-cache-clean
   assert_file_not_exist "$HOME/.bash_it/tmp/cache/plugins"
+
   run _bash-it-component-help plugin
   assert_file_exist "$HOME/.bash_it/tmp/cache/plugins"
 }
@@ -111,6 +116,7 @@ local_setup () {
 }
 
 @test "bash-it helpers: components: _bash-it-component-help: should display a plugin help passed as the second param" {
+
   run _bash-it-component-help plugin base
   assert_success
   assert_line --partial "base"
@@ -118,11 +124,13 @@ local_setup () {
 }
 
 @test "bash-it helpers: components: _bash-it-component-help: should fail if the plugin passed as the second param doesn't exist" {
+
   run _bash-it-component-help plugin FAIL
   assert_failure
 }
 
 @test "bash-it helpers: components: _bash-it-component-help: should display aliases help" {
+
   run _bash-it-component-help alias osx
   assert_success
   assert_output --partial "osx"
@@ -130,6 +138,7 @@ local_setup () {
 }
 
 @test "bash-it helpers: components: _bash-it-component-help: should display an alias help passed as the second param" {
+
   run _bash-it-component-help plugin base
   assert_success
   assert_line --partial "base"
@@ -137,11 +146,13 @@ local_setup () {
 }
 
 @test "bash-it helpers: components: _bash-it-component-help: should fail if the alias passed as the second param doesn't exist" {
+
   run _bash-it-component-help aliases FAIL
   assert_failure
 }
 
 @test "bash-it helpers: components: _bash-it-component-help: should display completions help" {
+
   run _bash-it-component-help completions
   assert_success
   assert_output --partial "bash-it"
@@ -155,6 +166,7 @@ local_setup () {
 }
 
 @test "bash-it helpers: components: _bash-it-component-help: should display a completion help passed as the second param" {
+
   run _bash-it-component-help completion pipx
   assert_success
   assert_output --partial "pipx"
@@ -162,90 +174,95 @@ local_setup () {
 }
 
 @test "bash-it helpers: components: _bash-it-component-help: should fail if the completion passed as the second param doesn't exist" {
+
   run _bash-it-component-help completions FAIL
   assert_failure
 }
 
 @test "bash-it helpers: components: _bash-it-component-list: should fail if the no component was passed" {
+
   run _bash-it-component-list
   assert_failure
 }
 
 @test "bash-it helpers: components: _bash-it-component-list: should fail if the an invalid component was passed" {
+
   run _bash-it-component-list INVALID
   assert_failure
 }
 
 @test "bash-it helpers: components: _bash-it-component-list: should show a list of components (as an array)" {
+
   run _bash-it-component-list plugins
   assert_success
-
-  # Check if the output is an array and the first element matched the alias-completion plugin
   IFS=', ' read -r -a array <<< "$output"
   run echo "${array[0]-not array}"
   assert_output "alias-completion"
 }
 
 @test "bash-it helpers: components: _bash-it-component-list-matching: should fail if the no component was passed" {
+
   run _bash-it-component-list-matching
   assert_failure
 }
 
 @test "bash-it helpers: components: _bash-it-component-list-matching: should fail if the an invalid component was passed" {
+
   run _bash-it-component-list-matching INVALID
   assert_failure
 }
 
 @test "bash-it helpers: components: _bash-it-component-list-matching: should fail if no valid match was found" {
+
   run _bash-it-component-list-matching plugin NO_MATCH
   assert_failure
 }
 
 @test "bash-it helpers: components: _bash-it-component-list-matching: should show a list of matched components (as an array)" {
+
   run _bash-it-component-list-matching plugins base
   assert_success
-
-  # Check if the output is an array and the first element matched the alias-completion plugin
   IFS=', ' read -r -a array <<< "$output"
   run echo "${array[0]-not array}"
   assert_output "base"
 
-  # Check the output array length
   run echo "${#array[@]}"
   assert_output 1
 
   run _bash-it-component-list-matching plugins node
   assert_success
-
-  # Check if the output is an array and the first element matched the alias-completion plugin
   IFS=', ' read -r -a array <<< "$output"
   run echo "${array[0]-not array}"
   assert_output "node"
 }
 
 @test "bash-it helpers: components: _bash-it-component-list-enabled: should fail if the no component was passed" {
+
   run _bash-it-component-list-enabled
   assert_failure
 }
 
 @test "bash-it helpers: components: _bash-it-component-list-enabled: should fail if the no valid component was passed" {
+
   run _bash-it-component-list-enabled INVALID
   assert_failure
 }
 
 @test "bash-it helpers: components: _bash-it-component-list-enabled: should return a list of enabled components" {
+
   run _bash-it-component-list-enabled plugins
   assert_success
-
-  # Check if the output is an array and the first element matched the alias-completion plugin
   IFS=', ' read -r -a array <<< "$output"
+
   run echo "${array[0]-not array}"
   assert_output "alias-completion"
+
   run echo "${array[1]-not array}"
   assert_output "base"
 }
 
 @test "bash-it helpers: components: _bash-it-component-list-disabled: should fail if the no component was passed" {
+
   run _bash-it-component-list-disabled
   assert_failure
 }
@@ -256,33 +273,38 @@ local_setup () {
 }
 
 @test "bash-it helpers: components: _bash-it-component-list-disabled: should return a list of disabled components" {
+
   run _bash-it-component-list-disabled plugins
   assert_success
-
-  # Check if the output is an array and the first element matched the alias-completion plugin
   IFS=', ' read -r -a array <<< "$output"
+
   run echo "${array[0]-not array}"
   refute_output "alias-completion"
+
   run echo "${array[0]-not array}"
   assert_output "autojump"
 }
 
 @test "bash-it helpers: components: _bash-it-component-item-is-enabled: should fail if the no component was passed" {
+
   run _bash-it-component-item-is-enabled
   assert_failure
 }
 
 @test "bash-it helpers: components: _bash-it-component-item-is-enabled: should fail if the no valid component was passed" {
+
   run _bash-it-component-item-is-enabled INVALID
   assert_failure
 }
 
 @test "bash-it helpers: components: _bash-it-component-item-is-enabled: should fail if the item passed is not enabled" {
+
   run _bash-it-component-item-is-enabled plugin git
   assert_failure
 }
 
 @test "bash-it helpers: components: _bash-it-component-item-is-enabled: should succeed if the item passed is enabled" {
+
   run _bash-it-component-item-is-enabled plugin base
   assert_success
 }
@@ -294,26 +316,31 @@ local_setup () {
 
   run _bash-it-enable plugin git
   assert_success
+
   run _bash-it-component-item-is-enabled plugin git
   assert_success
 }
 
 @test "bash-it helpers: components: _bash-it-component-item-is-disabled: should fail if the no component was passed" {
+
   run _bash-it-component-item-is-disabled
   assert_failure
 }
 
 @test "bash-it helpers: components: _bash-it-component-item-is-disabled: should fail if the no valid component was passed" {
+
   run _bash-it-component-item-is-disabled INVALID
   assert_failure
 }
 
 @test "bash-it helpers: components: _bash-it-component-item-is-disabled: should fail if the item passed is not disabled" {
+
   run _bash-it-component-item-is-disabled plugin base
   assert_failure
 }
 
 @test "bash-it helpers: components: _bash-it-component-item-is-disabled: should succeed if the item passed is disabled" {
+
   run _bash-it-component-item-is-disabled plugin git
   assert_success
 }
@@ -325,6 +352,7 @@ local_setup () {
 
   run _bash-it-enable plugin git
   assert_success
+
   run _bash-it-component-item-is-disabled plugin git
   assert_failure
 }

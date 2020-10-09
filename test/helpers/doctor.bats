@@ -17,6 +17,7 @@ local_setup () {
 }
 
 @test 'bash-it helpers: doctor: _bash-it-doctor should show all logs by default' {
+
   run _bash-it-doctor
   assert_success
   assert_output --partial "[ DEBUG ] [CORE] Loading library: log"
@@ -24,6 +25,7 @@ local_setup () {
 }
 
 @test 'bash-it helpers: doctor: _bash-it-doctor should show only warning logs' {
+
   run _bash-it-doctor warning
   assert_success
   refute_output --partial "[ DEBUG ] [CORE] Loading library: log"
@@ -31,6 +33,7 @@ local_setup () {
 }
 
 @test 'bash-it helpers: doctor: _bash-it-doctor should only error logs' {
+
   run _bash-it-doctor errors
   assert_success
   refute_output

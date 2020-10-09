@@ -14,16 +14,6 @@ export BASH_IT_DESCRIPTION_MIN_LINE_COUNT=10
 
 local_setup () {
   prepare
-
-  # Copy the test fixture to the bash-it folder
-  if command -v rsync &> /dev/null
-  then
-    rsync -a "$BASH_IT/test/fixtures/bash_it/" "$BASH_IT/"
-  else
-    find "$BASH_IT/test/fixtures/bash_it" \
-      -mindepth 1 -maxdepth 1 \
-      -exec cp -r {} "$BASH_IT/" \;
-  fi
 }
 
 # Returns true if the no. lines for description is more than the BASH_IT_DESCRIPTION_MIN_LINE_COUNT
@@ -33,6 +23,7 @@ _check-results-count () {
 }
 
 @test "bash-it helpers: _bash-it-describe: should fail if no valid component was passed" {
+
   run _bash-it-describe plugins
   assert_success
 
@@ -47,6 +38,7 @@ _check-results-count () {
 }
 
 @test "bash-it helpers: _bash-it-describe: should fail if no valid mode was passed" {
+
   run _bash-it-describe plugins
   assert_success
 

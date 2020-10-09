@@ -16,6 +16,7 @@ local_setup () {
 }
 
 @test "bash-it helpers: search: _bash-it-rewind should successfully rewind the output by N chars" {
+
   run _bash-it-rewind
   assert_success
 
