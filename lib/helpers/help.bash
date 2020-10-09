@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# shellcheck disable=SC2002
 
 # @function     _help-completions
 # @description  summarize all completions available in bash-it
@@ -11,53 +12,48 @@ _help-completions () {
   _bash-it-show completions
 }
 
+# @function     _help-aliases
+# @description  summarize aliases available in bash-it (default: all enabled aliases)
+# @param $1     (optional) component name: display only aliases for the passed component
+# @return       returns the list of alias definitions
+# @example      ❯ _help-aliases
+#               ❯ _help-aliases git
 _help-aliases () {
-    about 'shows help for all aliases, or a specific alias group'
-    group 'bash-it:core:help'
+    about "shows help for all aliases, or a specific alias group"
+    group "bash-it:core:help"
 
+      # Helper function to list the aliases in a given *.aliases.bash file using the composure meta
     __help-list-aliases () {
       local file
 
-      file=$(basename "$1" | sed -e 's/[0-9]*[-]*\(.*\)\.aliases\.bash/\1/g')
-      printf '\n\n%s:\n' "${file}"
-      "$1" | metafor about | sed "s/$/'/"
+      file=$(basename "$1" | sed -e 's/[0-9]*[___]*\(.*\)\.aliases\.bash/\1/g')
+      printf '\n\n%b\n' "${GREEN}${file}${NC}"
+      printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -
+      cat "$1" | metafor alias | sed "s/$/'/"
     }
 
-      local __file
+    if [[ -n "$1" ]]; then
+        case $1 in
+            custom)
+                alias_path='custom/custom.aliases.bash'
+            ;;
+            *)
+                alias_path="aliases/$1.aliases.bash"
+            ;;
+        esac
+        cat "${BASH_IT}/components/$alias_path" | metafor alias | sed "s/$/'/"
+    else
+        local __file
 
-      for __file in $(sort <(compgen -G "${BASH_IT}/components/aliases/enabled/*") <(compgen -G "${BASH_IT}/components/enabled/*.aliases.bash"))
-      do
-          __help-list-aliases "$__file"
-      done
+        for __file in $(sort <(compgen -G "${BASH_IT}/components/aliases/enabled/*") <(compgen -G "${BASH_IT}/components/enabled/*.aliases.bash"))
+        do
+            __help-list-aliases "$__file"
+        done
 
-      if [[ -e "${BASH_IT}/components/aliases/custom.aliases.bash" ]]; then
-        __help-list-aliases "${BASH_IT}/components/aliases/custom.aliases.bash"
-      fi
-
-    # if [[ -n "$1" ]]; then
-    #     case $1 in
-    #         custom)
-    #             alias_path='custom/custom.aliases.bash'
-    #         ;;
-    #         *)
-    #             alias_path="aliases/$1.aliases.bash"
-    #         ;;
-    #     esac
-    #     "${BASH_IT}/components/$alias_path" | metafor about | sed "s/$/'/"
-    # else
-    #     local __file
-
-    #     for __file in $(sort <(compgen -G "${BASH_IT}/components/aliases/enabled/*") <(compgen -G "${BASH_IT}/components/enabled/*.aliases.bash"))
-
-    #     do
-    #     echo "file: $file"
-    #         __help-list-aliases "$__file"
-    #     done
-
-    #     if [[ -e "${BASH_IT}/aliases/custom.aliases.bash" ]]; then
-    #       __help-list-aliases "${BASH_IT}/aliases/custom.aliases.bash"
-    #     fi
-    # fi
+        if [[ -e "${BASH_IT}/aliases/custom.aliases.bash" ]]; then
+          __help-list-aliases "${BASH_IT}/aliases/custom.aliases.bash"
+        fi
+    fi
 }
 
 # @function     _help-plugins
