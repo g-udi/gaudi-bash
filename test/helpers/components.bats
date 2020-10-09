@@ -6,7 +6,7 @@ load ../../lib/composure
 
 cite about param example group
 
-load ../../lib/helpers
+load ../../lib/bash-it
 load ../../lib/helpers/components
 load ../../lib/helpers/cache
 

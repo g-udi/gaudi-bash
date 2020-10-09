@@ -6,7 +6,7 @@ load ../../lib/composure
 
 cite about param example group
 
-load ../../lib/helpers
+load ../../lib/bash-it
 load ../../lib/search
 
 local_setup () {

@@ -4,7 +4,7 @@
 
 load ../helper
 load ../../lib/composure
-load ../../lib/helpers
+load ../../lib/bash-it
 load ../../lib/colors
 
 cite about param example group
