@@ -14,23 +14,13 @@ _help-completions () {
 
 # @function     _help-aliases
 # @description  summarize aliases available in bash-it (default: all enabled aliases)
-# @param $1     (optional) component name: display only aliases for the passed component
+# @param $1     (optional) component name: display only aliases for the passed component if available
 # @return       returns the list of alias definitions
 # @example      ❯ _help-aliases
 #               ❯ _help-aliases git
 _help-aliases () {
     about "shows help for all aliases, or a specific alias group"
     group "bash-it:core:help"
-
-      # Helper function to list the aliases in a given *.aliases.bash file using the composure meta
-    __help-list-aliases () {
-      local file
-
-      file=$(basename "$1" | sed -e 's/[0-9]*[___]*\(.*\)\.aliases\.bash/\1/g')
-      printf '\n\n%b\n' "${GREEN}${file}${NC}"
-      printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -
-      cat "$1" | metafor alias | sed "s/$/'/"
-    }
 
     if [[ -n "$1" ]]; then
         case $1 in
@@ -41,6 +31,10 @@ _help-aliases () {
                 alias_path="aliases/$1.aliases.bash"
             ;;
         esac
+
+        # If the alias doesn't exist .. return an error code
+        [[ -e "${BASH_IT}/components/$alias_path" ]] || return 1
+
         cat "${BASH_IT}/components/$alias_path" | metafor alias | sed "s/$/'/"
     else
         local __file
@@ -110,4 +104,14 @@ _help-plugins () {
         rm "$gfile" 2> /dev/null
     done | less
     rm "$grouplist" 2> /dev/null
+}
+
+  # Helper function to list the aliases in a given *.aliases.bash file using the composure meta
+__help-list-aliases () {
+  local file
+
+  file=$(basename "$1" | sed -e 's/[0-9]*[___]*\(.*\)\.aliases\.bash/\1/g')
+  printf '\n\n%b\n' "${GREEN}${file}${NC}"
+  printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -
+  cat "$1" | metafor alias | sed "s/$/'/"
 }

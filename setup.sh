@@ -108,7 +108,7 @@ source "$BASH_IT/lib/composure.bash"
 # Allow access for composure specific syntax to other functions
 cite about param example group
 
-source "$BASH_IT/lib/helpers.bash"
+source "$BASH_IT/lib/bash-it.bash"
 
 # Check if the folder is a valid git and pull all submodules
 [[ -d "$BASH_IT/.git" ]] && git submodule update --init --recursive

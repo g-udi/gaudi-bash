@@ -5,8 +5,8 @@ load ../../lib/composure
 
 cite about group
 
+load ../../lib/bash-it
 load ../../lib/search
-load ../../lib/helpers
 load ../../lib/helpers/utils
 load ../../lib/helpers/components
 load ../../lib/helpers/search

@@ -6,7 +6,7 @@ load ../../lib/composure
 
 cite about group
 
-load ../../lib/helpers
+load ../../lib/bash-it
 load ../../lib/helpers/cache
 load ../../lib/helpers/components
 load ../../lib/helpers/utils
@@ -54,4 +54,24 @@ local_setup () {
   assert_success
   assert_output -p "alias-completion enabled"
   assert_file_exist "$BASH_IT/components/enabled/365___alias-completion.plugins.bash"
+}
+
+@test "bash-it helpers: _bash-it-enable: should enable multiple components passed" {
+  run _bash-it-enable plugin "node" "nvm"
+  assert_line -n 0 -p 'node enabled with priority'
+  assert_line -n 1 -p 'nvm enabled with priority'
+  assert_link_exist "$BASH_IT/components/enabled/250___node.plugins.bash"
+  assert_link_exist "$BASH_IT/components/enabled/225___nvm.plugins.bash"
+}
+
+@test "bash-it helpers: _bash-it-enable: should enable all plugins" {
+
+  local available enabled
+
+  run _bash-it-enable plugins "all"
+
+  available=$(find $BASH_IT/components/plugins -name *.plugins.bash | wc -l | xargs)
+  enabled=$(find $BASH_IT/components/enabled -name [0-9]*.plugins.bash | wc -l | xargs)
+
+  assert_equal "$available" "$enabled"
 }

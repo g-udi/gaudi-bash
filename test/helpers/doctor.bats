@@ -5,7 +5,7 @@ load ../../lib/composure
 
 cite about group
 
-load ../../lib/helpers
+load ../../lib/bash-it
 load ../../lib/helpers/doctor
 
 local_setup () {
