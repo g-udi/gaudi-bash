@@ -6,10 +6,10 @@ fi
 
 case $OSTYPE in
   darwin*)
-    CONFIG_FILE=.bash_profile
+    CONFIG_FILE=".bash_profile"
     ;;
   *)
-    CONFIG_FILE=.bashrc
+    CONFIG_FILE=".bashrc"
     ;;
 esac
 
@@ -31,7 +31,7 @@ fi
 rm -rf "$BASH_IT"
 
 echo ""
-echo -e "${GREEN}Uninstallation finished successfully! Sorry to see you go!${NC}"
+echo -e "${GREEN}un-installation finished successfully! Sorry to see you go!${NC}"
 echo ""
-echo "Final steps to complete the uninstallation:"
+echo "Final steps to complete the un-installation:"
 echo "  -> Open a new shell/tab/terminal"

@@ -104,10 +104,10 @@ _bash-it-reload () {
 
   case $OSTYPE in
     darwin*)
-      source ~/.bash_profile
+      source "$HOME/.bash_profile"
       ;;
     *)
-      source ~/.bashrc
+      source "$HOME/.bashrc"
       ;;
   esac
 
