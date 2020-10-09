@@ -57,7 +57,7 @@ local_setup () {
 }
 
 @test "bash-it helpers: _bash-it-enable: should enable multiple components passed" {
-  run _bash-it-enable plugin "node" "nvm"
+  run bash-it enable plugin "node" "nvm"
   assert_line -n 0 -p 'node enabled with priority'
   assert_line -n 1 -p 'nvm enabled with priority'
   assert_link_exist "$BASH_IT/components/enabled/250___node.plugins.bash"

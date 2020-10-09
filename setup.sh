@@ -11,10 +11,10 @@ _read_input() {
 
 case $OSTYPE in
   darwin*)
-    CONFIG_FILE=.bash_profile
+    CONFIG_FILE=".bash_profile"
     ;;
   *)
-    CONFIG_FILE=.bashrc
+    CONFIG_FILE=".bashrc"
     ;;
 esac
 

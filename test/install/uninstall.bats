@@ -5,10 +5,10 @@ load ../../lib/composure
 
 case $OSTYPE in
   darwin*)
-    export BASH_IT_CONFIG_FILE=.bash_profile
+    export BASH_IT_CONFIG_FILE=".bash_profile"
     ;;
   *)
-    export BASH_IT_CONFIG_FILE=.bashrc
+    export BASH_IT_CONFIG_FILE=".bashrc"
     ;;
 esac
 

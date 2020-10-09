@@ -13,10 +13,10 @@ local_teardown() {
 
 case $OSTYPE in
   darwin*)
-    CONFIG_FILE=.bash_profile
+    CONFIG_FILE=".bash_profile"
     ;;
   *)
-    CONFIG_FILE=.bashrc
+    CONFIG_FILE=".bashrc"
     ;;
 esac
 
@@ -49,6 +49,7 @@ prepare () {
 
   rm -rf "$BASH_IT/components/enabled"
   mkdir -p "$BASH_IT/components/enabled"
+  touch "$HOME/$CONFIG_FILE"
 }
 
 setup () {
