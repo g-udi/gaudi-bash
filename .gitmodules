@@ -1,18 +1,6 @@
-[submodule "bin/bats-core"]
-	path = bin/bats-core
-	url = https://github.com/bats-core/bats-core
-[submodule "bin/bats-support"]
-	path = bin/bats-support
-	url = https://github.com/bats-core/bats-support
-[submodule "bin/bats-assert"]
-	path = bin/bats-assert
-	url = https://github.com/bats-core/bats-assert
-[submodule "bin/bats-file"]
-	path = bin/bats-file
-	url = https://github.com/bats-core/bats-file
 [submodule "bin/composure"]
 	path = bin/composure
-	url = git@github.com:erichs/composure.git
+	url = https://github.com/erichs/composure
 [submodule "bin/preexec"]
 	path = bin/preexec
 	url = https://github.com/rcaloras/bash-preexec
