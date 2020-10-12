@@ -36,14 +36,14 @@ local_setup () {
   run _bash-it-enable plugin INVALID
   assert_failure
   assert_output -p "INVALID"
-  assert_output -e "does not appear to be an available plugin"
+  assert_output -e "does not appear to be an available"
 }
 
 @test "bash-it helpers: _bash-it-enable: should successfully enable a component" {
 
   run _bash-it-enable plugin base
   assert_success
-  assert_output -e "base enabled"
+  assert_output -e "enabled"
   assert_file_exist "$BASH_IT/components/enabled/250___base.plugins.bash"
 }
 
@@ -53,22 +53,22 @@ local_setup () {
   assert_success
 
   run _bash-it-enable plugin base
-  assert_output -e "base is already enabled"
+  assert_output -e "is already enabled"
 }
 
 @test "bash-it helpers: _bash-it-enable: should respect custom priority defined in component" {
 
   run _bash-it-enable plugin alias-completion
   assert_success
-  assert_output -e "alias-completion enabled"
+  assert_output -e "enabled"
   assert_file_exist "$BASH_IT/components/enabled/365___alias-completion.plugins.bash"
 }
 
 @test "bash-it helpers: _bash-it-enable: should enable multiple components passed" {
 
   run bash-it enable plugin "node" "nvm"
-  assert_line -n 0 -e 'node enabled with priority'
-  assert_line -n 1 -e 'nvm enabled with priority'
+  assert_line -n 0 -e "enabled with priority"
+  assert_line -n 1 -e "enabled with priority"
   assert_link_exist "$BASH_IT/components/enabled/250___node.plugins.bash"
   assert_link_exist "$BASH_IT/components/enabled/225___nvm.plugins.bash"
 }
@@ -86,12 +86,12 @@ local_setup () {
 @test "bash-it helpers: _bash-it-enable: should handle properly enabling a set of mixed existing and non-existing components" {
 
   run bash-it enable plugin "node"
-  assert_line -n 0 -e '◉  plugin: node enabled with priority \(250\)'
+  assert_line -n 0 -p "enabled with priority"
 
   run bash-it enable plugin "node" INVALID "nvm"
-  assert_line -n 0 -e "node is already enabled"
-  assert_line -n 1 -e "does not appear to be an available plugin"
-  assert_line -n 2 -e 'nvm enabled with priority'
+  assert_line -n 0 -e "is already enabled"
+  assert_line -n 1 -e "does not appear to be an available"
+  assert_line -n 2 -e "enabled with priority"
 
   assert_link_exist "$BASH_IT/components/enabled/250___node.plugins.bash"
   assert_link_exist "$BASH_IT/components/enabled/225___nvm.plugins.bash"

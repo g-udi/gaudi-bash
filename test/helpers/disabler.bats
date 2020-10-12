@@ -36,14 +36,14 @@ local_setup () {
   run _bash-it-disable plugin INVALID
   assert_failure
   assert_output -p "INVALID"
-  assert_output -p "does not appear to be an enabled plugin"
+  assert_output -p "does not appear to be an enabled"
 }
 
 @test "bash-it helpers: _bash-it-disable: should successfully disable a component" {
 
   run _bash-it-disable plugin base
   assert_failure
-  assert_output -p "does not appear to be an enabled plugin"
+  assert_output -p "does not appear to be an enabled"
   assert_file_not_exist "$BASH_IT/components/disabled/250___base.plugins.bash"
 }
 
@@ -77,8 +77,8 @@ local_setup () {
 @test "bash-it helpers: _bash-it-disable: should disable multiple components passed" {
 
   run bash-it enable plugin "node" "nvm"
-  assert_line -n 0 '◉ plugin: node enabled with priority 250'
-  assert_line -n 1 -p 'nvm enabled with priority'
+  assert_line -n 0 -p "enabled with priority"
+  assert_line -n 1 -p "enabled with priority"
   assert_link_exist "$BASH_IT/components/enabled/250___node.plugins.bash"
   assert_link_exist "$BASH_IT/components/enabled/225___nvm.plugins.bash"
 
@@ -130,12 +130,12 @@ local_setup () {
 @test "bash-it helpers: _bash-it-enable: should handle properly enabling a set of mixed existing and non-existing components" {
 
   run bash-it enable plugin "node"
-  assert_line -n 0 -p '◉ plugin: node enabled with priority 250'
+  assert_line -n 0 -p "enabled with priority"
 
-  run bash-it enable plugin "node" INVALID "nvm"
-  assert_line -n 0 -p "node is already enabled"
+  run bash-it enable plugin node INVALID nvm
+  assert_line -n 0 -p "is already enabled"
   assert_line -n 1 -p "does not appear to be an available plugin"
-  assert_line -n 2 -p 'nvm enabled with priority'
+  assert_line -n 2 -p "enabled with priority"
 
   assert_link_exist "$BASH_IT/components/enabled/250___node.plugins.bash"
   assert_link_exist "$BASH_IT/components/enabled/225___nvm.plugins.bash"

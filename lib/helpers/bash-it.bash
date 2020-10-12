@@ -3,18 +3,6 @@
 
 # A collection of reusable bash-it functions
 
-# @function     _bash-it-print
-# @description  special print function that is color aware as it checks the BASH_IT_NO_COLOR variable
-#               the function can also checks if plugin or component variables are passed and replaces those with a colored version
-# @return       colored output depending on BASH_IT_NO_COLOR
-_bash-it-print () {
-  if [[ $BASH_IT_NO_COLOR = "true" ]]; then
-    echo "${NC}$1" | sed 's/\\033\[[0-9;]*[a-zA-Z]//g'
-  else
-    echo -e "$1"
-  fi
-}
-
 # @function     _bash-it-grep
 # @description  outputs a full path of the grep found on the filesystem
 # @return       Path to the egrep, grep bin e.g., /usr/bin/egrep

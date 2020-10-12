@@ -123,7 +123,7 @@ local_setup () {
   assert_output -p "miscellaneous tools"
 }
 
-@test "bash-it helpers: components: _bash-it-component-help: should fail if the plugin passed as the second param doesn't exist" {
+@test "bash-it helpers: components: _bash-it-component-help: should fail if the plugin passed as the second param doesn"t exist" {
 
   run _bash-it-component-help plugin FAIL
   assert_failure
@@ -145,7 +145,7 @@ local_setup () {
   assert_output -p "miscellaneous tools"
 }
 
-@test "bash-it helpers: components: _bash-it-component-help: should fail if the alias passed as the second param doesn't exist" {
+@test "bash-it helpers: components: _bash-it-component-help: should fail if the alias passed as the second param doesn"t exist" {
 
   run _bash-it-component-help aliases FAIL
   assert_failure
@@ -173,7 +173,7 @@ local_setup () {
   assert_output -p "install and run python applications in isolated environments"
 }
 
-@test "bash-it helpers: components: _bash-it-component-help: should fail if the completion passed as the second param doesn't exist" {
+@test "bash-it helpers: components: _bash-it-component-help: should fail if the completion passed as the second param doesn"t exist" {
 
   run _bash-it-component-help completions FAIL
   assert_failure
@@ -195,7 +195,7 @@ local_setup () {
 
   run _bash-it-component-list plugins
   assert_success
-  IFS=', ' read -r -a array <<< "$output"
+  IFS=", " read -r -a array <<< "$output"
   run echo "${array[0]-not array}"
   assert_output "alias-completion"
 }
@@ -222,7 +222,7 @@ local_setup () {
 
   run _bash-it-component-list-matching plugins base
   assert_success
-  IFS=', ' read -r -a array <<< "$output"
+  IFS=", " read -r -a array <<< "$output"
   run echo "${array[0]-not array}"
   assert_output "base"
 
@@ -231,7 +231,7 @@ local_setup () {
 
   run _bash-it-component-list-matching plugins node
   assert_success
-  IFS=', ' read -r -a array <<< "$output"
+  IFS=", " read -r -a array <<< "$output"
   run echo "${array[0]-not array}"
   assert_output "node"
 }
@@ -252,7 +252,7 @@ local_setup () {
 
   run _bash-it-component-list-enabled plugins
   assert_success
-  IFS=', ' read -r -a array <<< "$output"
+  IFS=", " read -r -a array <<< "$output"
 
   run echo "${array[0]-not array}"
   assert_output "alias-completion"
@@ -276,7 +276,7 @@ local_setup () {
 
   run _bash-it-component-list-disabled plugins
   assert_success
-  IFS=', ' read -r -a array <<< "$output"
+  IFS=", " read -r -a array <<< "$output"
 
   run echo "${array[0]-not array}"
   refute_output "alias-completion"

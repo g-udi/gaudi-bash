@@ -17,7 +17,7 @@ _bash-it-disable () {
     about "disable a bash-it component (plugin, component, alias)"
     group "bash-it:core"
 
-    ! __check-function-parameters "$1" && _bash-it-print "${RED}Please enter a valid component to disable${NC}" && return 1
+    ! __check-function-parameters "$1" && echo -e "${RED}Please enter a valid component to disable${NC}" && return 1
 
     local type component
 
@@ -40,14 +40,14 @@ _bash-it-disable () {
       find "${BASH_IT}/components/enabled" -name "*.${type}.bash" -exec rm {} \;
     else
 
-        [[ -z "$component" ]] && _bash-it-print "${RED}Please enter a valid $(_bash-it-singularize-component "$type")(s) to disable${NC}" && return 1
+        [[ -z "$component" ]] && echo -e "${RED}Please enter a valid $(_bash-it-singularize-component "$type")(s) to disable${NC}" && return 1
 
         local _component
 
         _component=$(command ls $ "${BASH_IT}/components/enabled/"[0-9]*"$BASH_IT_LOAD_PRIORITY_SEPARATOR$component.$type.bash" 2>/dev/null | head -1)
 
         if [[ -z "$_component" ]]; then
-          _bash-it-print "${CYAN}$component${NC} ${RED}does not appear to be an enabled ${GREEN}$(_bash-it-singularize-component "$type")${NC}"
+          echo -e "${CYAN}$component${NC} ${RED}does not appear to be an enabled ${GREEN}$(_bash-it-singularize-component "$type")${NC}"
           return 1
         else
           rm "${BASH_IT}/components/enabled/$(basename "$_component")"
@@ -56,7 +56,7 @@ _bash-it-disable () {
 
     _bash-it-component-cache-clean "${type}"
 
-    _bash-it-print "${RED}◯ disabled ${GREEN}$(_bash-it-singularize-component "$type"): ${CYAN}$component${NC}"
+    echo -e "${RED}◯ disabled ${GREEN}$(_bash-it-singularize-component "$type"): ${CYAN}$component${NC}"
 
     [[ $type == "plugins" ]] && _on-disable-callback "$component"
 

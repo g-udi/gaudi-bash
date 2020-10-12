@@ -1,6 +1,7 @@
 [submodule "bin/bats-core"]
 	path = bin/bats-core
-	url = https://github.com/bats-core/bats-core
+	url = https://github.com/bats-core/bats-core.git
+	branch = master
 [submodule "bin/bats-support"]
 	path = bin/bats-support
 	url = https://github.com/bats-core/bats-support

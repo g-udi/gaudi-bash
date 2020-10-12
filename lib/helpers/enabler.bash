@@ -14,7 +14,7 @@ _bash-it-enable () {
     about "enable a bash-it component (plugin, component, alias)"
     group "bash-it:core"
 
-    ! __check-function-parameters "$1" && _bash-it-print "${RED}Please enter a valid component to enable${NC}" && return 1
+    ! __check-function-parameters "$1" && echo -e "${RED}Please enter a valid component to enable${NC}" && return 1
 
     local type component load_priority
 
@@ -36,7 +36,7 @@ _bash-it-enable () {
       return
     fi
 
-    [[ -z "$component" ]] && _bash-it-print "${RED}Please enter a valid $type_singular(s) to enable${NC}" && return 1
+    [[ -z "$component" ]] && echo -e "${RED}Please enter a valid $type_singular(s) to enable${NC}" && return 1
 
     if [[ "$component" = "all" ]]; then
         local _component
@@ -49,13 +49,13 @@ _bash-it-enable () {
 
         _component=$(command ls "${BASH_IT}/components/$type/$component".*bash 2>/dev/null | head -1)
 
-        [[ -z "$_component" ]] && _bash-it-print "${CYAN}$component${NC} ${RED}does not appear to be an available $type_singular${NC}" && return 1
+        [[ -z "$_component" ]] && echo -e "${CYAN}$component${NC} ${RED}does not appear to be an available $type_singular${NC}" && return 1
 
         _component=$(basename "$_component")
         local enabled_component
         enabled_component=$(command compgen -G "${BASH_IT}/components/enabled/[0-9][0-9][0-9]$BASH_IT_LOAD_PRIORITY_SEPARATOR$_component" 2>/dev/null | head -1)
         if [[ -n "$enabled_component" ]] ; then
-          _bash-it-print "${GREEN}$component${NC} is already enabled"
+          echo -e "${GREEN}$component${NC} is already enabled"
           return
         fi
 
@@ -71,7 +71,7 @@ _bash-it-enable () {
 
     _bash-it-component-cache-clean "${type}"
 
-    _bash-it-print "${GREEN}◉ $type_singular${NC}: ${CYAN}$component${NC} enabled with priority ${RED}$use_load_priority${NC}"
+    echo -e "${GREEN}◉ $type_singular${NC}: ${CYAN}$component${NC} enabled with priority ${RED}$use_load_priority${NC}"
 
     if [[ -n "$BASH_IT_AUTOMATIC_RELOAD_AFTER_CONFIG_CHANGE" ]]; then
       _bash-it-reload

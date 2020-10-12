@@ -56,7 +56,7 @@ _check-results-count () {
 
   # Should display plugins help (we are piping to sed to remove redundant white spaces for consistency)
   _get-description-header () {
-    echo "$(_bash-it-describe "$1")" | head -n 2 | sed 's/  */ /g'
+    echo "$(_bash-it-describe "$1")" | head -n 2 | sed "s/  */ /g"
   }
 
   # Make sure the columns headers are capitalized
