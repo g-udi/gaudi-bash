@@ -29,7 +29,7 @@ local_setup () {
 @test "bash-it install: run the install script silently by skipping prompts" {
 
   ./setup.sh --silent
-  refute_output
+  [[ -z $output ]]
 }
 
 @test "bash-it install: run the install script silently and check that config file exists" {

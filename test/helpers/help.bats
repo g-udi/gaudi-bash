@@ -86,7 +86,7 @@ local_setup () {
   assert_link_exist "$BASH_IT/components/enabled/150___ag.aliases.bash"
 
   run bash-it enable plugin "aws"
-  assert_line --index 0 --partial 'aws enabled with priority'
+  assert_line --index 0 --partial 'enabled with priority'
   assert_link_exist "$BASH_IT/components/enabled/250___aws.plugins.bash"
 
   run _bash-it-help aliases

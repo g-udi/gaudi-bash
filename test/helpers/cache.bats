@@ -52,7 +52,6 @@ local_setup () {
   assert_file_exist "$HOME/.bash_it/tmp/cache/aliases"
 
   _bash-it-component-cache-clean
-  assert_success
   assert_dir_exist "$HOME/.bash_it/tmp/cache"
   assert_file_not_exist "$HOME/.bash_it/tmp/cache/plugins"
   assert_file_not_exist "$HOME/.bash_it/tmp/cache/aliases"
