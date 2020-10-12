@@ -16,3 +16,7 @@
 [submodule "bin/bats-support"]
 	path = bin/bats-support
 	url = https://github.com/bats-core/bats-support
+[submodule "components"]
+	path = components
+	url = git@github.com:ahmadassaf/gaudi-bash-components
+	branch = master
