@@ -78,8 +78,8 @@ _check-results-count () {
 @test "bash-it helpers: _bash-it-describe: should display a component name and description" {
   run _bash-it-describe plugins
   assert_success
-  assert_output --partial "base"
-  assert_output --partial "miscellaneous tools"
+  assert_output -p "base"
+  assert_output -p "miscellaneous tools"
 }
 
 @test "bash-it helpers: _bash-it-describe: should list all plugins (enabled/disabled)" {

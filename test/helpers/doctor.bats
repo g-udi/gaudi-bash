@@ -20,16 +20,16 @@ local_setup () {
 
   run _bash-it-doctor
   assert_success
-  assert_output --partial "[ DEBUG ] [CORE] Loading library: log"
-  assert_output --partial "[ WARNING ] [LOADER] completion already loaded"
+  assert_output -p "[ DEBUG ] [CORE] Loading library: log"
+  assert_output -p "[ WARNING ] [LOADER] completion already loaded"
 }
 
 @test 'bash-it helpers: doctor: _bash-it-doctor should show only warning logs' {
 
   run _bash-it-doctor warning
   assert_success
-  refute_output --partial "[ DEBUG ] [CORE] Loading library: log"
-  assert_output --partial "[ WARNING ] [LOADER] completion already loaded"
+  refute_output -p "[ DEBUG ] [CORE] Loading library: log"
+  assert_output -p "[ WARNING ] [LOADER] completion already loaded"
 }
 
 @test 'bash-it helpers: doctor: _bash-it-doctor should only error logs' {

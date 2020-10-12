@@ -10,8 +10,6 @@ export BASH_IT_LOG_DEBUG_COLOR=${GREEN}
 export BASH_IT_LOG_WARNING_COLOR=${YELLOW}
 export BASH_IT_LOG_ERROR_COLOR=${RED}
 
-source "$BASH_IT/lib/helpers/components.bash"
-
 # @function     _bash-it-get-component-name-from-path
 # @description  get a component name from a component path
 # @param $1     component path: filesystem path for the component e.g., /Users/ahmadassaf/.bash_it/lib/colors.plugins.bash
@@ -63,7 +61,7 @@ _log_general () {
   log_color="BASH_IT_LOG_${log_type^^}_COLOR"
   log_prefix="${NC}${YELLOW}[${BASH_IT_LOG_PREFIX}]${NC}"
 
-  echo -e "${!log_color} [ ${log_type^^} ] ${log_prefix} $1"
+  printf "%b\n" "${!log_color} [ ${log_type^^} ] ${log_prefix} $1"
 }
 
 # @function     _log_debug

@@ -105,22 +105,22 @@ local_setup () {
 
   run _bash-it-component-help plugin
   assert_success
-  assert_output --partial "alias-completion"
-  assert_output --partial "git helper function"
-  assert_output --partial "autojump"
-  refute_output --partial "FAIL"
+  assert_output -p "alias-completion"
+  assert_output -p "git helper function"
+  assert_output -p "autojump"
+  refute_output -p "FAIL"
 
   run _bash-it-component-help plugins
   assert_success
-  assert_output --partial "alias-completion"
+  assert_output -p "alias-completion"
 }
 
 @test "bash-it helpers: components: _bash-it-component-help: should display a plugin help passed as the second param" {
 
   run _bash-it-component-help plugin base
   assert_success
-  assert_line --partial "base"
-  assert_output --partial "miscellaneous tools"
+  assert_line -p "base"
+  assert_output -p "miscellaneous tools"
 }
 
 @test "bash-it helpers: components: _bash-it-component-help: should fail if the plugin passed as the second param doesn't exist" {
@@ -133,16 +133,16 @@ local_setup () {
 
   run _bash-it-component-help alias osx
   assert_success
-  assert_output --partial "osx"
-  assert_output --partial "osx-specific aliases"
+  assert_output -p "osx"
+  assert_output -p "osx-specific aliases"
 }
 
 @test "bash-it helpers: components: _bash-it-component-help: should display an alias help passed as the second param" {
 
   run _bash-it-component-help plugin base
   assert_success
-  assert_line --partial "base"
-  assert_output --partial "miscellaneous tools"
+  assert_line -p "base"
+  assert_output -p "miscellaneous tools"
 }
 
 @test "bash-it helpers: components: _bash-it-component-help: should fail if the alias passed as the second param doesn't exist" {
@@ -155,22 +155,22 @@ local_setup () {
 
   run _bash-it-component-help completions
   assert_success
-  assert_output --partial "bash-it"
-  assert_output --partial "git"
-  assert_output --partial "install and run python applications in isolated environments"
-  refute_output --partial "FAIL"
+  assert_output -p "bash-it"
+  assert_output -p "git"
+  assert_output -p "install and run python applications in isolated environments"
+  refute_output -p "FAIL"
 
   run _bash-it-component-help aliases
   assert_success
-  assert_output --partial "bash-it"
+  assert_output -p "bash-it"
 }
 
 @test "bash-it helpers: components: _bash-it-component-help: should display a completion help passed as the second param" {
 
   run _bash-it-component-help completion pipx
   assert_success
-  assert_output --partial "pipx"
-  assert_output --partial "install and run python applications in isolated environments"
+  assert_output -p "pipx"
+  assert_output -p "install and run python applications in isolated environments"
 }
 
 @test "bash-it helpers: components: _bash-it-component-help: should fail if the completion passed as the second param doesn't exist" {

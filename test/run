@@ -46,7 +46,7 @@ then
       echo ${test_jobs_default}
     fi
   )"
-  exec "$bats_executable" ${CI:+--tap} --jobs "${test_jobs_effective}" \
+  exec "$bats_executable" ${CI:+--tap} --jobs "${test_jobs_effective}" -F junit \
     "${test_dirs[@]}"
 else
   # Run bats in single-threaded mode

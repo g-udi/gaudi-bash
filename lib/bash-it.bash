@@ -241,14 +241,13 @@ bash-it () {
         return;;
     esac
 
-    if [ x"$verb" == x"enable" ] || [ x"$verb" == x"disable" ]; then
-        for arg in "$@"
-        do
-          $func "$(_bash-it-pluralize-component "$component")" "$arg"
-        done
+    # Make sure we can pass the one parameter to the full enabler so that we can detect emptiness
+    if [[ x"$verb" == x"enable" || x"$verb" == x"disable" ]] && [[ ${#@} != 0 ]]; then
+      for arg in "$@"
+      do
+        $func "$(_bash-it-pluralize-component "$component")" "$arg"
+      done
     else
-        $func "$(_bash-it-pluralize-component "$component")" "$@"
+      $func "$(_bash-it-pluralize-component "$component")" "$@"
     fi
-
-
 }

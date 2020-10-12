@@ -3,6 +3,18 @@
 
 # A collection of reusable bash-it functions
 
+# @function     _bash-it-print
+# @description  special print function that is color aware as it checks the BASH_IT_NO_COLOR variable
+#               the function can also checks if plugin or component variables are passed and replaces those with a colored version
+# @return       colored output depending on BASH_IT_NO_COLOR
+_bash-it-print () {
+  if [[ $BASH_IT_NO_COLOR = "true" ]]; then
+    echo "${NC}$1" | sed 's/\\033\[[0-9;]*[a-zA-Z]//g'
+  else
+    echo -e "$1"
+  fi
+}
+
 # @function     _bash-it-grep
 # @description  outputs a full path of the grep found on the filesystem
 # @return       Path to the egrep, grep bin e.g., /usr/bin/egrep
@@ -37,8 +49,8 @@ _bash-it-describe () {
     component_type="$(_bash-it-singularize-component "$component")"
     mode=${2:-"all"}
 
-    printf "\n%-20s%-10s%s\n" "${component_type^}" 'Enabled?' '  Description'
-    printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -
+    printf "\n%-20s%-10s%s\n" "${component_type^}" "Enabled?" "  Description"
+    printf "%*s\n" "${COLUMNS:-$(tput cols)}" '' | tr ' ' -
 
     file=$(_bash-it-component-cache-add "${component}-enabled")
     [[ "$mode" = "all" ]] && file=${file/-enabled/}
@@ -64,8 +76,7 @@ _bash-it-describe () {
     fi
 
     if [[ "$mode" = "all" ]]; then
-      echo ""
-      echo -e "bash-it allows you easily enable/disable components:
+      printf "\n%b" "bash-it allows you easily enable/disable components:
 
 to enable ${GREEN}$component_type${NC}, do:
 bash-it enable ${GREEN}$component_type${NC}  <${GREEN}$component_type${NC} name> [${GREEN}$component_type${NC} name]... -or- $ bash-it enable ${GREEN}$component${NC} all

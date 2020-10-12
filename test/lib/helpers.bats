@@ -2,12 +2,11 @@
 
 # load ../helper
 # load ../../lib/composure
-# load ../../lib/log
-# load ../../lib/search
-# load ../../plugins/available/base.plugin
 
 # cite about param example group
 
+# load ../../lib/log
+# load ../../lib/search
 # load ../../lib/bash-it
 
 # local_setup () {
