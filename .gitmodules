@@ -13,3 +13,6 @@
 [submodule "bin/bats-assert"]
 	path = bin/bats-assert
 	url = https://github.com/bats-core/bats-assert
+[submodule "bin/bats-file"]
+	path = bin/bats-file
+	url = https://github.com/bats-core/bats-file
