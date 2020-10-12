@@ -10,3 +10,6 @@
 [submodule "bin/bats-core"]
 	path = bin/bats-core
 	url = https://github.com/bats-core/bats-core
+[submodule "bin/bats-assert"]
+	path = bin/bats-assert
+	url = https://github.com/bats-core/bats-assert
