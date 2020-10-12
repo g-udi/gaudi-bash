@@ -196,7 +196,7 @@ _bash-it-search-print-result () {
   color_sep=':'
 
   ( ${BASH_IT_SEARCH_USE_COLOR} ) && {
-    color_component="${BLUE}"
+    color_component="${CYAN}"
     color_enable="${GREEN}"
     suffix_enable=''
     suffix_disable=''
@@ -317,14 +317,14 @@ ${YELLOW}EXAMPLES${NC}
    it's description. You should see something like this when you run this
    command:
 
-         ${GREEN}❯ bash-it search git${BLUE}
+         ${GREEN}❯ bash-it search git${NC}
                ${YELLOW}aliases:  ${GREEN}git ${NC}gitsvn
                ${YELLOW}plugins:  ${NC}autojump ${GREEN}git ${NC}git-subrepo jgitflow jump
            ${YELLOW}completions:  ${GREEN}git ${NC}git_flow git_flow_avh${NC}
 
    You can exclude some terms by prefixing a term with a minus, eg:
 
-         ${GREEN}❯ bash-it search git -flow -svn${BLUE}
+         ${GREEN}❯ bash-it search git -flow -svn${NC}
                ${YELLOW}aliases:  ${NC}git
                ${YELLOW}plugins:  ${NC}autojump git git-subrepo jump
            ${YELLOW}completions:  ${NC}git${NC}
@@ -333,7 +333,7 @@ ${YELLOW}EXAMPLES${NC}
    match. Note, that we also pass the '--enable' flag, which would ensure
    that all matches are automatically enabled. The example is below:
 
-         ${GREEN}❯ bash-it search @git --enable${BLUE}
+         ${GREEN}❯ bash-it search @git --enable${NC}
                ${YELLOW}aliases:  ${NC}git
                ${YELLOW}plugins:  ${NC}git
            ${YELLOW}completions:  ${NC}git${NC}

@@ -20,11 +20,11 @@ local_setup () {
   run _bash-it-rewind
   assert_success
 
-  run echo -e "AAA$(_bash-it-rewind 2)AA"
+  run printf "AAA$(_bash-it-rewind 2)AA"
   assert_success
   assert_output "AAA[2DAA"
 
-  run echo -e "AAA$(_bash-it-rewind 2)AAA"
+  run printf "AAA$(_bash-it-rewind 2)AAA"
   assert_success
   assert_output "AAA[2DAAA"
 }

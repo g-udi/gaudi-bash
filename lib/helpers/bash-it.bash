@@ -38,7 +38,7 @@ _bash-it-describe () {
     mode=${2:-"all"}
 
     printf "\n%-20s%-10s%s\n" "${component_type^}" 'Enabled?' '  Description'
-    printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -
+    printf "%*s\n" "${COLUMNS:-$(tput cols)}" '' | tr ' ' -
 
     file=$(_bash-it-component-cache-add "${component}-enabled")
     [[ "$mode" = "all" ]] && file=${file/-enabled/}
@@ -64,8 +64,7 @@ _bash-it-describe () {
     fi
 
     if [[ "$mode" = "all" ]]; then
-      echo ""
-      echo -e "bash-it allows you easily enable/disable components:
+      printf "\n%b\n" "bash-it allows you easily enable/disable components:
 
 to enable ${GREEN}$component_type${NC}, do:
 bash-it enable ${GREEN}$component_type${NC}  <${GREEN}$component_type${NC} name> [${GREEN}$component_type${NC} name]... -or- $ bash-it enable ${GREEN}$component${NC} all

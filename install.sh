@@ -14,7 +14,7 @@ __install () {
   umask g-w,o-w
 
   env git clone --depth=1 --recurse-submodules https://github.com/ahmadassaf/bash-it.git "$BASH_IT" || {
-      printf "Error: Cloning of gaudi into this machine failed :(\\n"
+      printf "%s\n" "Error: Cloning of gaudi into this machine failed :("
       exit 1
   }
 

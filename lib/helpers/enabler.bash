@@ -10,19 +10,20 @@ BASH_IT_LOAD_PRIORITY_DEFAULT_COMPLETIONS=${BASH_IT_LOAD_PRIORITY_DEFAULT_COMPLE
 # @param $2     component name: bash-it component name .e.g., base, git
 # @return       message to indicate the outcome
 _bash-it-enable () {
+
     about "enable a bash-it component (plugin, component, alias)"
     group "bash-it:core"
+
+    ! __check-function-parameters "$1" && printf "%s\n" "Please enter a valid component to enable" && return 1
 
     local type component load_priority
 
     # Make sure the component is pluralized in case this function is called directly e.g., for unit tests
     type=$(_bash-it-pluralize-component "$1")
+    type_singular=$(_bash-it-singularize-component "$1")
     _load_priority="BASH_IT_LOAD_PRIORITY_DEFAULT_${type^^}"
     component="$2"
     load_priority="${!_load_priority}"
-
-    __check-function-parameters "$type" || printf "${RED}%s${NC}" "Please enter a valid component to enable"
-    __check-function-parameters "$type" || return 1
 
     # Capture if the user prompted for a disable all and iterate on all components
     if [[ "$type" = "alls" ]] && [[ -z "$component"  ]]; then
@@ -35,7 +36,7 @@ _bash-it-enable () {
       return
     fi
 
-    [[ -z "$component" ]] && printf "${RED}%s${NC}" "Please enter a valid $(_bash-it-singularize-component "$type")(s) to enable" && return 1
+    [[ -z "$component" ]] && printf "${RED}%s${NC}\n" "Please enter a valid $type_singular(s) to enable" && return 1
 
     if [[ "$component" = "all" ]]; then
         local _component
@@ -48,13 +49,14 @@ _bash-it-enable () {
 
         _component=$(command ls "${BASH_IT}/components/$type/$component".*bash 2>/dev/null | head -1)
 
-        [[ -z "$_component" ]] && printf "${GREEN}%s ${NC}${RED}%s${NC}\n" "$component" "does not appear to be an available $(_bash-it-singularize-component "$type")" && return 1
-
+        [[ -z "$_component" ]] && printf "${CYAN}$component ${RED}%s ${GREEN}$type_singular${NC}\n" "does not appear to be an available" && return 1
         _component=$(basename "$_component")
+
         local enabled_component
+
         enabled_component=$(command compgen -G "${BASH_IT}/components/enabled/[0-9][0-9][0-9]$BASH_IT_LOAD_PRIORITY_SEPARATOR$_component" 2>/dev/null | head -1)
         if [[ -n "$enabled_component" ]] ; then
-          printf "${GREEN}%s${NC}\n" "$component is already enabled"
+          printf "${GREEN}$type_singular ${CYAN}$component${NC} %s\n" "is already enabled"
           return
         fi
 
@@ -70,7 +72,7 @@ _bash-it-enable () {
 
     _bash-it-component-cache-clean "${type}"
 
-    printf "${GREEN}%s${NC} %s %s${RED} (%s)${NC}\n" "◉ ENABLED" "$(_bash-it-singularize-component "$type"): $component" "enabled with priority" "$use_load_priority"
+    printf "${GREEN}%s $type_singular: ${CYAN}$component${NC} %s ${RED}$use_load_priority${NC}\n" "◉" "enabled with priority"
 
     if [[ -n "$BASH_IT_AUTOMATIC_RELOAD_AFTER_CONFIG_CHANGE" ]]; then
       _bash-it-reload

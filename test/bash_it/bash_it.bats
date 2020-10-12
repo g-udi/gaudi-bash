@@ -42,7 +42,7 @@
 
 #   run alias test_alias &> /dev/null
 #   assert_success
-#   assert_line -n 0 "alias test_alias='b'"
+#   assert_line --index 0 "alias test_alias='b'"
 # }
 
 # @test "core: load aliases in priority order" {
@@ -63,7 +63,7 @@
 
 #   run alias test_alias &> /dev/null
 #   assert_success
-#   assert_line -n 0 "alias test_alias='a'"
+#   assert_line --index 0 "alias test_alias='a'"
 # }
 
 # @test "core: load aliases and plugins in priority order" {
@@ -86,7 +86,7 @@
 
 #   run alias test_alias &> /dev/null
 #   assert_success
-#   assert_line -n 0 "alias test_alias='c'"
+#   assert_line --index 0 "alias test_alias='c'"
 # }
 
 # @test "core: load aliases, plugins and completions in priority order" {
@@ -110,7 +110,7 @@
 #   run alias test_alias &> /dev/null
 #   assert_success
 #   # "b" wins since completions are loaded last in the old directory structure
-#   assert_line -n 0 "alias test_alias='b'"
+#   assert_line --index 0 "alias test_alias='b'"
 # }
 
 # @test "core: load aliases, plugins and completions in priority order, even if the priority says otherwise" {
@@ -134,7 +134,7 @@
 #   run alias test_alias &> /dev/null
 #   assert_success
 #   # "b" wins since completions are loaded last in the old directory structure
-#   assert_line -n 0 "alias test_alias='b'"
+#   assert_line --index 0 "alias test_alias='b'"
 # }
 
 # @test "core: load aliases and plugins in priority order, with one alias higher than plugins" {
@@ -159,5 +159,5 @@
 #   assert_success
 #   # This will be c, loaded from the c plugin, since the individual directories
 #   # are loaded one by one.
-#   assert_line -n 0 "alias test_alias='c'"
+#   assert_line --index 0 "alias test_alias='c'"
 # }
