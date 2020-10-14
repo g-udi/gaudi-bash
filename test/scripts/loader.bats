@@ -9,7 +9,6 @@ cite about param example group
 local_setup () {
   prepare
 
-  # Copy the test fixture to the bash-it folder
   if command -v rsync &> /dev/null
   then
     rsync -a "$BASH_IT/test/fixtures/bash_it/" "$BASH_IT/"
@@ -34,7 +33,6 @@ local_setup () {
   ln -s $BASH_IT/components/aliases/b.aliases.bash $BASH_IT/components/enabled/150___b.aliases.bash
   assert_link_exist "$BASH_IT/components/enabled/150___b.aliases.bash"
 
-  # The `test_alias` alias should not exist
   run alias test_alias &> /dev/null
   assert_failure
 
@@ -58,7 +56,6 @@ local_setup () {
   ln -s $BASH_IT/components/aliases/b.aliases.bash $BASH_IT/components/enabled/150___b.aliases.bash
   assert_link_exist "$BASH_IT/components/enabled/150___b.aliases.bash"
 
-  # The `test_alias` alias should not exist
   run alias test_alias &> /dev/null
   assert_failure
 
@@ -84,7 +81,6 @@ local_setup () {
   ln -s $BASH_IT/components/plugins/c.plugin.bash $BASH_IT/components/enabled/250___c.plugin.bash
   assert_link_exist "$BASH_IT/components/enabled/250___c.plugin.bash"
 
-  # The `test_alias` alias should not exist
   run alias test_alias &> /dev/null
   assert_failure
 
@@ -110,7 +106,6 @@ local_setup () {
   ln -s $BASH_IT/components/plugins/c.plugin.bash $BASH_IT/components/enabled/250___c.plugin.bash
   assert_link_exist "$BASH_IT/components/enabled/250___c.plugin.bash"
 
-  # The `test_alias` alias should not exist
   run alias test_alias &> /dev/null
   assert_failure
 
@@ -118,7 +113,6 @@ local_setup () {
 
   run alias test_alias &> /dev/null
   assert_success
-  # "b" wins since completions are loaded last in the old directory structure
   assert_line --index 0 "alias test_alias='b'"
 }
 
@@ -137,7 +131,6 @@ local_setup () {
   ln -s $BASH_IT/components/plugins/c.plugin.bash $BASH_IT/components/enabled/950___c.plugin.bash
   assert_link_exist "$BASH_IT/components/enabled/950___c.plugin.bash"
 
-  # The `test_alias` alias should not exist
   run alias test_alias &> /dev/null
   assert_failure
 
@@ -145,7 +138,6 @@ local_setup () {
 
   run alias test_alias &> /dev/null
   assert_success
-  # "b" wins since completions are loaded last in the old directory structure
   assert_line --index 0 "alias test_alias='c'"
 }
 
@@ -164,7 +156,6 @@ local_setup () {
   ln -s $BASH_IT/components/plugins/c.plugin.bash $BASH_IT/components/enabled/250___c.plugin.bash
   assert_link_exist "$BASH_IT/components/enabled/250___c.plugin.bash"
 
-  # The `test_alias` alias should not exist
   run alias test_alias &> /dev/null
   assert_failure
 
@@ -172,7 +163,5 @@ local_setup () {
 
   run alias test_alias &> /dev/null
   assert_success
-  # This will be c, loaded from the c plugin, since the individual directories
-  # are loaded one by one.
   assert_line --index 0 "alias test_alias='a'"
 }
