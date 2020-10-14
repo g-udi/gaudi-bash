@@ -11,7 +11,7 @@ local_setup () {
 
   if command -v rsync &> /dev/null
   then
-    rsync -a "$BASH_IT/test/fixtures/bash_it/" "$BASH_IT/"
+    rsync -a "$BASH_IT/test/fixtures/bash_it/" "$BASH_IT/components"
   else
     find "$BASH_IT/test/fixtures/bash_it" \
       -mindepth 1 -maxdepth 1 \
