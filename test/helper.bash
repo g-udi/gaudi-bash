@@ -48,6 +48,8 @@ prepare () {
   fi
 
   rm -rf "$BASH_IT/components/enabled"
+  rm -rf "$BASH_IT/tmp"
+
   mkdir -p "$BASH_IT/components/enabled"
   touch "$HOME/$CONFIG_FILE"
 }

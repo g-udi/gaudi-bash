@@ -1,156 +1,178 @@
-# @test "core: load aliases in order" {
+#!/usr/bin/env bats
 
-#   mkdir -p $BASH_IT/enabled
-#   mkdir -p $BASH_IT/enabled
+load ../helper
 
-#   ln -s $BASH_IT/plugins/available/base.plugin.bash "$BASH_IT/enabled/250___base.plugin.bash"
-#   assert_link_exist "$BASH_IT/enabled/250___base.plugin.bash"
+load ../../lib/composure
 
-#   ln -s $BASH_IT/aliases/available/a.aliases.bash "$BASH_IT/enabled/150___a.aliases.bash"
-#   assert_link_exist "$BASH_IT/enabled/150___a.aliases.bash"
+cite about param example group
 
-#   ln -s $BASH_IT/aliases/available/b.aliases.bash "$BASH_IT/enabled/150___b.aliases.bash"
-#   assert_link_exist "$BASH_IT/enabled/150___b.aliases.bash"
+local_setup () {
+  prepare
 
-#   # The `test_alias` alias should not exist
-#   run alias test_alias &> /dev/null
-#   assert_failure
+  # Copy the test fixture to the bash-it folder
+  if command -v rsync &> /dev/null
+  then
+    rsync -a "$BASH_IT/test/fixtures/bash_it/" "$BASH_IT/"
+  else
+    find "$BASH_IT/test/fixtures/bash_it" \
+      -mindepth 1 -maxdepth 1 \
+      -exec cp -r {} "$BASH_IT/" \;
+  fi
+}
 
-#   load "$BASH_IT/bash_it.sh"
+@test "bash-it loader: load aliases in order" {
 
-#   run alias test_alias &> /dev/null
-#   assert_success
-#   assert_line --index 0 "alias test_alias='b'"
-# }
+  mkdir -p $BASH_IT/components/enabled
+  mkdir -p $BASH_IT/components/enabled
 
-# @test "core: load aliases in priority order" {
-#   mkdir -p $BASH_IT/enabled
-#   mkdir -p $BASH_IT/enabled
+  ln -s $BASH_IT/components/plugins/base.plugin.bash $BASH_IT/components/enabled/250___base.plugin.bash
+  assert_link_exist "$BASH_IT/components/enabled/250___base.plugin.bash"
 
-#   ln -s $BASH_IT/plugins/available/base.plugin.bash $BASH_IT/enabled/250___base.plugin.bash
-#   assert_link_exist "$BASH_IT/enabled/250___base.plugin.bash"
+  ln -s $BASH_IT/components/aliases/a.aliases.bash $BASH_IT/components/enabled/150___a.aliases.bash
+  assert_link_exist "$BASH_IT/components/enabled/150___a.aliases.bash"
 
-#   ln -s $BASH_IT/aliases/available/a.aliases.bash $BASH_IT/enabled/175___a.aliases.bash
-#   assert_link_exist "$BASH_IT/enabled/175___a.aliases.bash"
+  ln -s $BASH_IT/components/aliases/b.aliases.bash $BASH_IT/components/enabled/150___b.aliases.bash
+  assert_link_exist "$BASH_IT/components/enabled/150___b.aliases.bash"
 
-#   ln -s $BASH_IT/aliases/available/b.aliases.bash $BASH_IT/enabled/150___b.aliases.bash
-#   assert_link_exist "$BASH_IT/enabled/150___b.aliases.bash"
+  # The `test_alias` alias should not exist
+  run alias test_alias &> /dev/null
+  assert_failure
 
-#   # The `test_alias` alias should not exist
-#   run alias test_alias &> /dev/null
-#   assert_failure
+  load "$BASH_IT/bash_it.sh"
 
-#   load "$BASH_IT/bash_it.sh"
+  run alias test_alias &> /dev/null
+  assert_success
+  assert_line --index 0 "alias test_alias='b'"
+}
 
-#   run alias test_alias &> /dev/null
-#   assert_success
-#   assert_line --index 0 "alias test_alias='a'"
-# }
+@test "bash-it loader: load aliases in priority order" {
+  mkdir -p $BASH_IT/enabled
+  mkdir -p $BASH_IT/enabled
 
-# @test "core: load aliases and plugins in priority order" {
-#   mkdir -p $BASH_IT/enabled
+  ln -s $BASH_IT/components/plugins/base.plugin.bash $BASH_IT/components/enabled/250___base.plugin.bash
+  assert_link_exist "$BASH_IT/components/enabled/250___base.plugin.bash"
 
-#   ln -s $BASH_IT/plugins/available/base.plugin.bash $BASH_IT/enabled/250___base.plugin.bash
-#   assert_link_exist "$BASH_IT/enabled/250___base.plugin.bash"
+  ln -s $BASH_IT/components/aliases/a.aliases.bash $BASH_IT/components/enabled/175___a.aliases.bash
+  assert_link_exist "$BASH_IT/components/enabled/175___a.aliases.bash"
 
-#   ln -s $BASH_IT/aliases/available/a.aliases.bash $BASH_IT/enabled/150___a.aliases.bash
-#   assert_link_exist "$BASH_IT/enabled/150___a.aliases.bash"
+  ln -s $BASH_IT/components/aliases/b.aliases.bash $BASH_IT/components/enabled/150___b.aliases.bash
+  assert_link_exist "$BASH_IT/components/enabled/150___b.aliases.bash"
 
-#   ln -s $BASH_IT/aliases/available/b.aliases.bash $BASH_IT/enabled/150___b.aliases.bash
-#   assert_link_exist "$BASH_IT/enabled/150___b.aliases.bash"
+  # The `test_alias` alias should not exist
+  run alias test_alias &> /dev/null
+  assert_failure
 
-#   ln -s $BASH_IT/plugins/available/c.plugin.bash $BASH_IT/enabled/250___c.plugin.bash
-#   assert_link_exist "$BASH_IT/enabled/250___c.plugin.bash"
+  load "$BASH_IT/bash_it.sh"
 
-#   # The `test_alias` alias should not exist
-#   run alias test_alias &> /dev/null
-#   assert_failure
+  run alias test_alias &> /dev/null
+  assert_success
+  assert_line --index 0 "alias test_alias='a'"
+}
 
-#   load "$BASH_IT/bash_it.sh"
+@test "bash-it loader: load aliases and plugins in priority order" {
+  mkdir -p $BASH_IT/enabled
 
-#   run alias test_alias &> /dev/null
-#   assert_success
-#   assert_line --index 0 "alias test_alias='c'"
-# }
+  ln -s $BASH_IT/components/plugins/base.plugin.bash $BASH_IT/components/enabled/250___base.plugin.bash
+  assert_link_exist "$BASH_IT/components/enabled/250___base.plugin.bash"
 
-# @test "core: load aliases, plugins and completions in priority order" {
-#   mkdir -p $BASH_IT/enabled
+  ln -s $BASH_IT/components/aliases/a.aliases.bash $BASH_IT/components/enabled/150___a.aliases.bash
+  assert_link_exist "$BASH_IT/components/enabled/150___a.aliases.bash"
 
-#   ln -s $BASH_IT/plugins/available/base.plugin.bash "$BASH_IT/enabled/250___base.plugin.bash"
-#   assert_link_exist "$BASH_IT/enabled/250___base.plugin.bash"
+  ln -s $BASH_IT/components/aliases/b.aliases.bash $BASH_IT/components/enabled/150___b.aliases.bash
+  assert_link_exist "$BASH_IT/components/enabled/150___b.aliases.bash"
 
-#   ln -s $BASH_IT/aliases/available/a.aliases.bash $BASH_IT/enabled/150___a.aliases.bash
-#   assert_link_exist "$BASH_IT/enabled/150___a.aliases.bash"
+  ln -s $BASH_IT/components/plugins/c.plugin.bash $BASH_IT/components/enabled/250___c.plugin.bash
+  assert_link_exist "$BASH_IT/components/enabled/250___c.plugin.bash"
 
-#   ln -s $BASH_IT/aliases/available/b.aliases.bash $BASH_IT/enabled/350___b.completion.bash
-#   assert_link_exist "$BASH_IT/enabled/350___b.completion.bash"
+  # The `test_alias` alias should not exist
+  run alias test_alias &> /dev/null
+  assert_failure
 
-#   ln -s $BASH_IT/plugins/available/c.plugin.bash $BASH_IT/enabled/250___c.plugin.bash
-#   assert_link_exist "$BASH_IT/enabled/250___c.plugin.bash"
+  load "$BASH_IT/bash_it.sh"
 
-#   # The `test_alias` alias should not exist
-#   run alias test_alias &> /dev/null
-#   assert_failure
+  run alias test_alias &> /dev/null
+  assert_success
+  assert_line --index 0 "alias test_alias='c'"
+}
 
-#   load "$BASH_IT/bash_it.sh"
+@test "bash-it loader: load aliases, plugins and completions in priority order" {
+  mkdir -p $BASH_IT/enabled
 
-#   run alias test_alias &> /dev/null
-#   assert_success
-#   # "b" wins since completions are loaded last in the old directory structure
-#   assert_line --index 0 "alias test_alias='b'"
-# }
+  ln -s $BASH_IT/components/plugins/base.plugin.bash $BASH_IT/components/enabled/250___base.plugin.bash
+  assert_link_exist "$BASH_IT/components/enabled/250___base.plugin.bash"
 
-# @test "core: load aliases, plugins and completions in priority order, even if the priority says otherwise" {
-#   mkdir -p $BASH_IT/enabled
+  ln -s $BASH_IT/components/aliases/a.aliases.bash $BASH_IT/components/enabled/150___a.aliases.bash
+  assert_link_exist "$BASH_IT/components/enabled/150___a.aliases.bash"
 
-#   ln -s $BASH_IT/plugins/available/base.plugin.bash $BASH_IT/enabled/250___base.plugin.bash
-#   assert_link_exist "$BASH_IT/enabled/250___base.plugin.bash"
+  ln -s $BASH_IT/components/aliases/b.aliases.bash $BASH_IT/components/enabled/350___b.completion.bash
+  assert_link_exist "$BASH_IT/components/enabled/350___b.completion.bash"
 
-#   ln -s $BASH_IT/aliases/available/a.aliases.bash $BASH_IT/enabled/450___a.aliases.bash
-#   assert_link_exist "$BASH_IT/enabled/450___a.aliases.bash"
+  ln -s $BASH_IT/components/plugins/c.plugin.bash $BASH_IT/components/enabled/250___c.plugin.bash
+  assert_link_exist "$BASH_IT/components/enabled/250___c.plugin.bash"
 
-#   ln -s $BASH_IT/aliases/available/b.aliases.bash $BASH_IT/enabled/350___b.completion.bash
-#   assert_link_exist "$BASH_IT/enabled/350___b.completion.bash"
+  # The `test_alias` alias should not exist
+  run alias test_alias &> /dev/null
+  assert_failure
 
-#   ln -s $BASH_IT/plugins/available/c.plugin.bash $BASH_IT/enabled/950___c.plugin.bash
-#   assert_link_exist "$BASH_IT/enabled/950___c.plugin.bash"
+  load "$BASH_IT/bash_it.sh"
 
-#   # The `test_alias` alias should not exist
-#   run alias test_alias &> /dev/null
-#   assert_failure
+  run alias test_alias &> /dev/null
+  assert_success
+  # "b" wins since completions are loaded last in the old directory structure
+  assert_line --index 0 "alias test_alias='b'"
+}
 
-#   load "$BASH_IT/bash_it.sh"
+@test "bash-it loader: load aliases, plugins and completions in priority order with one alias priority higher than a plugin" {
+  mkdir -p $BASH_IT/enabled
 
-#   run alias test_alias &> /dev/null
-#   assert_success
-#   # "b" wins since completions are loaded last in the old directory structure
-#   assert_line --index 0 "alias test_alias='b'"
-# }
+  ln -s $BASH_IT/components/plugins/base.plugin.bash $BASH_IT/components/enabled/250___base.plugin.bash
+  assert_link_exist "$BASH_IT/components/enabled/250___base.plugin.bash"
 
-# @test "core: load aliases and plugins in priority order, with one alias higher than plugins" {
-#   mkdir -p $BASH_IT/enabled
+  ln -s $BASH_IT/components/aliases/a.aliases.bash $BASH_IT/components/enabled/450___a.aliases.bash
+  assert_link_exist "$BASH_IT/components/enabled/450___a.aliases.bash"
 
-#   ln -s $BASH_IT/plugins/available/base.plugin.bash $BASH_IT/enabled/250___base.plugin.bash
-#   assert_link_exist "$BASH_IT/enabled/250___base.plugin.bash"
+  ln -s $BASH_IT/components/aliases/b.aliases.bash $BASH_IT/components/enabled/350___b.completion.bash
+  assert_link_exist "$BASH_IT/components/enabled/350___b.completion.bash"
 
-#   ln -s $BASH_IT/aliases/available/a.aliases.bash $BASH_IT/enabled/350___a.aliases.bash
-#   assert_link_exist "$BASH_IT/enabled/350___a.aliases.bash"
+  ln -s $BASH_IT/components/plugins/c.plugin.bash $BASH_IT/components/enabled/950___c.plugin.bash
+  assert_link_exist "$BASH_IT/components/enabled/950___c.plugin.bash"
 
-#   ln -s $BASH_IT/aliases/available/b.aliases.bash $BASH_IT/enabled/150___b.aliases.bash
-#   assert_link_exist "$BASH_IT/enabled/150___b.aliases.bash"
+  # The `test_alias` alias should not exist
+  run alias test_alias &> /dev/null
+  assert_failure
 
-#   ln -s $BASH_IT/plugins/available/c.plugin.bash $BASH_IT/enabled/250___c.plugin.bash
-#   assert_link_exist "$BASH_IT/enabled/250___c.plugin.bash"
+  load "$BASH_IT/bash_it.sh"
 
-#   # The `test_alias` alias should not exist
-#   run alias test_alias &> /dev/null
-#   assert_failure
+  run alias test_alias &> /dev/null
+  assert_success
+  # "b" wins since completions are loaded last in the old directory structure
+  assert_line --index 0 "alias test_alias='c'"
+}
 
-#   load "$BASH_IT/bash_it.sh"
+@test "bash-it loader: load aliases and plugins in priority order, with one alias higher than plugins" {
+  mkdir -p $BASH_IT/enabled
 
-#   run alias test_alias &> /dev/null
-#   assert_success
-#   # This will be c, loaded from the c plugin, since the individual directories
-#   # are loaded one by one.
-#   assert_line --index 0 "alias test_alias='c'"
-# }
+  ln -s $BASH_IT/components/plugins/base.plugin.bash $BASH_IT/components/enabled/250___base.plugin.bash
+  assert_link_exist "$BASH_IT/components/enabled/250___base.plugin.bash"
+
+  ln -s $BASH_IT/components/aliases/a.aliases.bash $BASH_IT/components/enabled/350___a.aliases.bash
+  assert_link_exist "$BASH_IT/components/enabled/350___a.aliases.bash"
+
+  ln -s $BASH_IT/components/aliases/b.aliases.bash $BASH_IT/components/enabled/150___b.aliases.bash
+  assert_link_exist "$BASH_IT/components/enabled/150___b.aliases.bash"
+
+  ln -s $BASH_IT/components/plugins/c.plugin.bash $BASH_IT/components/enabled/250___c.plugin.bash
+  assert_link_exist "$BASH_IT/components/enabled/250___c.plugin.bash"
+
+  # The `test_alias` alias should not exist
+  run alias test_alias &> /dev/null
+  assert_failure
+
+  load "$BASH_IT/bash_it.sh"
+
+  run alias test_alias &> /dev/null
+  assert_success
+  # This will be c, loaded from the c plugin, since the individual directories
+  # are loaded one by one.
+  assert_line --index 0 "alias test_alias='a'"
+}

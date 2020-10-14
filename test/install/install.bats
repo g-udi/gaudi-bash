@@ -1,7 +1,10 @@
 #!/usr/bin/env bats
 
 load ../helper
+
 load ../../lib/composure
+
+cite about param example group
 
 case $OSTYPE in
   darwin*)

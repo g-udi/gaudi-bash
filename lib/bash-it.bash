@@ -3,8 +3,6 @@
 
 export BASH_IT_LOAD_PRIORITY_SEPARATOR="___"
 
-cite about param example group
-
 # Load all the helper libraries
 for helper in "${BASH_IT}"/lib/helpers/*.bash; do source "$helper"; done
 
@@ -61,6 +59,8 @@ _bash-it-update () {
   else
     echo "bash-it is up to date, nothing to do!"
   fi
+  echo "checking bash-it dependencies"
+  cd "${BASH_IT}/components" && git submodule update --recursive --remote
   cd "${old_pwd}" &> /dev/null || return
 }
 
@@ -123,7 +123,7 @@ _bash-it-reload () {
 #               aliases: show list of aliases in either 1) all enabled aliases if no alias was passed or 2) a specific alias
 #               plugins: show function descriptions of either 1) all enabled plugins if no plugin was passed or 2) a specific plugin
 _bash-it-help () {
-  __check-function-parameters "$1" || return 1
+  ! __check-function-parameters "$1" && reference bash-it && return 0
 
   local type component
 
@@ -192,6 +192,7 @@ _bash-it-restore () {
 
 
 bash-it () {
+    about 'provides a solid framework for using, developing and maintaining shell scripts and custom commands for your daily work'
     param '1: verb [one of: help | backup | show | enable | disable | update | restore | search | version | reload | doctor ]] '
     param '2: component type [one of: alias(es) | completion(s) | plugin(s) ]] or search term(s)'
     param '3: specific component [optional]'
@@ -202,6 +203,7 @@ bash-it () {
     example '$ bash-it disable alias hg [tmux]...'
     example '$ bash-it update'
     example '$ bash-it backup'
+    example '$ bash-it help plugins'
     example '$ bash-it search [-|@]term1 [-|@]term2 ... [[ -e/--enable ]] [[ -d/--disable ]] [[ -r/--refresh ]] [[ -c/--no-color ]]'
     example '$ bash-it version'
     example '$ bash-it reload'

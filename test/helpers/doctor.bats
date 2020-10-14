@@ -3,7 +3,7 @@
 load ../helper
 load ../../lib/composure
 
-cite about group
+cite about param example group
 
 load ../../lib/bash-it
 load ../../lib/helpers/doctor

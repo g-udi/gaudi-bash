@@ -3,7 +3,7 @@
 load ../helper
 load ../../lib/composure
 
-cite about group
+cite about param example group
 
 load ../../lib/bash-it
 load ../../lib/helpers/help
@@ -13,13 +13,14 @@ local_setup () {
   prepare
 }
 
-@test "bash-it-helpers: help: should exit gracefully if no valid argument was passed" {
+@test "bash-it-helpers: help: should show default help menu if no valid argument was passed" {
 
   run _bash-it-help INVALID
-  assert_failure
+  assert_success
+  assert_line --index 0 --partial "provides a solid framework for using, developing and maintaining shell scripts and custom commands for your daily work"
 }
 
-@test "bash-it-helpers: help: should exit gracefully if no valid alias was passed" {
+@test "bash-it-helpers: help: should show default help menu if no valid alias was passed" {
 
   run _bash-it-help alias INVALID
   assert_failure
