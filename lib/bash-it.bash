@@ -59,8 +59,12 @@ _bash-it-update () {
   else
     echo "bash-it is up to date, nothing to do!"
   fi
-  echo "checking bash-it dependencies"
-  cd "${BASH_IT}/components" && git submodule update --recursive --remote
+
+  if [[ "$*" = "all" ]]; then
+    echo "checking bash-it dependencies"
+    cd "${BASH_IT}/components" && git submodule update --recursive --remote
+  fi
+
   cd "${old_pwd}" &> /dev/null || return
 }
 
@@ -226,7 +230,8 @@ bash-it () {
       doctor)
         func=_bash-it-doctor;;
       update)
-        func=_bash-it-update;;
+        _bash-it-update "$component" "$@"
+        return;;
       version)
         func=_bash-it-version;;
       backup)
