@@ -75,7 +75,7 @@ local_setup () {
   local available enabled
 
   run _bash-it-enable plugins "all"
-  available=$(find $BASH_IT/components/plugins -name *.plugins.bash | wc -l | xargs)
+  available=$(find $BASH_IT/components/plugins/lib -name *.plugins.bash | wc -l | xargs)
   enabled=$(find $BASH_IT/components/enabled -name [0-9]*.plugins.bash | wc -l | xargs)
   assert_equal "$available" "$enabled"
 }

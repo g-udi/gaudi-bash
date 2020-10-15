@@ -46,7 +46,7 @@ _bash-it-describe () {
     if [[ ! -s "${file}" || -z $(find "${file}" -mmin -300) ]] ; then
       rm -f "${file}" 2>/dev/null
         local __file
-        for __file in "${BASH_IT}/components/$component/"*.bash
+        for __file in "${BASH_IT}/components/$component/lib/"*.bash
         do
             # Check for both the old format without the load priority, and the extended format with the priority
             declare enabled_files enabled_file

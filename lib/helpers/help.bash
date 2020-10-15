@@ -28,7 +28,7 @@ _help-aliases () {
                 alias_path='custom/custom.aliases.bash'
             ;;
             *)
-                alias_path="aliases/$1.aliases.bash"
+                alias_path="aliases/lib/$1.aliases.bash"
             ;;
         esac
 
@@ -39,7 +39,7 @@ _help-aliases () {
     else
         local __file
 
-        for __file in $(sort <(compgen -G "${BASH_IT}/components/aliases/enabled/*") <(compgen -G "${BASH_IT}/components/enabled/*.aliases.bash"))
+        for __file in $(sort <(compgen -G "${BASH_IT}/components/enabled/*.aliases.bash"))
         do
             __help-list-aliases "$__file"
         done

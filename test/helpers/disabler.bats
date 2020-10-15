@@ -44,7 +44,7 @@ local_setup () {
   run _bash-it-disable plugin base
   assert_failure
   assert_output --partial "does not appear to be an enabled"
-  assert_file_not_exist "$BASH_IT/components/disabled/250___base.plugins.bash"
+  assert_file_not_exist "$BASH_IT/components/enabled/250___base.plugins.bash"
 }
 
 @test "bash-it helpers: _bash-it-disable: should display appropriate message when trying to disable an already disabled component" {
@@ -55,7 +55,7 @@ local_setup () {
 
   run _bash-it-disable plugin base
   assert_output --partial "disabled"
-  assert_file_not_exist "$BASH_IT/components/disabled/250___base.plugins.bash"
+  assert_file_not_exist "$BASH_IT/components/enabled/250___base.plugins.bash"
 }
 
 @test "bash-it helpers: _bash-it-disable: should run the component disable function if it exists" {
@@ -71,7 +71,7 @@ local_setup () {
   run _bash-it-disable plugin base
   assert_output --partial "disabled"
   assert_output --partial "callback"
-  assert_file_not_exist "$BASH_IT/components/disabled/250___base.plugins.bash"
+  assert_file_not_exist "$BASH_IT/components/enabled/250___base.plugins.bash"
 }
 
 @test "bash-it helpers: _bash-it-disable: should disable multiple components passed" {
@@ -92,7 +92,7 @@ local_setup () {
   local available enabled
 
   run _bash-it-enable plugins "all"
-  available=$(find $BASH_IT/components/plugins -name *.plugins.bash | wc -l | xargs)
+  available=$(find $BASH_IT/components/plugins/lib -name *.plugins.bash | wc -l | xargs)
   enabled=$(find $BASH_IT/components/enabled -name [0-9]*.plugins.bash | wc -l | xargs)
   assert_equal "$available" "$enabled"
 
@@ -109,10 +109,10 @@ local_setup () {
 
   local enabled
 
-  ln -s $BASH_IT/components/plugins/nvm.plugins.bash $BASH_IT/components/enabled/250___nvm.plugins.bash
+  ln -s $BASH_IT/components/plugins/lib/nvm.plugins.bash $BASH_IT/components/enabled/250___nvm.plugins.bash
   assert_file_exist "$BASH_IT/components/enabled/250___nvm.plugins.bash"
 
-  ln -s $BASH_IT/components/plugins/node.plugins.bash $BASH_IT/components/enabled/250___node.plugins.bash
+  ln -s $BASH_IT/components/plugins/lib/node.plugins.bash $BASH_IT/components/enabled/250___node.plugins.bash
   assert_file_exist "$BASH_IT/components/enabled/250___node.plugins.bash"
 
   enabled=$(find $BASH_IT/components/enabled -name *.plugins.bash | wc -l | xargs)

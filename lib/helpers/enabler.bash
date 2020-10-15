@@ -40,14 +40,14 @@ _bash-it-enable () {
 
     if [[ "$component" = "all" ]]; then
         local _component
-        for _component in "${BASH_IT}/components/$type/"*.bash
+        for _component in "${BASH_IT}/components/$type/lib/"*.bash
         do
           _bash-it-enable "$type" "$(basename "$_component" ."$type".bash)"
         done
     else
         local _component
 
-        _component=$(command ls "${BASH_IT}/components/$type/$component".*bash 2>/dev/null | head -1)
+        _component=$(command ls "${BASH_IT}/components/$type/lib/$component".*bash 2>/dev/null | head -1)
 
         [[ -z "$_component" ]] && printf "${CYAN}$component ${RED}%s ${GREEN}$type_singular${NC}\n" "does not appear to be an available" && return 1
         _component=$(basename "$_component")
@@ -64,10 +64,10 @@ _bash-it-enable () {
 
         # Load the priority from the file if it present there
         declare local_file_priority use_load_priority
-        local_file_priority=$(grep -E "^# BASH_IT_LOAD_PRIORITY:" "${BASH_IT}/components/$type/$_component" | awk -F': ' '{ print $2 }')
+        local_file_priority=$(grep -E "^# BASH_IT_LOAD_PRIORITY:" "${BASH_IT}/components/$type/lib/$_component" | awk -F': ' '{ print $2 }')
         use_load_priority=${local_file_priority:-$load_priority}
 
-        ln -s "${BASH_IT}"/components/"$type"/"$_component" "${BASH_IT}/components/enabled/${use_load_priority}${BASH_IT_LOAD_PRIORITY_SEPARATOR}${_component}"
+        ln -s "${BASH_IT}"/components/"$type"/lib/"$_component" "${BASH_IT}/components/enabled/${use_load_priority}${BASH_IT_LOAD_PRIORITY_SEPARATOR}${_component}"
     fi
 
     _bash-it-component-cache-clean "${type}"

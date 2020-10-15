@@ -46,7 +46,7 @@ local_setup () {
 
 @test "bash-it-helpers: help: _bash-it-help list aliases with ag aliases enabled" {
 
-  ln -s "$BASH_IT/components/aliases/ag.aliases.bash" "$BASH_IT/components/enabled/150___ag.aliases.bash"
+  ln -s "$BASH_IT/components/aliases/lib/ag.aliases.bash" "$BASH_IT/components/enabled/150___ag.aliases.bash"
   assert_link_exist "$BASH_IT/components/enabled/150___ag.aliases.bash"
 
   run __help-list-aliases "$BASH_IT/components/enabled/150___ag.aliases.bash"
@@ -55,7 +55,7 @@ local_setup () {
 
 @test "bash-it-helpers: help: _bash-it-help list aliases with todo.txt-cli aliases enabled" {
 
-  ln -s "$BASH_IT/components/aliases/todo.txt-cli.aliases.bash" "$BASH_IT/components/enabled/150___todo.txt-cli.aliases.bash"
+  ln -s "$BASH_IT/components/aliases/lib/todo.txt-cli.aliases.bash" "$BASH_IT/components/enabled/150___todo.txt-cli.aliases.bash"
   assert_link_exist "$BASH_IT/components/enabled/150___todo.txt-cli.aliases.bash"
 
   run __help-list-aliases "$BASH_IT/components/enabled/150___todo.txt-cli.aliases.bash"
@@ -64,7 +64,7 @@ local_setup () {
 
 @test "bash-it-helpers: help: _bash-it-help list aliases with docker-compose aliases enabled" {
 
-  ln -s "$BASH_IT/components/aliases/docker-compose.aliases.bash" "$BASH_IT/components/enabled/150___docker-compose.aliases.bash"
+  ln -s "$BASH_IT/components/aliases/lib/docker-compose.aliases.bash" "$BASH_IT/components/enabled/150___docker-compose.aliases.bash"
   assert_link_exist "$BASH_IT/components/enabled/150___docker-compose.aliases.bash"
 
   run __help-list-aliases "$BASH_IT/components/enabled/150___docker-compose.aliases.bash"
@@ -73,7 +73,7 @@ local_setup () {
 
 @test "bash-it-helpers: help: _bash-it-help list aliases with ag aliases enabled in global directory" {
 
-  ln -s "$BASH_IT/components/aliases/ag.aliases.bash" "$BASH_IT/components/enabled/150___ag.aliases.bash"
+  ln -s "$BASH_IT/components/aliases/lib/ag.aliases.bash" "$BASH_IT/components/enabled/150___ag.aliases.bash"
   assert_link_exist "$BASH_IT/components/enabled/150___ag.aliases.bash"
 
   run __help-list-aliases "$BASH_IT/components/enabled/150___ag.aliases.bash"
