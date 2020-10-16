@@ -16,7 +16,7 @@ for helper in "${BASH_IT}"/lib/helpers/*.bash; do source "$helper"; done
 #               user skip: Skipping upgrade
 _bash-it-update () {
 
-  about "Updates the bash-it installation by fetching latest code from the remote git"
+  about "updates the bash-it installation by fetching latest code from the remote git"
   group "bash-it:core"
 
   local old_pwd="${PWD}"
@@ -75,7 +75,7 @@ _bash-it-update () {
 #               last git commit link e.g., git@github.com:ahmadassaf/bash-it/commit/47d1e26
 #               latest remote e.g., Compare to latest: git@github.com:ahmadassaf/bash-it/compare/47d1e26...master
 _bash-it-version () {
-  about "Shows current bash-it version with the Current git SHA and commit hash"
+  about "shows current bash-it version with the Current git SHA and commit hash"
   group "bash-it:core"
 
   cd "${BASH_IT}" || return
@@ -101,7 +101,7 @@ _bash-it-version () {
 # @description  reloads the bash profile
 #               reloads the profile that corresponds to the correct OS type (.bashrc, .bash_profile)
 _bash-it-reload () {
-  about "Reloads the bash profile that corresponds to the correct OS type (.bashrc, .bash_profile)"
+  about "reloads the bash profile that corresponds to the correct OS type (.bashrc, .bash_profile)"
   group "bash-it:core"
 
   pushd "${BASH_IT}" &> /dev/null || return
@@ -143,7 +143,7 @@ _bash-it-help () {
 # @param $2     mode <enabled, all>: either show all available components or filter only for enabled ones
 # @return       table showing each component name, status (enabled/disabled) and description
 _bash-it-show () {
-  about "List available bash_it components or allow filtering for a specific type e.g., plugins, aliases, completions"
+  about "list available bash_it components or allow filtering for a specific type e.g., plugins, aliases, completions"
   group "bash-it:core"
 
   if [[ -n "$1" ]]; then

@@ -117,7 +117,7 @@ alias grep='grep $GREP_OPTIONS'
 
 # Load the theme
 if [[ -n $BASH_IT_THEME ]]; then
-  source "$BASH_IT/themes/$BASH_IT_THEME/$BASH_IT_THEME.theme.bash"
+  source "$BASH_IT/components/themes/$BASH_IT_THEME/$BASH_IT_THEME.theme.bash"
 fi
 
 _log_component "$BASH_IT_THEME" "theme"
