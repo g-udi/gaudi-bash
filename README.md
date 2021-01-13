@@ -1,6 +1,6 @@
 # gaudi-bash
 
-**gaudi-bash** is a fork from the infamous [gaudi-bash](https://github.com/gaudi-bash/gaudi-bash) with lots of opinionated changes in the code to suit my OCD-like nature. I am by no means a bash expert but I tried my best to conform to the best practices in [here](http://mywiki.wooledge.org/BashPitfalls).
+**gaudi-bash** is a fork from the infamous [bash-it](https://github.com/bash-it/bash-it) with lots of opinionated changes in the code to suit my OCD-like nature. I am by no means a bash expert but I tried my best to conform to the best practices in [here](http://mywiki.wooledge.org/BashPitfalls).
 
 **bash-it** itself is inspired by [oh-my-zsh](https://github.com/robbyrussell/oh-my-zsh) and includes autocompletion, themes, aliases, custom functions, and more. It provides a solid framework for using, developing and maintaining shell scripts and custom commands for your daily work.
 If you're using the _Bourne Again Shell_ (Bash) on a regular basis and have been looking for an easy way on how to keep all of these nice little scripts and aliases under control, then gaudi-bash is for you!
