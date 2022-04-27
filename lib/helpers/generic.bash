@@ -29,11 +29,11 @@ fi
 # - GNU sed (Linux) uses `-i`
 # - BSD sed (macOS) uses `-i ''`
 #
-# In order to use this in bash-it for inline replacements with `sed`, use the following syntax:
-# ❯ sed "${BASH_IT_SED_I_PARAMETERS[@]}" -e "..." file
-BASH_IT_SED_I_PARAMETERS=(-i)
+# In order to use this in gaudi-bash for inline replacements with `sed`, use the following syntax:
+# ❯ sed "${GAUDI_BASH_SED_I_PARAMETERS[@]}" -e "..." file
+GAUDI_BASH_SED_I_PARAMETERS=(-i)
 case "$(uname)" in
-  Darwin*) BASH_IT_SED_I_PARAMETERS=(-i "")
+  Darwin*) GAUDI_BASH_SED_I_PARAMETERS=(-i "")
 esac
 
 # Adding Support for other OSes

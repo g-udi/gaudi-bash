@@ -1,2 +1,2 @@
 # shellcheck disable=SC1090
-source "${BASH_IT}/bin/preexec/bash-preexec.sh"
+source "${GAUDI_BASH}/bin/preexec/bash-preexec.sh"

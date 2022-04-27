@@ -12,47 +12,47 @@ local_setup () {
   prepare
 }
 
-@test "bash-it helpers: cache: _bash-it-component-cache-add should fail if no component type was passed" {
+@test "gaudi-bash helpers: cache: _gaudi-bash-component-cache-add should fail if no component type was passed" {
 
-  run _bash-it-component-cache-add
+  run _gaudi-bash-component-cache-add
   assert_failure
 }
 
-@test "bash-it helpers: cache: _bash-it-component-cache-add should return a new cache file in /tmp directory for a singular component" {
+@test "gaudi-bash helpers: cache: _gaudi-bash-component-cache-add should return a new cache file in /tmp directory for a singular component" {
 
-  run _bash-it-component-cache-add alias
+  run _gaudi-bash-component-cache-add alias
   assert_success
-  assert_output "$HOME/.bash_it/tmp/cache/alias"
+  assert_output "$HOME/.gaudi_bash/tmp/cache/alias"
 }
 
-@test "bash-it helpers: cache: _bash-it-component-cache-add should return a new cache file in /tmp directory" {
+@test "gaudi-bash helpers: cache: _gaudi-bash-component-cache-add should return a new cache file in /tmp directory" {
 
-  run _bash-it-component-cache-add plugins
+  run _gaudi-bash-component-cache-add plugins
   assert_success
-  assert_output "$HOME/.bash_it/tmp/cache/plugins"
+  assert_output "$HOME/.gaudi_bash/tmp/cache/plugins"
 }
 
-@test "bash-it helpers: cache: _bash-it-component-cache-add should create a cache folder" {
+@test "gaudi-bash helpers: cache: _gaudi-bash-component-cache-add should create a cache folder" {
 
-  run _bash-it-component-cache-add plugins
+  run _gaudi-bash-component-cache-add plugins
   assert_success
-  assert_output "$HOME/.bash_it/tmp/cache/plugins"
-  assert_dir_exist "$HOME/.bash_it/tmp/cache"
+  assert_output "$HOME/.gaudi_bash/tmp/cache/plugins"
+  assert_dir_exist "$HOME/.gaudi_bash/tmp/cache"
 }
 
-@test "bash-it helpers: cache: _bash-it-component-cache-clean should clear the cache folder" {
+@test "gaudi-bash helpers: cache: _gaudi-bash-component-cache-clean should clear the cache folder" {
 
-  _plugins_cache=$(_bash-it-component-cache-add plugins)
-  _aliases_cache=$(_bash-it-component-cache-add aliases)
+  _plugins_cache=$(_gaudi-bash-component-cache-add plugins)
+  _aliases_cache=$(_gaudi-bash-component-cache-add aliases)
 
   touch "${_plugins_cache}"
   touch "${_aliases_cache}"
 
-  assert_file_exist "$HOME/.bash_it/tmp/cache/plugins"
-  assert_file_exist "$HOME/.bash_it/tmp/cache/aliases"
+  assert_file_exist "$HOME/.gaudi_bash/tmp/cache/plugins"
+  assert_file_exist "$HOME/.gaudi_bash/tmp/cache/aliases"
 
-  _bash-it-component-cache-clean
-  assert_dir_exist "$HOME/.bash_it/tmp/cache"
-  assert_file_not_exist "$HOME/.bash_it/tmp/cache/plugins"
-  assert_file_not_exist "$HOME/.bash_it/tmp/cache/aliases"
+  _gaudi-bash-component-cache-clean
+  assert_dir_exist "$HOME/.gaudi_bash/tmp/cache"
+  assert_file_not_exist "$HOME/.gaudi_bash/tmp/cache/plugins"
+  assert_file_not_exist "$HOME/.gaudi_bash/tmp/cache/aliases"
 }

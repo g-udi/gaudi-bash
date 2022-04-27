@@ -6,7 +6,7 @@ load ../../lib/composure
 
 cite about param example group
 
-load ../../lib/bash-it
+load ../../lib/gaudi-bash
 load ../../lib/helpers/cache
 load ../../lib/helpers/components
 load ../../lib/helpers/utils
@@ -16,80 +16,80 @@ local_setup () {
   prepare
 }
 
-@test "bash-it helpers: _bash-it-enable: should fail if no valid component type was passed" {
+@test "gaudi-bash helpers: _gaudi-bash-enable: should fail if no valid component type was passed" {
 
-  run _bash-it-enable
+  run _gaudi-bash-enable
   assert_failure
   assert_output "Please enter a valid component to enable"
 }
 
-@test "bash-it helpers: _bash-it-enable: should fail if no valid component was passed" {
+@test "gaudi-bash helpers: _gaudi-bash-enable: should fail if no valid component was passed" {
 
-  run _bash-it-enable plugin
+  run _gaudi-bash-enable plugin
   assert_failure
   assert_output --partial "Please enter a valid plugin(s) to enable"
 }
 
-@test "bash-it helpers: _bash-it-enable: should fail if component was not found" {
+@test "gaudi-bash helpers: _gaudi-bash-enable: should fail if component was not found" {
 
-  run _bash-it-enable plugin INVALID
+  run _gaudi-bash-enable plugin INVALID
   assert_failure
   assert_output --partial "does not appear to be an available"
 }
 
-@test "bash-it helpers: _bash-it-enable: should successfully enable a component" {
+@test "gaudi-bash helpers: _gaudi-bash-enable: should successfully enable a component" {
 
-  run _bash-it-enable plugin base
+  run _gaudi-bash-enable plugin base
   assert_success
   assert_output --partial "enabled with priority"
-  assert_file_exist "$BASH_IT/components/enabled/250___base.plugins.bash"
+  assert_file_exist "$GAUDI_BASH/components/enabled/250___base.plugins.bash"
 }
 
-@test "bash-it helpers: _bash-it-enable: should display appropriate message when trying to enable an already enabled component" {
+@test "gaudi-bash helpers: _gaudi-bash-enable: should display appropriate message when trying to enable an already enabled component" {
 
-  run _bash-it-enable plugin base
+  run _gaudi-bash-enable plugin base
   assert_success
-  run _bash-it-enable plugin base
+  run _gaudi-bash-enable plugin base
   assert_output --partial "is already enabled"
 }
 
-@test "bash-it helpers: _bash-it-enable: should respect custom priority defined in component" {
+@test "gaudi-bash helpers: _gaudi-bash-enable: should respect custom priority defined in component" {
 
-  run _bash-it-enable plugin alias-completion
+  run _gaudi-bash-enable plugin alias-completion
   assert_success
   assert_output --partial "enabled with priority"
-  assert_file_exist "$BASH_IT/components/enabled/365___alias-completion.plugins.bash"
+  assert_file_exist "$GAUDI_BASH/components/enabled/365___alias-completion.plugins.bash"
 }
 
-@test "bash-it helpers: _bash-it-enable: should enable multiple components passed" {
+@test "gaudi-bash helpers: _gaudi-bash-enable: should enable multiple components passed" {
 
-  run bash-it enable plugin "node" "nvm"
+  run gaudi-bash enable plugin "node" "nvm"
   assert_line --index 0 --partial "enabled with priority"
   assert_line --index 1 --partial "enabled with priority"
-  assert_link_exist "$BASH_IT/components/enabled/250___node.plugins.bash"
-  assert_link_exist "$BASH_IT/components/enabled/225___nvm.plugins.bash"
+  assert_link_exist "$GAUDI_BASH/components/enabled/250___node.plugins.bash"
+  assert_link_exist "$GAUDI_BASH/components/enabled/225___nvm.plugins.bash"
 }
 
-@test "bash-it helpers: _bash-it-enable: should enable all plugins" {
+@test "gaudi-bash helpers: _gaudi-bash-enable: should enable all plugins" {
 
   local available enabled
 
-  run _bash-it-enable plugins "all"
-  available=$(find $BASH_IT/components/plugins/lib -name *.plugins.bash | wc -l | xargs)
-  enabled=$(find $BASH_IT/components/enabled -name [0-9]*.plugins.bash | wc -l | xargs)
+  run _gaudi-bash-enable plugins "all"
+  available=$(find $GAUDI_BASH/components/plugins/lib -name *.plugins.bash | wc -l | xargs)
+  enabled=$(find $GAUDI_BASH/components/enabled -name [0-9]*.plugins.bash | wc -l | xargs)
   assert_equal "$available" "$enabled"
 }
 
-@test "bash-it helpers: _bash-it-enable: should handle properly enabling a set of mixed existing and non-existing components" {
+@test "gaudi-bash helpers: _gaudi-bash-enable: should handle properly enabling a set of mixed existing and non-existing components" {
 
-  run bash-it enable plugin "node"
+  run gaudi-bash enable plugin "node"
   assert_line --index 0 --partial "enabled with priority"
 
-  run bash-it enable plugin node INVALID nvm
+  run gaudi-bash enable plugin node INVALID nvm
   assert_line --index 0 --partial "is already enabled"
   assert_line --index 1 --partial "does not appear to be an available"
   assert_line --index 2 --partial "enabled with priority"
 
-  assert_link_exist "$BASH_IT/components/enabled/250___node.plugins.bash"
-  assert_link_exist "$BASH_IT/components/enabled/225___nvm.plugins.bash"
+  assert_link_exist "$GAUDI_BASH/components/enabled/250___node.plugins.bash"
+  assert_link_exist "$GAUDI_BASH/components/enabled/225___nvm.plugins.bash"
 }

@@ -1,36 +1,36 @@
 #!/usr/bin/env bash
 
-BASH_IT_LOAD_PRIORITY_DEFAULT_ALIASES=${BASH_IT_LOAD_PRIORITY_DEFAULT_ALIASES:-150}
-BASH_IT_LOAD_PRIORITY_DEFAULT_PLUGINS=${BASH_IT_LOAD_PRIORITY_DEFAULT_PLUGINS:-250}
-BASH_IT_LOAD_PRIORITY_DEFAULT_COMPLETIONS=${BASH_IT_LOAD_PRIORITY_DEFAULT_COMPLETIONS:-350}
+GAUDI_BASH_LOAD_PRIORITY_DEFAULT_ALIASES=${GAUDI_BASH_LOAD_PRIORITY_DEFAULT_ALIASES:-150}
+GAUDI_BASH_LOAD_PRIORITY_DEFAULT_PLUGINS=${GAUDI_BASH_LOAD_PRIORITY_DEFAULT_PLUGINS:-250}
+GAUDI_BASH_LOAD_PRIORITY_DEFAULT_COMPLETIONS=${GAUDI_BASH_LOAD_PRIORITY_DEFAULT_COMPLETIONS:-350}
 
-# @function     _bash-it-enable
+# @function     _gaudi-bash-enable
 # @description  enables a component
-# @param $1     component type: bash-it component of type aliases, plugins, completions
-# @param $2     component name: bash-it component name .e.g., base, git
+# @param $1     component type: gaudi-bash component of type aliases, plugins, completions
+# @param $2     component name: gaudi-bash component name .e.g., base, git
 # @return       message to indicate the outcome
-_bash-it-enable () {
+_gaudi-bash-enable () {
 
-    about "enable a bash-it component (plugin, component, alias)"
-    group "bash-it:core"
+    about "enable a gaudi-bash component (plugin, component, alias)"
+    group "gaudi-bash:core"
 
     ! __check-function-parameters "$1" && printf "%s\n" "Please enter a valid component to enable" && return 1
 
     local type component load_priority
 
     # Make sure the component is pluralized in case this function is called directly e.g., for unit tests
-    type=$(_bash-it-pluralize-component "$1")
-    type_singular=$(_bash-it-singularize-component "$1")
-    _load_priority="BASH_IT_LOAD_PRIORITY_DEFAULT_${type^^}"
+    type=$(_gaudi-bash-pluralize-component "$1")
+    type_singular=$(_gaudi-bash-singularize-component "$1")
+    _load_priority="GAUDI_BASH_LOAD_PRIORITY_DEFAULT_${type^^}"
     component="$2"
     load_priority="${!_load_priority}"
 
     # Capture if the user prompted for a disable all and iterate on all components
     if [[ "$type" = "alls" ]] && [[ -z "$component"  ]]; then
-      _read_input "This will enable all bash-it components (aliases, plugins and completions). Are you sure you want to proceed? [yY/nN]"
+      _read_input "This will enable all gaudi-bash components (aliases, plugins and completions). Are you sure you want to proceed? [yY/nN]"
       if [[ $REPLY =~ ^[yY]$ ]]; then
         for file_type in "aliases" "plugins" "completions"; do
-          _bash-it-enable "$file_type" "all"
+          _gaudi-bash-enable "$file_type" "all"
         done
       fi
       return
@@ -40,41 +40,41 @@ _bash-it-enable () {
 
     if [[ "$component" = "all" ]]; then
         local _component
-        for _component in "${BASH_IT}/components/$type/lib/"*.bash
+        for _component in "${GAUDI_BASH}/components/$type/lib/"*.bash
         do
-          _bash-it-enable "$type" "$(basename "$_component" ."$type".bash)"
+          _gaudi-bash-enable "$type" "$(basename "$_component" ."$type".bash)"
         done
     else
         local _component
 
-        _component=$(command ls "${BASH_IT}/components/$type/lib/$component".*bash 2>/dev/null | head -1)
+        _component=$(command ls "${GAUDI_BASH}/components/$type/lib/$component".*bash 2>/dev/null | head -1)
 
         [[ -z "$_component" ]] && printf "${CYAN}$component ${RED}%s ${GREEN}$type_singular${NC}\n" "does not appear to be an available" && return 1
         _component=$(basename "$_component")
 
         local enabled_component
 
-        enabled_component=$(command compgen -G "${BASH_IT}/components/enabled/[0-9][0-9][0-9]$BASH_IT_LOAD_PRIORITY_SEPARATOR$_component" 2>/dev/null | head -1)
+        enabled_component=$(command compgen -G "${GAUDI_BASH}/components/enabled/[0-9][0-9][0-9]$GAUDI_BASH_LOAD_PRIORITY_SEPARATOR$_component" 2>/dev/null | head -1)
         if [[ -n "$enabled_component" ]] ; then
           printf "${GREEN}$type_singular ${CYAN}$component${NC} %s\n" "is already enabled"
           return
         fi
 
-        mkdir -p "${BASH_IT}/components/enabled"
+        mkdir -p "${GAUDI_BASH}/components/enabled"
 
         # Load the priority from the file if it present there
         declare local_file_priority use_load_priority
-        local_file_priority=$(grep -E "^# BASH_IT_LOAD_PRIORITY:" "${BASH_IT}/components/$type/lib/$_component" | awk -F': ' '{ print $2 }')
+        local_file_priority=$(grep -E "^# GAUDI_BASH_LOAD_PRIORITY:" "${GAUDI_BASH}/components/$type/lib/$_component" | awk -F': ' '{ print $2 }')
         use_load_priority=${local_file_priority:-$load_priority}
 
-        ln -s "${BASH_IT}"/components/"$type"/lib/"$_component" "${BASH_IT}/components/enabled/${use_load_priority}${BASH_IT_LOAD_PRIORITY_SEPARATOR}${_component}"
+        ln -s "${GAUDI_BASH}"/components/"$type"/lib/"$_component" "${GAUDI_BASH}/components/enabled/${use_load_priority}${GAUDI_BASH_LOAD_PRIORITY_SEPARATOR}${_component}"
     fi
 
-    _bash-it-component-cache-clean "${type}"
+    _gaudi-bash-component-cache-clean "${type}"
 
     printf "${GREEN}%s $type_singular: ${CYAN}$component${NC} %s ${RED}$use_load_priority${NC}\n" "◉" "enabled with priority"
 
-    if [[ -n "$BASH_IT_AUTOMATIC_RELOAD_AFTER_CONFIG_CHANGE" ]]; then
-      _bash-it-reload
+    if [[ -n "$GAUDI_BASH_AUTOMATIC_RELOAD_AFTER_CONFIG_CHANGE" ]]; then
+      _gaudi-bash-reload
     fi
 }

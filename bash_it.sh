@@ -2,38 +2,38 @@
 # shellcheck disable=SC1090,SC1091,SC2034
 
 # Initialize Bash It
-BASH_IT_LOG_PREFIX="CORE"
+GAUDI_BASH_LOG_PREFIX="CORE"
 
-# Only set $BASH_IT if it's not already set
-if [[ -z "$BASH_IT" ]];
+# Only set $GAUDI_BASH if it's not already set
+if [[ -z "$GAUDI_BASH" ]];
 then
   # Setting $BASH to maintain backwards compatibility
-  export BASH_IT=$BASH
+  export GAUDI_BASH=$BASH
   BASH="$(bash -c 'echo $BASH')"
   export BASH
 fi
 
 # Load composure first, so we support function metadata and then logging
-source "${BASH_IT}/lib/composure.bash"
-source "${BASH_IT}/lib/log.bash"
+source "${GAUDI_BASH}/lib/composure.bash"
+source "${GAUDI_BASH}/lib/log.bash"
 
 # Load all the libraries
-for lib in "${BASH_IT}"/lib/*.bash; do
-  [[ "$lib" != "${BASH_IT}/lib/appearance.bash" ]] && _log_component "$lib" "library" && source "$lib"
+for lib in "${GAUDI_BASH}"/lib/*.bash; do
+  [[ "$lib" != "${GAUDI_BASH}/lib/appearance.bash" ]] && _log_component "$lib" "library" && source "$lib"
 done
 
 # Load the loader that will load all enabled components
-source "${BASH_IT}/scripts/loader.bash"
+source "${GAUDI_BASH}/scripts/loader.bash"
 
 # Load custom aliases, completions, plugins
-CUSTOM_LIB="${BASH_IT_CUSTOM:=${BASH_IT}/components/custom}/*.bash ${BASH_IT_CUSTOM:=${BASH_IT}/components/custom}/**/*.bash"
+CUSTOM_LIB="${GAUDI_BASH_CUSTOM:=${GAUDI_BASH}/components/custom}/*.bash ${GAUDI_BASH_CUSTOM:=${GAUDI_BASH}/components/custom}/**/*.bash"
 for custom in ${CUSTOM_LIB}; do [[ -e "${custom}" ]] && _log_component "$custom" "custom" && source "$custom"; done
 
 # Load the bash theme
-source "${BASH_IT}/lib/appearance.bash"
+source "${GAUDI_BASH}/lib/appearance.bash"
 
-# handle the case where BASH_IT_RELOAD_LEGACY is set
-if ! command -v reload &>/dev/null && [[ -n "$BASH_IT_RELOAD_LEGACY" ]]; then
+# handle the case where GAUDI_BASH_RELOAD_LEGACY is set
+if ! command -v reload &>/dev/null && [[ -n "$GAUDI_BASH_RELOAD_LEGACY" ]]; then
   case $OSTYPE in
     darwin*)
       alias reload="source \$HOME/.bash_profile"
@@ -44,7 +44,7 @@ if ! command -v reload &>/dev/null && [[ -n "$BASH_IT_RELOAD_LEGACY" ]]; then
   esac
 fi
 
-# Disable trap DEBUG on subshells [ref:https://github.com/Bash-it/bash-it/pull/1040]
+# Disable trap DEBUG on subshells [ref:https://github.com/Bash-it/gaudi-bash/pull/1040]
 set +T
 
-unset _bash_it_config_file
+unset _gaudi_bash_config_file

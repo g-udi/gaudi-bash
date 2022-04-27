@@ -18,8 +18,8 @@ case $OSTYPE in
     ;;
 esac
 
-# This is a special "print" function that prints the bash-it ASCII art
-__print-bash-it () {
+# This is a special "print" function that prints the gaudi-bash ASCII art
+__print-gaudi-bash () {
 
 echo -e "
 ██████╗  █████╗ ███████╗██╗  ██╗      ██╗████████╗
@@ -29,12 +29,12 @@ echo -e "
 ██████╔╝██║  ██║███████║██║  ██║      ██║   ██║
 ╚═════╝ ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝      ╚═╝   ╚═╝
 
-${CYAN}Installing bash-it ..${NC}"
+${CYAN}Installing gaudi-bash ..${NC}"
 }
 
 # Show how to use this installer
 show_usage () {
-  __print-bash-it
+  __print-gaudi-bash
   echo -e "
 Usage:\n${GREEN}$0 [arguments] \n${NC}
 Arguments:
@@ -71,9 +71,9 @@ if [[ -n $silent ]] ; then
     exec >/dev/null 2>&1
 fi
 
-BASH_IT="$(cd "$(dirname "$0")" && pwd)"
+GAUDI_BASH="$(cd "$(dirname "$0")" && pwd)"
 
-! [[ $silent ]] && __print-bash-it && bash --version
+! [[ $silent ]] && __print-gaudi-bash && bash --version
 
 if ! [[ $no_modify_config ]]; then
 
@@ -92,47 +92,47 @@ if ! [[ $no_modify_config ]]; then
 
   fi
 
-  ! [[ $silent ]] && _read_input "Would you like to keep your $CONFIG_FILE and append bash-it templates at the end? [Yy/Nn]"
+  ! [[ $silent ]] && _read_input "Would you like to keep your $CONFIG_FILE and append gaudi-bash templates at the end? [Yy/Nn]"
 
   if [[ $REPLY =~ ^[yY]$ ]]; then
-    (sed "s|{{BASH_IT}}|$BASH_IT|" "$BASH_IT/template/bash_profile.template.bash" | tail -n +2) >> "$HOME/$CONFIG_FILE"
-    echo -e "${GREEN}bash-it template has been added to your $CONFIG_FILE${NC}"
+    (sed "s|{{GAUDI_BASH}}|$GAUDI_BASH|" "$GAUDI_BASH/template/bash_profile.template.bash" | tail -n +2) >> "$HOME/$CONFIG_FILE"
+    echo -e "${GREEN}gaudi-bash template has been added to your $CONFIG_FILE${NC}"
   elif [[ $REPLY =~ ^[nN]$ ]] || [[ $silent ]]; then
-    sed "s|{{BASH_IT}}|$BASH_IT|" "$BASH_IT/template/bash_profile.template.bash" > "$HOME/$CONFIG_FILE"
-    echo -e "${YELLOW}Copied bash-it template into ~/$CONFIG_FILE, edit this file to customize bash-it${NC}"
+    sed "s|{{GAUDI_BASH}}|$GAUDI_BASH|" "$GAUDI_BASH/template/bash_profile.template.bash" > "$HOME/$CONFIG_FILE"
+    echo -e "${YELLOW}Copied gaudi-bash template into ~/$CONFIG_FILE, edit this file to customize gaudi-bash${NC}"
   fi
 fi
 
 # Load dependencies for enabling components
-source "$BASH_IT/lib/composure.bash"
+source "$GAUDI_BASH/lib/composure.bash"
 # Allow access for composure specific syntax to other functions
 cite about param example group
 
-source "$BASH_IT/lib/bash-it.bash"
+source "$GAUDI_BASH/lib/gaudi-bash.bash"
 
 # Check if the folder is a valid git and pull all submodules
-[[ -d "$BASH_IT/.git" ]] && git submodule update --init --recursive
+[[ -d "$GAUDI_BASH/.git" ]] && git submodule update --init --recursive
 
 echo -e  "\n${MAGENTA}Enabling reasonable defaults${NC}"
 
-_bash-it-enable completion bash-it
-_bash-it-enable completion system
-_bash-it-enable completion git
-_bash-it-enable plugin base
-_bash-it-enable plugin alias-completion
-_bash-it-enable alias general
-_bash-it-enable alias gls
+_gaudi-bash-enable completion gaudi-bash
+_gaudi-bash-enable completion system
+_gaudi-bash-enable completion git
+_gaudi-bash-enable plugin base
+_gaudi-bash-enable plugin alias-completion
+_gaudi-bash-enable alias general
+_gaudi-bash-enable alias gls
 
 
 echo -e "
-${GREEN}Installation finished successfully! Enjoy bash-it!${NC}
+${GREEN}Installation finished successfully! Enjoy gaudi-bash!${NC}
 ${MAGENTA}To start using it, open a new tab or 'source ${HOME}/$CONFIG_FILE'${NC}
 
 To show the available aliases/completions/plugins, type one of the following:
-  bash-it show
-  bash-it show aliases
-  bash-it show completions
-  bash-it show plugins
+  gaudi-bash show
+  gaudi-bash show aliases
+  gaudi-bash show completions
+  gaudi-bash show plugins
 
 To avoid issues and to keep your shell lean, please enable only features you really want to use.
 Enabling everything can lead to issues

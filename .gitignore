@@ -8,7 +8,7 @@
 # test libraries
 bats
 
-# bash-it enabled items and custom and temporary files
+# gaudi-bash enabled items and custom and temporary files
 */enabled/*
 enabled/*
 custom/*

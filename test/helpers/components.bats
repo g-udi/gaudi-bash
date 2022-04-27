@@ -6,18 +6,18 @@ load ../../lib/composure
 
 cite about param example group
 
-load ../../lib/bash-it
+load ../../lib/gaudi-bash
 load ../../lib/helpers/components
 load ../../lib/helpers/cache
 
 local_setup () {
   prepare
 
-  cd "$BASH_IT"
+  cd "$GAUDI_BASH"
   ./setup.sh --silent
 }
 
-@test "bash-it helpers: components: components: __check-function-parameters: should success when passing a valid component" {
+@test "gaudi-bash helpers: components: components: __check-function-parameters: should success when passing a valid component" {
 
   run __check-function-parameters "plugin"
   assert_success
@@ -29,7 +29,7 @@ local_setup () {
   assert_success
 }
 
-@test "bash-it helpers: components: components: __check-function-parameters: should fail when passing an invalid component" {
+@test "gaudi-bash helpers: components: components: __check-function-parameters: should fail when passing an invalid component" {
 
   run __check-function-parameters "pl"
   assert_failure
@@ -38,189 +38,189 @@ local_setup () {
   assert_failure
 }
 
-@test "bash-it helpers: components: components: _bash-it-pluralize-component: should pluralize the argument" {
+@test "gaudi-bash helpers: components: components: _gaudi-bash-pluralize-component: should pluralize the argument" {
 
-  run  _bash-it-pluralize-component "alias"
+  run  _gaudi-bash-pluralize-component "alias"
   assert_success
   assert_output "aliases"
 
-  run  _bash-it-pluralize-component "aliases"
+  run  _gaudi-bash-pluralize-component "aliases"
   assert_success
   assert_output "aliases"
 
-  run  _bash-it-pluralize-component "plugin"
+  run  _gaudi-bash-pluralize-component "plugin"
   assert_success
   assert_output "plugins"
 
-  run  _bash-it-pluralize-component "plugins"
+  run  _gaudi-bash-pluralize-component "plugins"
   assert_success
   assert_output "plugins"
 
-  run  _bash-it-pluralize-component "completion"
+  run  _gaudi-bash-pluralize-component "completion"
   assert_success
   assert_output "completions"
 }
 
-@test "bash-it helpers: components: components: _bash-it-singularize-component: should singularize the argument" {
+@test "gaudi-bash helpers: components: components: _gaudi-bash-singularize-component: should singularize the argument" {
 
-  run  _bash-it-singularize-component "aliases"
+  run  _gaudi-bash-singularize-component "aliases"
   assert_success
   assert_output "alias"
 
-  run  _bash-it-singularize-component "alias"
+  run  _gaudi-bash-singularize-component "alias"
   assert_success
   assert_output "alias"
 
-  run  _bash-it-singularize-component "plugins"
+  run  _gaudi-bash-singularize-component "plugins"
   assert_success
   assert_output "plugin"
 
-  run  _bash-it-singularize-component "completions"
+  run  _gaudi-bash-singularize-component "completions"
   assert_success
   assert_output "completion"
 }
 
-@test "bash-it helpers: components: _bash-it-component-help: should fail if no component was passed" {
+@test "gaudi-bash helpers: components: _gaudi-bash-component-help: should fail if no component was passed" {
 
-  run _bash-it-component-help
+  run _gaudi-bash-component-help
   assert_failure
 }
 
-@test "bash-it helpers: components: _bash-it-component-help: should fail if no valid component was passed" {
+@test "gaudi-bash helpers: components: _gaudi-bash-component-help: should fail if no valid component was passed" {
 
-  run _bash-it-component-help INVALID
+  run _gaudi-bash-component-help INVALID
   assert_failure
 }
 
-@test "bash-it helpers: components: _bash-it-component-help: should create cache file for component on the first run" {
+@test "gaudi-bash helpers: components: _gaudi-bash-component-help: should create cache file for component on the first run" {
 
-  _bash-it-component-cache-clean
-  assert_file_not_exist "$HOME/.bash_it/tmp/cache/plugins"
+  _gaudi-bash-component-cache-clean
+  assert_file_not_exist "$HOME/.gaudi_bash/tmp/cache/plugins"
 
-  run _bash-it-component-help plugin
-  assert_file_exist "$HOME/.bash_it/tmp/cache/plugins"
+  run _gaudi-bash-component-help plugin
+  assert_file_exist "$HOME/.gaudi_bash/tmp/cache/plugins"
 }
 
-@test "bash-it helpers: components: _bash-it-component-help: should display plugins help" {
+@test "gaudi-bash helpers: components: _gaudi-bash-component-help: should display plugins help" {
 
-  run _bash-it-component-help plugin
+  run _gaudi-bash-component-help plugin
   assert_success
   assert_output --partial "alias-completion"
   assert_output --partial "git helper function"
   assert_output --partial "autojump"
   refute_output --partial "FAIL"
 
-  run _bash-it-component-help plugins
+  run _gaudi-bash-component-help plugins
   assert_success
   assert_output --partial "alias-completion"
 }
 
-@test "bash-it helpers: components: _bash-it-component-help: should display a plugin help passed as the second param" {
+@test "gaudi-bash helpers: components: _gaudi-bash-component-help: should display a plugin help passed as the second param" {
 
-  run _bash-it-component-help plugin base
+  run _gaudi-bash-component-help plugin base
   assert_success
   assert_line --partial "base"
   assert_output --partial "miscellaneous tools"
 }
 
-@test "bash-it helpers: components: _bash-it-component-help: should fail if the plugin passed as the second param doesn't exist" {
+@test "gaudi-bash helpers: components: _gaudi-bash-component-help: should fail if the plugin passed as the second param doesn't exist" {
 
-  run _bash-it-component-help plugin FAIL
+  run _gaudi-bash-component-help plugin FAIL
   assert_failure
 }
 
-@test "bash-it helpers: components: _bash-it-component-help: should display aliases help" {
+@test "gaudi-bash helpers: components: _gaudi-bash-component-help: should display aliases help" {
 
-  run _bash-it-component-help alias osx
+  run _gaudi-bash-component-help alias osx
   assert_success
   assert_output --partial "osx"
   assert_output --partial "osx-specific aliases"
 }
 
-@test "bash-it helpers: components: _bash-it-component-help: should display an alias help passed as the second param" {
+@test "gaudi-bash helpers: components: _gaudi-bash-component-help: should display an alias help passed as the second param" {
 
-  run _bash-it-component-help plugin base
+  run _gaudi-bash-component-help plugin base
   assert_success
   assert_line --partial "base"
   assert_output --partial "miscellaneous tools"
 }
 
-@test "bash-it helpers: components: _bash-it-component-help: should fail if the alias passed as the second param doesn't exist" {
+@test "gaudi-bash helpers: components: _gaudi-bash-component-help: should fail if the alias passed as the second param doesn't exist" {
 
-  run _bash-it-component-help aliases FAIL
+  run _gaudi-bash-component-help aliases FAIL
   assert_failure
 }
 
-@test "bash-it helpers: components: _bash-it-component-help: should display completions help" {
+@test "gaudi-bash helpers: components: _gaudi-bash-component-help: should display completions help" {
 
-  run _bash-it-component-help completions
+  run _gaudi-bash-component-help completions
   assert_success
-  assert_output --partial "bash-it"
+  assert_output --partial "gaudi-bash"
   assert_output --partial "git"
   assert_output --partial "install and run python applications in isolated environments"
   refute_output --partial "FAIL"
 
-  run _bash-it-component-help aliases
+  run _gaudi-bash-component-help aliases
   assert_success
-  assert_output --partial "bash-it"
+  assert_output --partial "gaudi-bash"
 }
 
-@test "bash-it helpers: components: _bash-it-component-help: should display a completion help passed as the second param" {
+@test "gaudi-bash helpers: components: _gaudi-bash-component-help: should display a completion help passed as the second param" {
 
-  run _bash-it-component-help completion pipx
+  run _gaudi-bash-component-help completion pipx
   assert_success
   assert_output --partial "pipx"
   assert_output --partial "install and run python applications in isolated environments"
 }
 
-@test "bash-it helpers: components: _bash-it-component-help: should fail if the completion passed as the second param doesn't exist" {
+@test "gaudi-bash helpers: components: _gaudi-bash-component-help: should fail if the completion passed as the second param doesn't exist" {
 
-  run _bash-it-component-help completions FAIL
+  run _gaudi-bash-component-help completions FAIL
   assert_failure
 }
 
-@test "bash-it helpers: components: _bash-it-component-list: should fail if the no component was passed" {
+@test "gaudi-bash helpers: components: _gaudi-bash-component-list: should fail if the no component was passed" {
 
-  run _bash-it-component-list
+  run _gaudi-bash-component-list
   assert_failure
 }
 
-@test "bash-it helpers: components: _bash-it-component-list: should fail if the an invalid component was passed" {
+@test "gaudi-bash helpers: components: _gaudi-bash-component-list: should fail if the an invalid component was passed" {
 
-  run _bash-it-component-list INVALID
+  run _gaudi-bash-component-list INVALID
   assert_failure
 }
 
-@test "bash-it helpers: components: _bash-it-component-list: should show a list of components (as an array)" {
+@test "gaudi-bash helpers: components: _gaudi-bash-component-list: should show a list of components (as an array)" {
 
-  run _bash-it-component-list plugins
+  run _gaudi-bash-component-list plugins
   assert_success
   IFS=', ' read -r -a array <<< "$output"
   run echo "${array[0]-not array}"
   assert_output "alias-completion"
 }
 
-@test "bash-it helpers: components: _bash-it-component-list-matching: should fail if the no component was passed" {
+@test "gaudi-bash helpers: components: _gaudi-bash-component-list-matching: should fail if the no component was passed" {
 
-  run _bash-it-component-list-matching
+  run _gaudi-bash-component-list-matching
   assert_failure
 }
 
-@test "bash-it helpers: components: _bash-it-component-list-matching: should fail if the an invalid component was passed" {
+@test "gaudi-bash helpers: components: _gaudi-bash-component-list-matching: should fail if the an invalid component was passed" {
 
-  run _bash-it-component-list-matching INVALID
+  run _gaudi-bash-component-list-matching INVALID
   assert_failure
 }
 
-@test "bash-it helpers: components: _bash-it-component-list-matching: should fail if no valid match was found" {
+@test "gaudi-bash helpers: components: _gaudi-bash-component-list-matching: should fail if no valid match was found" {
 
-  run _bash-it-component-list-matching plugin NO_MATCH
+  run _gaudi-bash-component-list-matching plugin NO_MATCH
   assert_failure
 }
 
-@test "bash-it helpers: components: _bash-it-component-list-matching: should show a list of matched components (as an array)" {
+@test "gaudi-bash helpers: components: _gaudi-bash-component-list-matching: should show a list of matched components (as an array)" {
 
-  run _bash-it-component-list-matching plugins base
+  run _gaudi-bash-component-list-matching plugins base
   assert_success
   IFS=', ' read -r -a array <<< "$output"
   run echo "${array[0]-not array}"
@@ -229,28 +229,28 @@ local_setup () {
   run echo "${#array[@]}"
   assert_output 1
 
-  run _bash-it-component-list-matching plugins node
+  run _gaudi-bash-component-list-matching plugins node
   assert_success
   IFS=', ' read -r -a array <<< "$output"
   run echo "${array[0]-not array}"
   assert_output "node"
 }
 
-@test "bash-it helpers: components: _bash-it-component-list-enabled: should fail if the no component was passed" {
+@test "gaudi-bash helpers: components: _gaudi-bash-component-list-enabled: should fail if the no component was passed" {
 
-  run _bash-it-component-list-enabled
+  run _gaudi-bash-component-list-enabled
   assert_failure
 }
 
-@test "bash-it helpers: components: _bash-it-component-list-enabled: should fail if the no valid component was passed" {
+@test "gaudi-bash helpers: components: _gaudi-bash-component-list-enabled: should fail if the no valid component was passed" {
 
-  run _bash-it-component-list-enabled INVALID
+  run _gaudi-bash-component-list-enabled INVALID
   assert_failure
 }
 
-@test "bash-it helpers: components: _bash-it-component-list-enabled: should return a list of enabled components" {
+@test "gaudi-bash helpers: components: _gaudi-bash-component-list-enabled: should return a list of enabled components" {
 
-  run _bash-it-component-list-enabled plugins
+  run _gaudi-bash-component-list-enabled plugins
   assert_success
   IFS=', ' read -r -a array <<< "$output"
 
@@ -261,20 +261,20 @@ local_setup () {
   assert_output "base"
 }
 
-@test "bash-it helpers: components: _bash-it-component-list-disabled: should fail if the no component was passed" {
+@test "gaudi-bash helpers: components: _gaudi-bash-component-list-disabled: should fail if the no component was passed" {
 
-  run _bash-it-component-list-disabled
+  run _gaudi-bash-component-list-disabled
   assert_failure
 }
 
-@test "bash-it helpers: components: _bash-it-component-list-disabled: should fail if the no valid component was passed" {
-  run _bash-it-component-list-disabled INVALID
+@test "gaudi-bash helpers: components: _gaudi-bash-component-list-disabled: should fail if the no valid component was passed" {
+  run _gaudi-bash-component-list-disabled INVALID
   assert_failure
 }
 
-@test "bash-it helpers: components: _bash-it-component-list-disabled: should return a list of disabled components" {
+@test "gaudi-bash helpers: components: _gaudi-bash-component-list-disabled: should return a list of disabled components" {
 
-  run _bash-it-component-list-disabled plugins
+  run _gaudi-bash-component-list-disabled plugins
   assert_success
   IFS=', ' read -r -a array <<< "$output"
 
@@ -285,74 +285,74 @@ local_setup () {
   assert_output "autojump"
 }
 
-@test "bash-it helpers: components: _bash-it-component-item-is-enabled: should fail if the no component was passed" {
+@test "gaudi-bash helpers: components: _gaudi-bash-component-item-is-enabled: should fail if the no component was passed" {
 
-  run _bash-it-component-item-is-enabled
+  run _gaudi-bash-component-item-is-enabled
   assert_failure
 }
 
-@test "bash-it helpers: components: _bash-it-component-item-is-enabled: should fail if the no valid component was passed" {
+@test "gaudi-bash helpers: components: _gaudi-bash-component-item-is-enabled: should fail if the no valid component was passed" {
 
-  run _bash-it-component-item-is-enabled INVALID
+  run _gaudi-bash-component-item-is-enabled INVALID
   assert_failure
 }
 
-@test "bash-it helpers: components: _bash-it-component-item-is-enabled: should fail if the item passed is not enabled" {
+@test "gaudi-bash helpers: components: _gaudi-bash-component-item-is-enabled: should fail if the item passed is not enabled" {
 
-  run _bash-it-component-item-is-enabled plugin git
+  run _gaudi-bash-component-item-is-enabled plugin git
   assert_failure
 }
 
-@test "bash-it helpers: components: _bash-it-component-item-is-enabled: should succeed if the item passed is enabled" {
+@test "gaudi-bash helpers: components: _gaudi-bash-component-item-is-enabled: should succeed if the item passed is enabled" {
 
-  run _bash-it-component-item-is-enabled plugin base
+  run _gaudi-bash-component-item-is-enabled plugin base
   assert_success
 }
 
-@test "bash-it helpers: components: _bash-it-component-item-is-enabled: should check enabled component" {
+@test "gaudi-bash helpers: components: _gaudi-bash-component-item-is-enabled: should check enabled component" {
 
-  run _bash-it-component-item-is-enabled plugin git
+  run _gaudi-bash-component-item-is-enabled plugin git
   assert_failure
 
-  run _bash-it-enable plugin git
+  run _gaudi-bash-enable plugin git
   assert_success
 
-  run _bash-it-component-item-is-enabled plugin git
+  run _gaudi-bash-component-item-is-enabled plugin git
   assert_success
 }
 
-@test "bash-it helpers: components: _bash-it-component-item-is-disabled: should fail if the no component was passed" {
+@test "gaudi-bash helpers: components: _gaudi-bash-component-item-is-disabled: should fail if the no component was passed" {
 
-  run _bash-it-component-item-is-disabled
-  assert_failure
-}
-
-@test "bash-it helpers: components: _bash-it-component-item-is-disabled: should fail if the no valid component was passed" {
-
-  run _bash-it-component-item-is-disabled INVALID
+  run _gaudi-bash-component-item-is-disabled
   assert_failure
 }
 
-@test "bash-it helpers: components: _bash-it-component-item-is-disabled: should fail if the item passed is not disabled" {
+@test "gaudi-bash helpers: components: _gaudi-bash-component-item-is-disabled: should fail if the no valid component was passed" {
 
-  run _bash-it-component-item-is-disabled plugin base
+  run _gaudi-bash-component-item-is-disabled INVALID
   assert_failure
 }
 
-@test "bash-it helpers: components: _bash-it-component-item-is-disabled: should succeed if the item passed is disabled" {
+@test "gaudi-bash helpers: components: _gaudi-bash-component-item-is-disabled: should fail if the item passed is not disabled" {
 
-  run _bash-it-component-item-is-disabled plugin git
+  run _gaudi-bash-component-item-is-disabled plugin base
+  assert_failure
+}
+
+@test "gaudi-bash helpers: components: _gaudi-bash-component-item-is-disabled: should succeed if the item passed is disabled" {
+
+  run _gaudi-bash-component-item-is-disabled plugin git
   assert_success
 }
 
-@test "bash-it helpers: components: _bash-it-component-item-is-disabled: should check disabled component" {
+@test "gaudi-bash helpers: components: _gaudi-bash-component-item-is-disabled: should check disabled component" {
 
-  run _bash-it-component-item-is-disabled plugin git
+  run _gaudi-bash-component-item-is-disabled plugin git
   assert_success
 
-  run _bash-it-enable plugin git
+  run _gaudi-bash-enable plugin git
   assert_success
 
-  run _bash-it-component-item-is-disabled plugin git
+  run _gaudi-bash-component-item-is-disabled plugin git
   assert_failure
 }

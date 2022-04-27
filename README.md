@@ -1,8 +1,8 @@
 # gaudi-bash
 
-**gaudi-bash** is a fork from the infamous [bash-it](https://github.com/bash-it/bash-it) with lots of opinionated changes in the code to suit my OCD-like nature. I am by no means a bash expert but I tried my best to conform to the best practices in [here](http://mywiki.wooledge.org/BashPitfalls).
+**gaudi-bash** is a fork from the infamous [gaudi-bash](https://github.com/gaudi-bash/gaudi-bash) with lots of opinionated changes in the code to suit my OCD-like nature. I am by no means a bash expert but I tried my best to conform to the best practices in [here](http://mywiki.wooledge.org/BashPitfalls).
 
-**bash-it** itself is inspired by [oh-my-zsh](https://github.com/robbyrussell/oh-my-zsh) and includes autocompletion, themes, aliases, custom functions, and more. It provides a solid framework for using, developing and maintaining shell scripts and custom commands for your daily work.
+**gaudi-bash** itself is inspired by [oh-my-zsh](https://github.com/robbyrussell/oh-my-zsh) and includes autocompletion, themes, aliases, custom functions, and more. It provides a solid framework for using, developing and maintaining shell scripts and custom commands for your daily work.
 If you're using the _Bourne Again Shell_ (Bash) on a regular basis and have been looking for an easy way on how to keep all of these nice little scripts and aliases under control, then gaudi-bash is for you!
 Stop polluting your `~/bin` directory and your `.bashrc` file, fork/clone gaudi-bash and start hacking away.
 
@@ -27,8 +27,8 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/ahmadassaf/gaudi-bash/mast
 
 If you wish to do a standalone installation then you proceed with the following steps:
 
-1. Check a clone of this repo: `git clone https://github.com/ahmadassaf/gaudi-bash.git ~/.bash_it`
-2. Run `~/.bash_it/setup.sh` (it automatically backs up your `~/.bash_profile`)
+1. Check a clone of this repo: `git clone https://github.com/ahmadassaf/gaudi-bash.git ~/.gaudi_bash`
+2. Run `~/.gaudi_bash/setup.sh` (it automatically backs up your `~/.bash_profile`)
 3. Edit your `~/.bash_profile` file in order to customize gaudi-bash.
 
 The install script can take the following options:
@@ -65,26 +65,26 @@ gaudi-bash update
 ```
 
 gaudi-bash separates the core engine from the components (plugins, aliases, completions, etc.) _more on that to come in the design section_. the `gaudi-bash`
-will make sure the latest **core** code is pulled, if you would like to make sure that latest components are being pulled as well then you need to pass the `all` parameter `bash-it update all`.
+will make sure the latest **core** code is pulled, if you would like to make sure that latest components are being pulled as well then you need to pass the `all` parameter `gaudi-bash update all`.
 
 ### Uninstalling
 
-To uninstall gaudi-bash, run the `uninstall.sh` script found in the `$BASH_IT` directory:
+To uninstall gaudi-bash, run the `uninstall.sh` script found in the `$GAUDI_BASH` directory:
 
 ```
-cd $BASH_IT
+cd $GAUDI_BASH
 ./uninstall.sh
 ```
 
 This will restore your previous Bash profile.
-After the uninstall script finishes, remove the gaudi-bash directory from your machine (`rm -rf $BASH_IT`) and start a new shell.
+After the uninstall script finishes, remove the gaudi-bash directory from your machine (`rm -rf $GAUDI_BASH`) and start a new shell.
 
 ## Architecture & Design
-> or why did I fork bash-it
+> or why did I fork gaudi-bash
 
-I am a huge fan of bash-it, but the more I used it, the more I ran into some issues. Thats when I started to dig into the codebase, open PRs and contribute to the codebase. It is however, after digging deeper into some areas that I found myself moving lots of parts and restructuring big chunks the code. Moreover, I found various inconsistencies when it came to code style and adherence to bash best practices (some examples outlined in this [issue](https://github.com/Bash-it/bash-it/issues/194)). 
+I am a huge fan of gaudi-bash, but the more I used it, the more I ran into some issues. Thats when I started to dig into the codebase, open PRs and contribute to the codebase. It is however, after digging deeper into some areas that I found myself moving lots of parts and restructuring big chunks the code. Moreover, I found various inconsistencies when it came to code style and adherence to bash best practices (some examples outlined in this [issue](https://github.com/Bash-it/gaudi-bash/issues/194)). 
 
-I also found lots of unused and redundant code, a huge part of that was to ensure backward compatibility with the older versions of bash-it. Sometimes, it is better to start fresh and put the past behind us!
+I also found lots of unused and redundant code, a huge part of that was to ensure backward compatibility with the older versions of gaudi-bash. Sometimes, it is better to start fresh and put the past behind us!
 
 The main changes in this repo are:
 
@@ -94,7 +94,7 @@ The main changes in this repo are:
  - Following as much as possible [bash best practices](http://mywiki.wooledge.org/BashPitfalls)
  - Make sure to comply with [shellcheck](http://shellcheck.net) as much as possible
  - Ensure high coverage unit tests for all core functions and split test functions as well into small units
- - Merged some of the work from bash-it issues and openPRs that made sense to me
+ - Merged some of the work from gaudi-bash issues and openPRs that made sense to me
 
 I will discuss more the code structure and functions in [DEVELOPMENT](https://github.com/ahmadassaf/gaudi-bash/blob/master/DEVELOPMENT.md)
 
@@ -174,5 +174,5 @@ For custom scripts, and aliases, just create the following files (they'll be ign
 
 Now, if you want to change any of the main configuration and have it saved in your own fork, then i recommend you edit the `template/bash-profile.template.bash` as this is the main `bash_profile` file that will be copied and sourced in your home folder. For example, i have changed the theme and the default editors so that i will not have to change them every time i do a fresh install.
 
-Alternately, if you would like to keep your custom scripts under version control, you can set `BASH_IT_CUSTOM` in your `~/.bashrc` to another location outside of the `$BASH_IT` folder.
-In this case, any `*.bash` file under every directory below `BASH_IT_CUSTOM` folder will be used.
+Alternately, if you would like to keep your custom scripts under version control, you can set `GAUDI_BASH_CUSTOM` in your `~/.bashrc` to another location outside of the `$GAUDI_BASH` folder.
+In this case, any `*.bash` file under every directory below `GAUDI_BASH_CUSTOM` folder will be used.

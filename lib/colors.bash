@@ -5,7 +5,7 @@ if which tput >/dev/null 2>&1; then
 fi
 
 # Check if the stdout is a terminal that supports text colors
-if [[ -t 1 ]] && [[ -n "$ncolors" ]] && [[ "$ncolors" -ge 8 ]] && [[ "$BASH_IT_NO_COLOR" != "true" ]]; then
+if [[ -t 1 ]] && [[ -n "$ncolors" ]] && [[ "$ncolors" -ge 8 ]] && [[ "$GAUDI_BASH_NO_COLOR" != "true" ]]; then
 
     # Reset
     export NC="\033[0m"       # Text Reset

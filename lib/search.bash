@@ -2,11 +2,11 @@
 # shellcheck disable=SC2034,SC1090,SC2091,SC2207,SC2059
 
 
-# @function _bash-it-search
-# @description  returns list of aliases, plugins and completions in bash-it
+# @function _gaudi-bash-search
+# @description  returns list of aliases, plugins and completions in gaudi-bash
 #               name or description should match one of the search terms provided as arguments
 # @usage:
-#    ❯ bash-it search [-|@]term1 [-|@]term2 ... \
+#    ❯ gaudi-bash search [-|@]term1 [-|@]term2 ... \
 #       [[ --enable   | -e ]] \
 #       [[ --disable  | -d ]] \
 #       [[ --no-color | -c ]] \
@@ -19,81 +19,81 @@
 #    An '@' sign indicates an exact (not partial) match.
 #
 # @example
-#    ❯ bash-it search ruby rbenv rvm gem rake
+#    ❯ gaudi-bash search ruby rbenv rvm gem rake
 #          aliases:  bundler
 #          plugins:  chruby rbenv ruby rvm
 #      completions:  gem rake rvm
 #
-#    ❯ bash-it search ruby rbenv rvm gem rake -chruby
+#    ❯ gaudi-bash search ruby rbenv rvm gem rake -chruby
 #          aliases:  bundler
 #          plugins:  rbenv ruby rvm
 #      completions:  gem rake rvm
 #
 # Examples of enabling or disabling results of the search:
 #
-#    ❯ bash-it search ruby
+#    ❯ gaudi-bash search ruby
 #          aliases:  bundler
 #          plugins:  chruby chruby-auto ruby
 #
-#    ❯ bash-it search ruby -chruby --enable
+#    ❯ gaudi-bash search ruby -chruby --enable
 #          aliases:  bundler
 #          plugins:  ruby
 #
 # Examples of using exact match:
 #
-#    ❯ bash-it search @git @ruby
+#    ❯ gaudi-bash search @git @ruby
 #          aliases:  git
 #          plugins:  git ruby
 #      completions:  git
 #
-_bash-it-search () {
-  about "searches for given terms amongst bash-it plugins, aliases and completions"
-  group "bash-it:search"
+_gaudi-bash-search () {
+  about "searches for given terms amongst gaudi-bash plugins, aliases and completions"
+  group "gaudi-bash:search"
 
   [[ -z "$(type _array-contains 2>/dev/null)" ]]
 
-  export BASH_IT_SEARCH_USE_COLOR=true
-  export BASH_IT_GREP=${BASH_IT_GREP:-$(which egrep)}
+  export GAUDI_BASH_SEARCH_USE_COLOR=true
+  export GAUDI_BASH_GREP=${GAUDI_BASH_GREP:-$(which egrep)}
 
-  declare -a BASH_IT_COMPONENTS=(aliases plugins completions)
+  declare -a GAUDI_BASH_COMPONENTS=(aliases plugins completions)
 
   if [[ -z "$*" ]] ; then
-    _bash-it-search-help
+    _gaudi-bash-search-help
     return 0
   fi
 
   local -a args=()
   for word in "$@"; do
     if [[ ${word} == "--help" || ${word} == "-h" ]]; then
-      _bash-it-search-help
+      _gaudi-bash-search-help
       return 0
     elif [[ ${word} == "--refresh" || ${word} == "-r" ]]; then
-      _bash-it-component-cache-clean
+      _gaudi-bash-component-cache-clean
     elif [[ ${word} == "--no-color" || ${word} == '-c' ]]; then
-      export BASH_IT_SEARCH_USE_COLOR=false
+      export GAUDI_BASH_SEARCH_USE_COLOR=false
     else
       args=("${args[@]}" "${word}")
     fi
   done
 
   if [[ ${#args} -gt 0 ]]; then
-    for component in "${BASH_IT_COMPONENTS[@]}" ; do
-      _bash-it-search-component "${component}" "${args[@]}"
+    for component in "${GAUDI_BASH_COMPONENTS[@]}" ; do
+      _gaudi-bash-search-component "${component}" "${args[@]}"
     done
   fi
 
   return 0
 }
 
-# @function     _bash-it-component-term-matches-negation
+# @function     _gaudi-bash-component-term-matches-negation
 # @description  matches the negation of the search term entered
 # @param $1     search match: the search results matches
 # @param $2     negation terms <array>: the terms we need to negate/remove from the search matches (result set)
 # @return       String of search results without the negated terms
-# @example      ❯ _bash-it-component-term-matches-negation "${match}" "${negative_terms[@]}"
-_bash-it-component-term-matches-negation () {
+# @example      ❯ _gaudi-bash-component-term-matches-negation "${match}" "${negative_terms[@]}"
+_gaudi-bash-component-term-matches-negation () {
   about "matches the negation of the search term entered"
-  group "bash-it:search"
+  group "gaudi-bash:search"
 
   local match="$1"; shift
   local negative
@@ -104,15 +104,15 @@ _bash-it-component-term-matches-negation () {
   return 1
 }
 
-# @function     _bash-it-component-component
+# @function     _gaudi-bash-component-component
 # @description  searches a component to match the search terms
 # @param $1     component: the component to search in e.g., alias, completion, plugin
 # @param $2     search terms: the terms we want to search for
 # @return       Results that match our search term
-# @example      ❯ _bash-it-search-component aliases @git rake bundler -chruby
-_bash-it-search-component () {
+# @example      ❯ _gaudi-bash-search-component aliases @git rake bundler -chruby
+_gaudi-bash-search-component () {
   about "searches for given terms amongst a given component"
-  group "bash-it:search"
+  group "gaudi-bash:search"
 
   local component="$1"; shift
 
@@ -124,7 +124,7 @@ _bash-it-search-component () {
   for search_command in "${search_commands[@]}"; do
     if $(_array-contains "--${search_command}" "$@"); then
       action="${search_command}"
-      action_func="_bash-it-${action} ${component}"
+      action_func="_gaudi-bash-${action} ${component}"
       break
     fi
   done
@@ -143,7 +143,7 @@ _bash-it-search-component () {
   local -a negative_terms=()
 
   unset component_list
-  local -a component_list=( $(_bash-it-component-list "${component}") )
+  local -a component_list=( $(_gaudi-bash-component-list "${component}") )
   local term
 
   for term in "${terms[@]}"; do
@@ -158,7 +158,7 @@ _bash-it-search-component () {
         exact_terms=("${exact_terms[@]}" "${search_term}")
       fi
     else
-      partial_terms=("${partial_terms[@]}" $(_bash-it-component-list-matching "${component}" "${term}") )
+      partial_terms=("${partial_terms[@]}" $(_gaudi-bash-component-list-matching "${component}" "${term}") )
     fi
   done
 
@@ -170,23 +170,23 @@ _bash-it-search-component () {
     local include_match=true
 
     if  [[ ${#negative_terms[@]} -gt 0 ]]; then
-      ( _bash-it-component-term-matches-negation "${match}" "${negative_terms[@]}" ) && include_match=false
+      ( _gaudi-bash-component-term-matches-negation "${match}" "${negative_terms[@]}" ) && include_match=false
     fi
     ( ${include_match} ) && matches=("${matches[@]}" "${match}")
   done
-  _bash-it-search-print-result "${component}" "${action}" "${action_func}" "${matches[@]}"
+  _gaudi-bash-search-print-result "${component}" "${action}" "${action_func}" "${matches[@]}"
   unset matches final_matches terms
 }
 
-# @function     _bash-it-search-print-result
+# @function     _gaudi-bash-search-print-result
 # @description  prints the results of search result
 # @param $1     component: the component to search in e.g., alias, completion, plugin
 # @param $2     action: the action to apply on the results (enable or disable)
-# @param $3     action function: the function to apply for the action e.g., _bash-it-enable <component_name>
+# @param $3     action function: the function to apply for the action e.g., _gaudi-bash-enable <component_name>
 # @param $4     search terms: the search result terms
 # @return       print the search results formatted and colored
-# @example      ❯ _bash-it-search-print-result "${component}" "${action}" "${action_func}" "${matches[@]}"
-_bash-it-search-print-result () {
+# @example      ❯ _gaudi-bash-search-print-result "${component}" "${action}" "${action_func}" "${matches[@]}"
+_gaudi-bash-search-print-result () {
   local component="$1"; shift
   local action="$1"; shift
   local action_func="$1"; shift
@@ -195,7 +195,7 @@ _bash-it-search-print-result () {
 
   color_sep=':'
 
-  ( ${BASH_IT_SEARCH_USE_COLOR} ) && {
+  ( ${GAUDI_BASH_SEARCH_USE_COLOR} ) && {
     color_component="${CYAN}"
     color_enable="${GREEN}"
     suffix_enable=''
@@ -204,7 +204,7 @@ _bash-it-search-print-result () {
     color_off="${NC}"
   }
 
-  ( ${BASH_IT_SEARCH_USE_COLOR} ) || {
+  ( ${GAUDI_BASH_SEARCH_USE_COLOR} ) || {
     color_component=''
     suffix_enable=' ✓ '
     suffix_disable='  '
@@ -222,7 +222,7 @@ _bash-it-search-print-result () {
     for match in "${matches[@]}"; do
       local enabled=0
 
-      ( _bash-it-component-item-is-enabled "${component}" "${match}" ) && enabled=1
+      ( _gaudi-bash-component-item-is-enabled "${component}" "${match}" ) && enabled=1
 
       local match_color compatible_action suffix opposite_suffix
 
@@ -246,38 +246,38 @@ _bash-it-search-print-result () {
 
       printf " ${match_color}${match}${suffix}"
       if [[ "${action}" == "${compatible_action}" ]]; then
-        if [[ ${action} == "enable" && ${BASH_IT_SEARCH_USE_COLOR} == false ]]; then
+        if [[ ${action} == "enable" && ${GAUDI_BASH_SEARCH_USE_COLOR} == false ]]; then
           printf "${match}${suffix}"
         else
-          _bash-it-erase-term "${len}"
+          _gaudi-bash-erase-term "${len}"
         fi
         modified=1
         result=$(${action_func} "${match}")
         local temp="color_${compatible_action}"
 
         match_color=${!temp}
-        _bash-it-rewind "${len}"
+        _gaudi-bash-rewind "${len}"
         printf "${match_color}${match}${opposite_suffix}"
       fi
 
       printf "${color_off}"
     done
 
-    [[ ${modified} -gt 0 ]] && _bash-it-component-cache-clean "${component}"
+    [[ ${modified} -gt 0 ]] && _gaudi-bash-component-cache-clean "${component}"
     printf "\n"
   fi
 }
 
-# @function     _bash-it-search-help
-# @description  displays the bash-it search help
+# @function     _gaudi-bash-search-help
+# @description  displays the gaudi-bash search help
 # @return       Help manual for the search function
-_bash-it-search-help () {
+_gaudi-bash-search-help () {
 
 printf "${NC}%b" "
 
 ${YELLOW}USAGE${NC}
 
-   bash-it search [-|@]term1 [-|@]term2 ... \\
+   gaudi-bash search [-|@]term1 [-|@]term2 ... \\
      [[ --enable   | -e ]] \\
      [[ --disable  | -d ]] \\
      [[ --no-color | -c ]] \\
@@ -286,7 +286,7 @@ ${YELLOW}USAGE${NC}
 
 ${YELLOW}DESCRIPTION${NC}
 
-   Use ${GREEN}search${NC} bash-it command to search for a list of terms or term negations
+   Use ${GREEN}search${NC} gaudi-bash command to search for a list of terms or term negations
    across all components: aliases, completions and plugins. Components that are
    enabled are shown in green (or with a check box if --no-color option is used).
 
@@ -312,19 +312,19 @@ ${YELLOW}FLAGS${NC}
 
 ${YELLOW}EXAMPLES${NC}
 
-   For example, ${GREEN}bash-it search git${NC} would match any alias, completion
+   For example, ${GREEN}gaudi-bash search git${NC} would match any alias, completion
    or plugin that has the word 'git' in either the module name or
    it's description. You should see something like this when you run this
    command:
 
-         ${GREEN}❯ bash-it search git${NC}
+         ${GREEN}❯ gaudi-bash search git${NC}
                ${YELLOW}aliases:  ${GREEN}git ${NC}gitsvn
                ${YELLOW}plugins:  ${NC}autojump ${GREEN}git ${NC}git-subrepo jgitflow jump
            ${YELLOW}completions:  ${GREEN}git ${NC}git_flow git_flow_avh${NC}
 
    You can exclude some terms by prefixing a term with a minus, eg:
 
-         ${GREEN}❯ bash-it search git -flow -svn${NC}
+         ${GREEN}❯ gaudi-bash search git -flow -svn${NC}
                ${YELLOW}aliases:  ${NC}git
                ${YELLOW}plugins:  ${NC}autojump git git-subrepo jump
            ${YELLOW}completions:  ${NC}git${NC}
@@ -333,7 +333,7 @@ ${YELLOW}EXAMPLES${NC}
    match. Note, that we also pass the '--enable' flag, which would ensure
    that all matches are automatically enabled. The example is below:
 
-         ${GREEN}❯ bash-it search @git --enable${NC}
+         ${GREEN}❯ gaudi-bash search @git --enable${NC}
                ${YELLOW}aliases:  ${NC}git
                ${YELLOW}plugins:  ${NC}git
            ${YELLOW}completions:  ${NC}git${NC}

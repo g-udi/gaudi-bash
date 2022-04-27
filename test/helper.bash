@@ -20,43 +20,43 @@ case $OSTYPE in
     ;;
 esac
 
-# This function sets up a local test fixture, i.e. a completely fresh and isolated bash-it directory.
-# This is done to avoid messing with your own bash-it source directory.
+# This function sets up a local test fixture, i.e. a completely fresh and isolated gaudi-bash directory.
+# This is done to avoid messing with your own gaudi-bash source directory.
 # If you need this, call it in your .bats file's `local_setup` function.
 prepare () {
   local lib_directory  src_topdir
 
-  # Create the bash_it folder in the temp test directory
-  mkdir -p "$BASH_IT"
+  # Create the gaudi_bash folder in the temp test directory
+  mkdir -p "$GAUDI_BASH"
 
-  # Get the root folder of bash_it by traversing from the bats lib location
+  # Get the root folder of gaudi_bash by traversing from the bats lib location
   lib_directory="$(cd "$(dirname "$0")" && pwd)"
   src_topdir="$lib_directory/../../../.."
 
   if command -v rsync &> /dev/null
   then
-    # Use rsync to copy bash-it to the temp folder
-    rsync -qavrKL -d --delete-excluded --exclude=.git "$src_topdir" "$BASH_IT"
+    # Use rsync to copy gaudi-bash to the temp folder
+    rsync -qavrKL -d --delete-excluded --exclude=.git "$src_topdir" "$GAUDI_BASH"
   else
-    rm -rf "$BASH_IT"
-    mkdir -p "$BASH_IT"
+    rm -rf "$GAUDI_BASH"
+    mkdir -p "$GAUDI_BASH"
 
     find "$src_topdir" \
       -mindepth 1 -maxdepth 1 \
       -not -name .git \
-      -exec cp -r {} "$BASH_IT" \;
+      -exec cp -r {} "$GAUDI_BASH" \;
   fi
 
-  rm -rf "$BASH_IT/components/enabled"
-  rm -rf "$BASH_IT/tmp"
+  rm -rf "$GAUDI_BASH/components/enabled"
+  rm -rf "$GAUDI_BASH/tmp"
 
-  mkdir -p "$BASH_IT/components/enabled"
+  mkdir -p "$GAUDI_BASH/components/enabled"
   touch "$HOME/$CONFIG_FILE"
 }
 
 setup () {
 
-  # TEST_MAIN_DIR Points to the 'test' folder location e.g., $HOME/.bash_it/test/
+  # TEST_MAIN_DIR Points to the 'test' folder location e.g., $HOME/.gaudi_bash/test/
   export TEST_MAIN_DIR="${BATS_TEST_DIRNAME}/.."
   # TEST_DEPS_DIR will point to the folder where the bats git submodules are
   export TEST_DEPS_DIR="${TEST_DEPS_DIR-${TEST_MAIN_DIR}/../bin}"
@@ -65,12 +65,12 @@ setup () {
   load "${TEST_DEPS_DIR}/bats-assert/load.bash"
   load "${TEST_DEPS_DIR}/bats-file/load.bash"
 
-  # Create a temp directory with a 'bash-it-test-' prefix
-  TEST_TEMP_DIR="$(temp_make --prefix 'bash-it-test-')"
+  # Create a temp directory with a 'gaudi-bash-test-' prefix
+  TEST_TEMP_DIR="$(temp_make --prefix 'gaudi-bash-test-')"
 
   export BATSLIB_FILE_PATH_REM="#${TEST_TEMP_DIR}"
   export BATSLIB_FILE_PATH_ADD='<temp>'
-  export BASH_IT="${TEST_TEMP_DIR}/.bash_it"
+  export GAUDI_BASH="${TEST_TEMP_DIR}/.gaudi_bash"
   export TEST_TEMP_DIR
 
   # Some tools, e.g. `git` use configuration files from the $HOME directory,
@@ -91,7 +91,7 @@ setup () {
 teardown () {
   local_teardown
 
-  rm -rf "${BASH_IT}"
+  rm -rf "${GAUDI_BASH}"
   temp_del "${TEST_TEMP_DIR}"
 }
 

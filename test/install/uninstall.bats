@@ -6,14 +6,14 @@ local_setup () {
   prepare
 }
 
-@test "bash-it uninstall: verify that the uninstall script exists" {
+@test "gaudi-bash uninstall: verify that the uninstall script exists" {
 
-  assert_file_exist "$BASH_IT/uninstall.sh"
+  assert_file_exist "$GAUDI_BASH/uninstall.sh"
 }
 
-@test "bash-it uninstall: run the uninstall script with an existing backup file" {
+@test "gaudi-bash uninstall: run the uninstall script with an existing backup file" {
 
-  cd "$BASH_IT"
+  cd "$GAUDI_BASH"
 
   echo "test file content for backup" > "$HOME/$CONFIG_FILE.bak"
   echo "test file content for original file" > "$HOME/$CONFIG_FILE"
@@ -30,9 +30,9 @@ local_setup () {
   assert_equal "$md5_bak" "$md5_conf"
 }
 
-@test "bash-it uninstall: run the uninstall script without an existing backup file" {
+@test "gaudi-bash uninstall: run the uninstall script without an existing backup file" {
 
-  cd "$BASH_IT"
+  cd "$GAUDI_BASH"
 
   echo "test file content for original file" > "$HOME/$CONFIG_FILE"
   local md5_orig=$(md5sum "$HOME/$CONFIG_FILE" | awk '{print $1}')

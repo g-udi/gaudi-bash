@@ -7,9 +7,9 @@ Most of this is common sense, but please try to stick to the conventions listed 
 
 * When opening a new issue in the issue tracker, please include information about which _Operating System_ you're using, and which version of _Bash_.
 * In many cases, it also makes sense to show which Bash-it plugins you are using.
-  This information can be obtained using `bash-it show plugins`.
+  This information can be obtained using `gaudi-bash show plugins`.
 * If the issue happens while loading Bash-it, please also include your `~/.bash_profile` or `~/.bashrc` file,
-  as well as the install location of Bash-it (default should be `~/.bash_it`).
+  as well as the install location of Bash-it (default should be `~/.gaudi_bash`).
 * When reporting a bug or requesting a new feature, consider providing a Pull Request that fixes the issue or can be used as a starting point for the new feature.
   Don't be afraid, most things aren't that complex...
 
@@ -40,7 +40,7 @@ Most of this is common sense, but please try to stick to the conventions listed 
   Take a look at the existing code for an example (e.g. [the base plugin](plugins/available/base.plugin.bash)).
 * When adding files, please use the existing file naming conventions, e.g. plugin files need to end in `.plugin.bash`.
   This is important for the installation functionality.
-* When using the `$BASH_IT` variable, please always enclose it in double quotes to ensure that the code also works when Bash-it is installed in a directory that contains spaces in its name: `for f in "${BASH_IT}/plugins/available"/*.bash ; do echo "$f" ; done`
+* When using the `$GAUDI_BASH` variable, please always enclose it in double quotes to ensure that the code also works when Bash-it is installed in a directory that contains spaces in its name: `for f in "${GAUDI_BASH}/plugins/available"/*.bash ; do echo "$f" ; done`
 * Bash-it supports Bash 3.2 and higher. Please don't use features only available in Bash 4, such as associative arrays.
 
 ## Unit Tests
@@ -48,7 +48,7 @@ Most of this is common sense, but please try to stick to the conventions listed 
 When adding features or making changes/fixes, please run our growing unit test suite to ensure that you did not break existing functionality.
 The test suite does not cover all aspects of Bash-it, but please run it anyway to verify that you did not introduce any regression issues.
 
-Any code pushed to GitHub as part of a Pull Request will automatically trigger a continuous integration build on [Travis CI](https://travis-ci.org/Bash-it/bash-it), where the test suite is run on both Linux and macOS.
+Any code pushed to GitHub as part of a Pull Request will automatically trigger a continuous integration build on [Travis CI](https://travis-ci.org/Bash-it/gaudi-bash), where the test suite is run on both Linux and macOS.
 The Pull Request will then show the result of the Travis build, indicating whether all tests ran fine, or whether there were issues.
 Please pay attention to this, Pull Requests with build issues will not be merged.
 

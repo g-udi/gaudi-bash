@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-if [[ -z "$BASH_IT" ]];
+if [[ -z "$GAUDI_BASH" ]];
 then
-  BASH_IT="$HOME/.bash_it"
+  GAUDI_BASH="$HOME/.gaudi_bash"
 fi
 
 __install () {
@@ -13,26 +13,26 @@ __install () {
   # precedence over umasks except for filesystems mounted with option "noacl".
   umask g-w,o-w
 
-  env git clone --depth=1 --recurse-submodules https://github.com/ahmadassaf/bash-it.git "$BASH_IT" || {
+  env git clone --depth=1 --recurse-submodules https://github.com/ahmadassaf/gaudi-bash.git "$GAUDI_BASH" || {
       printf "%s\n" "Error: Cloning of gaudi into this machine failed :("
       exit 1
   }
 
-  bash "$BASH_IT/setup.sh"
+  bash "$GAUDI_BASH/setup.sh"
 }
 
-if [[ -d "$BASH_IT" ]]; then
-    echo "You already have bash-it installed.."
+if [[ -d "$GAUDI_BASH" ]]; then
+    echo "You already have gaudi-bash installed.."
     unset REPLY
     while ! [[ $REPLY =~ ^[yY]$ ]] && ! [[ $REPLY =~ ^[nN]$ ]]; do
-        read -rp "Do you want to set up a fresh installation of bash-it? " -n 1 </dev/tty;
+        read -rp "Do you want to set up a fresh installation of gaudi-bash? " -n 1 </dev/tty;
         [[ -n $REPLY ]] && echo ""
     done
     if [[ $REPLY =~ ^[yY]$ ]]; then
-        rm -rf "$BASH_IT"
+        rm -rf "$GAUDI_BASH"
     else
-        echo "Running a bash-it update to pull latest changes ..."
-        git -C "$BASH_IT" pull
+        echo "Running a gaudi-bash update to pull latest changes ..."
+        git -C "$GAUDI_BASH" pull
     fi
     __install
 else

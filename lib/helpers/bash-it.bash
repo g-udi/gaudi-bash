@@ -1,57 +1,57 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC2001
 
-# A collection of reusable bash-it functions
+# A collection of reusable gaudi-bash functions
 
-# @function     _bash-it-grep
+# @function     _gaudi-bash-grep
 # @description  outputs a full path of the grep found on the filesystem
 # @return       Path to the egrep, grep bin e.g., /usr/bin/egrep
-_bash-it-grep () {
+_gaudi-bash-grep () {
   about "outputs a full path of the grep found on the filesystem"
-  group "bash-it:core"
+  group "gaudi-bash:core"
 
-  if [[ -z "${BASH_IT_GREP}" ]] ; then
-    BASH_IT_GREP="$(which egrep || which grep || '/usr/bin/grep')"
-    export BASH_IT_GREP
+  if [[ -z "${GAUDI_BASH_GREP}" ]] ; then
+    GAUDI_BASH_GREP="$(which egrep || which grep || '/usr/bin/grep')"
+    export GAUDI_BASH_GREP
   fi
-  printf "%s " "${BASH_IT_GREP}"
+  printf "%s " "${GAUDI_BASH_GREP}"
 }
 
-# @function     _bash-it-describe
-# @description  describes bash-it components by listing the component, description and its status (enabled vs. disabled)
+# @function     _gaudi-bash-describe
+# @description  describes gaudi-bash components by listing the component, description and its status (enabled vs. disabled)
 #               the function can display all the items for a specific component (alias, plugin or completion) passed as a param
 # @param $1     component: (of type aliases, plugins, completions)
 # @param $2     mode <enabled, all>: either show all available components or filter only for enabled ones (default: all)
 # @return       table showing each component name, status (enabled/disabled) and description
-_bash-it-describe () {
-    about "describes bash-it components by listing the component, description and its status (enabled vs. disabled)"
-    group "bash-it:core"
+_gaudi-bash-describe () {
+    about "describes gaudi-bash components by listing the component, description and its status (enabled vs. disabled)"
+    group "gaudi-bash:core"
 
-    declare -a BASH_IT_DESCRIBE_MODES=(enabled all)
+    declare -a GAUDI_BASH_DESCRIBE_MODES=(enabled all)
 
     __check-function-parameters "$1" || return 1
-    [[ -n "$2" ]] && ! _array-contains "$2" "${BASH_IT_DESCRIBE_MODES[@]}" && echo "unsupported describe mode" && return 1
+    [[ -n "$2" ]] && ! _array-contains "$2" "${GAUDI_BASH_DESCRIBE_MODES[@]}" && echo "unsupported describe mode" && return 1
 
     # Make sure the component is pluralized in case this function is called directly e.g., for unit tests
-    component=$(_bash-it-pluralize-component "$1")
-    component_type="$(_bash-it-singularize-component "$component")"
+    component=$(_gaudi-bash-pluralize-component "$1")
+    component_type="$(_gaudi-bash-singularize-component "$component")"
     mode=${2:-"all"}
 
     printf "\n%-20s%-10s%s\n" "${component_type^}" 'Enabled?' '  Description'
     printf "%*s\n" "${COLUMNS:-$(tput cols)}" '' | tr ' ' -
 
-    file=$(_bash-it-component-cache-add "${component}-enabled")
+    file=$(_gaudi-bash-component-cache-add "${component}-enabled")
     [[ "$mode" = "all" ]] && file=${file/-enabled/}
 
     if [[ ! -s "${file}" || -z $(find "${file}" -mmin -300) ]] ; then
       rm -f "${file}" 2>/dev/null
         local __file
-        for __file in "${BASH_IT}/components/$component/lib/"*.bash
+        for __file in "${GAUDI_BASH}/components/$component/lib/"*.bash
         do
             # Check for both the old format without the load priority, and the extended format with the priority
             declare enabled_files enabled_file
             enabled_file=$(basename "$__file")
-            enabled_files=$(sort <(compgen -G "${BASH_IT}/components/enabled/*$BASH_IT_LOAD_PRIORITY_SEPARATOR${enabled_file}") | wc -l)
+            enabled_files=$(sort <(compgen -G "${GAUDI_BASH}/components/enabled/*$GAUDI_BASH_LOAD_PRIORITY_SEPARATOR${enabled_file}") | wc -l)
 
             if [[ "$enabled_files" -gt 0 ]]; then
                 printf "%-20s${GREEN}%-10s${NC}%s\n" "$(basename "$__file" | sed -e 's/\(.*\)\..*\.bash/\1/g')" "  ◉" "    $(cat $__file | metafor about-"$component_type")" 2>&1 | tee -a "${file}"
@@ -64,13 +64,13 @@ _bash-it-describe () {
     fi
 
     if [[ "$mode" = "all" ]]; then
-      printf "\n%b\n" "bash-it allows you easily enable/disable components:
+      printf "\n%b\n" "gaudi-bash allows you easily enable/disable components:
 
 to enable ${GREEN}$component_type${NC}, do:
-bash-it enable ${GREEN}$component_type${NC}  <${GREEN}$component_type${NC} name> [${GREEN}$component_type${NC} name]... -or- $ bash-it enable ${GREEN}$component${NC} all
+gaudi-bash enable ${GREEN}$component_type${NC}  <${GREEN}$component_type${NC} name> [${GREEN}$component_type${NC} name]... -or- $ gaudi-bash enable ${GREEN}$component${NC} all
 
 to disable ${GREEN}$component_type${NC}, do:
-bash-it disable ${GREEN}$component_type${NC} <${GREEN}$component_type${NC} name> [${GREEN}$component_type${NC} name]... -or- $ bash-it disable ${GREEN}$component${NC} all
+gaudi-bash disable ${GREEN}$component_type${NC} <${GREEN}$component_type${NC} name> [${GREEN}$component_type${NC} name]... -or- $ gaudi-bash disable ${GREEN}$component${NC} all
 "
     fi
 }

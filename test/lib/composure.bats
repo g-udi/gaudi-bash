@@ -6,7 +6,7 @@ load ../../lib/composure
 
 cite about param example group
 
-@test "bash-it lib: composure: composure_keywords()" {
+@test "gaudi-bash lib: composure: composure_keywords()" {
 
   run _composure_keywords
   assert_output "about author example group param version"

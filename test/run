@@ -7,10 +7,10 @@ bats_executable="${test_directory}/../bin/bats-core/bin/bats"
 
 git submodule init && git submodule update
 
-if [[ -z "${BASH_IT}" ]]; then
-  declare BASH_IT
-  BASH_IT=$(cd "${test_directory}" && dirname "$(pwd)")
-  export BASH_IT
+if [[ -z "${GAUDI_BASH}" ]]; then
+  declare GAUDI_BASH
+  GAUDI_BASH=$(cd "${test_directory}" && dirname "$(pwd)")
+  export GAUDI_BASH
 fi
 
 # Capture all the test files by searching the lib folder for .bats files

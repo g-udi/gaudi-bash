@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
-if [[ -z "$BASH_IT" ]];
+if [[ -z "$GAUDI_BASH" ]];
 then
-  BASH_IT="$HOME/.bash_it"
+  GAUDI_BASH="$HOME/.gaudi_bash"
 fi
 
 case $OSTYPE in
@@ -28,7 +28,7 @@ else
     echo -e "${GREEN}Your original $CONFIG_FILE has been restored.${NC}"
 fi
 
-rm -rf "$BASH_IT"
+rm -rf "$GAUDI_BASH"
 
 echo ""
 echo -e "${GREEN}un-installation finished successfully! Sorry to see you go!${NC}"

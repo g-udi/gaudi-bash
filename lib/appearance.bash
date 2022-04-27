@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC1090,SC2034
 
-BASH_IT_LOG_PREFIX="THEME"
+GAUDI_BASH_LOG_PREFIX="THEME"
 
 # LSCOLORS
 
@@ -116,13 +116,13 @@ GREP_OPTIONS="--color=auto"
 alias grep='grep $GREP_OPTIONS'
 
 # Load the theme
-if [[ -n $BASH_IT_THEME ]]; then
-  source "$BASH_IT/components/themes/$BASH_IT_THEME/$BASH_IT_THEME.theme.bash"
+if [[ -n $GAUDI_BASH_THEME ]]; then
+  source "$GAUDI_BASH/components/themes/$GAUDI_BASH_THEME/$GAUDI_BASH_THEME.theme.bash"
 fi
 
-_log_component "$BASH_IT_THEME" "theme"
+_log_component "$GAUDI_BASH_THEME" "theme"
 if [[ $PROMPT ]]; then
   export PS1="\[""$PROMPT""\]"
 fi
 
-unset BASH_IT_LOG_PREFIX
+unset GAUDI_BASH_LOG_PREFIX

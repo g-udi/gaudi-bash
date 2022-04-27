@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-export BASH_IT_COMPONENT_TYPES=(plugins aliases completions)
+export GAUDI_BASH_COMPONENT_TYPES=(plugins aliases completions)
 
 # Component-specific functions (component is either an alias, a plugin, or a completion).
 
@@ -11,21 +11,21 @@ export BASH_IT_COMPONENT_TYPES=(plugins aliases completions)
 # @example      ❯ __check-function-parameters plugin
 __check-function-parameters () {
   about "check the passed parameter to make sure its valid and matches a component type"
-  group "bash-it:core:components"
+  group "gaudi-bash:core:components"
 
   [[ -z "$1" ]] && return 1
-  _array-contains "$(_bash-it-pluralize-component "${1}")" "${BASH_IT_COMPONENT_TYPES[@]}" && return 0
+  _array-contains "$(_gaudi-bash-pluralize-component "${1}")" "${GAUDI_BASH_COMPONENT_TYPES[@]}" && return 0
   return 1
 }
 
-# @function     _bash-it-pluralize-component
+# @function     _gaudi-bash-pluralize-component
 # @description  pluralize component name for consistency especially for search
 # @param $1     component: the component type (plugin, alias, completion)
 # @return       plural form of the component type
-# @example      ❯ _bash-it-pluralize-component plugin
-_bash-it-pluralize-component () {
+# @example      ❯ _gaudi-bash-pluralize-component plugin
+_gaudi-bash-pluralize-component () {
   about "pluralize component name for consistency especially for search"
-  group "bash-it:core:components"
+  group "gaudi-bash:core:components"
 
   local component="${1}"
   local len=$(( ${#component} - 1 ))
@@ -38,14 +38,14 @@ _bash-it-pluralize-component () {
   printf "%s" "${component}"
 }
 
-# @function     _bash-it-singularize-component
+# @function     _gaudi-bash-singularize-component
 # @description  singularize component name for consistency especially for search
 # @param $1     component: the component type (plugin, alias, completion)
 # @return       singular form of the component type
-# @example      ❯ _bash-it-singularize-component plugins
-_bash-it-singularize-component () {
+# @example      ❯ _gaudi-bash-singularize-component plugins
+_gaudi-bash-singularize-component () {
   about "singularize component name for consistency especially for search"
-  group "bash-it:core:components"
+  group "gaudi-bash:core:components"
 
   __check-function-parameters "$1" || return 1
 
@@ -58,25 +58,25 @@ _bash-it-singularize-component () {
   printf "%s" "${component_singular:-$component}"
 }
 
-# @function     _bash-it-component-help
+# @function     _gaudi-bash-component-help
 # @description  show the about description for a component
-#               if no component is passed then the list of all components of the passed type will be show (proxy for bash-it show <component>)
+#               if no component is passed then the list of all components of the passed type will be show (proxy for gaudi-bash show <component>)
 #               the function caches the first call to speed up search and grep after the first run
 # @param $1     type: the component type (plugin, alias, completion)
 # @param $2     component: the component name
 # @return       component help
-# @example      ❯ _bash-it-component-help plugins git
-_bash-it-component-help () {
+# @example      ❯ _gaudi-bash-component-help plugins git
+_gaudi-bash-component-help () {
   about "show the about description for a component"
-  group "bash-it:core:components"
+  group "gaudi-bash:core:components"
 
   local type component
 
   __check-function-parameters "$1" || return 1
 
-  type=$(_bash-it-pluralize-component "${1}")
+  type=$(_gaudi-bash-pluralize-component "${1}")
   component="$2"
-  help=$(_bash-it-show "$type" | tail -n +4)
+  help=$(_gaudi-bash-show "$type" | tail -n +4)
 
   # If there is a component passed then grep the type list
   if [[ -n $component ]]; then
@@ -86,97 +86,97 @@ _bash-it-component-help () {
   printf "%s" "${help}"
 }
 
-# @function     _bash-it-component-list
+# @function     _gaudi-bash-component-list
 # @description  returns a list of items within each component (plugin, alias, completion)
 # @param $1     type: the component type (plugin, alias, completion)
 # @return       <array> list of components
-# @example      ❯ _bash-it-component-list plugins
-_bash-it-component-list () {
+# @example      ❯ _gaudi-bash-component-list plugins
+_gaudi-bash-component-list () {
   about "returns a list of items within each component (plugin, alias, completion)"
-  group "bash-it:core:components"
+  group "gaudi-bash:core:components"
 
   __check-function-parameters "$1" || return 1
-  _bash-it-component-help "$1" | awk '{print $1}' | uniq | sort | tr '\n' ' '
+  _gaudi-bash-component-help "$1" | awk '{print $1}' | uniq | sort | tr '\n' ' '
 }
 
-# @function     _bash-it-component-list
+# @function     _gaudi-bash-component-list
 # @description  returns a list of items within each component (plugin, alias, completion) that match a string
 # @param $1     type: the component type (plugin, alias, completion)
 # @param $2     component: the component name (search string) to match against
 # @return       <array> list of matched components
-# @example      ❯ _bash-it-component-list-matching plugins git
-_bash-it-component-list-matching () {
+# @example      ❯ _gaudi-bash-component-list-matching plugins git
+_gaudi-bash-component-list-matching () {
   about "returns a list of items within each component (plugin, alias, completion) that match a string "
-  group "bash-it:core:components"
+  group "gaudi-bash:core:components"
 
   __check-function-parameters "$1" || return 1
   if [[ -n "$1" ]] && [[ -n "$2" ]]; then
     local match
-    match=$(_bash-it-component-help "$1" | $(_bash-it-grep) -E -- "$2" | awk '{print $1}' | uniq | sort | tr '\n' ' ')
+    match=$(_gaudi-bash-component-help "$1" | $(_gaudi-bash-grep) -E -- "$2" | awk '{print $1}' | uniq | sort | tr '\n' ' ')
     [[ -n "$match" ]] && echo "$match" && return 0
   fi
   return 1
 }
 
-# @function     _bash-it-component-list-enabled
+# @function     _gaudi-bash-component-list-enabled
 # @description  returns a list of enabled items within each component (plugin, alias, completion)
 # @param $1     type: the component type (plugin, alias, completion)
 # @return       <array> list of enabled components
-# @example      ❯ _bash-it-component-list-enabled plugins
-_bash-it-component-list-enabled () {
+# @example      ❯ _gaudi-bash-component-list-enabled plugins
+_gaudi-bash-component-list-enabled () {
   about "returns a list of enabled items within each component (plugin, alias, completion)"
-  group "bash-it:core:components"
+  group "gaudi-bash:core:components"
 
   __check-function-parameters "$1" || return 1
-  _bash-it-component-help "${1}" | $(_bash-it-grep) -E '◉' | awk '{print $1}' | uniq | sort | tr '\n' ' '
+  _gaudi-bash-component-help "${1}" | $(_gaudi-bash-grep) -E '◉' | awk '{print $1}' | uniq | sort | tr '\n' ' '
 }
 
-# @function     _bash-it-component-list-disabled
+# @function     _gaudi-bash-component-list-disabled
 # @description  returns a list of disabled items within each component (plugin, alias, completion)
 # @param $1     type: the component type (plugin, alias, completion)
 # @return       <array> list of disabled components
-# @example      ❯ _bash-it-component-list-disabled plugins
-_bash-it-component-list-disabled () {
+# @example      ❯ _gaudi-bash-component-list-disabled plugins
+_gaudi-bash-component-list-disabled () {
   about "returns a list of disabled items within each component (plugin, alias, completion)"
-  group "bash-it:core:components"
+  group "gaudi-bash:core:components"
 
   __check-function-parameters "$1" || return 1
-  _bash-it-component-help "${1}" | $(_bash-it-grep) -E  '◯' | awk '{print $1}' | uniq | sort | tr '\n' ' '
+  _gaudi-bash-component-help "${1}" | $(_gaudi-bash-grep) -E  '◯' | awk '{print $1}' | uniq | sort | tr '\n' ' '
 }
 
-# @function     _bash-it-component-item-is-enabled
+# @function     _gaudi-bash-component-item-is-enabled
 # @description  checks if a given item is enabled for a particular component/file-type
 #               Uses the component cache if available
 # @param $1     type: the component type (plugin, alias, completion)
 # @param $2     component: the component name (search string) to match against
 # @return       success status (0) if an item of the component is enabled, fail status (1) otherwise.
-# @example      ❯ _bash-it-component-item-is-enabled alias git && echo "git alias is enabled"
-_bash-it-component-item-is-enabled () {
+# @example      ❯ _gaudi-bash-component-item-is-enabled alias git && echo "git alias is enabled"
+_gaudi-bash-component-item-is-enabled () {
   about "checks if a given item is enabled for a particular component/file-type"
-  group "bash-it:core:components"
+  group "gaudi-bash:core:components"
 
   __check-function-parameters "$1" || return 1
   if [[ -n "$1" ]] && [[ -n "$2" ]]; then
-    _bash-it-component-list-enabled "$1" | tr ' ' '\n' |  $(_bash-it-grep) -E -q -- "^${2}$"
+    _gaudi-bash-component-list-enabled "$1" | tr ' ' '\n' |  $(_gaudi-bash-grep) -E -q -- "^${2}$"
   else
     return 1
   fi
 }
 
-# @function     _bash-it-component-item-is-disabled
+# @function     _gaudi-bash-component-item-is-disabled
 # @description  checks if a given item is disabled for a particular component/file-type
 #               Uses the component cache if available
 # @param $1     type: the component type (plugin, alias, completion)
 # @param $2     component: the component name (search string) to match against
 # @return       success status (0) if an item of the component is enabled, fail status (1) otherwise.
-# @example      ❯ _bash-it-component-item-is-disabled alias git && echo "git aliases are disabled"
-_bash-it-component-item-is-disabled () {
+# @example      ❯ _gaudi-bash-component-item-is-disabled alias git && echo "git aliases are disabled"
+_gaudi-bash-component-item-is-disabled () {
   about "checks if a given item is disabled for a particular component/file-type"
-  group "bash-it:core:components"
+  group "gaudi-bash:core:components"
 
   __check-function-parameters "$1" || return 1
   if [[ -n "$1" ]] && [[ -n "$2" ]]; then
-    _bash-it-component-list-disabled "$1" | tr ' ' '\n' |  $(_bash-it-grep) -E -q -- "^${2}$"
+    _gaudi-bash-component-list-disabled "$1" | tr ' ' '\n' |  $(_gaudi-bash-grep) -E -q -- "^${2}$"
   else
     return 1
   fi

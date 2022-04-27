@@ -2,25 +2,25 @@
 # shellcheck disable=SC2002
 
 # @function     _help-completions
-# @description  summarize all completions available in bash-it
+# @description  summarize all completions available in gaudi-bash
 # @return       returns the table of available completions, their status(enabled/disabled) and description
 # @example      ❯ _help-completions
 _help-completions () {
-  about 'summarize all completions available in bash-it'
-  group 'bash-it:core:help'
+  about 'summarize all completions available in gaudi-bash'
+  group 'gaudi-bash:core:help'
 
-  _bash-it-show completions
+  _gaudi-bash-show completions
 }
 
 # @function     _help-aliases
-# @description  summarize aliases available in bash-it (default: all enabled aliases)
+# @description  summarize aliases available in gaudi-bash (default: all enabled aliases)
 # @param $1     (optional) component name: display only aliases for the passed component if available
 # @return       returns the list of alias definitions
 # @example      ❯ _help-aliases
 #               ❯ _help-aliases git
 _help-aliases () {
     about "shows help for all aliases, or a specific alias group"
-    group "bash-it:core:help"
+    group "gaudi-bash:core:help"
 
     if [[ -n "$1" ]]; then
         case $1 in
@@ -33,33 +33,33 @@ _help-aliases () {
         esac
 
         # If the alias doesn't exist .. return an error code
-        [[ -e "${BASH_IT}/components/$alias_path" ]] || return 1
+        [[ -e "${GAUDI_BASH}/components/$alias_path" ]] || return 1
 
-        cat "${BASH_IT}/components/$alias_path" | metafor alias | sed "s/$/'/"
+        cat "${GAUDI_BASH}/components/$alias_path" | metafor alias | sed "s/$/'/"
     else
         local __file
 
-        for __file in $(sort <(compgen -G "${BASH_IT}/components/enabled/*.aliases.bash"))
+        for __file in $(sort <(compgen -G "${GAUDI_BASH}/components/enabled/*.aliases.bash"))
         do
             __help-list-aliases "$__file"
         done
 
-        if [[ -e "${BASH_IT}/aliases/custom.aliases.bash" ]]; then
-          __help-list-aliases "${BASH_IT}/aliases/custom.aliases.bash"
+        if [[ -e "${GAUDI_BASH}/aliases/custom.aliases.bash" ]]; then
+          __help-list-aliases "${GAUDI_BASH}/aliases/custom.aliases.bash"
         fi
     fi
 }
 
 # @function     _help-plugins
-# @description  summarize all functions defined by enabled bash-it plugins
+# @description  summarize all functions defined by enabled gaudi-bash plugins
 # @param $1     mode: help mode to decide what to show (default: show help for enabled plugins only)
-#                 - all: show all help functions that has valid composure about and group (including bash-it core functions)
+#                 - all: show all help functions that has valid composure about and group (including gaudi-bash core functions)
 # @return       returns the list of function names and their descriptions
 # @example      ❯ _help-plugins
 #               ❯ _help-plugins all
 _help-plugins () {
-    about 'summarize all functions defined by enabled bash-it plugins'
-    group 'bash-it:core:help'
+    about 'summarize all functions defined by enabled gaudi-bash plugins'
+    group 'gaudi-bash:core:help'
 
     # Overrides the composure default letterpress function to allow for custom column width setting for plugins help
     __letterpress () {
@@ -83,7 +83,7 @@ _help-plugins () {
         if [[ -n "$group" ]]; then
           local about
 
-          if [[ $1 != "all" ]] && [[ "$group" =~ "bash-it" ]]; then
+          if [[ $1 != "all" ]] && [[ "$group" =~ "gaudi-bash" ]]; then
             continue
           fi
 
