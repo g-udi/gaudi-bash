@@ -72,8 +72,8 @@ _gaudi-bash-update () {
 # @description  prints the gaudi-bash version
 #               shows current git SHA, commit hash and the remote that was compared against
 # @return       current git SHA e.g., Current git SHA: 47d1e26 on 2020-10-01T17:50:08-07:00
-#               last git commit link e.g., git@github.com:ahmadassaf/gaudi-bash/commit/47d1e26
-#               latest remote e.g., Compare to latest: git@github.com:ahmadassaf/gaudi-bash/compare/47d1e26...master
+#               last git commit link e.g., git@github.com:g-udi/gaudi-bash/commit/47d1e26
+#               latest remote e.g., Compare to latest: git@github.com:g-udi/gaudi-bash/compare/47d1e26...master
 _gaudi-bash-version () {
   about "shows current gaudi-bash version with the Current git SHA and commit hash"
   group "gaudi-bash:core"

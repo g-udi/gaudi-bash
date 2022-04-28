@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC1090,SC1091,SC2034
 
+source "./lib/colors.bash"
+
 _read_input() {
   unset REPLY
   while ! [[ $REPLY =~ ^[yY]$ ]] && ! [[ $REPLY =~ ^[nN]$ ]]; do
@@ -22,14 +24,16 @@ esac
 __print-gaudi-bash () {
 
 echo -e "
-██████╗  █████╗ ███████╗██╗  ██╗      ██╗████████╗
-██╔══██╗██╔══██╗██╔════╝██║  ██║      ██║╚══██╔══╝
-██████╔╝███████║███████╗███████║█████╗██║   ██║
-██╔══██╗██╔══██║╚════██║██╔══██║╚════╝██║   ██║
-██████╔╝██║  ██║███████║██║  ██║      ██║   ██║
-╚═════╝ ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝      ╚═╝   ╚═╝
+\033c
+ ██████╗  █████╗ ██╗   ██╗██████╗ ██╗      ██████╗  █████╗ ███████╗██╗  ██╗
+██╔════╝ ██╔══██╗██║   ██║██╔══██╗██║      ██╔══██╗██╔══██╗██╔════╝██║  ██║
+██║  ███╗███████║██║   ██║██║  ██║██║█████╗██████╔╝███████║███████╗███████║
+██║   ██║██╔══██║██║   ██║██║  ██║██║╚════╝██╔══██╗██╔══██║╚════██║██╔══██║
+╚██████╔╝██║  ██║╚██████╔╝██████╔╝██║      ██████╔╝██║  ██║███████║██║  ██║
+ ╚═════╝ ╚═╝  ╚═╝ ╚═════╝ ╚═════╝ ╚═╝      ╚═════╝ ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝
+                                                                           
 
-${CYAN}Installing gaudi-bash ..${NC}"
+${CYAN}Installing gaudi-bash ..${NC}\n"
 }
 
 # Show how to use this installer
@@ -76,7 +80,7 @@ GAUDI_BASH="$(cd "$(dirname "$0")" && pwd)"
 ! [[ $silent ]] && __print-gaudi-bash && bash --version
 
 if ! [[ $no_modify_config ]]; then
-
+  echo ""
   echo -e "${RED}We need to make sure to backup your $CONFIG_FILE before running this installation${NC}"
 
   if [[ -e "$HOME/$CONFIG_FILE.bak" ]] && ! [[ $silent ]]; then
@@ -106,7 +110,7 @@ fi
 # Load dependencies for enabling components
 source "$GAUDI_BASH/lib/composure.bash"
 # Allow access for composure specific syntax to other functions
-cite about param example group
+cite about param example group priority
 
 source "$GAUDI_BASH/lib/gaudi-bash.bash"
 

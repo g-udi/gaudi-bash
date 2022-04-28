@@ -4,7 +4,7 @@ load ../helper
 
 load ../../lib/composure
 
-cite about param example group
+cite about param example group priority
 
 load ../../lib/gaudi-bash
 
@@ -31,7 +31,7 @@ local_setup () {
   assert_file_exist "$GAUDI_BASH/tmp/enabled.gaudi-bash.backup"
   local backup_md5=$(md5sum "$GAUDI_BASH/tmp/enabled.gaudi-bash.backup" | awk '{print $1}')
   # This is compare against the md5 hash of the backup file created from a fresh set of enabled plugins after setup
-  assert_equal "$backup_md5" "e0ee585f9e1ce1d7b409d5acd7d5fde8"
+  assert_equal "$backup_md5" "cace0cf71b5cbaeadf601a964d56f13a"
 }
 
 @test "gaudi-bash core: _gaudi-bash-backup should overwrite old backed up components" {
@@ -55,13 +55,13 @@ local_setup () {
   assert_file_exist "$GAUDI_BASH/tmp/enabled.gaudi-bash.backup"
   backup_md5=$(md5sum "$GAUDI_BASH/tmp/enabled.gaudi-bash.backup" | awk '{print $1}')
   # This is compare against the md5 hash of the backup file created from a fresh set of enabled plugins after setup
-  assert_equal "$backup_md5" "e0ee585f9e1ce1d7b409d5acd7d5fde8"
+  assert_equal "$backup_md5" "cace0cf71b5cbaeadf601a964d56f13a"
 
   run gaudi-bash disable completion git
   run _gaudi-bash-backup
   backup_md5=$(md5sum "$GAUDI_BASH/tmp/enabled.gaudi-bash.backup" | awk '{print $1}')
   # This is compare against the md5 hash of the backup file created from a fresh set of enabled plugins after setup
-  assert_equal "$backup_md5" "662d4f27c32d1d408a0bccab8b1825ea"
+  assert_equal "$backup_md5" "10a9e81384ef9f77c886cac1a4ab7373"
 }
 
 @test "gaudi-bash core: _gaudi-bash-restore should successfully restore backed up components" {
@@ -86,7 +86,7 @@ local_setup () {
   assert_file_exist "$GAUDI_BASH/tmp/enabled.gaudi-bash.backup"
   backup_md5=$(md5sum "$GAUDI_BASH/tmp/enabled.gaudi-bash.backup" | awk '{print $1}')
   # This is compare against the md5 hash of the backup file created from a fresh set of enabled plugins after setup
-  assert_equal "$backup_md5" "e0ee585f9e1ce1d7b409d5acd7d5fde8"
+  assert_equal "$backup_md5" "cace0cf71b5cbaeadf601a964d56f13a"
 
   run gaudi-bash disable plugins all
   run gaudi-bash disable completion all

@@ -64,7 +64,8 @@ _gaudi-bash-enable () {
 
         # Load the priority from the file if it present there
         declare local_file_priority use_load_priority
-        local_file_priority=$(grep -E "^# GAUDI_BASH_LOAD_PRIORITY:" "${GAUDI_BASH}/components/$type/lib/$_component" | awk -F': ' '{ print $2 }')
+
+        local_file_priority=$(cat "${GAUDI_BASH}/components/$type/lib/$_component" | metafor priority)
         use_load_priority=${local_file_priority:-$load_priority}
 
         ln -s "${GAUDI_BASH}"/components/"$type"/lib/"$_component" "${GAUDI_BASH}/components/enabled/${use_load_priority}${GAUDI_BASH_LOAD_PRIORITY_SEPARATOR}${_component}"

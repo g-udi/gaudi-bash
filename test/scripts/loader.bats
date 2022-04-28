@@ -4,7 +4,7 @@ load ../helper
 
 load ../../lib/composure
 
-cite about param example group
+cite about param example group priority
 
 local_setup () {
   prepare

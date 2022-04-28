@@ -4,7 +4,7 @@ load ../helper
 
 load ../../lib/composure
 
-cite about param example group
+cite about param example group priority
 
 load ../../lib/gaudi-bash
 load ../../lib/helpers/cache
@@ -67,7 +67,7 @@ local_setup () {
   assert_line --index 0 --partial "enabled with priority"
   assert_line --index 1 --partial "enabled with priority"
   assert_link_exist "$GAUDI_BASH/components/enabled/250___node.plugins.bash"
-  assert_link_exist "$GAUDI_BASH/components/enabled/225___nvm.plugins.bash"
+  assert_link_exist "$GAUDI_BASH/components/enabled/250___nvm.plugins.bash"
 }
 
 @test "gaudi-bash helpers: _gaudi-bash-enable: should enable all plugins" {
@@ -91,5 +91,5 @@ local_setup () {
   assert_line --index 2 --partial "enabled with priority"
 
   assert_link_exist "$GAUDI_BASH/components/enabled/250___node.plugins.bash"
-  assert_link_exist "$GAUDI_BASH/components/enabled/225___nvm.plugins.bash"
+  assert_link_exist "$GAUDI_BASH/components/enabled/250___nvm.plugins.bash"
 }

@@ -3,9 +3,9 @@
 load ../helper
 load ../../lib/composure
 
-cite about param example group
+cite about param example group priority
 
-load ../../lib/helpers/gaudi-bash
+load ../../lib/gaudi-bash
 load ../../lib/helpers/components
 load ../../lib/helpers/utils
 load ../../lib/helpers/cache

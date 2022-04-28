@@ -27,7 +27,7 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/ahmadassaf/gaudi-bash/mast
 
 If you wish to do a standalone installation then you proceed with the following steps:
 
-1. Check a clone of this repo: `git clone https://github.com/ahmadassaf/gaudi-bash.git ~/.gaudi_bash`
+1. Check a clone of this repo: `git clone https://github.com/g-udi/gaudi-bash.git ~/.gaudi_bash`
 2. Run `~/.gaudi_bash/setup.sh` (it automatically backs up your `~/.bash_profile`)
 3. Edit your `~/.bash_profile` file in order to customize gaudi-bash.
 
@@ -96,7 +96,7 @@ The main changes in this repo are:
  - Ensure high coverage unit tests for all core functions and split test functions as well into small units
  - Merged some of the work from gaudi-bash issues and openPRs that made sense to me
 
-I will discuss more the code structure and functions in [DEVELOPMENT](https://github.com/ahmadassaf/gaudi-bash/blob/master/DEVELOPMENT.md)
+I will discuss more the code structure and functions in [DEVELOPMENT](https://github.com/g-udi/gaudi-bash/blob/master/DEVELOPMENT.md)
 
 
 ## Help Screens

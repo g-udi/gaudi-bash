@@ -13,7 +13,7 @@ __install () {
   # precedence over umasks except for filesystems mounted with option "noacl".
   umask g-w,o-w
 
-  env git clone --depth=1 --recurse-submodules https://github.com/ahmadassaf/gaudi-bash.git "$GAUDI_BASH" || {
+  env git clone --depth=1 --recurse-submodules https://github.com/g-udi/gaudi-bash.git "$GAUDI_BASH" || {
       printf "%s\n" "Error: Cloning of gaudi into this machine failed :("
       exit 1
   }

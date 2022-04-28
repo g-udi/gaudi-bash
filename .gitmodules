@@ -18,5 +18,5 @@
 	url = https://github.com/bats-core/bats-support
 [submodule "components"]
 	path = components
-	url = git@github.com:ahmadassaf/gaudi-bash-components
+	url = git@github.com:g-udi/gaudi-bash-components
 	branch = master

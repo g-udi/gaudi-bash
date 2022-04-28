@@ -5,13 +5,10 @@
 load ../helper
 
 load ../../lib/composure
-
-cite about param example group
-
 load ../../lib/gaudi-bash
 load ../../lib/colors
 
-cite about param example group
+cite about param example group priority
 
 load ../../lib/log
 
