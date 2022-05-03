@@ -1,21 +1,27 @@
 [submodule "bin/composure"]
 	path = bin/composure
 	url = https://github.com/erichs/composure
+	branch = master
 [submodule "bin/preexec"]
 	path = bin/preexec
 	url = https://github.com/rcaloras/bash-preexec
+	branch = master
 [submodule "bin/bats-core"]
 	path = bin/bats-core
 	url = https://github.com/bats-core/bats-core
+	branch = master
 [submodule "bin/bats-assert"]
 	path = bin/bats-assert
 	url = https://github.com/bats-core/bats-assert
+	branch = master
 [submodule "bin/bats-file"]
 	path = bin/bats-file
 	url = https://github.com/bats-core/bats-file
+	branch = master
 [submodule "bin/bats-support"]
 	path = bin/bats-support
 	url = https://github.com/bats-core/bats-support
+	branch = master
 [submodule "components"]
 	path = components
 	url = git@github.com:g-udi/gaudi-bash-components
