@@ -1,16 +1,16 @@
 #!/usr/bin/env bash
+# shellcheck shell=bash
 # shellcheck disable=SC1090,SC1091,SC2034
 
 # Initialize Bash It
 GAUDI_BASH_LOG_PREFIX="CORE"
 
 # Only set $GAUDI_BASH if it's not already set
-if [[ -z "$GAUDI_BASH" ]];
-then
-  # Setting $BASH to maintain backwards compatibility
-  export GAUDI_BASH=$BASH
-  BASH="$(bash -c 'echo $BASH')"
-  export BASH
+if [[ -z "$GAUDI_BASH" ]]; then
+	# Setting $BASH to maintain backwards compatibility
+	export GAUDI_BASH=$BASH
+	BASH="$(bash -c 'echo $BASH')"
+	export BASH
 fi
 
 # Load composure first, so we support function metadata and then logging
@@ -19,7 +19,7 @@ source "${GAUDI_BASH}/lib/log.bash"
 
 # Load all the libraries
 for lib in "${GAUDI_BASH}"/lib/*.bash; do
-  [[ "$lib" != "${GAUDI_BASH}/lib/appearance.bash" ]] && _log_component "$lib" "library" && source "$lib"
+	[[ "$lib" != "${GAUDI_BASH}/lib/appearance.bash" ]] && _log_component "$lib" "library" && source "$lib"
 done
 
 # Load the loader that will load all enabled components
@@ -33,15 +33,15 @@ for custom in ${CUSTOM_LIB}; do [[ -e "${custom}" ]] && _log_component "$custom"
 source "${GAUDI_BASH}/lib/appearance.bash"
 
 # handle the case where GAUDI_BASH_RELOAD_LEGACY is set
-if ! command -v reload &>/dev/null && [[ -n "$GAUDI_BASH_RELOAD_LEGACY" ]]; then
-  case $OSTYPE in
-    darwin*)
-      alias reload="source \$HOME/.bash_profile"
-      ;;
-    *)
-      alias reload="source \$HOME/.bashrc"
-      ;;
-  esac
+if ! command -v reload &> /dev/null && [[ -n "$GAUDI_BASH_RELOAD_LEGACY" ]]; then
+	case $OSTYPE in
+		darwin*)
+			alias reload="source \$HOME/.bash_profile"
+			;;
+		*)
+			alias reload="source \$HOME/.bashrc"
+			;;
+	esac
 fi
 
 # Disable trap DEBUG on subshells [ref:https://github.com/Bash-it/gaudi-bash/pull/1040]

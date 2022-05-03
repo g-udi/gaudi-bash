@@ -34,6 +34,7 @@ repos:
         language: system
         files: "\\.sh$"
         types: [file]
+        exclude: ^(^test/fixtures/|^template/)
       - id: shellcheck-audit
         name: Check .bash files against gaudi-bash requirements (shellcheck shebang)
         exclude: "test/test_helper.bash"
@@ -41,3 +42,4 @@ repos:
         language: system
         files: "\\.bash$"
         types: [file]
+        exclude: ^(^test/fixtures/|^template/)

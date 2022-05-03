@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# shellcheck shell=bash
 # shellcheck disable=SC2143,SC2154
 
 # A collection of reusable functions
@@ -7,11 +8,11 @@
 # @description  check if the passed parameter is a function
 #               sets $? to true if parameter is the name of a function
 # @return       status code success (0) if the function is found or fails otherwise
-_is_function () {
-  about "check if the passed parameter is a function"
-  group "gaudi-bash:core:utils"
+_is_function() {
+	about "check if the passed parameter is a function"
+	group "gaudi-bash:core:utils"
 
-  [[ -n "$(LANG=C type -t "$1" 2>/dev/null | grep 'function')" ]]
+	[[ -n "$(LANG=C type -t "$1" 2> /dev/null | grep 'function')" ]]
 }
 
 # @function     _command_exists
@@ -20,14 +21,14 @@ _is_function () {
 # @param $2     message (optional) for a log message to include when the command not found
 # @return       status code success (0) if the function is found or fails otherwise
 # @example      ❯ _command_exists ls && echo exists
-_command_exists () {
-  about "check if the command passed as the argument exists"
-  group "gaudi-bash:core:utils"
+_command_exists() {
+	about "check if the command passed as the argument exists"
+	group "gaudi-bash:core:utils"
 
-  local msg
+	local msg
 
-  msg="${2:-"command $1 does not exist!"}"
-  type "$1" &> /dev/null || (_log_debug "$msg" && return 1) ;
+	msg="${2:-"command $1 does not exist!"}"
+	type "$1" &> /dev/null || (echo "$msg" && return 1)
 }
 
 # @function     _read_input
@@ -38,14 +39,14 @@ _command_exists () {
 # @return       REPLY entered by the user
 # @example      ❯ _read_input "would you like to update gaudi-bash?"
 _read_input() {
-  about "reads input from the prompt for a yes/no (one character) input"
-  group "gaudi-bash:core:utils"
+	about "reads input from the prompt for a yes/no (one character) input"
+	group "gaudi-bash:core:utils"
 
-  unset REPLY
-  while ! [[ $REPLY =~ ^[yY]$ ]] && ! [[ $REPLY =~ ^[nN]$ ]]; do
-    read -rp "${1} " -n 1 </dev/tty;
-    [[ -n $REPLY ]] && echo ""
-  done
+	unset REPLY
+	while ! [[ $REPLY =~ ^[yY]$ ]] && ! [[ $REPLY =~ ^[nN]$ ]]; do
+		read -rp "${1} " -n 1 < /dev/tty
+		[[ -n $REPLY ]] && echo ""
+	done
 }
 
 # @function     _array-contains
@@ -64,15 +65,15 @@ _read_input() {
 #       echo "contains pear!"
 #     fi
 #   ❯ contains pear!
-_array-contains () {
-  about "searches an array for an exact match against the term passed as the first argument to the function"
-  group "gaudi-bash:core:utils"
+_array-contains() {
+	about "searches an array for an exact match against the term passed as the first argument to the function"
+	group "gaudi-bash:core:utils"
 
-  local e match="$1"
+	local e match="$1"
 
-  shift
-  for e; do [[ "$e" == "$match" ]] && return 0; done
-  return 1
+	shift
+	for e; do [[ "$e" == "$match" ]] && return 0; done
+	return 1
 }
 
 # @function     _clean-string
@@ -96,21 +97,21 @@ _array-contains () {
 #
 #   ❯ _clean-string " test test test " "any"
 #   ❯ 'testtesttest'
-_clean-string () {
-  about "cleans a string from whitespace give a passed cleaning mode"
-  group "gaudi-bash:core:utils"
+_clean-string() {
+	about "cleans a string from whitespace give a passed cleaning mode"
+	group "gaudi-bash:core:utils"
 
-  local mode=${2:-"all"}
+	local mode=${2:-"all"}
 
-  if [[ $mode = "all" ]]; then
-    echo -e "${1}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//'
-  elif [[ $mode = "trailing" ]]; then
-    echo -e "${1}" | sed -e 's/[[:space:]]*$//'
-  elif [[ $mode = "leading" ]]; then
-    echo -e "${1}" | sed -e 's/^[[:space:]]*//'
-  elif [[ $mode = "any" ]]; then
-    echo -e "${1}" | tr -d '[:space:]'
-  fi
+	if [[ $mode = "all" ]]; then
+		echo -e "${1}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//'
+	elif [[ $mode = "trailing" ]]; then
+		echo -e "${1}" | sed -e 's/[[:space:]]*$//'
+	elif [[ $mode = "leading" ]]; then
+		echo -e "${1}" | sed -e 's/^[[:space:]]*//'
+	elif [[ $mode = "any" ]]; then
+		echo -e "${1}" | tr -d '[:space:]'
+	fi
 }
 
 # @function     _array-dedupe
@@ -124,9 +125,9 @@ _clean-string () {
 #
 #   ❯ _array-dedupe "${array_a[@]}" "${array_b[@]}"
 #   ❯ apple apricot cucumber mandarin orange pear
-_array-dedupe () {
-  about "creates a concatenated array of unique and sorted elements"
-  group "gaudi-bash:core:utils"
+_array-dedupe() {
+	about "creates a concatenated array of unique and sorted elements"
+	group "gaudi-bash:core:utils"
 
-  _clean-string "$(echo "$*" | tr ' ' '\n' | sort -u | tr '\n' ' ')" "all"
+	_clean-string "$(echo "$*" | tr ' ' '\n' | sort -u | tr '\n' ' ')" "all"
 }

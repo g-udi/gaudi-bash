@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# shellcheck shell=bash
 # shellcheck disable=SC2001,SC2002
 
 # A collection of reusable gaudi-bash functions

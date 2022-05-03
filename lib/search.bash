@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
+# shellcheck shell=bash
 # shellcheck disable=SC2034,SC1090,SC2091,SC2207,SC2059
-
 
 # @function _gaudi-bash-search
 # @description  returns list of aliases, plugins and completions in gaudi-bash
@@ -46,43 +46,43 @@
 #          plugins:  git ruby
 #      completions:  git
 #
-_gaudi-bash-search () {
-  about "searches for given terms amongst gaudi-bash plugins, aliases and completions"
-  group "gaudi-bash:search"
+_gaudi-bash-search() {
+	about "searches for given terms amongst gaudi-bash plugins, aliases and completions"
+	group "gaudi-bash:search"
 
-  [[ -z "$(type _array-contains 2>/dev/null)" ]]
+	[[ -z "$(type _array-contains 2> /dev/null)" ]]
 
-  export GAUDI_BASH_SEARCH_USE_COLOR=true
-  export GAUDI_BASH_GREP=${GAUDI_BASH_GREP:-$(which egrep)}
+	export GAUDI_BASH_SEARCH_USE_COLOR=true
+	export GAUDI_BASH_GREP=${GAUDI_BASH_GREP:-$(which egrep)}
 
-  declare -a GAUDI_BASH_COMPONENTS=(aliases plugins completions)
+	declare -a GAUDI_BASH_COMPONENTS=(aliases plugins completions)
 
-  if [[ -z "$*" ]] ; then
-    _gaudi-bash-search-help
-    return 0
-  fi
+	if [[ -z "$*" ]]; then
+		_gaudi-bash-search-help
+		return 0
+	fi
 
-  local -a args=()
-  for word in "$@"; do
-    if [[ ${word} == "--help" || ${word} == "-h" ]]; then
-      _gaudi-bash-search-help
-      return 0
-    elif [[ ${word} == "--refresh" || ${word} == "-r" ]]; then
-      _gaudi-bash-component-cache-clean
-    elif [[ ${word} == "--no-color" || ${word} == '-c' ]]; then
-      export GAUDI_BASH_SEARCH_USE_COLOR=false
-    else
-      args=("${args[@]}" "${word}")
-    fi
-  done
+	local -a args=()
+	for word in "$@"; do
+		if [[ ${word} == "--help" || ${word} == "-h" ]]; then
+			_gaudi-bash-search-help
+			return 0
+		elif [[ ${word} == "--refresh" || ${word} == "-r" ]]; then
+			_gaudi-bash-component-cache-clean
+		elif [[ ${word} == "--no-color" || ${word} == '-c' ]]; then
+			export GAUDI_BASH_SEARCH_USE_COLOR=false
+		else
+			args=("${args[@]}" "${word}")
+		fi
+	done
 
-  if [[ ${#args} -gt 0 ]]; then
-    for component in "${GAUDI_BASH_COMPONENTS[@]}" ; do
-      _gaudi-bash-search-component "${component}" "${args[@]}"
-    done
-  fi
+	if [[ ${#args} -gt 0 ]]; then
+		for component in "${GAUDI_BASH_COMPONENTS[@]}"; do
+			_gaudi-bash-search-component "${component}" "${args[@]}"
+		done
+	fi
 
-  return 0
+	return 0
 }
 
 # @function     _gaudi-bash-component-term-matches-negation
@@ -91,17 +91,18 @@ _gaudi-bash-search () {
 # @param $2     negation terms <array>: the terms we need to negate/remove from the search matches (result set)
 # @return       String of search results without the negated terms
 # @example      ❯ _gaudi-bash-component-term-matches-negation "${match}" "${negative_terms[@]}"
-_gaudi-bash-component-term-matches-negation () {
-  about "matches the negation of the search term entered"
-  group "gaudi-bash:search"
+_gaudi-bash-component-term-matches-negation() {
+	about "matches the negation of the search term entered"
+	group "gaudi-bash:search"
 
-  local match="$1"; shift
-  local negative
+	local match="$1"
+	shift
+	local negative
 
-  for negative in "$@"; do
-    [[ "${match}" =~ ${negative} ]] && return 0
-  done
-  return 1
+	for negative in "$@"; do
+		[[ "${match}" =~ ${negative} ]] && return 0
+	done
+	return 1
 }
 
 # @function     _gaudi-bash-component-component
@@ -110,72 +111,73 @@ _gaudi-bash-component-term-matches-negation () {
 # @param $2     search terms: the terms we want to search for
 # @return       Results that match our search term
 # @example      ❯ _gaudi-bash-search-component aliases @git rake bundler -chruby
-_gaudi-bash-search-component () {
-  about "searches for given terms amongst a given component"
-  group "gaudi-bash:search"
+_gaudi-bash-search-component() {
+	about "searches for given terms amongst a given component"
+	group "gaudi-bash:search"
 
-  local component="$1"; shift
+	local component="$1"
+	shift
 
-  # If one of the search terms is --enable or --disable, we will apply this action to the matches further down.
-  local component_singular action action_func
-  local -a search_commands=(enable disable)
+	# If one of the search terms is --enable or --disable, we will apply this action to the matches further down.
+	local component_singular action action_func
+	local -a search_commands=(enable disable)
 
-  # check if the arguments has a --enable or --disable flags passed
-  for search_command in "${search_commands[@]}"; do
-    if $(_array-contains "--${search_command}" "$@"); then
-      action="${search_command}"
-      action_func="_gaudi-bash-${action} ${component}"
-      break
-    fi
-  done
+	# check if the arguments has a --enable or --disable flags passed
+	for search_command in "${search_commands[@]}"; do
+		if $(_array-contains "--${search_command}" "$@"); then
+			action="${search_command}"
+			action_func="_gaudi-bash-${action} ${component}"
+			break
+		fi
+	done
 
-  local -a terms=("$@")
+	local -a terms=("$@")
 
-  unset exact_terms
-  unset partial_terms
-  unset negative_terms
+	unset exact_terms
+	unset partial_terms
+	unset negative_terms
 
-  # Terms that should be included only if they match exactly
-  local -a exact_terms=()
-  # Terms that should be included if they match partially
-  local -a partial_terms=()
-  # Negated partial terms that should be excluded
-  local -a negative_terms=()
+	# Terms that should be included only if they match exactly
+	local -a exact_terms=()
+	# Terms that should be included if they match partially
+	local -a partial_terms=()
+	# Negated partial terms that should be excluded
+	local -a negative_terms=()
 
-  unset component_list
-  local -a component_list=( $(_gaudi-bash-component-list "${component}") )
-  local term
+	unset component_list
+	local -a component_list=($(_gaudi-bash-component-list "${component}"))
+	local term
 
-  for term in "${terms[@]}"; do
-    local search_term="${term:1}"
+	for term in "${terms[@]}"; do
+		local search_term="${term:1}"
 
-    if [[ "${term:0:2}" == "--" ]] ; then
-      continue
-    elif [[ "${term:0:1}" == "-"  ]] ; then
-      negative_terms=("${negative_terms[@]}" "${search_term}")
-    elif [[ "${term:0:1}" == "@"  ]] ; then
-      if $(_array-contains "${search_term}" "${component_list[@]}"); then
-        exact_terms=("${exact_terms[@]}" "${search_term}")
-      fi
-    else
-      partial_terms=("${partial_terms[@]}" $(_gaudi-bash-component-list-matching "${component}" "${term}") )
-    fi
-  done
+		if [[ "${term:0:2}" == "--" ]]; then
+			continue
+		elif [[ "${term:0:1}" == "-" ]]; then
+			negative_terms=("${negative_terms[@]}" "${search_term}")
+		elif [[ "${term:0:1}" == "@" ]]; then
+			if $(_array-contains "${search_term}" "${component_list[@]}"); then
+				exact_terms=("${exact_terms[@]}" "${search_term}")
+			fi
+		else
+			partial_terms=("${partial_terms[@]}" $(_gaudi-bash-component-list-matching "${component}" "${term}"))
+		fi
+	done
 
-  local -a total_matches=( $(_array-dedupe "${exact_terms[@]}" "${partial_terms[@]}") )
+	local -a total_matches=($(_array-dedupe "${exact_terms[@]}" "${partial_terms[@]}"))
 
-  unset matches
-  declare -a matches=()
-  for match in "${total_matches[@]}"; do
-    local include_match=true
+	unset matches
+	declare -a matches=()
+	for match in "${total_matches[@]}"; do
+		local include_match=true
 
-    if  [[ ${#negative_terms[@]} -gt 0 ]]; then
-      ( _gaudi-bash-component-term-matches-negation "${match}" "${negative_terms[@]}" ) && include_match=false
-    fi
-    ( ${include_match} ) && matches=("${matches[@]}" "${match}")
-  done
-  _gaudi-bash-search-print-result "${component}" "${action}" "${action_func}" "${matches[@]}"
-  unset matches final_matches terms
+		if [[ ${#negative_terms[@]} -gt 0 ]]; then
+			(_gaudi-bash-component-term-matches-negation "${match}" "${negative_terms[@]}") && include_match=false
+		fi
+		(${include_match}) && matches=("${matches[@]}" "${match}")
+	done
+	_gaudi-bash-search-print-result "${component}" "${action}" "${action_func}" "${matches[@]}"
+	unset matches final_matches terms
 }
 
 # @function     _gaudi-bash-search-print-result
@@ -186,94 +188,97 @@ _gaudi-bash-search-component () {
 # @param $4     search terms: the search result terms
 # @return       print the search results formatted and colored
 # @example      ❯ _gaudi-bash-search-print-result "${component}" "${action}" "${action_func}" "${matches[@]}"
-_gaudi-bash-search-print-result () {
-  local component="$1"; shift
-  local action="$1"; shift
-  local action_func="$1"; shift
-  local -a matches=("$@")
-  local color_component color_enable color_disable color_off
+_gaudi-bash-search-print-result() {
+	local component="$1"
+	shift
+	local action="$1"
+	shift
+	local action_func="$1"
+	shift
+	local -a matches=("$@")
+	local color_component color_enable color_disable color_off
 
-  color_sep=':'
+	color_sep=':'
 
-  ( ${GAUDI_BASH_SEARCH_USE_COLOR} ) && {
-    color_component="${CYAN}"
-    color_enable="${GREEN}"
-    suffix_enable=''
-    suffix_disable=''
-    color_disable="${NC}"
-    color_off="${NC}"
-  }
+	(${GAUDI_BASH_SEARCH_USE_COLOR}) && {
+		color_component="${CYAN}"
+		color_enable="${GREEN}"
+		suffix_enable=''
+		suffix_disable=''
+		color_disable="${NC}"
+		color_off="${NC}"
+	}
 
-  ( ${GAUDI_BASH_SEARCH_USE_COLOR} ) || {
-    color_component=''
-    suffix_enable=' ✓ '
-    suffix_disable='  '
-    color_enable=''
-    color_disable=''
-    color_off=''
-  }
+	(${GAUDI_BASH_SEARCH_USE_COLOR}) || {
+		color_component=''
+		suffix_enable=' ✓ '
+		suffix_disable='  '
+		color_enable=''
+		color_disable=''
+		color_off=''
+	}
 
-  local match
-  local modified=0
+	local match
+	local modified=0
 
-  if [[ "${#matches[@]}" -gt 0 ]] ; then
-    printf "${color_component}%13s${color_sep} ${color_off}" "${component}"
+	if [[ "${#matches[@]}" -gt 0 ]]; then
+		printf "${color_component}%13s${color_sep} ${color_off}" "${component}"
 
-    for match in "${matches[@]}"; do
-      local enabled=0
+		for match in "${matches[@]}"; do
+			local enabled=0
 
-      ( _gaudi-bash-component-item-is-enabled "${component}" "${match}" ) && enabled=1
+			(_gaudi-bash-component-item-is-enabled "${component}" "${match}") && enabled=1
 
-      local match_color compatible_action suffix opposite_suffix
+			local match_color compatible_action suffix opposite_suffix
 
-      (( "${enabled}" )) && {
-        match_color=${color_enable}
-        suffix=${suffix_enable}
-        opposite_suffix=${suffix_disable}
-        compatible_action="disable"
-      }
+			(("${enabled}")) && {
+				match_color=${color_enable}
+				suffix=${suffix_enable}
+				opposite_suffix=${suffix_disable}
+				compatible_action="disable"
+			}
 
-      (( "${enabled}" )) || {
-        match_color=${color_disable}
-        suffix=${suffix_disable}
-        opposite_suffix=${suffix_enable}
-        compatible_action="enable"
-      }
+			(("${enabled}")) || {
+				match_color=${color_disable}
+				suffix=${suffix_disable}
+				opposite_suffix=${suffix_enable}
+				compatible_action="enable"
+			}
 
-      local m="${match}${suffix}"
-      local len
-      len=${#m}
+			local m="${match}${suffix}"
+			local len
+			len=${#m}
 
-      printf " ${match_color}${match}${suffix}"
-      if [[ "${action}" == "${compatible_action}" ]]; then
-        if [[ ${action} == "enable" && ${GAUDI_BASH_SEARCH_USE_COLOR} == false ]]; then
-          printf "${match}${suffix}"
-        else
-          _gaudi-bash-erase-term "${len}"
-        fi
-        modified=1
-        result=$(${action_func} "${match}")
-        local temp="color_${compatible_action}"
+			printf " ${match_color}${match}${suffix}"
+			if [[ "${action}" == "${compatible_action}" ]]; then
+				if [[ ${action} == "enable" && ${GAUDI_BASH_SEARCH_USE_COLOR} == false ]]; then
+					printf "${match}${suffix}"
+				else
+					_gaudi-bash-erase-term "${len}"
+				fi
+				modified=1
+				result=$(${action_func} "${match}")
+				local temp="color_${compatible_action}"
 
-        match_color=${!temp}
-        _gaudi-bash-rewind "${len}"
-        printf "${match_color}${match}${opposite_suffix}"
-      fi
+				match_color=${!temp}
+				_gaudi-bash-rewind "${len}"
+				printf "${match_color}${match}${opposite_suffix}"
+			fi
 
-      printf "${color_off}"
-    done
+			printf "${color_off}"
+		done
 
-    [[ ${modified} -gt 0 ]] && _gaudi-bash-component-cache-clean "${component}"
-    printf "\n"
-  fi
+		[[ ${modified} -gt 0 ]] && _gaudi-bash-component-cache-clean "${component}"
+		printf "\n"
+	fi
 }
 
 # @function     _gaudi-bash-search-help
 # @description  displays the gaudi-bash search help
 # @return       Help manual for the search function
-_gaudi-bash-search-help () {
+_gaudi-bash-search-help() {
 
-printf "${NC}%b" "
+	printf "${NC}%b" "
 
 ${YELLOW}USAGE${NC}
 

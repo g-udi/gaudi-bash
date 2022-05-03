@@ -78,8 +78,8 @@ local_setup () {
   ln -s $GAUDI_BASH/components/aliases/lib/b.aliases.bash $GAUDI_BASH/components/enabled/150___b.aliases.bash
   assert_link_exist "$GAUDI_BASH/components/enabled/150___b.aliases.bash"
 
-  ln -s $GAUDI_BASH/components/plugins/lib/c.plugin.bash $GAUDI_BASH/components/enabled/250___c.plugin.bash
-  assert_link_exist "$GAUDI_BASH/components/enabled/250___c.plugin.bash"
+  ln -s $GAUDI_BASH/components/plugins/lib/c.plugins.bash $GAUDI_BASH/components/enabled/250___c.plugins.bash
+  assert_link_exist "$GAUDI_BASH/components/enabled/250___c.plugins.bash"
 
   run alias test_alias &> /dev/null
   assert_failure
@@ -103,8 +103,8 @@ local_setup () {
   ln -s $GAUDI_BASH/components/aliases/lib/b.aliases.bash $GAUDI_BASH/components/enabled/350___b.completion.bash
   assert_link_exist "$GAUDI_BASH/components/enabled/350___b.completion.bash"
 
-  ln -s $GAUDI_BASH/components/plugins/c.plugin.bash $GAUDI_BASH/components/enabled/250___c.plugin.bash
-  assert_link_exist "$GAUDI_BASH/components/enabled/250___c.plugin.bash"
+  ln -s $GAUDI_BASH/components/plugins/c.plugins.bash $GAUDI_BASH/components/enabled/250___c.plugins.bash
+  assert_link_exist "$GAUDI_BASH/components/enabled/250___c.plugins.bash"
 
   run alias test_alias &> /dev/null
   assert_failure
@@ -128,8 +128,8 @@ local_setup () {
   ln -s $GAUDI_BASH/components/aliases/lib/b.aliases.bash $GAUDI_BASH/components/enabled/350___b.completion.bash
   assert_link_exist "$GAUDI_BASH/components/enabled/350___b.completion.bash"
 
-  ln -s $GAUDI_BASH/components/plugins/lib/c.plugin.bash $GAUDI_BASH/components/enabled/950___c.plugin.bash
-  assert_link_exist "$GAUDI_BASH/components/enabled/950___c.plugin.bash"
+  ln -s $GAUDI_BASH/components/plugins/lib/c.plugins.bash $GAUDI_BASH/components/enabled/950___c.plugins.bash
+  assert_link_exist "$GAUDI_BASH/components/enabled/950___c.plugins.bash"
 
   run alias test_alias &> /dev/null
   assert_failure
@@ -153,8 +153,8 @@ local_setup () {
   ln -s $GAUDI_BASH/components/aliases/lib/b.aliases.bash $GAUDI_BASH/components/enabled/150___b.aliases.bash
   assert_link_exist "$GAUDI_BASH/components/enabled/150___b.aliases.bash"
 
-  ln -s $GAUDI_BASH/components/plugins/lib/c.plugin.bash $GAUDI_BASH/components/enabled/250___c.plugin.bash
-  assert_link_exist "$GAUDI_BASH/components/enabled/250___c.plugin.bash"
+  ln -s $GAUDI_BASH/components/plugins/lib/c.plugins.bash $GAUDI_BASH/components/enabled/250___c.plugins.bash
+  assert_link_exist "$GAUDI_BASH/components/enabled/250___c.plugins.bash"
 
   run alias test_alias &> /dev/null
   assert_failure

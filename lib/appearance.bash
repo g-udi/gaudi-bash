@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# shellcheck shell=bash
 # shellcheck disable=SC1090,SC2034
 
 GAUDI_BASH_LOG_PREFIX="THEME"
@@ -117,12 +118,12 @@ alias grep='grep $GREP_OPTIONS'
 
 # Load the theme
 if [[ -n $GAUDI_BASH_THEME ]]; then
-  source "$GAUDI_BASH/components/themes/$GAUDI_BASH_THEME/$GAUDI_BASH_THEME.theme.bash"
+	source "$GAUDI_BASH/components/themes/$GAUDI_BASH_THEME/$GAUDI_BASH_THEME.theme.bash"
 fi
 
 _log_component "$GAUDI_BASH_THEME" "theme"
 if [[ $PROMPT ]]; then
-  export PS1="\[""$PROMPT""\]"
+	export PS1="\[""$PROMPT""\]"
 fi
 
 unset GAUDI_BASH_LOG_PREFIX
