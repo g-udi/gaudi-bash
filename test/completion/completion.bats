@@ -1,4 +1,5 @@
-# #!/usr/bin/env bats
+#!/usr/bin/env bats
+# shellcheck shell=bats
 
 # load ../helper
 # load ../../lib/composure

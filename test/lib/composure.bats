@@ -1,4 +1,5 @@
 #!/usr/bin/env bats
+# shellcheck shell=bats
 
 load ../helper
 
@@ -8,6 +9,6 @@ cite about param example group priority
 
 @test "gaudi-bash lib: composure: composure_keywords()" {
 
-  run _composure_keywords
-  assert_output "about author example group param version"
+	run _composure_keywords
+	assert_output "about author example group param version"
 }
