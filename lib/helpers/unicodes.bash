@@ -46,4 +46,3 @@ _getUnicodes () {
   done
   echo ""
 }
-

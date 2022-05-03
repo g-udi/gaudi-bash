@@ -21,7 +21,7 @@ gaudi-bash is installed by running the following commands in your terminal. You 
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ahmadassaf/gaudi-bash/master/install.sh)"
 ```
 
-> **Manual inspection**: 
+> **Manual inspection**:
   It's a good idea to inspect the install script from projects you don't yet know. You can do that by downloading the install script first, looking through it so everything looks normal, then running it.
 
 
@@ -82,7 +82,7 @@ After the uninstall script finishes, remove the gaudi-bash directory from your m
 ## Architecture & Design
 > or why did I fork gaudi-bash
 
-I am a huge fan of gaudi-bash, but the more I used it, the more I ran into some issues. Thats when I started to dig into the codebase, open PRs and contribute to the codebase. It is however, after digging deeper into some areas that I found myself moving lots of parts and restructuring big chunks the code. Moreover, I found various inconsistencies when it came to code style and adherence to bash best practices (some examples outlined in this [issue](https://github.com/Bash-it/gaudi-bash/issues/194)). 
+I am a huge fan of gaudi-bash, but the more I used it, the more I ran into some issues. Thats when I started to dig into the codebase, open PRs and contribute to the codebase. It is however, after digging deeper into some areas that I found myself moving lots of parts and restructuring big chunks the code. Moreover, I found various inconsistencies when it came to code style and adherence to bash best practices (some examples outlined in this [issue](https://github.com/Bash-it/gaudi-bash/issues/194)).
 
 I also found lots of unused and redundant code, a huge part of that was to ensure backward compatibility with the older versions of gaudi-bash. Sometimes, it is better to start fresh and put the past behind us!
 

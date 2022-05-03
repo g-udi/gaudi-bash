@@ -94,5 +94,3 @@ teardown () {
   rm -rf "${GAUDI_BASH}"
   temp_del "${TEST_TEMP_DIR}"
 }
-
-
