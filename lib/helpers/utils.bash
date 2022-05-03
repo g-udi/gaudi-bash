@@ -103,13 +103,13 @@ _clean-string () {
   local mode=${2:-"all"}
 
   if [[ $mode = "all" ]]; then
-    printf "${1}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//'
+    echo -e "${1}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//'
   elif [[ $mode = "trailing" ]]; then
-    printf "${1}" | sed -e 's/[[:space:]]*$//'
+    echo -e "${1}" | sed -e 's/[[:space:]]*$//'
   elif [[ $mode = "leading" ]]; then
-    printf "${1}" | sed -e 's/^[[:space:]]*//'
+    echo -e "${1}" | sed -e 's/^[[:space:]]*//'
   elif [[ $mode = "any" ]]; then
-    printf "${1}" | tr -d '[:space:]'
+    echo -e "${1}" | tr -d '[:space:]'
   fi
 }
 

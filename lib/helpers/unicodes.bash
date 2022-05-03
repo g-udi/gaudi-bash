@@ -6,8 +6,8 @@
 __fast_chr () {
     local __octal __char
 
-    printf -v __octal '%03o' $1
-    printf -v __char \\$__octal
+    printf -v __octal '%03o' "$1"
+    printf -v __char \\"$__octal"
     REPLY=$__char
 }
 

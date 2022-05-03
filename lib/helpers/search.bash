@@ -7,7 +7,7 @@
 # @example      ❯ _gaudi-bash-rewind 2
 _gaudi-bash-rewind () {
   local length="$1"
-  printf "\033[${length}D"
+  echo -e "\033[${length}D"
 }
 
 # @function     _gaudi-bash-erase-term
@@ -18,7 +18,7 @@ _gaudi-bash-rewind () {
 # @example      ❯ _gaudi-bash-component-cache-add plugin
 _gaudi-bash-erase-term () {
   local length="$1"
-  _gaudi-bash-rewind ${length}
+  _gaudi-bash-rewind "${length}"
   for a in {0..30}; do
     [[ ${a} -gt ${length} ]] && break
     printf "%.*s" "$a" " "

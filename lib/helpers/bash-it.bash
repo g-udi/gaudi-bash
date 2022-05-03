@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# shellcheck disable=SC2001
+# shellcheck disable=SC2001,SC2002
 
 # A collection of reusable gaudi-bash functions
 
@@ -54,9 +54,9 @@ _gaudi-bash-describe () {
             enabled_files=$(sort <(compgen -G "${GAUDI_BASH}/components/enabled/*$GAUDI_BASH_LOAD_PRIORITY_SEPARATOR${enabled_file}") | wc -l)
 
             if [[ "$enabled_files" -gt 0 ]]; then
-                printf "%-20s${GREEN}%-10s${NC}%s\n" "$(basename "$__file" | sed -e 's/\(.*\)\..*\.bash/\1/g')" "  ◉" "    $(cat $__file | metafor about-"$component_type")" 2>&1 | tee -a "${file}"
+                printf "%-20s${GREEN}%-10s${NC}%s\n" "$(basename "$__file" | sed -e 's/\(.*\)\..*\.bash/\1/g')" "  ◉" "    $(cat "$__file" | metafor about-"$component_type")" 2>&1 | tee -a "${file}"
             elif [[ "$mode" = "all" ]]; then
-                printf "%-20s${RED}%-10s${NC}%s\n" "$(basename "$__file" | sed -e 's/\(.*\)\..*\.bash/\1/g')" "  ◯" "    $(cat $__file | metafor about-"$component_type")" 2>&1 | tee -a "${file}"
+                printf "%-20s${RED}%-10s${NC}%s\n" "$(basename "$__file" | sed -e 's/\(.*\)\..*\.bash/\1/g')" "  ◯" "    $(cat "$__file" | metafor about-"$component_type")" 2>&1 | tee -a "${file}"
             fi
         done
     else
