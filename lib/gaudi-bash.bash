@@ -61,8 +61,10 @@ _gaudi-bash-reload() {
 # @function     _gaudi-bash-restart
 # @description  restarts the bash profile
 #               restarts the profile that corresponds to the correct OS type (.bashrc, .bash_profile) preserving context
+#               Instead of reloading your Bash profile, this command re-runs Bash (using exec)
+#               This is stronger than simple reload, and is similar to the effect of closing and reopening your terminal
 function _gaudi-bash-restart() {
-	about 'restarts the shell in order to fully reload it'
+	about 'Instead of reloading your Bash profile, this command re-runs Bash (using exec)'
 	group "gaudi-bash:core"
 
 	case $OSTYPE in
