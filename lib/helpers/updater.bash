@@ -1,7 +1,7 @@
 # #!/usr/bin/env bash
 # shellcheck shell=bash
 
-function _gaudi-bash_update_migrate_and_restart() {
+function _gaudi-bash_update_and_restart() {
   about 'Checks out the wanted version, pops directory and restart. Does not return (because of the restart!)'
   param '1: Which branch to checkout to'
   param '2: Which type of version we are using'
@@ -9,12 +9,6 @@ function _gaudi-bash_update_migrate_and_restart() {
   git checkout "$1" &> /dev/null
   if [[ $? -eq 0 ]]; then
     echo "gaudi-bash successfully updated."
-    echo ""
-    echo "Migrating your installation to the latest $2 version now..."
-    _gaudi-bash-migrate
-    echo ""
-    echo "All done, enjoy!"
-    # Don't forget to restore the original pwd!
     popd &> /dev/null
     _gaudi-bash-restart
   else
@@ -89,12 +83,12 @@ function _gaudi-bash-update() {
 
 		if [[ -n "${silent}" ]]; then
 			echo "Updating to ${TARGET}($(git log -1 --format=%h "${TARGET}"))..."
-			_gaudi-bash_update_migrate_and_restart "$TARGET" "$version"
+			_gaudi-bash_update_and_restart "$TARGET" "$version"
 		else
 			read -r -e -n 1 -p "Would you like to update to ${TARGET}($(git log -1 --format=%h "${TARGET}"))? [Y/n] " RESP
 			case "$RESP" in
 				[yY] | "")
-					_gaudi-bash_update_migrate_and_restart "$TARGET" "$version"
+					_gaudi-bash_update_and_restart "$TARGET" "$version"
 					;;
 				[nN])
 					echo "Not updating…"
