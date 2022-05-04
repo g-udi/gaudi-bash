@@ -1,123 +1,124 @@
-# !/usr/bin/env bats
+#!/usr/bin/env bats
 # shellcheck shell=bats
+# shellcheck disable=SC2294,SC2004
 
 load ../helper
 load ../../lib/composure
 load ../../components/completions/lib/gaudi-bash.completions
 
-local_setup () {
-  prepare
+local_setup() {
+	prepare
 }
 
 @test "gaudi-bash completion: ensure that the _gaudi-bash-comp function is available" {
-  run type -a _gaudi-bash-comp &> /dev/null
-  assert_success
+	run type -a _gaudi-bash-comp &> /dev/null
+	assert_success
 }
 
-__check_completion () {
-  # Get the parameters as a single value
-  COMP_LINE=$*
+__check_completion() {
+	# Get the parameters as a single value
+	COMP_LINE=$*
 
-  # Get the parameters as an array
-  eval set -- "$@"
-  COMP_WORDS=("$@")
+	# Get the parameters as an array
+	eval set -- "$@"
+	COMP_WORDS=("$@")
 
-  # Index of the cursor in the line
-  COMP_POINT=${#COMP_LINE}
+	# Index of the cursor in the line
+	COMP_POINT=${#COMP_LINE}
 
-  # Get the last character of the line that was entered
-  COMP_LAST=$((${COMP_POINT} - 1))
+	# Get the last character of the line that was entered
+	COMP_LAST=$((${COMP_POINT} - 1))
 
-  # If the last character was a space...
-  if [[  ${COMP_LINE:$COMP_LAST} = ' ' ]]; then
-    # ...then add an empty array item
-    COMP_WORDS+=('')
-  fi
+	# If the last character was a space...
+	if [[ ${COMP_LINE:$COMP_LAST} = ' ' ]]; then
+		# ...then add an empty array item
+		COMP_WORDS+=('')
+	fi
 
-  # Word index of the last word
-  COMP_CWORD=$(( ${#COMP_WORDS[@]} - 1 ))
+	# Word index of the last word
+	COMP_CWORD=$((${#COMP_WORDS[@]} - 1))
 
-  # Run the gaudi-bash completion function
-  _gaudi-bash-comp
+	# Run the gaudi-bash completion function
+	_gaudi-bash-comp
 
-  # Return the completion output
-  echo "${COMPREPLY[@]}"
+	# Return the completion output
+	echo "${COMPREPLY[@]}"
 }
 
 @test "gaudi-bash completion: doctor - show options" {
 
-  run __check_completion 'gaudi-bash doctor '
-  assert_line --index 0 "errors warnings all"
+	run __check_completion 'gaudi-bash doctor '
+	assert_line --index 0 "errors warnings all"
 }
 
 @test "gaudi-bash completion: help - show options" {
 
-  run __check_completion 'gaudi-bash help '
-  assert_line --index 0 "aliases completions migrate plugins update"
+	run __check_completion 'gaudi-bash help '
+	assert_line --index 0 "aliases completions migrate plugins update"
 }
 
 @test "gaudi-bash completion: update - show no options" {
 
-  run __check_completion 'gaudi-bash update '
-  refute_output
+	run __check_completion 'gaudi-bash update '
+	refute_output
 }
 
 @test "gaudi-bash completion: show options" {
 
-  run __check_completion 'gaudi-bash '
-  assert_line --index 0 "version help doctor reload restart search update backup restore disable enable show"
+	run __check_completion 'gaudi-bash '
+	assert_line --index 0 "version help doctor reload restart search update backup restore disable enable show"
 }
 
 @test "gaudi-bash completion: gudi-bash - show options" {
 
-  run __check_completion 'gudi-bash '
-  assert_line --index 0 "version help doctor reload restart search update backup restore disable enable show"
+	run __check_completion 'gudi-bash '
+	assert_line --index 0 "version help doctor reload restart search update backup restore disable enable show"
 }
 
 @test "gaudi-bash completion: g-udi-bash - show options" {
 
-  run __check_completion 'g-udi-bash '
-  assert_line --index 0 "version help doctor reload restart search update backup restore disable enable show"
+	run __check_completion 'g-udi-bash '
+	assert_line --index 0 "version help doctor reload restart search update backup restore disable enable show"
 }
 
 @test "gaudi-bash completion: gadi-bash - show options" {
 
-  run __check_completion 'gadi-bash '
-  assert_line --index 0 "version help doctor reload restart search update backup restore disable enable show"
+	run __check_completion 'gadi-bash '
+	assert_line --index 0 "version help doctor reload restart search update backup restore disable enable show"
 }
 
 @test "gaudi-bash completion: guadi-bash - show options" {
-  run __check_completion 'guadi-bash '
-  assert_line --index 0 "version help doctor reload restart search update backup restore disable enable show"
+	run __check_completion 'guadi-bash '
+	assert_line --index 0 "version help doctor reload restart search update backup restore disable enable show"
 }
 
 @test "gaudi-bash completion: show - show options" {
 
-  run __check_completion 'gaudi-bash show '
-  assert_line --index 0 "aliases completions plugins"
+	run __check_completion 'gaudi-bash show '
+	assert_line --index 0 "aliases completions plugins"
 }
 
 @test "gaudi-bash completion: disable - show options" {
 
-  run __check_completion 'gaudi-bash disable '
-  assert_line --index 0 "alias completion plugin"
+	run __check_completion 'gaudi-bash disable '
+	assert_line --index 0 "alias completion plugin"
 }
 
 @test "gaudi-bash completion: disable - show options a" {
 
-  run __check_completion 'gaudi-bash disable a'
-  assert_line --index 0 "alias"
+	run __check_completion 'gaudi-bash disable a'
+	assert_line --index 0 "alias"
 }
 
 @test "gaudi-bash completion: disable - provide nothing when atom is not enabled" {
 
-  run __check_completion 'gaudi-bash disable alias ato'
-  refute_output
+	run __check_completion 'gaudi-bash disable alias ato'
+	refute_output
 }
 
 @test "gaudi-bash completion: disable - provide all when atom is not enabled" {
-  run __check_completion 'gaudi-bash disable alias a'
-  assert_line --index 0 "all"
+	run __check_completion 'gaudi-bash disable alias a'
+	assert_line --index 0 "all"
 }
 
 # @test "gaudi-bash completion: disable - provide the a* aliases when atom is enabled with the old location and name" {

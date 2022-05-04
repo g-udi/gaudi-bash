@@ -1,19 +1,20 @@
 # #!/usr/bin/env bash
 # shellcheck shell=bash
+# shellcheck disable=SC2181
 
 function _gaudi-bash_update_and_restart() {
-  about 'Checks out the wanted version, pops directory and restart. Does not return (because of the restart!)'
-  param '1: Which branch to checkout to'
-  param '2: Which type of version we are using'
-  
-  git checkout "$1" &> /dev/null
-  if [[ $? -eq 0 ]]; then
-    echo "gaudi-bash successfully updated."
-    popd &> /dev/null
-    _gaudi-bash-restart
-  else
-    echo "Error updating gaudi-bash, please, check if your gaudi-bash installation folder (${BASH_IT}) is clean."
-  fi
+	about 'Checks out the wanted version, pops directory and restart. Does not return (because of the restart!)'
+	param '1: Which branch to checkout to'
+	param '2: Which type of version we are using'
+
+	git checkout "$1" &> /dev/null
+	if [[ $? -eq 0 ]]; then
+		echo "gaudi-bash successfully updated."
+		popd &> /dev/null || return
+		_gaudi-bash-restart
+	else
+		echo "Error updating gaudi-bash, please, check if your gaudi-bash installation folder (${BASH_IT}) is clean."
+	fi
 }
 
 function _gaudi-bash-update() {

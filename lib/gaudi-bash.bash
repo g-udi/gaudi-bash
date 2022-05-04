@@ -65,14 +65,14 @@ function _gaudi-bash-restart() {
 	about 'restarts the shell in order to fully reload it'
 	group "gaudi-bash:core"
 
-  case $OSTYPE in
-	darwin*)
-		CONFIG_FILE=".bash_profile"
-		;;
-	*)
-		CONFIG_FILE=".bashrc"
-		;;
-  esac
+	case $OSTYPE in
+		darwin*)
+			CONFIG_FILE=".bash_profile"
+			;;
+		*)
+			CONFIG_FILE=".bashrc"
+			;;
+	esac
 
 	exec "${0#-}" --rcfile "${BASH_IT_BASHRC:-${HOME?}/"${CONFIG_FILE}"}"
 }
