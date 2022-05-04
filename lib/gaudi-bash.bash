@@ -62,10 +62,19 @@ _gaudi-bash-reload() {
 # @description  restarts the bash profile
 #               restarts the profile that corresponds to the correct OS type (.bashrc, .bash_profile) preserving context
 function _gaudi-bash-restart() {
-	_about 'restarts the shell in order to fully reload it'
+	about 'restarts the shell in order to fully reload it'
 	group "gaudi-bash:core"
 
-	exec "${0#-}" --rcfile "${BASH_IT_BASHRC:-${HOME?}/.bashrc}"
+  case $OSTYPE in
+	darwin*)
+		CONFIG_FILE=".bash_profile"
+		;;
+	*)
+		CONFIG_FILE=".bashrc"
+		;;
+  esac
+
+	exec "${0#-}" --rcfile "${BASH_IT_BASHRC:-${HOME?}/"${CONFIG_FILE}"}"
 }
 
 # @function     _gaudi-bash-help
@@ -146,7 +155,7 @@ _gaudi-bash-restore() {
 
 gaudi-bash() {
 	about 'provides a solid framework for using, developing and maintaining shell scripts and custom commands for your daily work'
-	param '1: verb [one of: help | backup | show | enable | disable | update | restore | search | version | reload | doctor ]] '
+	param '1: verb [one of: version | help | doctor | reload | restart | search | update | backup | restore | disable | enable | show ]] '
 	param '2: component type [one of: alias(es) | completion(s) | plugin(s) ]] or search term(s)'
 	param '3: specific component [optional]'
 
@@ -200,6 +209,9 @@ gaudi-bash() {
 			;;
 		reload)
 			func=_gaudi-bash-reload
+			;;
+		restart)
+			func=_gaudi-bash-restart
 			;;
 		search)
 			_gaudi-bash-search "$component" "$@"
