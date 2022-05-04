@@ -132,6 +132,7 @@ _gaudi-bash-enable plugin base
 _gaudi-bash-enable plugin alias-completion
 _gaudi-bash-enable alias general
 _gaudi-bash-enable alias gls
+_gaudi-bash-enable alias gaudi-bash
 
 echo -e "
 ${GREEN}Installation finished successfully! Enjoy gaudi-bash!${NC}
