@@ -32,7 +32,7 @@ local_setup() {
 
 @test "gaudi-bash install: run the install script silently by skipping prompts" {
 
-	./setup.sh --silent
+	run ./setup.sh --silent
 	[[ -z $output ]]
 }
 
