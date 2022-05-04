@@ -58,6 +58,16 @@ _gaudi-bash-reload() {
 	popd &> /dev/null || return
 }
 
+# @function     _gaudi-bash-restart
+# @description  restarts the bash profile
+#               restarts the profile that corresponds to the correct OS type (.bashrc, .bash_profile) preserving context
+function _gaudi-bash-restart() {
+	_about 'restarts the shell in order to fully reload it'
+	group "gaudi-bash:core"
+
+	exec "${0#-}" --rcfile "${BASH_IT_BASHRC:-${HOME?}/.bashrc}"
+}
+
 # @function     _gaudi-bash-help
 # @description  shows help command of a component (alias, plugin, completion)
 # @param $1     type: component type of: aliases, plugins, completions
