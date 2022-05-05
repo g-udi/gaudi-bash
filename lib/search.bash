@@ -52,10 +52,10 @@ _gaudi-bash-search() {
 
 	[[ -z "$(type _array-contains 2> /dev/null)" ]]
 
-	export GAUDI_BASH_SEARCH_USE_COLOR=true
+	local GAUDI_BASH_SEARCH_USE_COLOR="${GAUDI_BASH_SEARCH_USE_COLOR:=true}"
+	: "${GAUDI_BASH_GREP:=$(_gaudi-bash-grep)}"
 	export GAUDI_BASH_GREP=${GAUDI_BASH_GREP:-$(which egrep)}
-
-	declare -a GAUDI_BASH_COMPONENTS=(aliases plugins completions)
+	local -a GAUDI_BASH_COMPONENTS=(aliases plugins completions)
 
 	if [[ -z "$*" ]]; then
 		_gaudi-bash-search-help
@@ -64,16 +64,21 @@ _gaudi-bash-search() {
 
 	local -a args=()
 	for word in "$@"; do
-		if [[ ${word} == "--help" || ${word} == "-h" ]]; then
-			_gaudi-bash-search-help
-			return 0
-		elif [[ ${word} == "--refresh" || ${word} == "-r" ]]; then
-			_gaudi-bash-component-cache-clean
-		elif [[ ${word} == "--no-color" || ${word} == '-c' ]]; then
-			export GAUDI_BASH_SEARCH_USE_COLOR=false
-		else
-			args=("${args[@]}" "${word}")
-		fi
+		case "${word}" in
+			'-h' | '--help')
+				_gaudi-bash-search-help
+				return 0
+				;;
+			'-r' | '--refresh')
+				_gaudi-bash-clean-component-cache
+				;;
+			'-c' | '--no-color')
+				GAUDI_BASH_SEARCH_USE_COLOR=false
+				;;
+			*)
+				args+=("${word}")
+				;;
+		esac
 	done
 
 	if [[ ${#args} -gt 0 ]]; then
@@ -150,17 +155,19 @@ _gaudi-bash-search-component() {
 
 	for term in "${terms[@]}"; do
 		local search_term="${term:1}"
-
 		if [[ "${term:0:2}" == "--" ]]; then
 			continue
 		elif [[ "${term:0:1}" == "-" ]]; then
-			negative_terms=("${negative_terms[@]}" "${search_term}")
+			negative_terms+=("${search_term}")
 		elif [[ "${term:0:1}" == "@" ]]; then
-			if $(_array-contains "${search_term}" "${component_list[@]}"); then
-				exact_terms=("${exact_terms[@]}" "${search_term}")
+			if _array-contains "${search_term}" "${component_list[@]:-}"; then
+				exact_terms+=("${search_term}")
 			fi
 		else
-			partial_terms=("${partial_terms[@]}" $(_gaudi-bash-component-list-matching "${component}" "${term}"))
+			while IFS='' read -r line; do
+				partial_terms+=("$line")
+			done < <(_gaudi-bash-component-list-matching "${component}" "${term}")
+
 		fi
 	done
 
@@ -201,11 +208,11 @@ _gaudi-bash-search-print-result() {
 	color_sep=':'
 
 	(${GAUDI_BASH_SEARCH_USE_COLOR}) && {
-		color_component="${CYAN}"
+		color_component="${BLUE}"
 		color_enable="${GREEN}"
-		suffix_enable=''
+		suffix_enable=' ✓ '
 		suffix_disable=''
-		color_disable="${NC}"
+		color_disable="${CYAN}"
 		color_off="${NC}"
 	}
 
