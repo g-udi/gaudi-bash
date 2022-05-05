@@ -28,7 +28,7 @@ _command_exists() {
 	local msg
 
 	msg="${2:-"command $1 does not exist!"}"
-	type "$1" &> /dev/null || (echo "$msg" && return 1)
+	type "$1" &> /dev/null || (_log_error "$msg" && return 1)
 }
 
 # @function     _read_input
