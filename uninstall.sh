@@ -1,9 +1,7 @@
 #!/usr/bin/env bash
 # shellcheck shell=bash
 
-if [[ -z "$GAUDI_BASH" ]]; then
-	GAUDI_BASH="$HOME/.gaudi_bash"
-fi
+: "${GAUDI_BASH:=$HOME/.gaudi_bash}"
 
 case $OSTYPE in
 	darwin*)
