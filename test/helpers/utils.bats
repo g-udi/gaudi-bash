@@ -6,6 +6,7 @@ load ../../lib/composure
 
 cite about param example group priority
 
+load ../../lib/log
 load ../../lib/helpers/utils
 
 local_setup() {
