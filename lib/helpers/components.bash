@@ -107,7 +107,7 @@ _gaudi-bash-component-list() {
 # @return       <array> list of matched components
 # @example      ❯ _gaudi-bash-component-list-matching plugins git
 _gaudi-bash-component-list-matching() {
-	about "returns a list of items within each component (plugin, alias, completion) that match a string "
+	about "returns a list of items within each component (plugin, alias, completion) that match a string"
 	group "gaudi-bash:core:components"
 
 	__check-function-parameters "$1" || return 1

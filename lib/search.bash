@@ -57,6 +57,7 @@ _gaudi-bash-search() {
 	[[ -z "$(type _array-contains 2> /dev/null)" ]]
 
 	local GAUDI_BASH_SEARCH_USE_COLOR="${GAUDI_BASH_SEARCH_USE_COLOR:=true}"
+	local COMPONENT
 	: "${GAUDI_BASH_GREP:=$(_gaudi-bash-grep)}"
 	export GAUDI_BASH_GREP=${GAUDI_BASH_GREP:-$(which egrep)}
 	local -a GAUDI_BASH_COMPONENTS=(aliases plugins completions)
@@ -78,8 +79,17 @@ _gaudi-bash-search() {
 			'-r' | '--refresh')
 				_gaudi-bash-component-cache-clean
 				;;
-			'-c' | '--no-color')
+			'-x' | '--no-color')
 				GAUDI_BASH_SEARCH_USE_COLOR=false
+				;;
+			'-p' | '--plugin')
+				COMPONENT="plugins"
+				;;
+			'-a' | '--alias')
+				COMPONENT="aliases"
+				;;
+			'-c' | '--completion')
+				COMPONENT="completions"
 				;;
 			*)
 				args+=("${word}")
@@ -91,13 +101,17 @@ _gaudi-bash-search() {
 		# save the cursor position at the beginning of the search command
 		__gaudi-get-cursor-position component_position
 		[[ "${args[*]}" == *"--enable"* || "${args[*]}" == *"--disable"* ]] && echo -e "\033c"
-		for component in "${GAUDI_BASH_COMPONENTS[@]}"; do
-			_gaudi-bash-search-component "${component}" "${args[@]}"
-		done
+
+		if [[ -n $COMPONENT ]]; then
+			_gaudi-bash-search-component "${COMPONENT}" "${args[@]}" || return 1
+		else
+			for component in "${GAUDI_BASH_COMPONENTS[@]}"; do
+				_gaudi-bash-search-component "${component}" "${args[@]}" || return 1
+			done
+		fi
 		# Make sure to restore the cursor into its position once all components have been traversed
 		[[ ${#match_position[@]} -gt 0 ]] && tput cup "${match_position[0]}" "${match_position[1]}"
 	fi
-
 	return 0
 }
 
@@ -135,7 +149,6 @@ _gaudi-bash-search-component() {
 
 	# If one of the search terms is --enable or --disable, we will apply this action to the matches further down.
 	local component_singular action action_func
-
 	# check if the arguments has a --enable or --disable flags passed
 	for search_command in "${search_commands[@]}"; do
 		if $(_array-contains "--${search_command}" "$@"); then
@@ -161,7 +174,6 @@ _gaudi-bash-search-component() {
 	unset component_list
 	local -a component_list=($(_gaudi-bash-component-list "${component}"))
 	local term
-
 	for term in "${terms[@]}"; do
 		local search_term="${term:1}"
 		if [[ "${term:0:2}" == "--" ]]; then
@@ -176,12 +188,13 @@ _gaudi-bash-search-component() {
 			while IFS='' read -r line; do
 				partial_terms+=("$line")
 			done < <(_gaudi-bash-component-list-matching "${component}" "${term}")
-
 		fi
 	done
 
 	local -a total_matches=($(_array-dedupe "${exact_terms[@]}" "${partial_terms[@]}"))
-
+	
+	[[ ${#total_matches} -eq 0 ]] && return 1
+	
 	unset matches
 	declare -a matches=()
 	for match in "${total_matches[@]}"; do
@@ -209,30 +222,19 @@ _gaudi-bash-search-print-result() {
 	local action="$1" && shift
 	local action_func="$1" && shift
 	local -a matches=("$@")
-	local component_title_color component_color
-
-	(${GAUDI_BASH_SEARCH_USE_COLOR}) && {
-		component_title_color="${YELLOW}"
-		component_color="${CYAN}"
-	}
-
-	(${GAUDI_BASH_SEARCH_USE_COLOR}) || {
-		component_title_color=""
-		component_color=""
-	}
-
 	local match
 	local modified=0
 
 	if [[ "${#matches[@]}" -gt 0 ]]; then
 
-		printf "${component_title_color}%s:${NC}\t" "${component}"
+		
+		(${GAUDI_BASH_SEARCH_USE_COLOR}) && printf "${YELLOW}%s:${NC}\t" "${component}" || printf "%s:\t" "${component}"
 
 		for match in "${matches[@]}"; do
 			local match compatible_action length enabled=0
 			(_gaudi-bash-component-item-is-enabled "${component}" "${match}") && enabled=1
-			[[ $enabled == 1 ]] && match="${match} ✓" || match="${component_color}${match}"
-			printf "%b\t${NC}" "$match"
+			[[ $enabled == 1 ]] && match="${match} ✓"
+			(${GAUDI_BASH_SEARCH_USE_COLOR}) && printf "${CYAN}%s\t${NC}" "$match" || printf "%s\t" "$match"
 		done
 
 		printf "\n"
