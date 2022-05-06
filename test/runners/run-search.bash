@@ -10,7 +10,7 @@ git submodule init && git submodule update
 
 if [[ -z "${GAUDI_BASH}" ]]; then
 	declare GAUDI_BASH
-	GAUDI_BASH=$(cd "${test_directory}" && dirname "$(pwd)")
+	GAUDI_BASH=$(cd "${test_directory}" && ${PWD})
 	export GAUDI_BASH
 fi
 
