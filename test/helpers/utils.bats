@@ -51,14 +51,12 @@ local_setup() {
 
 	run _command_exists a
 	assert_failure
-	assert_output "command a does not exist!"
 }
 
 @test "gaudi-bash helpers: utils: _command_exists function negative test with a custom message" {
 
 	run _command_exists a "this function doesn't exist"
 	assert_failure
-	assert_output "this function doesn't exist"
 }
 
 @test "gaudi-bash helpers: utils: _array-contains: should be successful if an element is found in array" {
