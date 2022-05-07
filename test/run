@@ -1,7 +1,18 @@
 #!/usr/bin/env bash
 # shellcheck shell=bash
 
-test_directory="$(cd "${BASH_SOURCE%/*}" && pwd)"
+declare GAUDI_BATS GAUDI_TEST_DIRECTORY
+
+GAUDI_TEST_DIRECTORY="$(cd "${BASH_SOURCE%/*}" && pwd)"
+GAUDI_BATS="${GAUDI_TEST_DIRECTORY}/../bin/bats-core/bin/bats"
+
+git submodule init && git submodule update
+
+if [[ -z "${GAUDI_BASH}" ]]; then
+	declare GAUDI_BASH
+	GAUDI_BASH=$(cd "${GAUDI_TEST_DIRECTORY}" && ${PWD})
+	export GAUDI_BASH
+fi
 
 echo -e "
 \033c
@@ -15,5 +26,7 @@ echo -e "
 
 Running gaudi-bash unit tests.. \n\n"
 
-bash "$test_directory"/runners/run-bats.bash
-bash "$test_directory"/runners/run-search.bash
+export GAUDI_TEST_DIRECTORY GAUDI_BATS
+
+bash "$GAUDI_TEST_DIRECTORY"/runners/run-bats.bash
+bash "$GAUDI_TEST_DIRECTORY"/runners/run-search.bash

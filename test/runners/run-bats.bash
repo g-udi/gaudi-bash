@@ -1,23 +1,10 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC2155
 
-declare test_directory bats_executable
-
-test_directory="$GAUDI_BASH/test"
-bats_executable="${test_directory}/../bin/bats-core/bin/bats"
-
-git submodule init && git submodule update
-
-if [[ -z "${GAUDI_BASH}" ]]; then
-	declare GAUDI_BASH
-	GAUDI_BASH=$(cd "${test_directory}" && ${PWD})
-	export GAUDI_BASH
-fi
-
 # Capture all the test files by searching the lib folder for .bats files except for search
 if [[ -z "$1" ]]; then
 	shopt -s globstar
-	for lib in "${test_directory}"/**/*.bats; do
+	for lib in "${GAUDI_TEST_DIRECTORY}"/**/*.bats; do
 		[[ ! "$lib" =~ "search" ]] && test_dirs+=("$lib")
 	done
 else
@@ -46,9 +33,9 @@ if command -v parallel &> /dev/null \
 			echo ${test_jobs_default}
 		fi
 	)"
-	exec "$bats_executable" ${CI:+--tap} --jobs "${test_jobs_effective}" \
+	exec "$GAUDI_BATS" ${CI:+--tap} --jobs "${test_jobs_effective}" \
 		"${test_dirs[@]}"
 else
 	printf "\n\n%s\n\n" "[[ Single Mode Enabled ✓ ]]"
-	exec "$bats_executable" ${CI:+--tap} "${test_dirs[@]}"
+	exec "$GAUDI_BATS" ${CI:+--tap} "${test_dirs[@]}"
 fi
