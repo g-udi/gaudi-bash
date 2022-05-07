@@ -7,7 +7,7 @@
 	url = https://github.com/rcaloras/bash-preexec
 [submodule "components"]
 	path = components
-	url = git@github.com:g-udi/gaudi-bash-components
+	url = https://github.com/g-udi/gaudi-bash-components
 	branch = master
 [submodule "bin/bats-core"]
 	path = bin/bats-core
