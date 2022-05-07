@@ -1,15 +1,15 @@
 #!/usr/bin/env bats
 # shellcheck shell=bats
 
-load ../helper
-load ../../lib/composure
+load "$GAUDI_TEST_DIRECTORY"/helper.bash
+load "$GAUDI_BASH"/lib/composure.bash
 
 cite about param example group priority
 
-load ../../lib/gaudi-bash
-load ../../lib/helpers/components
-load ../../lib/helpers/utils
-load ../../lib/helpers/cache
+load "$GAUDI_BASH"/lib/gaudi-bash.bash
+load "$GAUDI_BASH"/lib/helpers/components.bash
+load "$GAUDI_BASH"/lib/helpers/utils.bash
+load "$GAUDI_BASH"/lib/helpers/cache.bash
 
 export GAUDI_BASH_DESCRIPTION_MIN_LINE_COUNT=10
 

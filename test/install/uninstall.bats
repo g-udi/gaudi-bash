@@ -1,7 +1,7 @@
 #!/usr/bin/env bats
 # shellcheck shell=bats
 
-load ../helper
+load "$GAUDI_TEST_DIRECTORY"/helper.bash
 
 local_setup() {
 	prepare

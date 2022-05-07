@@ -2,8 +2,6 @@
 # shellcheck shell=bash
 # shellcheck disable=SC2034
 
-export GIT_CONFIG_NOSYSTEM
-
 local_setup() {
 	true
 }
@@ -56,6 +54,7 @@ prepare() {
 
 setup() {
 
+	export GIT_CONFIG_NOSYSTEM
 	# TEST_MAIN_DIR Points to the 'test' folder location e.g., $HOME/.gaudi_bash/test/
 	export TEST_MAIN_DIR="${BATS_TEST_DIRNAME}/.."
 	# TEST_DEPS_DIR will point to the folder where the bats git submodules are

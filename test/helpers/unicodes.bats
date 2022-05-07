@@ -1,9 +1,9 @@
 #!/usr/bin/env bats
 # shellcheck shell=bats
 
-load ../helper
+load "$GAUDI_TEST_DIRECTORY"/helper.bash
 
-load ../../lib/helpers/unicodes
+load "$GAUDI_BASH"/lib/helpers/unicodes.bash
 
 local_setup() {
 	prepare

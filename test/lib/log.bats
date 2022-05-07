@@ -2,15 +2,15 @@
 # shellcheck shell=bats
 # shellcheck disable=SC2034
 
-load ../helper
+load "$GAUDI_TEST_DIRECTORY"/helper.bash
 
-load ../../lib/composure
-load ../../lib/gaudi-bash
-load ../../lib/colors
+load "$GAUDI_BASH"/lib/composure.bash
+load "$GAUDI_BASH"/lib/gaudi-bash.bash
+load "$GAUDI_BASH"/lib/colors.bash
 
 cite about param example group priority
 
-load ../../lib/log
+load "$GAUDI_BASH"/lib/log.bash
 
 @test "gaudi-bash log: _gaudi-bash-get-component-name-from-path extract component name from path" {
 

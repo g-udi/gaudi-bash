@@ -1,9 +1,9 @@
 #!/usr/bin/env bats
 # shellcheck shell=bats
 
-load ../helper
+load "$GAUDI_TEST_DIRECTORY"/helper.bash
 
-load ../../lib/composure
+load "$GAUDI_BASH"/lib/composure.bash
 
 cite about param example group priority
 

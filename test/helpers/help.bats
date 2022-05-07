@@ -1,13 +1,13 @@
 #!/usr/bin/env bats
 # shellcheck shell=bats
 
-load ../helper
-load ../../lib/composure
+load "$GAUDI_TEST_DIRECTORY"/helper.bash
+load "$GAUDI_BASH"/lib/composure.bash
 
 cite about param example group priority
 
-load ../../lib/gaudi-bash
-load ../../lib/helpers/help
+load "$GAUDI_BASH"/lib/gaudi-bash.bash
+load "$GAUDI_BASH"/lib/helpers/help.bash
 
 local_setup() {
 	prepare

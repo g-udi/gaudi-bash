@@ -2,9 +2,9 @@
 # shellcheck shell=bats
 # shellcheck disable=SC2294,SC2004
 
-load ../helper
-load ../../lib/composure
-load ../../components/completions/lib/gaudi-bash.completions
+load "$GAUDI_TEST_DIRECTORY"/helper.bash
+load "$GAUDI_BASH"/lib/composure.bash
+load "$GAUDI_BASH"/components/completions/lib/gaudi-bash.completions.bash
 
 local_setup() {
 	prepare
