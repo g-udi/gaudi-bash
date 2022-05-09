@@ -2,15 +2,9 @@
 # shellcheck shell=bats
 
 load "$GAUDI_TEST_DIRECTORY"/helper.bash
-load "$GAUDI_BASH"/lib/composure.bash
-
-cite about param example group priority
-
-load "$GAUDI_BASH"/lib/gaudi-bash.bash
-load "$GAUDI_BASH"/lib/helpers/help.bash
 
 local_setup() {
-	prepare
+	load_gaudi_libs gaudi-bash help
 }
 
 @test "gaudi-bash-helpers: help: should show default help menu if no valid argument was passed" {
@@ -46,7 +40,7 @@ local_setup() {
 
 @test "gaudi-bash-helpers: help: _gaudi-bash-help list aliases with ag aliases enabled" {
 
-	ln -s "$GAUDI_BASH/components/aliases/lib/ag.aliases.bash" "$GAUDI_BASH/components/enabled/150___ag.aliases.bash"
+	run gaudi-bash enable alias "ag"
 	assert_link_exist "$GAUDI_BASH/components/enabled/150___ag.aliases.bash"
 
 	run __help-list-aliases "$GAUDI_BASH/components/enabled/150___ag.aliases.bash"
@@ -55,7 +49,7 @@ local_setup() {
 
 @test "gaudi-bash-helpers: help: _gaudi-bash-help list aliases with todo.txt-cli aliases enabled" {
 
-	ln -s "$GAUDI_BASH/components/aliases/lib/todo.txt-cli.aliases.bash" "$GAUDI_BASH/components/enabled/150___todo.txt-cli.aliases.bash"
+	run gaudi-bash enable alias "todo.txt-cli"
 	assert_link_exist "$GAUDI_BASH/components/enabled/150___todo.txt-cli.aliases.bash"
 
 	run __help-list-aliases "$GAUDI_BASH/components/enabled/150___todo.txt-cli.aliases.bash"
@@ -64,7 +58,7 @@ local_setup() {
 
 @test "gaudi-bash-helpers: help: _gaudi-bash-help list aliases with docker-compose aliases enabled" {
 
-	ln -s "$GAUDI_BASH/components/aliases/lib/docker-compose.aliases.bash" "$GAUDI_BASH/components/enabled/150___docker-compose.aliases.bash"
+	run gaudi-bash enable alias "docker-compose"
 	assert_link_exist "$GAUDI_BASH/components/enabled/150___docker-compose.aliases.bash"
 
 	run __help-list-aliases "$GAUDI_BASH/components/enabled/150___docker-compose.aliases.bash"
@@ -73,7 +67,7 @@ local_setup() {
 
 @test "gaudi-bash-helpers: help: _gaudi-bash-help list aliases with ag aliases enabled in global directory" {
 
-	ln -s "$GAUDI_BASH/components/aliases/lib/ag.aliases.bash" "$GAUDI_BASH/components/enabled/150___ag.aliases.bash"
+	run gaudi-bash enable alias "ag"
 	assert_link_exist "$GAUDI_BASH/components/enabled/150___ag.aliases.bash"
 
 	run __help-list-aliases "$GAUDI_BASH/components/enabled/150___ag.aliases.bash"

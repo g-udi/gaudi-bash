@@ -3,18 +3,8 @@
 
 load "$GAUDI_TEST_DIRECTORY"/helper.bash
 
-load "$GAUDI_BASH"/lib/composure.bash
-
-cite about param example group priority
-
-load "$GAUDI_BASH"/lib/gaudi-bash.bash
-load "$GAUDI_BASH"/lib/helpers/cache.bash
-load "$GAUDI_BASH"/lib/helpers/components.bash
-load "$GAUDI_BASH"/lib/helpers/utils.bash
-load "$GAUDI_BASH"/lib/helpers/enabler.bash
-
 local_setup() {
-	prepare
+	load_gaudi_libs gaudi-bash cache components utils enabler
 }
 
 @test "gaudi-bash helpers: _gaudi-bash-enable: should fail if no valid component type was passed" {

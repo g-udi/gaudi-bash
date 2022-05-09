@@ -1,25 +1,33 @@
 #!/usr/bin/env bash
 # shellcheck shell=bash
 
-declare GAUDI_BATS GAUDI_TEST_DIRECTORY GAUDI_BASH_DIR GAUDI_BASH_GIT_DIR
+# Locate ourselves for easy reference.
+declare GAUDI_TEST_DIRECTORY
+GAUDI_TEST_DIRECTORY="$(cd "$(dirname "$0")" && pwd)"
 
-GAUDI_TEST_DIRECTORY="$(cd "${BASH_SOURCE%/*}" && pwd)"
-GAUDI_BATS="${GAUDI_TEST_DIRECTORY}/../bin/bats-core/bin/bats"
-GAUDI_BASH_DIR="${GAUDI_TEST_DIRECTORY%/*}"
-GAUDI_BASH_GIT_DIR="${MAIN_GAUDI_BASH_DIR}/.git"
+export GAUDI_BASH_DIR="${GAUDI_TEST_DIRECTORY%/*}"
+export GAUDI_BATS="${GAUDI_TEST_DIRECTORY}/../bin/bats-core/bin/bats"
+export GAUDI_BASH_GIT_DIR="${GAUDI_BASH_DIR}/.git"
+export GAUDI_TEST_DEPS_DIR="${GAUDI_BASH_DIR:-${BATS_TEST_DIRNAME?}/../..}/bin"
 
 git submodule init && git submodule update
 
-# Warn user that tests run from the current git HEAD
-if ! git diff --quiet; then
-	echo "${BASH_SOURCE##*/}: your worktree is dirty; uncommitted changes will *not* be tested!"
+if [[ -z "${GAUDI_BASH_ORIGIN}" ]]; then
+	declare GAUDI_BASH_ORIGIN
+	GAUDI_BASH_ORIGIN=$(cd "${GAUDI_TEST_DIRECTORY%/*}" && pwd)
+	export GAUDI_BASH_ORIGIN
 fi
 
-if [[ -z "${GAUDI_BASH}" ]]; then
-	declare GAUDI_BASH
-	GAUDI_BASH=$(cd "${GAUDI_TEST_DIRECTORY%/*}" && pwd)
-	export GAUDI_BASH
-fi
+case $OSTYPE in
+	darwin*)
+		export GAUDI_BASH_PROFILE=".bash_profile"
+		;;
+	*)
+		export GAUDI_BASH_PROFILE=".bashrc"
+		;;
+esac
+
+export GAUDI_TEST_DIRECTORY
 
 echo -e "
 \033c
@@ -33,8 +41,5 @@ echo -e "
 
 Running gaudi-bash unit tests.. \n\n"
 
-export GAUDI_TEST_DIRECTORY GAUDI_BATS GAUDI_BASH_DIR GAUDI_BASH_GIT_DIR
-
 bash "$GAUDI_TEST_DIRECTORY"/runners/run-bats.bash
-# bash "$GAUDI_TEST_DIRECTORY"/runners/run-search.bash
-
+bash "$GAUDI_TEST_DIRECTORY"/runners/run-search.bash

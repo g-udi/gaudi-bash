@@ -2,19 +2,11 @@
 # shellcheck shell=bats
 
 load "$GAUDI_TEST_DIRECTORY"/helper.bash
-load "$GAUDI_BASH"/lib/composure.bash
-
-cite about param example group priority
-
-load "$GAUDI_BASH"/lib/gaudi-bash.bash
-load "$GAUDI_BASH"/lib/helpers/components.bash
-load "$GAUDI_BASH"/lib/helpers/utils.bash
-load "$GAUDI_BASH"/lib/helpers/cache.bash
 
 export GAUDI_BASH_DESCRIPTION_MIN_LINE_COUNT=10
 
 local_setup() {
-	prepare
+	load_gaudi_libs gaudi-bash components utils cache
 }
 
 # Returns true if the no. lines for description is more than the GAUDI_BASH_DESCRIPTION_MIN_LINE_COUNT

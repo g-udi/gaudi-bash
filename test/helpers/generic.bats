@@ -2,14 +2,9 @@
 # shellcheck shell=bats
 
 load "$GAUDI_TEST_DIRECTORY"/helper.bash
-load "$GAUDI_BASH"/lib/composure.bash
-
-cite about param example group priority
-
-load "$GAUDI_BASH"/lib/helpers/generic.bash
 
 local_setup() {
-	prepare
+	load_gaudi_libs generic
 }
 
 @test "gaudi-bash helpers: generic: pathmunge: ensure function is defined" {

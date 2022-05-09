@@ -2,15 +2,9 @@
 # shellcheck shell=bats
 
 load "$GAUDI_TEST_DIRECTORY"/helper.bash
-load "$GAUDI_BASH"/lib/composure.bash
-
-cite about param example group priority
-
-load "$GAUDI_BASH"/lib/log.bash
-load "$GAUDI_BASH"/lib/helpers/utils.bash
 
 local_setup() {
-	prepare
+	load_gaudi_libs log utils
 }
 
 @test "gaudi-bash helpers: utils: _is_function: should return a success status if the passed argument is a function" {

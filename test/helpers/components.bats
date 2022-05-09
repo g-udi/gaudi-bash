@@ -1,21 +1,12 @@
-#!/usr/bin/env bats
-# shellcheck shell=bats
+# #!/usr/bin/env bats
+# # shellcheck shell=bats
 
 load "$GAUDI_TEST_DIRECTORY"/helper.bash
 
-load "$GAUDI_BASH"/lib/composure.bash
-
-cite about param example group priority
-
-load "$GAUDI_BASH"/lib/gaudi-bash.bash
-load "$GAUDI_BASH"/lib/helpers/components.bash
-load "$GAUDI_BASH"/lib/helpers/cache.bash
-
 local_setup() {
-	prepare
+	load_gaudi_libs gaudi-bash components cache
 
-	cd "$GAUDI_BASH" || exit
-	./setup.sh --silent
+	"$GAUDI_BASH"/setup.sh --silent
 }
 
 @test "gaudi-bash helpers: components: components: __check-function-parameters: should success when passing a valid component" {
@@ -94,12 +85,11 @@ local_setup() {
 }
 
 @test "gaudi-bash helpers: components: _gaudi-bash-component-help: should create cache file for component on the first run" {
-
 	_gaudi-bash-component-cache-clean
-	assert_file_not_exist "$HOME/.gaudi_bash/tmp/cache/plugins"
+	assert_file_not_exist "$GAUDI_BASH/tmp/cache/plugins"
 
 	run _gaudi-bash-component-help plugin
-	assert_file_exist "$HOME/.gaudi_bash/tmp/cache/plugins"
+	assert_file_exist "$GAUDI_BASH/tmp/cache/plugins"
 }
 
 @test "gaudi-bash helpers: components: _gaudi-bash-component-help: should display plugins help" {
