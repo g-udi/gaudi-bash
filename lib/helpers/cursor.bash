@@ -7,10 +7,10 @@
 # @return       success (0) or failure status (1)
 # @example      ❯ __gaudi-get-cursor-row
 function __gaudi-get-cursoer-row() {
-    local COL
-    local ROW
-    IFS=';' read -sdrR -p $'\E[6n' ROW COL
-    echo "${ROW#*[}"
+	local COL
+	local ROW
+	IFS=';' read -sdrR -p $'\E[6n' ROW COL
+	echo "${ROW#*[}"
 }
 
 # @function     __gaudi-get-cursor-column
@@ -18,10 +18,10 @@ function __gaudi-get-cursoer-row() {
 # @return       success (0) or failure status (1)
 # @example      ❯ __gaudi-get-cursor-column
 function __gaudi-get-cursor-column() {
-    local COL
-    local ROW
-    IFS=';' read -sdrR -p $'\E[6n' ROW COL
-    echo "${COL}"
+	local COL
+	local ROW
+	IFS=';' read -sdrR -p $'\E[6n' ROW COL
+	echo "${COL}"
 }
 
 # @function     __gaudi-get-cursor-position
@@ -30,17 +30,17 @@ function __gaudi-get-cursor-column() {
 # @return       the position array with array[0] being the cursor's row number and array[1] is the cursor's column number
 # @example      ❯ __gaudi-get-cursor-position cursor_position
 function __gaudi-get-cursor-position() {
-    export "$1"
+	export "$1"
 
-    exec < /dev/tty
-    oldstty=$(stty -g)
-    stty raw -echo min 0
-    echo -en "\033[6n" > /dev/tty
-    # tput u7 > /dev/tty    # when TERM=xterm (and relatives)
-    IFS=';' read -r -d R -a pos
-    stty "$oldstty"
+	exec < /dev/tty
+	oldstty=$(stty -g)
+	stty raw -echo min 0
+	echo -en "\033[6n" > /dev/tty
+	# tput u7 > /dev/tty    # when TERM=xterm (and relatives)
+	IFS=';' read -r -d R -a pos
+	stty "$oldstty"
 
-    # change from one-based to zero based so they work with: tput cup $row $col
-    eval "$1[0]=$((${pos[0]:2} - 1))"
-    eval "$1[1]=$((pos[1] - 1))"
+	# change from one-based to zero based so they work with: tput cup $row $col
+	eval "$1[0]=$((${pos[0]:2} - 1))"
+	eval "$1[1]=$((pos[1] - 1))"
 }

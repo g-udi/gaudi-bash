@@ -227,7 +227,6 @@ _gaudi-bash-search-print-result() {
 
 	if [[ "${#matches[@]}" -gt 0 ]]; then
 
-
 		(${GAUDI_BASH_SEARCH_USE_COLOR}) && printf "${YELLOW}%s:${NC}\t" "${component}" || printf "%s:\t" "${component}"
 
 		for match in "${matches[@]}"; do

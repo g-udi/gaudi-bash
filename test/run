@@ -36,4 +36,4 @@ Running gaudi-bash unit tests.. \n\n"
 export GAUDI_TEST_DIRECTORY GAUDI_BATS GAUDI_BASH_DIR GAUDI_BASH_GIT_DIR
 
 bash "$GAUDI_TEST_DIRECTORY"/runners/run-bats.bash
-# bash "$GAUDI_TEST_DIRECTORY"/runners/run-search.bash
+bash "$GAUDI_TEST_DIRECTORY"/runners/run-search.bash
