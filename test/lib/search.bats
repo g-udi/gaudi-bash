@@ -12,7 +12,7 @@ load "$GAUDI_BASH"/lib/search.bash
 local_setup() {
 	prepare
 
-	cd "$GAUDI_BASH"
+	cd "$GAUDI_BASH" || exit
 	./setup.sh --silent
 }
 
@@ -30,31 +30,31 @@ local_setup() {
 
 @test "gaudi-bash search: search for a specific component should return only relevant results" {
 
-	run _gaudi-bash-search "ruby" --plugin --no-color					  
+	run _gaudi-bash-search "ruby" --plugin --no-color
 	assert_line --index 0 "plugins:	chruby	ruby	"
 
-	run _gaudi-bash-search "ruby" --a --no-color					  
+	run _gaudi-bash-search "ruby" --a --no-color
 	assert_line --index 0 "aliases:	bundler	"
 
-	run _gaudi-bash-search "apm" -c --no-color					  
+	run _gaudi-bash-search "apm" -c --no-color
 	assert_line --index 0 "completions:	apm	"
 }
 
 @test "gaudi-bash search: search for a specific component should return fail if no relevant results found" {
 
-	run _gaudi-bash-search "ruby" --plugin --no-color					  
+	run _gaudi-bash-search "ruby" --plugin --no-color
 	assert_line --index 0 "plugins:	chruby	ruby	"
 
-	run _gaudi-bash-search "ruby" -c --no-color					  
+	run _gaudi-bash-search "ruby" -c --no-color
 	assert_failure
 }
 
 @test "gaudi-bash search: search for a component should return correct results with correct status for enabled ones" {
 
-	run _gaudi-bash-search "base" --plugin --no-color					  
+	run _gaudi-bash-search "base" --plugin --no-color
 	assert_line --index 0 "plugins:	base ✓	"
 
-	run _gaudi-bash-search "ruby" --plugin --no-color					  
+	run _gaudi-bash-search "ruby" --plugin --no-color
 	assert_line --index 0 "plugins:	chruby	ruby	"
 
 	run _gaudi-bash-enable completion apm &> /dev/null
@@ -68,7 +68,7 @@ local_setup() {
 
 	run _gaudi-bash-disable completion git &> /dev/null
 	run _gaudi-bash-search "git" --no-color
-	echo "$(run _gaudi-bash-search "git" --no-color)"
+
 	assert_line --index 0 "aliases:	git	gitsvn	"
 	for plugin in "autojump" "git" "gitstatus" "git-subrepo" "jgitflow" "jump"; do
 		assert_line --index 1 --partial $plugin

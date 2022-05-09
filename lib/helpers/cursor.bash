@@ -31,7 +31,7 @@ function __gaudi-get-cursor-column() {
 # @example      ❯ __gaudi-get-cursor-position cursor_position
 function __gaudi-get-cursor-position() {
     export "$1"
-    
+
     exec < /dev/tty
     oldstty=$(stty -g)
     stty raw -echo min 0
