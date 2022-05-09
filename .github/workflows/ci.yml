@@ -40,6 +40,6 @@ jobs:
     - name: Install shellcheck
       run: brew install shellcheck
     - name: Install pre-commit
-      run: python3 -m pip install -r test/lint-requirements.txt
+      run: python3 -m pip install pre-commit
     - name: Run lint
       run: pre-commit run --all-files

@@ -50,6 +50,10 @@ prepare() {
 
 	mkdir -p "$GAUDI_BASH/components/enabled"
 	touch "$HOME/$CONFIG_FILE"
+
+	load "$GAUDI_BASH/lib/composure.bash"
+	# support 'plumbing' metadata
+	cite about param example group priority
 }
 
 setup() {

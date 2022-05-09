@@ -2,17 +2,12 @@
 # shellcheck shell=bats
 # shellcheck disable=SC2294,SC2004
 
-load "$GAUDI_TEST_DIRECTORY"/helper.bash
-load "$GAUDI_BASH"/lib/composure.bash
-load "$GAUDI_BASH"/components/completions/lib/gaudi-bash.completions.bash
+load "$GAUDI_TEST_DIRECTORY/helper.bash"
+
+load "$GAUDI_BASH/components/completions/lib/gaudi-bash.completions.bash"
 
 local_setup() {
 	prepare
-}
-
-@test "gaudi-bash completion: ensure that the _gaudi-bash-comp function is available" {
-	run type -a _gaudi-bash-comp &> /dev/null
-	assert_success
 }
 
 __check_completion() {
@@ -43,6 +38,11 @@ __check_completion() {
 
 	# Return the completion output
 	echo "${COMPREPLY[@]}"
+}
+
+@test "gaudi-bash completion: ensure that the _gaudi-bash-comp function is available" {
+	run type -a _gaudi-bash-comp &> /dev/null
+	assert_success
 }
 
 @test "gaudi-bash completion: doctor - show options" {

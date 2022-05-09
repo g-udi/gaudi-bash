@@ -4,7 +4,7 @@
 # Capture all the test files by searching the lib folder for .bats files except for search
 if [[ -z "$1" ]]; then
 	shopt -s globstar
-	for lib in "${GAUDI_TEST_DIRECTORY}"/**/*.bats; do
+	for lib in "${GAUDI_TEST_DIRECTORY}"/**/completion.bats; do
 		[[ ! "$lib" =~ "search" ]] && test_dirs+=("$lib")
 	done
 else

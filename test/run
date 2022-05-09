@@ -1,12 +1,19 @@
 #!/usr/bin/env bash
 # shellcheck shell=bash
 
-declare GAUDI_BATS GAUDI_TEST_DIRECTORY
+declare GAUDI_BATS GAUDI_TEST_DIRECTORY GAUDI_BASH_DIR GAUDI_BASH_GIT_DIR
 
 GAUDI_TEST_DIRECTORY="$(cd "${BASH_SOURCE%/*}" && pwd)"
 GAUDI_BATS="${GAUDI_TEST_DIRECTORY}/../bin/bats-core/bin/bats"
+GAUDI_BASH_DIR="${GAUDI_TEST_DIRECTORY%/*}"
+GAUDI_BASH_GIT_DIR="${MAIN_GAUDI_BASH_DIR}/.git"
 
 git submodule init && git submodule update
+
+# Warn user that tests run from the current git HEAD
+if ! git diff --quiet; then
+	echo "${BASH_SOURCE##*/}: your worktree is dirty; uncommitted changes will *not* be tested!"
+fi
 
 if [[ -z "${GAUDI_BASH}" ]]; then
 	declare GAUDI_BASH
@@ -26,7 +33,8 @@ echo -e "
 
 Running gaudi-bash unit tests.. \n\n"
 
-export GAUDI_TEST_DIRECTORY GAUDI_BATS
+export GAUDI_TEST_DIRECTORY GAUDI_BATS GAUDI_BASH_DIR GAUDI_BASH_GIT_DIR
 
 bash "$GAUDI_TEST_DIRECTORY"/runners/run-bats.bash
-bash "$GAUDI_TEST_DIRECTORY"/runners/run-search.bash
+# bash "$GAUDI_TEST_DIRECTORY"/runners/run-search.bash
+
