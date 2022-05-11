@@ -2,15 +2,10 @@
 # shellcheck shell=bats
 
 load "$GAUDI_TEST_DIRECTORY"/helper.bash
-load "$GAUDI_BASH"/lib/composure.bash
-
-cite about param example group priority
-
-load "$GAUDI_BASH"/lib/gaudi-bash.bash
-load "$GAUDI_BASH"/lib/helpers/doctor.bash
 
 local_setup() {
 	prepare
+	load_gaudi_libs gaudi-bash doctor
 
 	cd "$GAUDI_BASH" || exit
 	./setup.sh --silent

@@ -2,15 +2,9 @@
 
 load "$GAUDI_TEST_DIRECTORY"/helper.bash
 
-load "$GAUDI_BASH"/lib/composure.bash
-
-cite about param example group priority
-
-load "$GAUDI_BASH"/lib/gaudi-bash.bash
-load "$GAUDI_BASH"/lib/search.bash
-
 local_setup() {
 	prepare
+	load_gaudi_libs gaudi-bash search
 
 	cd "$GAUDI_BASH" || exit
 	./setup.sh --silent

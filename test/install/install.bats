@@ -3,10 +3,6 @@
 
 load "$GAUDI_TEST_DIRECTORY"/helper.bash
 
-load "$GAUDI_BASH"/lib/composure.bash
-
-cite about param example group priority
-
 case $OSTYPE in
 	darwin*)
 		export GAUDI_BASH_CONFIG_FILE=".bash_profile"

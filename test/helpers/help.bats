@@ -2,15 +2,10 @@
 # shellcheck shell=bats
 
 load "$GAUDI_TEST_DIRECTORY"/helper.bash
-load "$GAUDI_BASH"/lib/composure.bash
-
-cite about param example group priority
-
-load "$GAUDI_BASH"/lib/gaudi-bash.bash
-load "$GAUDI_BASH"/lib/helpers/help.bash
 
 local_setup() {
 	prepare
+	load_gaudi_libs gaudi-bash help
 }
 
 @test "gaudi-bash-helpers: help: should show default help menu if no valid argument was passed" {

@@ -52,7 +52,6 @@ prepare() {
 	touch "$HOME/$CONFIG_FILE"
 
 	load "$GAUDI_BASH/lib/composure.bash"
-	# support 'plumbing' metadata
 	cite about param example group priority
 }
 
@@ -96,4 +95,12 @@ teardown() {
 
 	rm -rf "${GAUDI_BASH}"
 	temp_del "${TEST_TEMP_DIR}"
+}
+
+function load_gaudi_libs() {
+	for lib in "$@"; do
+		component=$(find "${GAUDI_BASH}/lib" -type f -iname "${lib}.bash")
+		load "$GAUDI_BASH/${component#*/.gaudi_bash/}"
+	done	
+	return 0
 }

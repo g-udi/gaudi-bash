@@ -3,14 +3,9 @@
 
 load "$GAUDI_TEST_DIRECTORY"/helper.bash
 
-load "$GAUDI_BASH"/lib/composure.bash
-
-cite about param example group priority
-
-load "$GAUDI_BASH"/lib/gaudi-bash.bash
-
 local_setup() {
 	prepare
+	load_gaudi_libs gaudi-bash
 }
 
 @test "gaudi-bash core: _gaudi-bash-backup should successfully backup enabled components" {

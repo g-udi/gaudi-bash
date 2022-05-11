@@ -3,10 +3,9 @@
 
 load "$GAUDI_TEST_DIRECTORY"/helper.bash
 
-load "$GAUDI_BASH"/lib/helpers/unicodes.bash
-
 local_setup() {
 	prepare
+	load_gaudi_libs unicodes
 }
 
 @test "gaudi-bash helpers: unicodes: _getUnicodes() should print full set of 4-digit unicodes" {

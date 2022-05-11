@@ -11,6 +11,8 @@ export GAUDI_BASH_LOG_DEBUG_COLOR=${GREEN}
 export GAUDI_BASH_LOG_WARNING_COLOR=${YELLOW}
 export GAUDI_BASH_LOG_ERROR_COLOR=${RED}
 
+# : "${GAUDI_LOG_DISABLE_COLOR:=0}"
+
 # @function     _gaudi-bash-get-component-name-from-path
 # @description  get a component name from a component path
 # @param $1     component path: filesystem path for the component e.g., /Users/ahmadassaf/.gaudi_bash/lib/colors.plugins.bash
@@ -59,10 +61,14 @@ _log_general() {
 	local log_type log_color log_prefix
 
 	log_type=${2:-GENERAL}
-	log_color="GAUDI_BASH_LOG_${log_type^^}_COLOR"
 	log_prefix="${NC}${YELLOW}[${GAUDI_BASH_LOG_PREFIX}]${NC}"
 
-	printf "%b\n" "${!log_color} [ ${log_type^^} ] ${log_prefix} $1"
+	if [[ -n $GAUDI_LOG_DISABLE_COLOR  ]]; then
+		printf "%s\n" " [ ${log_type^^} ] ${log_prefix} $1"
+	else
+		log_color=GAUDI_BASH_LOG_${log_type^^}_COLOR
+		printf "%b\n" "${!log_color} [ ${log_type^^} ] ${log_prefix} $1"
+	fi
 }
 
 # @function     _log_debug

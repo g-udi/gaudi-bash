@@ -2,15 +2,10 @@
 # shellcheck shell=bats
 
 load "$GAUDI_TEST_DIRECTORY"/helper.bash
-load "$GAUDI_BASH"/lib/composure.bash
-
-cite about param example group priority
-
-load "$GAUDI_BASH"/lib/helpers/components.bash
-load "$GAUDI_BASH"/lib/helpers/cache.bash
 
 local_setup() {
 	prepare
+	load_gaudi_libs components cache
 }
 
 @test "gaudi-bash helpers: cache: _gaudi-bash-component-cache-add should fail if no component type was passed" {

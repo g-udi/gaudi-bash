@@ -4,13 +4,12 @@
 
 load "$GAUDI_TEST_DIRECTORY"/helper.bash
 
-load "$GAUDI_BASH"/lib/composure.bash
-load "$GAUDI_BASH"/lib/gaudi-bash.bash
-load "$GAUDI_BASH"/lib/colors.bash
-
-cite about param example group priority
-
-load "$GAUDI_BASH"/lib/log.bash
+local_setup() {
+	export GAUDI_LOG_DISABLE_COLOR=1
+	
+	prepare
+	load_gaudi_libs gaudi-bash log colors
+}
 
 @test "gaudi-bash log: _gaudi-bash-get-component-name-from-path extract component name from path" {
 
