@@ -6,7 +6,7 @@ load "$GAUDI_TEST_DIRECTORY"/helper.bash
 
 local_setup() {
 	export GAUDI_LOG_DISABLE_COLOR=1
-	
+
 	prepare
 	load_gaudi_libs gaudi-bash log colors
 }

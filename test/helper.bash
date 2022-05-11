@@ -101,6 +101,6 @@ function load_gaudi_libs() {
 	for lib in "$@"; do
 		component=$(find "${GAUDI_BASH}/lib" -type f -iname "${lib}.bash")
 		load "$GAUDI_BASH/${component#*/.gaudi_bash/}"
-	done	
+	done
 	return 0
 }

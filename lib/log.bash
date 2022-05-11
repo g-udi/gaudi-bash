@@ -63,7 +63,7 @@ _log_general() {
 	log_type=${2:-GENERAL}
 	log_prefix="${NC}${YELLOW}[${GAUDI_BASH_LOG_PREFIX}]${NC}"
 
-	if [[ -n $GAUDI_LOG_DISABLE_COLOR  ]]; then
+	if [[ -n $GAUDI_LOG_DISABLE_COLOR ]]; then
 		printf "%s\n" " [ ${log_type^^} ] ${log_prefix} $1"
 	else
 		log_color=GAUDI_BASH_LOG_${log_type^^}_COLOR
