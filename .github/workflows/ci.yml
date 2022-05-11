@@ -20,7 +20,7 @@ jobs:
       if: startsWith(runner.os, 'macOS')
       run: brew install parallel
     - name: Test code
-      run: test/run
+      run: test/run --no-interaction
 
   lint:
     runs-on: ubuntu-latest
