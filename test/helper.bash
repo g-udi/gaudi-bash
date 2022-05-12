@@ -23,6 +23,9 @@ esac
 # This is done to avoid messing with your own gaudi-bash source directory.
 # If you need this, call it in your .bats file's `local_setup` function.
 prepare() {
+
+	set -a
+
 	local lib_directory src_topdir
 
 	# Create the gaudi_bash folder in the temp test directory
@@ -53,6 +56,8 @@ prepare() {
 
 	load "$GAUDI_BASH/lib/composure.bash"
 	cite about param example group priority
+
+	set +a
 }
 
 setup() {
@@ -84,10 +89,13 @@ setup() {
 
 	# For `git` tests to run well, user name and email need to be set [ref: https://git-scm.com/docs/git-commit#_commit_information]
 	# This goes to the test-specific config, due to the $HOME overridden above
-	git config --global user.name "John Doe"
-	git config --global user.email "johndoe@example.com"
+	git config --global user.name "gaudi-bash bats runner"
+	git config --global user.email "bash@gaudi.bash"
+	git config --global advice.detachedHead false
+	git config --global init.defaultBranch "master"
 
 	local_setup
+	
 }
 
 teardown() {
