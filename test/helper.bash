@@ -2,6 +2,8 @@ function setup_file() {
 	# export *everything* to subshells, needed to support tests
 	set -a
 
+	export GAUDI_TEST_RUNNER="enabled"
+	
 	# Load the BATS modules we use:
 	load "${GAUDI_TEST_DEPS_DIR}/bats-support/load.bash"
 	load "${GAUDI_TEST_DEPS_DIR}/bats-assert/load.bash"
@@ -16,7 +18,6 @@ function setup_file() {
 	# which interferes with our tests. The only way to keep `git` from doing
 	# this seems to set HOME explicitly to a separate location.
 	# Refer to https://git-scm.com/docs/git-config#FILES.
-	cp -r "$HOME/$GAUDI_BASH_BASHRC_PROFILE" "$BATS_SUITE_TMPDIR"
 	readonly HOME="${BATS_SUITE_TMPDIR?}"
 	mkdir -p "${HOME}"
 
