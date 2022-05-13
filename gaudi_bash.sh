@@ -46,14 +46,7 @@ source "${GAUDI_BASH}/lib/appearance.bash"
 
 # handle the case where GAUDI_BASH_RELOAD_LEGACY is set
 if ! command -v reload &> /dev/null && [[ -n "$GAUDI_BASH_RELOAD_LEGACY" ]]; then
-	case $OSTYPE in
-		darwin*)
-			alias reload="source \$HOME/.bash_profile"
-			;;
-		*)
-			alias reload="source \$HOME/.bashrc"
-			;;
-	esac
+	alias reload="source \$HOME/${GAUDI_BASH_BASHRC_PROFILE}"
 fi
 
 # Disable trap DEBUG on subshells [ref:https://github.com/Bash-it/gaudi-bash/pull/1040]

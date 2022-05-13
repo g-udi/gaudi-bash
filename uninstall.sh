@@ -3,28 +3,19 @@
 
 : "${GAUDI_BASH:=$HOME/.gaudi_bash}"
 
-case $OSTYPE in
-	darwin*)
-		CONFIG_FILE=".bash_profile"
-		;;
-	*)
-		CONFIG_FILE=".bashrc"
-		;;
-esac
-
-BACKUP_FILE=$CONFIG_FILE.bak
+BACKUP_FILE=$GAUDI_BASH_BASHRC_PROFILE.bak
 
 if [[ ! -e "$HOME/$BACKUP_FILE" ]]; then
 	echo -e "${YELLOW}Backup file $HOME/$BACKUP_FILE not found.${NC}" >&2
 
-	test -w "$HOME/$CONFIG_FILE" \
-		&& mv "$HOME/$CONFIG_FILE" "$HOME/$CONFIG_FILE.uninstall" \
-		&& echo -e "${GREEN}Moved your $HOME/$CONFIG_FILE to $HOME/$CONFIG_FILE.uninstall.${NC}"
+	test -w "$HOME/$GAUDI_BASH_BASHRC_PROFILE" \
+		&& mv "$HOME/$GAUDI_BASH_BASHRC_PROFILE" "$HOME/$GAUDI_BASH_BASHRC_PROFILE.uninstall" \
+		&& echo -e "${GREEN}Moved your $HOME/$GAUDI_BASH_BASHRC_PROFILE to $HOME/$GAUDI_BASH_BASHRC_PROFILE.uninstall.${NC}"
 else
 	test -w "$HOME/$BACKUP_FILE" \
-		&& cp -a "$HOME/$BACKUP_FILE" "$HOME/$CONFIG_FILE" \
+		&& cp -a "$HOME/$BACKUP_FILE" "$HOME/$GAUDI_BASH_BASHRC_PROFILE" \
 		&& rm "$HOME/$BACKUP_FILE" \
-		&& echo -e "${GREEN}Your original $CONFIG_FILE has been restored.${NC}"
+		&& echo -e "${GREEN}Your original $GAUDI_BASH_BASHRC_PROFILE has been restored.${NC}"
 fi
 
 rm -rf "$GAUDI_BASH"

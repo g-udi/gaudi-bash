@@ -67,14 +67,14 @@ local_setup() {
 
 @test "gaudi-bash helpers: _gaudi-bash-disable: should disable multiple components passed" {
 
-	run _gaudi-bash-enable plugin "nvm" "node"
+	run gaudi-bash enable plugin "nvm" "node"
 	assert_line --index 0 --partial "enabled with priority"
 	assert_line --index 1 --partial "enabled with priority"
 
 	assert_link_exist "$GAUDI_BASH/components/enabled/250___node.plugins.bash"
 	assert_link_exist "$GAUDI_BASH/components/enabled/250___nvm.plugins.bash"
 
-	run _gaudi-bash-disable plugin "nvm" "node"
+	run gaudi-bash disable plugin "nvm" "node"
 	assert_link_not_exist "$GAUDI_BASH/components/enabled/250___node.plugins.bash"
 	assert_link_not_exist "$GAUDI_BASH/components/enabled/250___nvm.plugins.bash"
 }

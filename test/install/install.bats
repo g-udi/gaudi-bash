@@ -3,15 +3,6 @@
 
 load "$GAUDI_TEST_DIRECTORY"/helper.bash
 
-case $OSTYPE in
-	darwin*)
-		export GAUDI_BASH_CONFIG_FILE=".bash_profile"
-		;;
-	*)
-		export GAUDI_BASH_CONFIG_FILE=".bashrc"
-		;;
-esac
-
 @test "gaudi-bash install: verify that the install script exists" {
 
 	assert_file_exist "$GAUDI_BASH/install.sh"
@@ -33,7 +24,7 @@ esac
 	cd "$GAUDI_BASH"
 
 	./setup.sh --silent
-	assert_file_exist "$HOME/$GAUDI_BASH_CONFIG_FILE"
+	assert_file_exist "$HOME/$GAUDI_BASH_BASHRC_PROFILE"
 }
 
 @test "gaudi-bash install: run the install script silently and enable sane defaults" {
@@ -50,12 +41,12 @@ esac
 }
 
 @test "gaudi-bash install: run the install script silently and don't modify configs" {
-	rm -rf "${HOME:?}/${GAUDI_BASH_CONFIG_FILE:?}"
+	rm -rf "${HOME:?}/${GAUDI_BASH_BASHRC_PROFILE:?}"
 
 	cd "$GAUDI_BASH"
 	./setup.sh --silent --no_modify_config
 
-	assert_file_not_exist "$HOME/${GAUDI_BASH_CONFIG_FILE}"
+	assert_file_not_exist "$HOME/${GAUDI_BASH_BASHRC_PROFILE}"
 }
 
 @test "gaudi-bash install: verify that a backup file is created" {
@@ -65,16 +56,16 @@ esac
 
 	cd "$GAUDI_BASH" || exit
 
-	touch "$HOME/$GAUDI_BASH_CONFIG_FILE"
-	echo "test file content" > "$HOME/$GAUDI_BASH_CONFIG_FILE"
-	md5_orig=$(md5sum "$HOME/$GAUDI_BASH_CONFIG_FILE" | awk '{print $1}')
+	touch "$HOME/$GAUDI_BASH_BASHRC_PROFILE"
+	echo "test file content" > "$HOME/$GAUDI_BASH_BASHRC_PROFILE"
+	md5_orig=$(md5sum "$HOME/$GAUDI_BASH_BASHRC_PROFILE" | awk '{print $1}')
 
 	./setup.sh --silent
 
-	assert_file_exist "$HOME/$GAUDI_BASH_CONFIG_FILE"
-	assert_file_exist "$HOME/$GAUDI_BASH_CONFIG_FILE.bak"
+	assert_file_exist "$HOME/$GAUDI_BASH_BASHRC_PROFILE"
+	assert_file_exist "$HOME/$GAUDI_BASH_BASHRC_PROFILE.bak"
 
-	md5_bak=$(md5sum "$HOME/$GAUDI_BASH_CONFIG_FILE.bak" | awk '{print $1}')
+	md5_bak=$(md5sum "$HOME/$GAUDI_BASH_BASHRC_PROFILE.bak" | awk '{print $1}')
 
 	assert_equal "$md5_orig" "$md5_bak"
 }
