@@ -56,6 +56,7 @@ local_setup() {
 	}
 
 	run _gaudi-bash-enable plugin git
+	run gaudi-bash enable plugin git
 	assert_success
 	echo ">>>>>>>> $(ls $GAUDI_BASH/components/)"
 	assert_file_exist "$GAUDI_BASH/components/enabled/250___git.plugins.bash"
