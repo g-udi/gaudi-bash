@@ -34,7 +34,7 @@ if command -v parallel &> /dev/null \
 			echo ${test_jobs_default}
 		fi
 	)"
-	exec "$GAUDI_BATS" ${CI:+--tap} --jobs "${test_jobs_effective}"  "${test_dirs[@]}"
+	exec "$GAUDI_BATS" ${CI:+--tap} --jobs "${test_jobs_effective}"  "${test_dirs[@]}" --verbose-run
 else
 	printf "\n\n%s\n\n" "[[ Single Mode Enabled ✓ ]]"
 	exec "$GAUDI_BATS" ${CI:+--tap} "${test_dirs[@]}"

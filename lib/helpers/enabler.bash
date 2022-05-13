@@ -16,6 +16,8 @@ _gaudi-bash-enable() {
 	about "enable a gaudi-bash component (plugin, component, alias)"
 	group "gaudi-bash:core"
 
+	mkdir -p "${GAUDI_BASH}/components/enabled"
+
 	! __check-function-parameters "$1" && printf "%s\n" "Please enter a valid component to enable" && return 1
 
 	local type component load_priority
@@ -60,8 +62,6 @@ _gaudi-bash-enable() {
 			printf "${GREEN}$type_singular ${CYAN}$component${NC} %s\n" "is already enabled"
 			return 0
 		fi
-
-		mkdir -p "${GAUDI_BASH}/components/enabled"
 
 		# Load the priority from the file if it present there
 		declare local_file_priority use_load_priority

@@ -7,6 +7,7 @@ function load_gaudi_libs() {
 }
 
 function setup() {
+	echo "setup"
 	export GIT_CONFIG_NOSYSTEM
 	export XDG_CACHE_HOME="${GAUDI_TEST_DIRECTORY?}"
 
@@ -14,6 +15,7 @@ function setup() {
 }
 
 function setup_file() {
+	
 	# export *everything* to subshells, needed to support tests
 	set -a
 
@@ -63,30 +65,36 @@ function setup_file() {
 }
 
 function teardown_file() {
+	
 	# This only serves to clean metadata from the real git repo.
 	git --git-dir="${GAUDI_BASH_GIT_DIR?}" worktree remove -f "${GAUDI_BASH?}"
 	rm -rf "${GAUDI_BASH?}/components"
 }
 
 function local_setup() {
+	echo "local setup"
 	true
 }
 
 function local_teardown() {
+	echo "local teardown"
 	true
 }
 
 function local_setup_file() {
+	echo "local setup file"
 	true
 }
 
 function teardown() {
+	echo "teardown"
 	unset GIT_CONFIG_NOSYSTEM
-	local_teardown
-	echo "GAUDI_BASH >>>> $GAUDI_BASH"
-	# rm -rf "${GAUDI_BASH?}/components/enabled"
+	
+	rm -rf "${GAUDI_BASH?}/components/enabled"
 	rm -rf "${GAUDI_BASH?}/tmp"
 	rm -rf "${GAUDI_BASH?}/profiles"/test*.bash_it
+	
+	local_teardown
 
 }
 
