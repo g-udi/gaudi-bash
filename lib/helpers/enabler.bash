@@ -46,6 +46,7 @@ _gaudi-bash-enable() {
 			_gaudi-bash-enable "$type" "$(basename "$_component" ."$type".bash)"
 		done
 	else
+		echo "kooo"
 		local _component
 
 		_component=$(command ls "${GAUDI_BASH}/components/$type/lib/$component".*bash 2> /dev/null | head -1)
