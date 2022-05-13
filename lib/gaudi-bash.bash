@@ -44,18 +44,7 @@ _gaudi-bash-reload() {
 	about "reloads the bash profile that corresponds to the correct OS type (.bashrc, .bash_profile)"
 	group "gaudi-bash:core"
 
-	pushd "${GAUDI_BASH}" &> /dev/null || return
-
-	case $OSTYPE in
-		darwin*)
-			source "$HOME/.bash_profile"
-			;;
-		*)
-			source "$HOME/.bashrc"
-			;;
-	esac
-
-	popd &> /dev/null || return
+	source "${GAUDI_BASH_BASHRC:-${HOME?}/$GAUDI_BASH_BASHRC_PROFILE}"
 }
 
 # @function     _gaudi-bash-restart

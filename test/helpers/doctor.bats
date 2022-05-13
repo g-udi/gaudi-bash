@@ -4,7 +4,6 @@
 load "$GAUDI_TEST_DIRECTORY"/helper.bash
 
 local_setup() {
-	prepare
 	load_gaudi_libs gaudi-bash doctor
 
 	cd "$GAUDI_BASH" || exit

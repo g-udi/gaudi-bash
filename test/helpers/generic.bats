@@ -4,7 +4,6 @@
 load "$GAUDI_TEST_DIRECTORY"/helper.bash
 
 local_setup() {
-	prepare
 	load_gaudi_libs generic
 }
 

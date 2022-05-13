@@ -12,10 +12,6 @@ case $OSTYPE in
 		;;
 esac
 
-local_setup() {
-	prepare
-}
-
 @test "gaudi-bash install: verify that the install script exists" {
 
 	assert_file_exist "$GAUDI_BASH/install.sh"

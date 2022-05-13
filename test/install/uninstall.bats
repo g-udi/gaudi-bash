@@ -3,10 +3,6 @@
 
 load "$GAUDI_TEST_DIRECTORY"/helper.bash
 
-local_setup() {
-	prepare
-}
-
 @test "gaudi-bash uninstall: verify that the uninstall script exists" {
 
 	assert_file_exist "$GAUDI_BASH/uninstall.sh"

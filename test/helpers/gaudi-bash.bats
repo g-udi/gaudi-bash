@@ -6,7 +6,6 @@ load "$GAUDI_TEST_DIRECTORY"/helper.bash
 export GAUDI_BASH_DESCRIPTION_MIN_LINE_COUNT=10
 
 local_setup() {
-	prepare
 	load_gaudi_libs gaudi-bash components utils cache
 }
 

@@ -5,7 +5,7 @@
 # Capture all the test files by searching the lib folder for .bats files except for search
 if [[ -z "$1" ]]; then
 	shopt -s globstar
-	for lib in "${GAUDI_TEST_DIRECTORY}"/**/*.bats; do
+	for lib in "${GAUDI_TEST_DIRECTORY}"/**/disabler.bats; do
 		[[ ! "$lib" =~ "search" ]] && test_dirs+=("$lib")
 	done
 else
@@ -34,8 +34,7 @@ if command -v parallel &> /dev/null \
 			echo ${test_jobs_default}
 		fi
 	)"
-	exec "$GAUDI_BATS" ${CI:+--tap} --jobs "${test_jobs_effective}" \
-		"${test_dirs[@]}"
+	exec "$GAUDI_BATS" ${CI:+--tap} --jobs "${test_jobs_effective}"  "${test_dirs[@]}"
 else
 	printf "\n\n%s\n\n" "[[ Single Mode Enabled ✓ ]]"
 	exec "$GAUDI_BATS" ${CI:+--tap} "${test_dirs[@]}"

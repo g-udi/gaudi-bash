@@ -4,7 +4,6 @@
 load "$GAUDI_TEST_DIRECTORY"/helper.bash
 
 local_setup() {
-	prepare
 	load_gaudi_libs components cache
 }
 
@@ -18,22 +17,22 @@ local_setup() {
 
 	run _gaudi-bash-component-cache-add alias
 	assert_success
-	assert_output "$HOME/.gaudi_bash/tmp/cache/alias"
+	assert_output "$GAUDI_BASH/tmp/cache/alias"
 }
 
 @test "gaudi-bash helpers: cache: _gaudi-bash-component-cache-add should return a new cache file in /tmp directory" {
 
 	run _gaudi-bash-component-cache-add plugins
 	assert_success
-	assert_output "$HOME/.gaudi_bash/tmp/cache/plugins"
+	assert_output "$GAUDI_BASH/tmp/cache/plugins"
 }
 
 @test "gaudi-bash helpers: cache: _gaudi-bash-component-cache-add should create a cache folder" {
 
 	run _gaudi-bash-component-cache-add plugins
 	assert_success
-	assert_output "$HOME/.gaudi_bash/tmp/cache/plugins"
-	assert_dir_exist "$HOME/.gaudi_bash/tmp/cache"
+	assert_output "$GAUDI_BASH/tmp/cache/plugins"
+	assert_dir_exist "$GAUDI_BASH/tmp/cache"
 }
 
 @test "gaudi-bash helpers: cache: _gaudi-bash-component-cache-clean should clear the cache folder" {
@@ -44,11 +43,11 @@ local_setup() {
 	touch "${_plugins_cache}"
 	touch "${_aliases_cache}"
 
-	assert_file_exist "$HOME/.gaudi_bash/tmp/cache/plugins"
-	assert_file_exist "$HOME/.gaudi_bash/tmp/cache/aliases"
+	assert_file_exist "$GAUDI_BASH/tmp/cache/plugins"
+	assert_file_exist "$GAUDI_BASH/tmp/cache/aliases"
 
 	_gaudi-bash-component-cache-clean
-	assert_dir_exist "$HOME/.gaudi_bash/tmp/cache"
-	assert_file_not_exist "$HOME/.gaudi_bash/tmp/cache/plugins"
-	assert_file_not_exist "$HOME/.gaudi_bash/tmp/cache/aliases"
+	assert_dir_exist "$GAUDI_BASH/tmp/cache"
+	assert_file_not_exist "$GAUDI_BASH/tmp/cache/plugins"
+	assert_file_not_exist "$GAUDI_BASH/tmp/cache/aliases"
 }

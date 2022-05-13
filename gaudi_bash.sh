@@ -4,6 +4,17 @@
 
 # Initialize Bash It
 GAUDI_BASH_LOG_PREFIX="CORE"
+: "${GAUDI_BASH:=${BASH_SOURCE%/*}}"
+: "${GAUDI_BASH_BASHRC:=${BASH_SOURCE[${#BASH_SOURCE[@]} - 1]}}"
+
+case $OSTYPE in
+	darwin*)
+		export GAUDI_BASH_BASHRC_PROFILE=".bash_profile"
+		;;
+	*)
+		export GAUDI_BASH_BASHRC_PROFILE=".bashrc"
+		;;
+esac
 
 # Only set $GAUDI_BASH if it's not already set
 if [[ -z "$GAUDI_BASH" ]]; then
@@ -11,6 +22,7 @@ if [[ -z "$GAUDI_BASH" ]]; then
 	export GAUDI_BASH=$BASH
 	BASH="$(bash -c 'echo $BASH')"
 	export BASH
+	
 fi
 
 # Load composure first, so we support function metadata and then logging

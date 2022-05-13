@@ -4,9 +4,9 @@
 load "$GAUDI_TEST_DIRECTORY"/helper.bash
 
 local_setup() {
-	prepare
 	load_gaudi_libs log utils
 }
+
 
 @test "gaudi-bash helpers: utils: _is_function: should return a success status if the passed argument is a function" {
 

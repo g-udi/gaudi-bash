@@ -8,7 +8,6 @@ load "$GAUDI_BASH"/lib/composure.bash
 cite about param example group priority
 
 local_setup() {
-	prepare
 
 	if command -v rsync &> /dev/null; then
 		rsync -a "$GAUDI_BASH/test/fixtures/gaudi_bash/" "$GAUDI_BASH/components"
