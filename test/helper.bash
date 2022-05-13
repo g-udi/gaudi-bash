@@ -3,7 +3,7 @@ function setup_file() {
 	set -a
 
 	export GAUDI_TEST_RUNNER="enabled"
-	
+
 	# Load the BATS modules we use:
 	load "${GAUDI_TEST_DEPS_DIR}/bats-support/load.bash"
 	load "${GAUDI_TEST_DEPS_DIR}/bats-assert/load.bash"
@@ -38,6 +38,7 @@ function setup_file() {
 	cp -r "$GAUDI_BASH_ORIGIN/components/plugins" "$GAUDI_BASH/components/plugins"
 	cp -r "$GAUDI_BASH_ORIGIN/components/completions" "$GAUDI_BASH/components/completions"
 
+
 	load "$GAUDI_BASH_ORIGIN/lib/composure.bash"
 	cite about param example group priority
 
@@ -67,7 +68,7 @@ function local_teardown() {
 }
 
 function setup_test_fixture() {
-	mkdir -p "${GAUDI_BASH?}/enabled"
+	mkdir -p "${GAUDI_BASH?}/components/enabled"
 }
 
 function setup() {
@@ -83,8 +84,8 @@ function teardown() {
 	unset GIT_CONFIG_NOSYSTEM
 	local_teardown
 	
-	rm -rf "${GAUDI_BASH?}/enabled"
-	rm -rf "${GAUDI_BASH?}/tmp/cache"
+	rm -rf "${GAUDI_BASH?}/components/enabled"
+	rm -rf "${GAUDI_BASH?}/tmp"
 	rm -rf "${GAUDI_BASH?}/profiles"/test*.bash_it
 }
 
