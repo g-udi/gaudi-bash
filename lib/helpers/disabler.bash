@@ -35,7 +35,7 @@ _gaudi-bash-disable() {
 				_gaudi-bash-disable "$file_type" "all"
 			done
 		fi
-		return
+		return 0
 	fi
 
 	if [[ "$component" = "all" ]]; then
@@ -65,4 +65,6 @@ _gaudi-bash-disable() {
 	if [[ -n "$GAUDI_BASH_AUTOMATIC_RELOAD_AFTER_CONFIG_CHANGE" ]]; then
 		_gaudi-bash-reload
 	fi
+
+	return 0
 }

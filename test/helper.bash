@@ -1,3 +1,18 @@
+function load_gaudi_libs() {
+	for lib in "$@"; do
+		component=$(find "${GAUDI_BASH}/lib" -type f -iname "${lib}.bash")
+		load "$component"
+	done
+	return 0
+}
+
+function setup() {
+	export GIT_CONFIG_NOSYSTEM
+	export XDG_CACHE_HOME="${GAUDI_TEST_DIRECTORY?}"
+
+	local_setup
+}
+
 function setup_file() {
 	# export *everything* to subshells, needed to support tests
 	set -a
@@ -38,25 +53,19 @@ function setup_file() {
 	cp -r "$GAUDI_BASH_ORIGIN/components/plugins" "$GAUDI_BASH/components/plugins"
 	cp -r "$GAUDI_BASH_ORIGIN/components/completions" "$GAUDI_BASH/components/completions"
 
-
 	load "$GAUDI_BASH_ORIGIN/lib/composure.bash"
 	cite about param example group priority
 
 	# Run any local test setup
 	local_setup_file
+
 	set +a # not needed, but symetiric!
 }
 
-function load_gaudi_libs() {
-	for lib in "$@"; do
-		component=$(find "${GAUDI_BASH}/lib" -type f -iname "${lib}.bash")
-		load "$component"
-	done
-	return 0
-}
-
-function local_setup_file() {
-	true
+function teardown_file() {
+	# This only serves to clean metadata from the real git repo.
+	git --git-dir="${GAUDI_BASH_GIT_DIR?}" worktree remove -f "${GAUDI_BASH?}"
+	rm -rf "${GAUDI_BASH?}/components"
 }
 
 function local_setup() {
@@ -67,29 +76,17 @@ function local_teardown() {
 	true
 }
 
-function setup_test_fixture() {
-	mkdir -p "${GAUDI_BASH?}/components/enabled"
-}
-
-function setup() {
-	# be independent of git's system configuration
-	export GIT_CONFIG_NOSYSTEM
-	export XDG_CACHE_HOME="${GAUDI_TEST_DIRECTORY?}"
-
-	setup_test_fixture
-	local_setup
+function local_setup_file() {
+	true
 }
 
 function teardown() {
 	unset GIT_CONFIG_NOSYSTEM
 	local_teardown
-	
+	echo "GAUDI_BASH >>>> $GAUDI_BASH"
 	rm -rf "${GAUDI_BASH?}/components/enabled"
 	rm -rf "${GAUDI_BASH?}/tmp"
 	rm -rf "${GAUDI_BASH?}/profiles"/test*.bash_it
+
 }
 
-function teardown_file() {
-	# This only serves to clean metadata from the real git repo.
-	git --git-dir="${GAUDI_BASH_GIT_DIR?}" worktree remove -f "${GAUDI_BASH?}"
-}
