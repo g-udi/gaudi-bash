@@ -7,10 +7,13 @@ function load_gaudi_libs() {
 }
 
 function setup() {
-	echo "setup"
 	export GIT_CONFIG_NOSYSTEM
 	export XDG_CACHE_HOME="${GAUDI_TEST_DIRECTORY?}"
-
+	
+	cp -r "$GAUDI_BASH_ORIGIN/components/aliases" "$GAUDI_BASH/components/aliases"
+	cp -r "$GAUDI_BASH_ORIGIN/components/plugins" "$GAUDI_BASH/components/plugins"
+	cp -r "$GAUDI_BASH_ORIGIN/components/completions" "$GAUDI_BASH/components/completions"
+	
 	local_setup
 }
 
@@ -51,10 +54,6 @@ function setup_file() {
 	# This sets up a local test fixture, i.e. a completely fresh and isolated gaudi-bash directory. This is done to avoid messing with your own gaudi-bash source directory.
 	git --git-dir="${GAUDI_BASH_GIT_DIR?}" worktree add -d "${GAUDI_BASH}"
 
-	cp -r "$GAUDI_BASH_ORIGIN/components/aliases" "$GAUDI_BASH/components/aliases"
-	cp -r "$GAUDI_BASH_ORIGIN/components/plugins" "$GAUDI_BASH/components/plugins"
-	cp -r "$GAUDI_BASH_ORIGIN/components/completions" "$GAUDI_BASH/components/completions"
-
 	load "$GAUDI_BASH_ORIGIN/lib/composure.bash"
 	cite about param example group priority
 
@@ -65,31 +64,26 @@ function setup_file() {
 }
 
 function teardown_file() {
-	
 	# This only serves to clean metadata from the real git repo.
 	git --git-dir="${GAUDI_BASH_GIT_DIR?}" worktree remove -f "${GAUDI_BASH?}"
 	rm -rf "${GAUDI_BASH?}/components"
 }
 
 function local_setup() {
-	echo "local setup"
 	true
 }
 
 function local_teardown() {
-	echo "local teardown"
 	true
 }
 
 function local_setup_file() {
-	echo "local setup file"
 	true
 }
 
 function teardown() {
-	echo "teardown"
 	unset GIT_CONFIG_NOSYSTEM
-	
+
 	rm -rf "${GAUDI_BASH?}/components/enabled"
 	rm -rf "${GAUDI_BASH?}/tmp"
 	rm -rf "${GAUDI_BASH?}/profiles"/test*.bash_it

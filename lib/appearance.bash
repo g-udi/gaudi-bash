@@ -116,9 +116,11 @@ export LSCOLORS='cxfxdxgxbxegedabagacad'
 GREP_OPTIONS="--color=auto"
 alias grep='grep $GREP_OPTIONS'
 
+: "${GAUDI_BASH_ORIGIN:="$GAUDI_BASH"}"
+
 # Load the theme
 if [[ -n $GAUDI_BASH_THEME ]]; then
-	source "$GAUDI_BASH/components/themes/$GAUDI_BASH_THEME/$GAUDI_BASH_THEME.theme.bash"
+	source "$GAUDI_BASH_ORIGIN/components/themes/$GAUDI_BASH_THEME/$GAUDI_BASH_THEME.theme.bash"
 fi
 
 _log_component "$GAUDI_BASH_THEME" "theme"

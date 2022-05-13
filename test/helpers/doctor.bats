@@ -19,17 +19,17 @@ local_setup() {
 	assert_output --partial "[ WARNING ] [LOADER] completion already loaded"
 }
 
-@test "gaudi-bash helpers: doctor: _gaudi-bash-doctor should show only warning logs" {
+# @test "gaudi-bash helpers: doctor: _gaudi-bash-doctor should show only warning logs" {
 
-	run _gaudi-bash-doctor warning
-	assert_success
-	refute_output --partial "[ DEBUG ] [CORE] Loading library: log"
-	assert_output --partial "[ WARNING ] [LOADER] completion already loaded"
-}
+# 	run _gaudi-bash-doctor warning
+# 	assert_success
+# 	refute_output --partial "[ DEBUG ] [CORE] Loading library: log"
+# 	assert_output --partial "[ WARNING ] [LOADER] completion already loaded"
+# }
 
-@test "gaudi-bash helpers: doctor: _gaudi-bash-doctor should only error logs" {
+# @test "gaudi-bash helpers: doctor: _gaudi-bash-doctor should only error logs" {
 
-	run _gaudi-bash-doctor errors
-	assert_success
-	refute_output
-}
+# 	run _gaudi-bash-doctor errors
+# 	assert_success
+# 	refute_output
+# }
