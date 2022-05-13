@@ -16,6 +16,7 @@ function setup_file() {
 	# which interferes with our tests. The only way to keep `git` from doing
 	# this seems to set HOME explicitly to a separate location.
 	# Refer to https://git-scm.com/docs/git-config#FILES.
+	cp -r "$HOME/$GAUDI_BASH_BASHRC_PROFILE" "$BATS_SUITE_TMPDIR"
 	readonly HOME="${BATS_SUITE_TMPDIR?}"
 	mkdir -p "${HOME}"
 
@@ -32,7 +33,6 @@ function setup_file() {
 	# This sets up a local test fixture, i.e. a completely fresh and isolated gaudi-bash directory. This is done to avoid messing with your own gaudi-bash source directory.
 	git --git-dir="${GAUDI_BASH_GIT_DIR?}" worktree add -d "${GAUDI_BASH}"
 
-	 
 	cp -r "$GAUDI_BASH_ORIGIN/components/aliases" "$GAUDI_BASH/components/aliases"
 	cp -r "$GAUDI_BASH_ORIGIN/components/plugins" "$GAUDI_BASH/components/plugins"
 	cp -r "$GAUDI_BASH_ORIGIN/components/completions" "$GAUDI_BASH/components/completions"
