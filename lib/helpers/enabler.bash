@@ -61,14 +61,13 @@ _gaudi-bash-enable() {
 			return 0
 		fi
 
-		mkdir -p "${GAUDI_BASH}/components/enabled"
+		mkdir "${GAUDI_BASH}/components/enabled"
 
 		# Load the priority from the file if it present there
 		declare local_file_priority use_load_priority
 
 		local_file_priority=$(cat "${GAUDI_BASH}/components/$type/lib/$_component" | metafor priority)
 		use_load_priority=${local_file_priority:-$load_priority}
-		echo "linking now to:     ---> $(ls ${GAUDI_BASH}/components/)"
 		ln -s "${GAUDI_BASH}"/components/"$type"/lib/"$_component" "${GAUDI_BASH}/components/enabled/${use_load_priority}${GAUDI_BASH_LOAD_PRIORITY_SEPARATOR}${_component}"
 	fi
 
