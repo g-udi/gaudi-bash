@@ -38,16 +38,16 @@ local_setup() {
 # 	assert_file_not_exist "$GAUDI_BASH/components/enabled/250___base.plugins.bash"
 # }
 
-# @test "gaudi-bash helpers: _gaudi-bash-disable: should display appropriate message when trying to disable an already disabled component" {
+@test "gaudi-bash helpers: _gaudi-bash-disable: should display appropriate message when trying to disable an already disabled component" {
 
-# 	run _gaudi-bash-enable plugin base
-# 	assert_success
-# 	assert_file_exist "$GAUDI_BASH/components/enabled/250___base.plugins.bash"
+	run _gaudi-bash-enable plugin node
+	assert_success
+	assert_file_exist "$GAUDI_BASH/components/enabled/250___node.plugins.bash"
 
-# 	run _gaudi-bash-disable plugin base
-# 	assert_output --partial "disabled"
-# 	assert_file_not_exist "$GAUDI_BASH/components/enabled/250___base.plugins.bash"
-# }
+	run _gaudi-bash-disable plugin node
+	assert_output --partial "disabled"
+	assert_file_not_exist "$GAUDI_BASH/components/enabled/250___node.plugins.bash"
+}
 
 # @test "gaudi-bash helpers: _gaudi-bash-disable: should run the component disable function if it exists" {
 
@@ -65,19 +65,19 @@ local_setup() {
 # 	assert_file_not_exist "$GAUDI_BASH/components/enabled/250___base.plugins.bash"
 # }
 
-@test "gaudi-bash helpers: _gaudi-bash-disable: should disable multiple components passed" {
+# @test "gaudi-bash helpers: _gaudi-bash-disable: should disable multiple components passed" {
 
-	run gaudi-bash enable plugin "nvm" "node"
-	assert_line --index 0 --partial "enabled with priority"
-	assert_line --index 1 --partial "enabled with priority"
+# 	run gaudi-bash enable plugin "nvm" "node"
+# 	assert_line --index 0 --partial "enabled with priority"
+# 	assert_line --index 1 --partial "enabled with priority"
 
-	assert_link_exist "$GAUDI_BASH/components/enabled/250___node.plugins.bash"
-	assert_link_exist "$GAUDI_BASH/components/enabled/250___nvm.plugins.bash"
+# 	assert_link_exist "$GAUDI_BASH/components/enabled/250___node.plugins.bash"
+# 	assert_link_exist "$GAUDI_BASH/components/enabled/250___nvm.plugins.bash"
 
-	run gaudi-bash disable plugin "nvm" "node"
-	assert_link_not_exist "$GAUDI_BASH/components/enabled/250___node.plugins.bash"
-	assert_link_not_exist "$GAUDI_BASH/components/enabled/250___nvm.plugins.bash"
-}
+# 	run gaudi-bash disable plugin "nvm" "node"
+# 	assert_link_not_exist "$GAUDI_BASH/components/enabled/250___node.plugins.bash"
+# 	assert_link_not_exist "$GAUDI_BASH/components/enabled/250___nvm.plugins.bash"
+# }
 
 # @test "gaudi-bash helpers: _gaudi-bash-disable: should disable all plugins" {
 
