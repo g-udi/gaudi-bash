@@ -61,7 +61,7 @@ _gaudi-bash-enable() {
 			return 0
 		fi
 
-		mkdir "${GAUDI_BASH}/components/enabled"
+		mkdir -p "${GAUDI_BASH}/components/enabled"
 
 		# Load the priority from the file if it present there
 		declare local_file_priority use_load_priority
