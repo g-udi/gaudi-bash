@@ -85,12 +85,12 @@ local_setup() {
 # }
 
 @test "gaudi-bash helpers: components: _gaudi-bash-component-help: should create cache file for component on the first run" {
-
-	_gaudi-bash-component-cache-clean
-	assert_file_not_exist "$HOME/.gaudi_bash/tmp/cache/plugins"
+	# _gaudi-bash-component-cache-clean
+	# assert_file_not_exist "$GAUDI_BASH/tmp/cache/plugins"
 
 	run _gaudi-bash-component-help plugin
-	assert_file_exist "$HOME/.gaudi_bash/tmp/cache/plugins"
+	echo "********** $(ls -la $GAUDI_BASH/tmp/cache)"
+	assert_file_exist "$GAUDI_BASH/tmp/cache/plugins"
 }
 
 # @test "gaudi-bash helpers: components: _gaudi-bash-component-help: should display plugins help" {
