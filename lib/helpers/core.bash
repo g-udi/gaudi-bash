@@ -41,7 +41,7 @@ _gaudi-bash-describe() {
 	printf "\n%-20s%-10s%s\n" "${component_type^}" 'Enabled?' '  Description'
 	printf "%*s\n" "${COLUMNS:-$(tput cols)}" '' | tr ' ' -
 
-	file=$(_gaudi-bash-component-cache-add "${component}-enabled")
+	file=$(_gaudi-bash-component-cache-add "$component-enabled")
 	[[ "$mode" = "all" ]] && file=${file/-enabled/}
 
 	if [[ ! -s "${file}" || -z $(find "${file}" -mmin -300) ]]; then
