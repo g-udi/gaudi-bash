@@ -3,10 +3,6 @@
 
 load "$GAUDI_TEST_DIRECTORY"/helper.bash
 
-load "$GAUDI_BASH"/lib/composure.bash
-
-cite about param example group priority
-
 local_setup() {
 
 	if command -v rsync &> /dev/null; then
@@ -20,9 +16,7 @@ local_setup() {
 
 @test "gaudi-bash loader: load aliases in order" {
 
-	mkdir -p "$GAUDI_BASH"/components/enabled
-	mkdir -p "$GAUDI_BASH"/components/enabled
-
+	echo "$(ls -la $GAUDI_BASH/components)"
 	ln -s "$GAUDI_BASH/components/plugins/lib/base.plugin.bash" "$GAUDI_BASH/components/enabled/250___base.plugin.bash"
 	assert_link_exist "$GAUDI_BASH/components/enabled/250___base.plugin.bash"
 
@@ -43,8 +37,6 @@ local_setup() {
 }
 
 @test "gaudi-bash loader: load aliases in priority order" {
-	mkdir -p "$GAUDI_BASH"/enabled
-	mkdir -p "$GAUDI_BASH"/enabled
 
 	ln -s "$GAUDI_BASH/components/plugins/lib/base.plugin.bash" "$GAUDI_BASH/components/enabled/250___base.plugin.bash"
 	assert_link_exist "$GAUDI_BASH/components/enabled/250___base.plugin.bash"
@@ -66,7 +58,6 @@ local_setup() {
 }
 
 @test "gaudi-bash loader: load aliases and plugins in priority order" {
-	mkdir -p "$GAUDI_BASH"/enabled
 
 	ln -s "$GAUDI_BASH/components/plugins/lib/base.plugin.bash" "$GAUDI_BASH/components/enabled/250___base.plugin.bash"
 	assert_link_exist "$GAUDI_BASH/components/enabled/250___base.plugin.bash"
@@ -91,7 +82,6 @@ local_setup() {
 }
 
 @test "gaudi-bash loader: load aliases, plugins and completions in priority order" {
-	mkdir -p "$GAUDI_BASH"/enabled
 
 	ln -s "$GAUDI_BASH/components/plugins/base.plugin.bash" "$GAUDI_BASH/components/enabled/250___base.plugin.bash"
 	assert_link_exist "$GAUDI_BASH/components/enabled/250___base.plugin.bash"
@@ -116,7 +106,6 @@ local_setup() {
 }
 
 @test "gaudi-bash loader: load aliases, plugins and completions in priority order with one alias priority higher than a plugin" {
-	mkdir -p "$GAUDI_BASH"/enabled
 
 	ln -s "$GAUDI_BASH/components/plugins/lib/base.plugin.bash" "$GAUDI_BASH/components/enabled/250___base.plugin.bash"
 	assert_link_exist "$GAUDI_BASH/components/enabled/250___base.plugin.bash"
@@ -141,7 +130,6 @@ local_setup() {
 }
 
 @test "gaudi-bash loader: load aliases and plugins in priority order, with one alias higher than plugins" {
-	mkdir -p "$GAUDI_BASH"/enabled
 
 	ln -s "$GAUDI_BASH/components/plugins/lib/base.plugin.bash" "$GAUDI_BASH/components/enabled/250___base.plugin.bash"
 	assert_link_exist "$GAUDI_BASH/components/enabled/250___base.plugin.bash"

@@ -1,36 +1,30 @@
 # #!/usr/bin/env bats
 # # shellcheck shell=bats
 
-# load "$GAUDI_TEST_DIRECTORY"/helper.bash
+load "$GAUDI_TEST_DIRECTORY"/helper.bash
 
-# local_setup() {
-# 	load_gaudi_libs gaudi-bash doctor
+local_setup() {
+	load_gaudi_libs gaudi-bash doctor
 
-# 	# cd "$GAUDI_BASH" || exit
-# 	# ./setup.sh --silent
-# 	# load "$GAUDI_BASH"/gaudi_bash.sh
-# }
+	"$GAUDI_BASH/setup.sh" --silent
+	load "$GAUDI_BASH"/gaudi_bash.sh
+}
 
-# @test "gaudi-bash helpers: doctor: _gaudi-bash-doctor should show all logs by default" {
+@test "gaudi-bash helpers: doctor: _gaudi-bash-doctor should show all logs by default" {
 
-# 	run gaudi-bash doctor
-# 	echo "$(gaudi-bash doctor)"
-# 	# assert_success
-# 	assert_output --partial "[ DEBUG ] [CORE] Loading library: log"
-# 	# assert_output --partial "[ WARNING ] [LOADER] completion already loaded"
-# }
+	run gaudi-bash doctor
+	assert_success
+}
 
-# # @test "gaudi-bash helpers: doctor: _gaudi-bash-doctor should show only warning logs" {
+@test "gaudi-bash helpers: doctor: _gaudi-bash-doctor should show only warning logs" {
 
-# # 	run _gaudi-bash-doctor warning
-# # 	assert_success
-# # 	refute_output --partial "[ DEBUG ] [CORE] Loading library: log"
-# # 	assert_output --partial "[ WARNING ] [LOADER] completion already loaded"
-# # }
+	run _gaudi-bash-doctor warning
+	assert_success
+}
 
-# # @test "gaudi-bash helpers: doctor: _gaudi-bash-doctor should only error logs" {
+@test "gaudi-bash helpers: doctor: _gaudi-bash-doctor should only error logs" {
 
-# # 	run _gaudi-bash-doctor errors
-# # 	assert_success
-# # 	refute_output
-# # }
+	run _gaudi-bash-doctor errors
+	assert_success
+	refute_output
+}

@@ -42,4 +42,4 @@ echo -e "
 Running gaudi-bash unit tests.. \n\n"
 
 bash "$GAUDI_TEST_DIRECTORY"/runners/run-bats.bash
-# bash "$GAUDI_TEST_DIRECTORY"/runners/run-search.bash
+bash "$GAUDI_TEST_DIRECTORY"/runners/run-search.bash

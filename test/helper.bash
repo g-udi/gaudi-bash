@@ -7,7 +7,7 @@ function load_gaudi_libs() {
 }
 
 function setup() {
-	echo "SETUP!"
+	
 	export GIT_CONFIG_NOSYSTEM
 	export XDG_CACHE_HOME="${GAUDI_TEST_DIRECTORY?}"
 
@@ -15,7 +15,7 @@ function setup() {
 	# This sets up a local test fixture, i.e. a completely fresh and isolated gaudi-bash directory. This is done to avoid messing with your own gaudi-bash source directory.
 	[[ ! -d "$GAUDI_BASH" ]] && echo "NO EXIST" && git --git-dir="${GAUDI_BASH_GIT_DIR?}" worktree add -d -f "${GAUDI_BASH}"
 
-	mkdir -p "$GAUDI_BASH/components"
+	mkdir -p "$GAUDI_BASH/components/enabled"
 	
 	cp -r "$GAUDI_BASH_ORIGIN/components/aliases" "$GAUDI_BASH/components/aliases"
 	cp -r "$GAUDI_BASH_ORIGIN/components/plugins" "$GAUDI_BASH/components/plugins"
