@@ -42,11 +42,10 @@ _gaudi-bash-describe() {
 	printf "%*s\n" "${COLUMNS:-$(tput cols)}" '' | tr ' ' -
 
 	file=$(_gaudi-bash-component-cache-add "$component-enabled")
-	echo "FILE >>>$file"
+
 	[[ "$mode" = "all" ]] && file=${file/-enabled/}
 
 	if [[ ! -s "${file}" || -z $(find "${file}" -mmin -300) ]]; then
-		echo "not found"
 		rm -f "${file}" 2> /dev/null
 		local __file
 		for __file in "${GAUDI_BASH}/components/$component/lib/"*.bash; do
@@ -62,7 +61,6 @@ _gaudi-bash-describe() {
 			fi
 		done
 	else
-		echo "found"
 		cat "${file}"
 	fi
 
