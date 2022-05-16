@@ -93,7 +93,7 @@ function teardown() {
 	unset GIT_CONFIG_NOSYSTEM
 
 	rm -rf "${GAUDI_BASH?}/components"
-	# rm -rf "${GAUDI_BASH?}/tmp"
+	rm -rf "${GAUDI_BASH?}/tmp"
 	rm -rf "${GAUDI_BASH?}/profiles"/test*.bash_it
 	
 	local_teardown

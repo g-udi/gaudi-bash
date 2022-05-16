@@ -16,6 +16,7 @@ _gaudi-bash-component-cache-add() {
 	local file
 	echo "GAUDI_BASH::::> $GAUDI_BASH"
 	file="${GAUDI_BASH}/tmp/cache/${1}"
+	echo "file::::> $file"
 	[[ -f ${file} ]] || mkdir -p "${file%/*}"
 	printf "%s" "${file}"
 }
