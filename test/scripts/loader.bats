@@ -16,7 +16,6 @@ local_setup() {
 
 @test "gaudi-bash loader: load aliases in order" {
 
-	echo "$(ls -la $GAUDI_BASH/components)"
 	ln -s "$GAUDI_BASH/components/plugins/lib/base.plugin.bash" "$GAUDI_BASH/components/enabled/250___base.plugin.bash"
 	assert_link_exist "$GAUDI_BASH/components/enabled/250___base.plugin.bash"
 

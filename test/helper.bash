@@ -1,3 +1,6 @@
+#!/usr/bin/env bash
+# shellcheck shell=bash
+
 function load_gaudi_libs() {
 	for lib in "$@"; do
 		component=$(find "${GAUDI_BASH}/lib" -type f -iname "${lib}.bash")
@@ -7,7 +10,7 @@ function load_gaudi_libs() {
 }
 
 function setup() {
-	
+
 	export GIT_CONFIG_NOSYSTEM
 	export XDG_CACHE_HOME="${GAUDI_TEST_DIRECTORY?}"
 
@@ -16,17 +19,17 @@ function setup() {
 	[[ ! -d "$GAUDI_BASH" ]] && echo "NO EXIST" && git --git-dir="${GAUDI_BASH_GIT_DIR?}" worktree add -d -f "${GAUDI_BASH}"
 
 	mkdir -p "$GAUDI_BASH/components/enabled"
-	
+
 	cp -r "$GAUDI_BASH_ORIGIN/components/aliases" "$GAUDI_BASH/components/aliases"
 	cp -r "$GAUDI_BASH_ORIGIN/components/plugins" "$GAUDI_BASH/components/plugins"
 	cp -r "$GAUDI_BASH_ORIGIN/components/completions" "$GAUDI_BASH/components/completions"
 	cp -r "$GAUDI_BASH_ORIGIN/components/themes" "$GAUDI_BASH/components/themes"
-	
+
 	local_setup
 }
 
 function setup_file() {
-	
+
 	# export *everything* to subshells, needed to support tests
 	set -a
 
@@ -95,8 +98,7 @@ function teardown() {
 	rm -rf "${GAUDI_BASH?}/components"
 	rm -rf "${GAUDI_BASH?}/tmp"
 	rm -rf "${GAUDI_BASH?}/profiles"/test*.bash_it
-	
+
 	local_teardown
 
 }
-

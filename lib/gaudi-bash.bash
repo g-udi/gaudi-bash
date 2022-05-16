@@ -43,7 +43,7 @@ _gaudi-bash-version() {
 _gaudi-bash-reload() {
 	about "reloads the bash profile that corresponds to the correct OS type (.bashrc, .bash_profile)"
 	group "gaudi-bash:core"
-	
+
 	[[ -z $GAUDI_TEST_RUNNER ]] && source "${GAUDI_BASH_BASHRC:-${HOME?}/$GAUDI_BASH_PROFILE}"
 }
 

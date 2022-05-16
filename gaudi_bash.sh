@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # shellcheck shell=bash
-# shellcheck disable=SC1090,SC1091,SC2034
+# shellcheck disable=SC1090,SC1091,SC2034,SC2139
 
 # Initialize Bash It
 GAUDI_BASH_LOG_PREFIX="CORE"
@@ -22,7 +22,7 @@ if [[ -z "$GAUDI_BASH" ]]; then
 	export GAUDI_BASH=$BASH
 	BASH="$(bash -c 'echo $BASH')"
 	export BASH
-	
+
 fi
 
 # Load composure first, so we support function metadata and then logging

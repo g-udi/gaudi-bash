@@ -7,7 +7,6 @@ local_setup() {
 	load_gaudi_libs log utils
 }
 
-
 @test "gaudi-bash helpers: utils: _is_function: should return a success status if the passed argument is a function" {
 
 	test_function() {

@@ -121,7 +121,7 @@ local_setup() {
 @test "gaudi-bash helpers: _gaudi-bash-enable: should handle properly disabling a set of mixed existing and non-existing components" {
 	run gaudi-bash enable plugin "node"
 	assert_line --index 0 -p "enabled with priority"
-	
+
 	run gaudi-bash disable plugin node INVALID nvm
 	assert_line --index 0 -p "disabled"
 	assert_line --index 1 -p "does not appear to be an enabled"
