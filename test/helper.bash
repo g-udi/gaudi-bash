@@ -7,12 +7,20 @@ function load_gaudi_libs() {
 }
 
 function setup() {
+	echo "SETUP!"
 	export GIT_CONFIG_NOSYSTEM
 	export XDG_CACHE_HOME="${GAUDI_TEST_DIRECTORY?}"
+
+	cp "$LEGACY_HOME/$GAUDI_BASH_PROFILE" "$HOME"
+	# This sets up a local test fixture, i.e. a completely fresh and isolated gaudi-bash directory. This is done to avoid messing with your own gaudi-bash source directory.
+	[[ ! -d "$GAUDI_BASH" ]] && echo "NO EXIST" && git --git-dir="${GAUDI_BASH_GIT_DIR?}" worktree add -d -f "${GAUDI_BASH}"
+
+	mkdir -p "$GAUDI_BASH/components"
 	
 	cp -r "$GAUDI_BASH_ORIGIN/components/aliases" "$GAUDI_BASH/components/aliases"
 	cp -r "$GAUDI_BASH_ORIGIN/components/plugins" "$GAUDI_BASH/components/plugins"
 	cp -r "$GAUDI_BASH_ORIGIN/components/completions" "$GAUDI_BASH/components/completions"
+	cp -r "$GAUDI_BASH_ORIGIN/components/themes" "$GAUDI_BASH/components/themes"
 	
 	local_setup
 }
@@ -23,6 +31,7 @@ function setup_file() {
 	set -a
 
 	export GAUDI_TEST_RUNNER="enabled"
+	export LEGACY_HOME=$HOME
 
 	# Load the BATS modules we use:
 	load "${GAUDI_TEST_DEPS_DIR}/bats-support/load.bash"
@@ -37,7 +46,7 @@ function setup_file() {
 	# Some tools, e.g. `git` use configuration files from the $HOME directory,
 	# which interferes with our tests. The only way to keep `git` from doing
 	# this seems to set HOME explicitly to a separate location.
-	# Refer to https://git-scm.com/docs/git-config#FILES.
+	# Refer to https://git-scm.com/docs/git-config#FILES
 	readonly HOME="${BATS_SUITE_TMPDIR?}"
 	mkdir -p "${HOME}"
 
@@ -51,7 +60,6 @@ function setup_file() {
 
 	# Locate the temporary folder, avoid double-slash.
 	GAUDI_BASH="${BATS_FILE_TMPDIR//\/\///}/.gaudi_bash"
-	# This sets up a local test fixture, i.e. a completely fresh and isolated gaudi-bash directory. This is done to avoid messing with your own gaudi-bash source directory.
 	git --git-dir="${GAUDI_BASH_GIT_DIR?}" worktree add -d "${GAUDI_BASH}"
 
 	load "$GAUDI_BASH_ORIGIN/lib/composure.bash"
@@ -84,8 +92,8 @@ function local_setup_file() {
 function teardown() {
 	unset GIT_CONFIG_NOSYSTEM
 
-	rm -rf "${GAUDI_BASH?}/components/enabled"
-	rm -rf "${GAUDI_BASH?}/tmp"
+	rm -rf "${GAUDI_BASH?}/components"
+	# rm -rf "${GAUDI_BASH?}/tmp"
 	rm -rf "${GAUDI_BASH?}/profiles"/test*.bash_it
 	
 	local_teardown

@@ -12,19 +12,17 @@ load "$GAUDI_TEST_DIRECTORY"/helper.bash
 
 	local md5_conf
 
-	cd "$GAUDI_BASH" || exit
+	echo "test file content for backup" > "$HOME/$GAUDI_BASH_PROFILE.bak"
+	echo "test file content for original file" > "$HOME/$GAUDI_BASH_PROFILE"
+	md5_bak=$(md5sum "$HOME/$GAUDI_BASH_PROFILE.bak" | awk '{print $1}')
 
-	echo "test file content for backup" > "$HOME/$CONFIG_FILE.bak"
-	echo "test file content for original file" > "$HOME/$CONFIG_FILE"
-	md5_bak=$(md5sum "$HOME/$CONFIG_FILE.bak" | awk '{print $1}')
+	. "$GAUDI_BASH"/uninstall.sh
 
-	./uninstall.sh
+	assert_file_not_exist "$HOME/$GAUDI_BASH_PROFILE.uninstall"
+	assert_file_not_exist "$HOME/$GAUDI_BASH_PROFILE.bak"
+	assert_file_exist "$HOME/$GAUDI_BASH_PROFILE"
 
-	assert_file_not_exist "$HOME/$CONFIG_FILE.uninstall"
-	assert_file_not_exist "$HOME/$CONFIG_FILE.bak"
-	assert_file_exist "$HOME/$CONFIG_FILE"
-
-	md5_conf=$(md5sum "$HOME/$CONFIG_FILE" | awk '{print $1}')
+	md5_conf=$(md5sum "$HOME/$GAUDI_BASH_PROFILE" | awk '{print $1}')
 
 	assert_equal "$md5_bak" "$md5_conf"
 }
@@ -34,18 +32,15 @@ load "$GAUDI_TEST_DIRECTORY"/helper.bash
 	local md5_uninstall
 	local md5_orig
 
-	cd "$GAUDI_BASH" || exit
+	echo "test file content for original file" > "$HOME/$GAUDI_BASH_PROFILE"
+	md5_orig=$(md5sum "$HOME/$GAUDI_BASH_PROFILE" | awk '{print $1}')
+	. "$GAUDI_BASH"/uninstall.sh
 
-	echo "test file content for original file" > "$HOME/$CONFIG_FILE"
-	md5_orig=$(md5sum "$HOME/$CONFIG_FILE" | awk '{print $1}')
+	assert_file_exist "$HOME/$GAUDI_BASH_PROFILE.uninstall"
+	assert_file_not_exist "$HOME/$GAUDI_BASH_PROFILE.bak"
+	assert_file_not_exist "$HOME/$GAUDI_BASH_PROFILE"
 
-	./uninstall.sh
-
-	assert_file_exist "$HOME/$CONFIG_FILE.uninstall"
-	assert_file_not_exist "$HOME/$CONFIG_FILE.bak"
-	assert_file_not_exist "$HOME/$CONFIG_FILE"
-
-	md5_uninstall=$(md5sum "$HOME/$CONFIG_FILE.uninstall" | awk '{print $1}')
+	md5_uninstall=$(md5sum "$HOME/$GAUDI_BASH_PROFILE.uninstall" | awk '{print $1}')
 
 	assert_equal "$md5_orig" "$md5_uninstall"
 }

@@ -24,7 +24,7 @@ load "$GAUDI_TEST_DIRECTORY"/helper.bash
 	cd "$GAUDI_BASH"
 
 	./setup.sh --silent
-	assert_file_exist "$HOME/$GAUDI_BASH_BASHRC_PROFILE"
+	assert_file_exist "$HOME/$GAUDI_BASH_PROFILE"
 }
 
 @test "gaudi-bash install: run the install script silently and enable sane defaults" {
@@ -41,12 +41,12 @@ load "$GAUDI_TEST_DIRECTORY"/helper.bash
 }
 
 @test "gaudi-bash install: run the install script silently and don't modify configs" {
-	rm -rf "${HOME:?}/${GAUDI_BASH_BASHRC_PROFILE:?}"
+	rm -rf "${HOME:?}/${GAUDI_BASH_PROFILE:?}"
 
 	cd "$GAUDI_BASH"
 	./setup.sh --silent --no_modify_config
 
-	assert_file_not_exist "$HOME/${GAUDI_BASH_BASHRC_PROFILE}"
+	assert_file_not_exist "$HOME/${GAUDI_BASH_PROFILE}"
 }
 
 @test "gaudi-bash install: verify that a backup file is created" {
@@ -56,16 +56,16 @@ load "$GAUDI_TEST_DIRECTORY"/helper.bash
 
 	cd "$GAUDI_BASH" || exit
 
-	touch "$HOME/$GAUDI_BASH_BASHRC_PROFILE"
-	echo "test file content" > "$HOME/$GAUDI_BASH_BASHRC_PROFILE"
-	md5_orig=$(md5sum "$HOME/$GAUDI_BASH_BASHRC_PROFILE" | awk '{print $1}')
+	touch "$HOME/$GAUDI_BASH_PROFILE"
+	echo "test file content" > "$HOME/$GAUDI_BASH_PROFILE"
+	md5_orig=$(md5sum "$HOME/$GAUDI_BASH_PROFILE" | awk '{print $1}')
 
 	./setup.sh --silent
 
-	assert_file_exist "$HOME/$GAUDI_BASH_BASHRC_PROFILE"
-	assert_file_exist "$HOME/$GAUDI_BASH_BASHRC_PROFILE.bak"
+	assert_file_exist "$HOME/$GAUDI_BASH_PROFILE"
+	assert_file_exist "$HOME/$GAUDI_BASH_PROFILE.bak"
 
-	md5_bak=$(md5sum "$HOME/$GAUDI_BASH_BASHRC_PROFILE.bak" | awk '{print $1}')
+	md5_bak=$(md5sum "$HOME/$GAUDI_BASH_PROFILE.bak" | awk '{print $1}')
 
 	assert_equal "$md5_orig" "$md5_bak"
 }

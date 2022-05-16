@@ -9,10 +9,10 @@ GAUDI_BASH_LOG_PREFIX="CORE"
 
 case $OSTYPE in
 	darwin*)
-		export GAUDI_BASH_BASHRC_PROFILE=".bash_profile"
+		export GAUDI_BASH_PROFILE=".bash_profile"
 		;;
 	*)
-		export GAUDI_BASH_BASHRC_PROFILE=".bashrc"
+		export GAUDI_BASH_PROFILE=".bashrc"
 		;;
 esac
 
@@ -46,7 +46,7 @@ source "${GAUDI_BASH}/lib/appearance.bash"
 
 # handle the case where GAUDI_BASH_RELOAD_LEGACY is set
 if ! command -v reload &> /dev/null && [[ -n "$GAUDI_BASH_RELOAD_LEGACY" ]]; then
-	alias reload="source \$HOME/${GAUDI_BASH_BASHRC_PROFILE}"
+	alias reload="source \$HOME/${GAUDI_BASH_PROFILE}"
 fi
 
 # Disable trap DEBUG on subshells [ref:https://github.com/Bash-it/gaudi-bash/pull/1040]
