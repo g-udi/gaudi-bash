@@ -18,9 +18,9 @@ _gaudi-bash-component-cache-add() {
 	file="${GAUDI_BASH}/tmp/cache/${1}"
 	echo "file::::> $file"
 	[[ -f ${file} ]] || mkdir -p "${file%/*}"
-	echo ">>>> $(ls -la ${GAUDI_BASH}/tmp/cache/)"
 	echo "!!! $file"
 	printf "%s" "${file}"
+	echo ">>>> $(ls -la ${GAUDI_BASH}/tmp/cache/)"
 }
 
 # @function     _gaudi-bash-component-cache-clean
