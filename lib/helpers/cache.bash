@@ -14,13 +14,9 @@ _gaudi-bash-component-cache-add() {
 	[[ -z $1 ]] && return 1
 
 	local file
-	echo "1::::> ${1}"
 	file="${GAUDI_BASH}/tmp/cache/${1}"
-	echo "file::::> $file"
 	[[ -f ${file} ]] || mkdir -p "${file%/*}"
-	echo ">>>> $(ls -la ${GAUDI_BASH}/tmp/cache)"
 	printf "%s" "${file}"
-	echo ">>>> $(ls -la ${GAUDI_BASH}/tmp/cache)"
 }
 
 # @function     _gaudi-bash-component-cache-clean
