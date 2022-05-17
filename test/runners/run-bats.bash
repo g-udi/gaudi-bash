@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# shellcheck shell=bash
 # shellcheck disable=SC2155
 
 # Capture all the test files by searching the lib folder for .bats files except for search

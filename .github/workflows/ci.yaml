@@ -1,0 +1,46 @@
+name: CI
+
+# Triggers the workflow on push or pull request events
+on: [push, pull_request]
+
+jobs:
+  bats-test:
+    strategy:
+      matrix:
+        os: [ubuntu-20.04, ubuntu-18.04, macos-10.15, macos-11]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install greadlink
+      if: startsWith(runner.os, 'macOS')
+      run: brew install coreutils
+    - name: Install parallel
+      if: startsWith(runner.os, 'macOS')
+      run: brew install parallel
+    - name: Test code
+      shell: 'script -q -e -c "bash {0}"'
+      run: test/run
+
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Go
+      uses: actions/setup-go@v2
+      with:
+        go-version: 1.17
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.8
+    - name: Install shfmt
+      run: GO111MODULE=on go get mvdan.cc/sh/v3/cmd/shfmt
+    - name: Install shellcheck
+      run: brew install shellcheck
+    - name: Install pre-commit
+      run: python3 -m pip install pre-commit
+    - name: Run lint
+      run: pre-commit run --all-files
