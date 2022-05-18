@@ -81,7 +81,7 @@ if [[ -n $silent ]]; then
 	exec > /dev/null 2>&1
 fi
 
-git submodule update --init
+git submodule update --init --recursive
 
 GAUDI_BASH="$(cd "$(dirname "$0")" && pwd)"
 
