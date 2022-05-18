@@ -16,6 +16,8 @@ _gaudi-bash-enable() {
 	about "enable a gaudi-bash component (plugin, component, alias)"
 	group "gaudi-bash:core"
 
+	mkdir -p "${GAUDI_BASH}/components/enabled"
+
 	! __check-function-parameters "$1" && printf "%s\n" "Please enter a valid component to enable" && return 1
 
 	local type component load_priority
@@ -35,7 +37,7 @@ _gaudi-bash-enable() {
 				_gaudi-bash-enable "$file_type" "all"
 			done
 		fi
-		return
+		return 0
 	fi
 
 	[[ -z "$component" ]] && printf "${RED}%s${NC}\n" "Please enter a valid $type_singular(s) to enable" && return 1
@@ -58,17 +60,14 @@ _gaudi-bash-enable() {
 		enabled_component=$(command compgen -G "${GAUDI_BASH}/components/enabled/[0-9][0-9][0-9]$GAUDI_BASH_LOAD_PRIORITY_SEPARATOR$_component" 2> /dev/null | head -1)
 		if [[ -n "$enabled_component" ]]; then
 			printf "${GREEN}$type_singular ${CYAN}$component${NC} %s\n" "is already enabled"
-			return
+			return 0
 		fi
-
-		mkdir -p "${GAUDI_BASH}/components/enabled"
 
 		# Load the priority from the file if it present there
 		declare local_file_priority use_load_priority
 
 		local_file_priority=$(cat "${GAUDI_BASH}/components/$type/lib/$_component" | metafor priority)
 		use_load_priority=${local_file_priority:-$load_priority}
-
 		ln -s "${GAUDI_BASH}"/components/"$type"/lib/"$_component" "${GAUDI_BASH}/components/enabled/${use_load_priority}${GAUDI_BASH_LOAD_PRIORITY_SEPARATOR}${_component}"
 	fi
 
@@ -79,4 +78,6 @@ _gaudi-bash-enable() {
 	if [[ -n "$GAUDI_BASH_AUTOMATIC_RELOAD_AFTER_CONFIG_CHANGE" ]]; then
 		_gaudi-bash-reload
 	fi
+
+	return 0
 }

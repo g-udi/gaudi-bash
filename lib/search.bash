@@ -192,9 +192,9 @@ _gaudi-bash-search-component() {
 	done
 
 	local -a total_matches=($(_array-dedupe "${exact_terms[@]}" "${partial_terms[@]}"))
-	
+
 	[[ ${#total_matches} -eq 0 ]] && return 1
-	
+
 	unset matches
 	declare -a matches=()
 	for match in "${total_matches[@]}"; do
@@ -227,7 +227,6 @@ _gaudi-bash-search-print-result() {
 
 	if [[ "${#matches[@]}" -gt 0 ]]; then
 
-		
 		(${GAUDI_BASH_SEARCH_USE_COLOR}) && printf "${YELLOW}%s:${NC}\t" "${component}" || printf "%s:\t" "${component}"
 
 		for match in "${matches[@]}"; do

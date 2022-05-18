@@ -1,95 +1,104 @@
 #!/usr/bin/env bash
 # shellcheck shell=bash
-# shellcheck disable=SC2034
 
-local_setup() {
-	true
+function load_gaudi_libs() {
+	for lib in "$@"; do
+		component=$(find "${GAUDI_BASH}/lib" -type f -iname "${lib}.bash")
+		load "$component"
+	done
+	return 0
 }
 
-local_teardown() {
-	true
-}
-
-case $OSTYPE in
-	darwin*)
-		CONFIG_FILE=".bash_profile"
-		;;
-	*)
-		CONFIG_FILE=".bashrc"
-		;;
-esac
-
-# This function sets up a local test fixture, i.e. a completely fresh and isolated gaudi-bash directory.
-# This is done to avoid messing with your own gaudi-bash source directory.
-# If you need this, call it in your .bats file's `local_setup` function.
-prepare() {
-	local lib_directory src_topdir
-
-	# Create the gaudi_bash folder in the temp test directory
-	mkdir -p "$GAUDI_BASH"
-
-	# Get the root folder of gaudi_bash by traversing from the bats lib location
-	lib_directory="$(cd "$(dirname "$0")" && pwd)"
-	src_topdir="$lib_directory/../../../.."
-
-	if command -v rsync &> /dev/null; then
-		# Use rsync to copy gaudi-bash to the temp folder
-		rsync -qavrKL -d --delete-excluded --exclude=.git "$src_topdir" "$GAUDI_BASH"
-	else
-		rm -rf "$GAUDI_BASH"
-		mkdir -p "$GAUDI_BASH"
-
-		find "$src_topdir" \
-			-mindepth 1 -maxdepth 1 \
-			-not -name .git \
-			-exec cp -r {} "$GAUDI_BASH" \;
-	fi
-
-	rm -rf "$GAUDI_BASH/components/enabled"
-	rm -rf "$GAUDI_BASH/tmp"
-
-	mkdir -p "$GAUDI_BASH/components/enabled"
-	touch "$HOME/$CONFIG_FILE"
-}
-
-setup() {
+function setup() {
 
 	export GIT_CONFIG_NOSYSTEM
-	# TEST_MAIN_DIR Points to the 'test' folder location e.g., $HOME/.gaudi_bash/test/
-	export TEST_MAIN_DIR="${BATS_TEST_DIRNAME}/.."
-	# TEST_DEPS_DIR will point to the folder where the bats git submodules are
-	export TEST_DEPS_DIR="${TEST_DEPS_DIR-${TEST_MAIN_DIR}/../bin}"
+	export XDG_CACHE_HOME="${GAUDI_TEST_DIRECTORY?}"
 
-	load "${TEST_DEPS_DIR}/bats-support/load.bash"
-	load "${TEST_DEPS_DIR}/bats-assert/load.bash"
-	load "${TEST_DEPS_DIR}/bats-file/load.bash"
+	cp "$LEGACY_HOME/$GAUDI_BASH_PROFILE" "$HOME"
+	# This sets up a local test fixture, i.e. a completely fresh and isolated gaudi-bash directory. This is done to avoid messing with your own gaudi-bash source directory.
+	[[ ! -d "$GAUDI_BASH" ]] && echo "NO EXIST" && git --git-dir="${GAUDI_BASH_GIT_DIR?}" worktree add -d -f "${GAUDI_BASH}"
 
-	# Create a temp directory with a 'gaudi-bash-test-' prefix
-	TEST_TEMP_DIR="$(temp_make --prefix 'gaudi-bash-test-')"
+	mkdir -p "$GAUDI_BASH/components/enabled"
 
-	export BATSLIB_FILE_PATH_REM="#${TEST_TEMP_DIR}"
-	export BATSLIB_FILE_PATH_ADD='<temp>'
-	export GAUDI_BASH="${TEST_TEMP_DIR}/.gaudi_bash"
-	export TEST_TEMP_DIR
-
-	# Some tools, e.g. `git` use configuration files from the $HOME directory,
-	# which interferes with our tests. The only way to keep `git` from doing this
-	# seems to set HOME explicitly to a separate location [ref: https://git-scm.com/docs/git-config#FILES]
-	unset XDG_CONFIG_HOME
-	export HOME="${TEST_TEMP_DIR}"
-	mkdir -p "${HOME}"
-
-	# For `git` tests to run well, user name and email need to be set [ref: https://git-scm.com/docs/git-commit#_commit_information]
-	# This goes to the test-specific config, due to the $HOME overridden above
-	git config --global user.name "John Doe"
-	git config --global user.email "johndoe@example.com"
+	cp -r "$GAUDI_BASH_ORIGIN/components/aliases" "$GAUDI_BASH/components/aliases"
+	cp -r "$GAUDI_BASH_ORIGIN/components/plugins" "$GAUDI_BASH/components/plugins"
+	cp -r "$GAUDI_BASH_ORIGIN/components/completions" "$GAUDI_BASH/components/completions"
+	cp -r "$GAUDI_BASH_ORIGIN/components/themes" "$GAUDI_BASH/components/themes"
 
 	local_setup
 }
 
-teardown() {
+function setup_file() {
+
+	# export *everything* to subshells, needed to support tests
+	set -a
+
+	export GAUDI_TEST_RUNNER="enabled"
+	export LEGACY_HOME=$HOME
+
+	# Load the BATS modules we use:
+	load "${GAUDI_TEST_DEPS_DIR}/bats-support/load.bash"
+	load "${GAUDI_TEST_DEPS_DIR}/bats-assert/load.bash"
+	load "${GAUDI_TEST_DEPS_DIR}/bats-file/load.bash"
+
+	# shellcheck disable=SC2034 # Clear any inherited environment:
+	XDG_DUMMY="" BASH_IT_DUMMY=""    # avoid possible invalid reference:
+	unset "${!XDG_@}" "${!BASH_IT@}" # unset all BASH_IT* and XDG_* variables
+	unset GIT_HOSTING NGINX_PATH IRC_CLIENT TODO SCM_CHECK
+
+	# Some tools, e.g. `git` use configuration files from the $HOME directory,
+	# which interferes with our tests. The only way to keep `git` from doing
+	# this seems to set HOME explicitly to a separate location.
+	# Refer to https://git-scm.com/docs/git-config#FILES
+	readonly HOME="${BATS_SUITE_TMPDIR?}"
+	mkdir -p "${HOME}"
+
+	# For `git` tests to run well, user name and email need to be set.
+	# Refer to https://git-scm.com/docs/git-commit#_commit_information.
+	# This goes to the test-specific config, due to the $HOME overridden above.
+	git config --global user.name "gaudi-bash bats runner"
+	git config --global user.email "bash@gaudi.bash"
+	git config --global advice.detachedHead false
+	git config --global init.defaultBranch "master"
+
+	# Locate the temporary folder, avoid double-slash.
+	GAUDI_BASH="${BATS_FILE_TMPDIR//\/\///}/.gaudi_bash"
+	git --git-dir="${GAUDI_BASH_GIT_DIR?}" worktree add -d "${GAUDI_BASH}"
+
+	load "$GAUDI_BASH_ORIGIN/lib/composure.bash"
+	cite about param example group priority
+
+	# Run any local test setup
+	local_setup_file
+
+	set +a # not needed, but symetiric!
+}
+
+function teardown_file() {
+	# This only serves to clean metadata from the real git repo.
+	git --git-dir="${GAUDI_BASH_GIT_DIR?}" worktree remove -f "${GAUDI_BASH?}"
+	rm -rf "${GAUDI_BASH?}/components"
+}
+
+function local_setup() {
+	true
+}
+
+function local_teardown() {
+	true
+}
+
+function local_setup_file() {
+	true
+}
+
+function teardown() {
+	unset GIT_CONFIG_NOSYSTEM
+
+	rm -rf "${GAUDI_BASH?}/components"
+	rm -rf "${GAUDI_BASH?}/tmp"
+	rm -rf "${GAUDI_BASH?}/profiles"/test*.bash_it
+
 	local_teardown
 
-	rm -rf "${GAUDI_BASH}"
-	temp_del "${TEST_TEMP_DIR}"
 }

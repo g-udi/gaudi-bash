@@ -1,9 +1,20 @@
 #!/usr/bin/env bash
 # shellcheck shell=bash
-# shellcheck disable=SC1090,SC1091,SC2034
+# shellcheck disable=SC1090,SC1091,SC2034,SC2139
 
 # Initialize Bash It
 GAUDI_BASH_LOG_PREFIX="CORE"
+: "${GAUDI_BASH:=${BASH_SOURCE%/*}}"
+: "${GAUDI_BASH_BASHRC:=${BASH_SOURCE[${#BASH_SOURCE[@]} - 1]}}"
+
+case $OSTYPE in
+	darwin*)
+		export GAUDI_BASH_PROFILE=".bash_profile"
+		;;
+	*)
+		export GAUDI_BASH_PROFILE=".bashrc"
+		;;
+esac
 
 # Only set $GAUDI_BASH if it's not already set
 if [[ -z "$GAUDI_BASH" ]]; then
@@ -11,6 +22,7 @@ if [[ -z "$GAUDI_BASH" ]]; then
 	export GAUDI_BASH=$BASH
 	BASH="$(bash -c 'echo $BASH')"
 	export BASH
+
 fi
 
 # Load composure first, so we support function metadata and then logging
@@ -34,14 +46,7 @@ source "${GAUDI_BASH}/lib/appearance.bash"
 
 # handle the case where GAUDI_BASH_RELOAD_LEGACY is set
 if ! command -v reload &> /dev/null && [[ -n "$GAUDI_BASH_RELOAD_LEGACY" ]]; then
-	case $OSTYPE in
-		darwin*)
-			alias reload="source \$HOME/.bash_profile"
-			;;
-		*)
-			alias reload="source \$HOME/.bashrc"
-			;;
-	esac
+	alias reload="source \$HOME/${GAUDI_BASH_PROFILE}"
 fi
 
 # Disable trap DEBUG on subshells [ref:https://github.com/Bash-it/gaudi-bash/pull/1040]

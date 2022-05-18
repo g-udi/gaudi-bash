@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 # shellcheck shell=bash
-# shellcheck disable=SC1090
+# shellcheck disable=SC1090,1091
 
-source "${GAUDI_BASH}/bin/composure/composure.sh"
+: "${GAUDI_BASH_ORIGIN:="$GAUDI_BASH"}"
+
+source "${GAUDI_BASH_ORIGIN}/bin/composure/composure.sh"

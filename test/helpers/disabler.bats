@@ -3,18 +3,8 @@
 
 load "$GAUDI_TEST_DIRECTORY"/helper.bash
 
-load "$GAUDI_BASH"/lib/composure.bash
-
-cite about param example group priority
-
-load "$GAUDI_BASH"/lib/gaudi-bash.bash
-load "$GAUDI_BASH"/lib/helpers/cache.bash
-load "$GAUDI_BASH"/lib/helpers/components.bash
-load "$GAUDI_BASH"/lib/helpers/utils.bash
-load "$GAUDI_BASH"/lib/helpers/disabler.bash
-
 local_setup() {
-	prepare
+	load_gaudi_libs gaudi-bash cache components utils disabler
 }
 
 @test "gaudi-bash helpers: _gaudi-bash-disable: should fail if no valid component type was passed" {
@@ -42,37 +32,36 @@ local_setup() {
 
 @test "gaudi-bash helpers: _gaudi-bash-disable: should successfully disable a component" {
 
-	run _gaudi-bash-disable plugin base
+	run _gaudi-bash-disable plugin go
 	assert_failure
 	assert_output --partial "does not appear to be an enabled"
 	assert_file_not_exist "$GAUDI_BASH/components/enabled/250___base.plugins.bash"
 }
 
 @test "gaudi-bash helpers: _gaudi-bash-disable: should display appropriate message when trying to disable an already disabled component" {
-
-	run _gaudi-bash-enable plugin base
+	run _gaudi-bash-enable plugin node
 	assert_success
-	assert_file_exist "$GAUDI_BASH/components/enabled/250___base.plugins.bash"
+	assert_file_exist "$GAUDI_BASH/components/enabled/250___node.plugins.bash"
 
-	run _gaudi-bash-disable plugin base
+	run _gaudi-bash-disable plugin node
 	assert_output --partial "disabled"
-	assert_file_not_exist "$GAUDI_BASH/components/enabled/250___base.plugins.bash"
+	assert_file_not_exist "$GAUDI_BASH/components/enabled/250___node.plugins.bash"
 }
 
 @test "gaudi-bash helpers: _gaudi-bash-disable: should run the component disable function if it exists" {
 
-	base_on_disable() {
+	git_on_disable() {
 		echo "callback"
 	}
 
-	run _gaudi-bash-enable plugin base
+	run _gaudi-bash-enable plugin git
 	assert_success
-	assert_file_exist "$GAUDI_BASH/components/enabled/250___base.plugins.bash"
+	assert_file_exist "$GAUDI_BASH/components/enabled/250___git.plugins.bash"
 
-	run _gaudi-bash-disable plugin base
+	run _gaudi-bash-disable plugin git
 	assert_output --partial "disabled"
 	assert_output --partial "callback"
-	assert_file_not_exist "$GAUDI_BASH/components/enabled/250___base.plugins.bash"
+	assert_file_not_exist "$GAUDI_BASH/components/enabled/250___git.plugins.bash"
 }
 
 @test "gaudi-bash helpers: _gaudi-bash-disable: should disable multiple components passed" {
@@ -111,10 +100,10 @@ local_setup() {
 
 	local enabled
 
-	ln -s "$GAUDI_BASH/components/plugins/lib/nvm.plugins.bash" "$GAUDI_BASH/components/enabled/250___nvm.plugins.bash"
+	run gaudi-bash enable plugin "nvm"
 	assert_file_exist "$GAUDI_BASH/components/enabled/250___nvm.plugins.bash"
 
-	ln -s "$GAUDI_BASH/components/plugins/lib/node.plugins.bash" "$GAUDI_BASH/components/enabled/250___node.plugins.bash"
+	run gaudi-bash enable plugin "node"
 	assert_file_exist "$GAUDI_BASH/components/enabled/250___node.plugins.bash"
 
 	enabled=$(find "$GAUDI_BASH/components/enabled" -name "*.plugins.bash" | wc -l | xargs)
@@ -130,7 +119,6 @@ local_setup() {
 }
 
 @test "gaudi-bash helpers: _gaudi-bash-enable: should handle properly disabling a set of mixed existing and non-existing components" {
-
 	run gaudi-bash enable plugin "node"
 	assert_line --index 0 -p "enabled with priority"
 
