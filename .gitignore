@@ -9,10 +9,7 @@
 bats
 
 # gaudi-bash enabled items and custom and temporary files
-*/enabled/*
-enabled/*
-custom/*
-/enabled
+components/enabled
 tmp/
 
 # OS specific files (mainly OSX)
