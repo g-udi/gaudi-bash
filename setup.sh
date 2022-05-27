@@ -2,6 +2,8 @@
 # shellcheck shell=bash
 # shellcheck disable=SC1090,SC1091,SC2034,SC2003
 
+GAUDI_BASH="$HOME/.gaudi_bash"
+
 source "$GAUDI_BASH/lib/colors.bash"
 
 _read_input() {
@@ -82,8 +84,6 @@ if [[ -n $silent ]]; then
 fi
 
 git submodule update --init --recursive
-
-GAUDI_BASH="$(cd "$(dirname "$0")" && pwd)"
 
 ! [[ $silent ]] && __print-gaudi-bash && bash --version
 
