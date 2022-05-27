@@ -2,7 +2,7 @@
 # shellcheck shell=bash
 # shellcheck disable=SC1090,SC1091,SC2034,SC2003
 
-source "$GAUDI/lib/colors.bash"
+source "$GAUDI_BASH/lib/colors.bash"
 
 _read_input() {
 	unset REPLY
