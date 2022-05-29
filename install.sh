@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 # shellcheck shell=bash
+# shellcheck disable=SC2120
 
 GAUDI_BASH="$HOME/.gaudi_bash"
 
@@ -16,7 +17,7 @@ __install() {
 		exit 1
 	}
 
-	bash "$GAUDI_BASH/setup.sh"
+	source "$GAUDI_BASH/setup.sh" "$@"
 }
 
 if [[ -d "$GAUDI_BASH" ]]; then
@@ -32,7 +33,7 @@ if [[ -d "$GAUDI_BASH" ]]; then
 		echo "Running a gaudi-bash update to pull latest changes ..."
 		git -C "$GAUDI_BASH" pull
 	fi
-	__install
+	__install "$@"
 else
-	__install
+	__install "$@"
 fi
