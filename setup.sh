@@ -129,7 +129,6 @@ echo -e "\n${MAGENTA}Enabling reasonable defaults${NC}"
 
 _gaudi-bash-enable completion gaudi-bash
 _gaudi-bash-enable completion system
-_gaudi-bash-enable completion git
 _gaudi-bash-enable plugin base
 _gaudi-bash-enable plugin alias-completion
 _gaudi-bash-enable alias general
