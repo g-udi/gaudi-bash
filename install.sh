@@ -23,7 +23,7 @@ if [[ -d "$GAUDI_BASH" ]]; then
 	echo "You already have gaudi-bash installed.."
 	unset REPLY
 	while ! [[ $REPLY =~ ^[yY]$ ]] && ! [[ $REPLY =~ ^[nN]$ ]]; do
-		read -rp "Do you want to set up a fresh installation of gaudi-bash? " -n 1 < /dev/tty
+		read -rp "Do you want to set up a fresh installation of gaudi-bash? [Yy/nN]" -n 1 < /dev/tty
 		[[ -n $REPLY ]] && echo ""
 	done
 	if [[ $REPLY =~ ^[yY]$ ]]; then
