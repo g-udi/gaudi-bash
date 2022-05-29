@@ -120,15 +120,15 @@ cite about param example group priority
 
 source "$GAUDI_BASH/lib/gaudi-bash.bash"
 
-echo -e "\n${MAGENTA}Enabling gaudi-bash default components${NC}"
+# echo -e "\n${MAGENTA}Enabling gaudi-bash default components${NC}"
 
-_gaudi-bash-enable alias general
-_gaudi-bash-enable alias gls
-_gaudi-bash-enable alias gaudi-bash
-_gaudi-bash-enable plugin base
-_gaudi-bash-enable plugin alias-completion
-_gaudi-bash-enable completion gaudi-bash
-_gaudi-bash-enable completion system
+# _gaudi-bash-enable alias general
+# _gaudi-bash-enable alias gls
+# _gaudi-bash-enable alias gaudi-bash
+# _gaudi-bash-enable plugin base
+# _gaudi-bash-enable plugin alias-completion
+# _gaudi-bash-enable completion gaudi-bash
+# _gaudi-bash-enable completion system
 
 echo -e "
 ${GREEN}Installation finished successfully! Enjoy gaudi-bash!${NC}
