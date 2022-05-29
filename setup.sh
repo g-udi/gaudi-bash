@@ -47,6 +47,7 @@ Usage:\n${GREEN}$0 [arguments] \n${NC}
 Arguments:
   ${YELLOW}--help (-h)${NC}: Display this help message
   ${YELLOW}--silent (-s)${NC}: Install default settings without prompting for input
+  ${YELLOW}--basic (-s)${NC}: Do not enable default gaudi-bash components
   ${YELLOW}--no-modify-config (-n)${NC}: Do not modify existing config file"
 	exit 0
 }
@@ -56,6 +57,7 @@ for param in "$@"; do
 	case "$param" in
 		"--help") set -- "$@" "-h" ;;
 		"--silent") set -- "$@" "-s" ;;
+		"--basic") set -- "$@" "-b" ;;
 		"--no-modify-config") set -- "$@" "-n" ;;
 		*) set -- "$@" "$param" ;;
 	esac
@@ -70,6 +72,7 @@ while getopts "hsn" opt; do
 			;;
 		"s") silent=true ;;
 		"n") no_modify_config=true ;;
+		"b") no_default_components=true ;;
 		"?")
 			show_usage >&2
 			exit 1
@@ -120,15 +123,20 @@ cite about param example group priority
 
 source "$GAUDI_BASH/lib/gaudi-bash.bash"
 
-# echo -e "\n${MAGENTA}Enabling gaudi-bash default components${NC}"
+# Check if the folder is a valid git and pull all submodules
+[[ -d "$GAUDI_BASH/.git" ]] && git submodule update --init --recursive
 
-# _gaudi-bash-enable alias general
-# _gaudi-bash-enable alias gls
-# _gaudi-bash-enable alias gaudi-bash
-# _gaudi-bash-enable plugin base
-# _gaudi-bash-enable plugin alias-completion
-# _gaudi-bash-enable completion gaudi-bash
-# _gaudi-bash-enable completion system
+if [[ $no_default_components ]]; then
+	echo -e "\n${MAGENTA}Enabling gaudi-bash default components${NC}"
+
+	_gaudi-bash-enable completion gaudi-bash
+	_gaudi-bash-enable completion system
+	_gaudi-bash-enable plugin base
+	_gaudi-bash-enable plugin alias-completion
+	_gaudi-bash-enable alias general
+	_gaudi-bash-enable alias gls
+	_gaudi-bash-enable alias gaudi-bash
+fi
 
 echo -e "
 ${GREEN}Installation finished successfully! Enjoy gaudi-bash!${NC}
