@@ -124,7 +124,7 @@ cite about param example group priority
 source "$GAUDI_BASH/lib/gaudi-bash.bash"
 
 # Check if the folder is a valid git and pull all submodules
-[[ -d "$GAUDI_BASH/.git" ]] && git submodule update --init --recursive
+# [[ -d "$GAUDI_BASH/.git" ]] && git submodule update --init --recursive
 
 if [[ "$no_default_components" != "true" ]]; then
 
