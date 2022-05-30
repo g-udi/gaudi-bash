@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 # shellcheck shell=bash
+# shellcheck disable=SC2120
 
 GAUDI_BASH="$HOME/.gaudi_bash"
 
@@ -16,7 +17,7 @@ __install() {
 		exit 1
 	}
 
-	bash "$GAUDI_BASH/setup.sh"
+	bash "$GAUDI_BASH/setup.sh" "$@"
 }
 
 if [[ -d "$GAUDI_BASH" ]]; then
