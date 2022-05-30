@@ -47,7 +47,7 @@ Usage:\n${GREEN}$0 [arguments] \n${NC}
 Arguments:
   ${YELLOW}--help (-h)${NC}: Display this help message
   ${YELLOW}--silent (-s)${NC}: Install default settings without prompting for input
-  ${YELLOW}--basic (-s)${NC}: Do not enable default gaudi-bash components
+  ${YELLOW}--basic (-b)${NC}: Do not enable default gaudi-bash components
   ${YELLOW}--no-modify-config (-n)${NC}: Do not modify existing config file"
 	exit 0
 }
@@ -64,7 +64,7 @@ for param in "$@"; do
 done
 
 OPTIND=1
-while getopts "hsn" opt; do
+while getopts "hsnb" opt; do
 	case "$opt" in
 		"h")
 			show_usage
@@ -126,7 +126,8 @@ source "$GAUDI_BASH/lib/gaudi-bash.bash"
 # Check if the folder is a valid git and pull all submodules
 [[ -d "$GAUDI_BASH/.git" ]] && git submodule update --init --recursive
 
-if [[ $no_default_components ]]; then
+if [[ "$no_default_components" != "true" ]]; then
+
 	echo -e "\n${MAGENTA}Enabling gaudi-bash default components${NC}"
 
 	_gaudi-bash-enable completion gaudi-bash
