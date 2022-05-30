@@ -3,8 +3,9 @@
 # shellcheck disable=SC2120
 
 GAUDI_BASH="$HOME/.gaudi_bash"
-
+echo "installing with params: $@"
 __install() {
+	echo "__install with params: $@"
 	# Prevent the cloned repository from having insecure permissions. Failing to do
 	# so causes compinit() calls to fail with "command not found: compdef" errors
 	# for users with insecure umasks (e.g., "002", allowing group writability). Note
@@ -17,7 +18,7 @@ __install() {
 		exit 1
 	}
 
-	bash "$GAUDI_BASH/setup.sh" "$@"
+	source "$GAUDI_BASH/setup.sh" "$@"
 }
 
 if [[ -d "$GAUDI_BASH" ]]; then
@@ -33,7 +34,7 @@ if [[ -d "$GAUDI_BASH" ]]; then
 		echo "Running a gaudi-bash update to pull latest changes ..."
 		git -C "$GAUDI_BASH" pull
 	fi
-	__install
+	__install "$@"
 else
-	__install
+	__install "$@"
 fi

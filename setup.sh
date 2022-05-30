@@ -4,6 +4,8 @@
 
 GAUDI_BASH="$HOME/.gaudi_bash"
 
+echo "setup with params: $@"
+
 source "$GAUDI_BASH/lib/colors.bash"
 
 _read_input() {
