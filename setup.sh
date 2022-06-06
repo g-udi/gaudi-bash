@@ -2,9 +2,9 @@
 # shellcheck shell=bash
 # shellcheck disable=SC1090,SC1091,SC2034,SC2003
 
-GAUDI_BASH="$HOME/.gaudi_bash"
+GAUDI_SETUP_DIRECTORY="$(cd "$(dirname "$0")" && pwd)"
 
-source "$GAUDI_BASH/lib/colors.bash"
+source "$GAUDI_SETUP_DIRECTORY/lib/colors.bash"
 
 _read_input() {
 	unset REPLY
@@ -135,7 +135,6 @@ if [[ "$no_default_components" != "true" ]]; then
 	_gaudi-bash-enable plugin base
 	_gaudi-bash-enable plugin alias-completion
 	_gaudi-bash-enable alias general
-	_gaudi-bash-enable alias gls
 	_gaudi-bash-enable alias gaudi-bash
 fi
 

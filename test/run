@@ -3,6 +3,7 @@
 
 # Locate ourselves for easy reference.
 declare GAUDI_TEST_DIRECTORY
+
 GAUDI_TEST_DIRECTORY="$(cd "$(dirname "$0")" && pwd)"
 
 export GAUDI_BASH_DIR="${GAUDI_TEST_DIRECTORY%/*}"
