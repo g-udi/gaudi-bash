@@ -87,6 +87,7 @@ local_setup() {
 
 @test "gaudi-bash search: search should fully match a search term using @" {
 
+	run _gaudi-bash-enable completion git &> /dev/null
 	run _gaudi-bash-search "@git" --no-color
 	assert_line --index 0 "aliases:	git	"
 	assert_line --index 1 "plugins:	git	"
