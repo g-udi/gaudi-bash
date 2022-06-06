@@ -2,10 +2,6 @@
 # shellcheck shell=bash
 # shellcheck disable=SC1090,SC1091,SC2034,SC2003
 
-GAUDI_BASH="$HOME/.gaudi_bash"
-
-source "$GAUDI_BASH/lib/colors.bash"
-
 _read_input() {
 	unset REPLY
 	while ! [[ $REPLY =~ ^[yY]$ ]] && ! [[ $REPLY =~ ^[nN]$ ]]; do
@@ -36,19 +32,19 @@ __print-gaudi-bash() {
  ╚═════╝ ╚═╝  ╚═╝ ╚═════╝ ╚═════╝ ╚═╝      ╚═════╝ ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝
 
 
-${CYAN}Installing gaudi-bash ..${NC}\n"
+Installing gaudi-bash ..\n"
 }
 
 # Show how to use this installer
 show_usage() {
 	__print-gaudi-bash
 	echo -e "
-Usage:\n${GREEN}$0 [arguments] \n${NC}
+Usage:\n$0 [arguments] \n
 Arguments:
-  ${YELLOW}--help (-h)${NC}: Display this help message
-  ${YELLOW}--silent (-s)${NC}: Install default settings without prompting for input
-  ${YELLOW}--basic (-b)${NC}: Do not enable default gaudi-bash components
-  ${YELLOW}--no-modify-config (-n)${NC}: Do not modify existing config file"
+  --help (-h): Display this help message
+  --silent (-s): Install default settings without prompting for input
+  --basic (-b): Do not enable default gaudi-bash components
+  --no-modify-config (-n): Do not modify existing config file"
 	exit 0
 }
 
@@ -90,18 +86,18 @@ fi
 
 if ! [[ $no_modify_config ]]; then
 	echo ""
-	echo -e "${RED}We need to make sure to backup your $CONFIG_FILE before running this installation${NC}"
+	echo -e "We need to make sure to backup your $CONFIG_FILE before running this installation"
 
 	if [[ -e "$HOME/$CONFIG_FILE.bak" ]] && ! [[ $silent ]]; then
 
-		echo -e "${GREEN}Backup file already exists!${NC}"
+		echo -e "Backup file already exists!"
 		_read_input "Would you like to overwrite the existing backup? This will delete your existing backup file ($HOME/$CONFIG_FILE.bak) [Yy/Nn]"
 		[[ $REPLY =~ ^[yY]$ ]] && cp -aL "$HOME/$CONFIG_FILE" "$HOME/$CONFIG_FILE.bak"
 
 	elif [[ -e "$HOME/$CONFIG_FILE" ]]; then
 
 		cp -aL "$HOME/$CONFIG_FILE" "$HOME/$CONFIG_FILE.bak"
-		echo -e"${GREEN}Your original $CONFIG_FILE has been backed up to $CONFIG_FILE.bak${NC}"
+		echo -e"Your original $CONFIG_FILE has been backed up to $CONFIG_FILE.bak"
 
 	fi
 
@@ -109,10 +105,10 @@ if ! [[ $no_modify_config ]]; then
 
 	if [[ $REPLY =~ ^[yY]$ ]]; then
 		(sed "s|{{GAUDI_BASH}}|$GAUDI_BASH|" "$GAUDI_BASH/template/bash_profile.template.bash" | tail -n +2) >> "$HOME/$CONFIG_FILE"
-		echo -e "${GREEN}gaudi-bash template has been added to your $CONFIG_FILE${NC}"
+		echo -e "gaudi-bash template has been added to your $CONFIG_FILE"
 	elif [[ $REPLY =~ ^[nN]$ ]] || [[ $silent ]]; then
 		sed "s|{{GAUDI_BASH}}|$GAUDI_BASH|" "$GAUDI_BASH/template/bash_profile.template.bash" > "$HOME/$CONFIG_FILE"
-		echo -e "${YELLOW}Copied gaudi-bash template into ~/$CONFIG_FILE, edit this file to customize gaudi-bash${NC}"
+		echo -e "Copied gaudi-bash template into ~/$CONFIG_FILE, edit this file to customize gaudi-bash"
 	fi
 fi
 
@@ -128,7 +124,7 @@ source "$GAUDI_BASH/lib/gaudi-bash.bash"
 
 if [[ "$no_default_components" != "true" ]]; then
 
-	echo -e "\n${MAGENTA}Enabling gaudi-bash default components${NC}"
+	echo -e "\nEnabling gaudi-bash default components"
 
 	_gaudi-bash-enable completion gaudi-bash
 	_gaudi-bash-enable completion system
@@ -140,8 +136,8 @@ if [[ "$no_default_components" != "true" ]]; then
 fi
 
 echo -e "
-${GREEN}Installation finished successfully! Enjoy gaudi-bash!${NC}
-${MAGENTA}To start using it, open a new tab or 'source ${HOME}/$CONFIG_FILE'${NC}
+Installation finished successfully! Enjoy gaudi-bash!
+To start using it, open a new tab or 'source ${HOME}/$CONFIG_FILE'
 
 To show the available aliases/completions/plugins, type one of the following:
   gaudi-bash show
