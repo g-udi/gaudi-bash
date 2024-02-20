@@ -49,7 +49,7 @@ if ! command -v reload &> /dev/null && [[ -n "$GAUDI_BASH_RELOAD_LEGACY" ]]; the
 	alias reload="source \$HOME/${GAUDI_BASH_PROFILE}"
 fi
 
-# Disable trap DEBUG on subshells [ref:https://github.com/Bash-it/gaudi-bash/pull/1040]
+# Disable trap DEBUG on subshells
 set +T
 
 unset _gaudi_bash_config_file
