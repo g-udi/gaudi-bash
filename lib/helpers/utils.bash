@@ -31,6 +31,22 @@ _command_exists() {
 	type "$1" &> /dev/null || (_log_error "$msg" && return 1)
 }
 
+# @function     _binary_exists
+# @description  check if the binary passed as the argument exists
+# @param $1     binary: the binary to check
+# @param $2     message (optional) for a log message to include when the command not found
+# @return       status code success (0) if the function is found or fails otherwise
+# @example      ❯ _binary_exists ls && echo exists
+_binary_exists() {
+	local msg="${2:-Binary '$1' does not exist}"
+	if type -P "$1" > /dev/null; then
+		return 0
+	else
+		_log_debug "$msg"
+		return 1
+	fi
+}
+
 # @function     _read_input
 # @description  reads input from the prompt for a yes/no (one character) input
 #               ensure no empty response will be passed by looping the read prompt until a valid non empty response is entered
