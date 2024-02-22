@@ -48,7 +48,6 @@
 #
 
 declare -a search_commands=(enable disable)
-declare -a match_position component_position
 
 _gaudi-bash-search() {
 	about "searches for given terms amongst gaudi-bash plugins, aliases and completions"
@@ -61,8 +60,6 @@ _gaudi-bash-search() {
 	: "${GAUDI_BASH_GREP:=$(_gaudi-bash-grep)}"
 	export GAUDI_BASH_GREP=${GAUDI_BASH_GREP:-$(which egrep)}
 	local -a GAUDI_BASH_COMPONENTS=(aliases plugins completions)
-
-	match_position=() component_position=()
 
 	if [[ -z "$*" ]]; then
 		_gaudi-bash-search-help
@@ -98,10 +95,6 @@ _gaudi-bash-search() {
 	done
 
 	if [[ ${#args} -gt 0 ]]; then
-		# save the cursor position at the beginning of the search command
-		__gaudi-get-cursor-position component_position
-		[[ "${args[*]}" == *"--enable"* || "${args[*]}" == *"--disable"* ]] && echo -e "\033c"
-
 		if [[ -n $COMPONENT ]]; then
 			_gaudi-bash-search-component "${COMPONENT}" "${args[@]}" || return 1
 		else
@@ -109,8 +102,6 @@ _gaudi-bash-search() {
 				_gaudi-bash-search-component "${component}" "${args[@]}" || return 1
 			done
 		fi
-		# Make sure to restore the cursor into its position once all components have been traversed
-		[[ ${#match_position[@]} -gt 0 ]] && tput cup "${match_position[0]}" "${match_position[1]}"
 	fi
 	return 0
 }
@@ -149,6 +140,7 @@ _gaudi-bash-search-component() {
 
 	# If one of the search terms is --enable or --disable, we will apply this action to the matches further down.
 	local component_singular action action_func
+
 	# check if the arguments has a --enable or --disable flags passed
 	for search_command in "${search_commands[@]}"; do
 		if $(_array-contains "--${search_command}" "$@"); then
@@ -170,10 +162,13 @@ _gaudi-bash-search-component() {
 	local -a partial_terms=()
 	# Negated partial terms that should be excluded
 	local -a negative_terms=()
+	local modified=0
 
 	unset component_list
+	# The component list is the list/array of all components for each category (alias, plugin and completion)
 	local -a component_list=($(_gaudi-bash-component-list "${component}"))
 	local term
+
 	for term in "${terms[@]}"; do
 		local search_term="${term:1}"
 		if [[ "${term:0:2}" == "--" ]]; then
@@ -205,56 +200,43 @@ _gaudi-bash-search-component() {
 		fi
 		(${include_match}) && matches=("${matches[@]}" "${match}")
 	done
-	_gaudi-bash-search-print-result "${component}" "${action}" "${action_func}" "${matches[@]}"
+
+	if [[ -n "${action}" ]]; then
+		for match in "${matches[@]}"; do
+			_output=$(_gaudi-bash-"$action" "$component" "$match")
+		done
+		_gaudi-bash-component-cache-clean "${component}"
+	fi
+
+	_gaudi-bash-search-print-result "${component}" "${matches[@]}"
 	unset matches final_matches terms
 }
 
 # @function     _gaudi-bash-search-print-result
 # @description  prints the results of search result
 # @param $1     component: the component to search in e.g., alias, completion, plugin
-# @param $2     action: the action to apply on the results (enable or disable)
-# @param $3     action function: the function to apply for the action e.g., _gaudi-bash-enable <component_name>
 # @param $4     search terms: the search result terms
 # @return       print the search results formatted and colored
 # @example      ❯ _gaudi-bash-search-print-result "${component}" "${action}" "${action_func}" "${matches[@]}"
 _gaudi-bash-search-print-result() {
 	local component="$1" && shift
-	local action="$1" && shift
-	local action_func="$1" && shift
 	local -a matches=("$@")
 	local match
-	local modified=0
 
 	if [[ "${#matches[@]}" -gt 0 ]]; then
 
 		(${GAUDI_BASH_SEARCH_USE_COLOR}) && printf "${YELLOW}%s:${NC}\t" "${component}" || printf "%s:\t" "${component}"
 
 		for match in "${matches[@]}"; do
-			local match compatible_action length enabled=0
+			local match enabled=0
 			(_gaudi-bash-component-item-is-enabled "${component}" "${match}") && enabled=1
-			[[ $enabled == 1 ]] && match="${match} ✓"
-			(${GAUDI_BASH_SEARCH_USE_COLOR}) && printf "${CYAN}%s\t${NC}" "$match" || printf "%s\t" "$match"
+			if [[ $enabled == 1 ]]; then
+				(${GAUDI_BASH_SEARCH_USE_COLOR}) && match="${GREEN}${match} ✓${NC}" || match="${match} ✓"
+			fi
+			(${GAUDI_BASH_SEARCH_USE_COLOR}) && echo -ne "${CYAN}$match  ${NC}" || printf "%s\t" "$match"
 		done
 
 		printf "\n"
-		__gaudi-get-cursor-position component_position
-
-		[[ ${modified} -gt 0 ]] && _gaudi-bash-component-cache-clean "${component}"
-
-		if [[ -n "${action}" ]]; then
-			# [[ $component == "aliases" ]] && match_position=($((${component_position[0]} + 1)) ${component_position[1]})
-			[[ ${#match_position[@]} -eq 0 || ${match_position[0]} -lt ${component_position[0]} ]] && match_position=($((component_position[0] + 1)) "${component_position[1]}")
-			tput cup "${match_position[0]}" "${match_position[1]}"
-			for match in "${matches[@]}"; do
-				_output=$(_gaudi-bash-"$action" "$component" "$match")
-				printf "\n%s" "$_output"
-			done
-
-			__gaudi-get-cursor-position match_position
-			_gaudi-bash-component-cache-clean "${component}"
-
-			tput cup "${component_position[0]}" "${component_position[1]}"
-		fi
 	fi
 }
 
@@ -330,7 +312,7 @@ ${YELLOW}EXAMPLES${NC}
 
 ${YELLOW}SUMMARY${NC}
 
-   Take advantage of the search functionality to discover what Bash-It can do
+   Take advantage of the search functionality to discover what gaudi-bash can do
    for you. Try searching for partial term matches, mix and match with the
    negative terms, or specify an exact matches of any number of terms. Once
    you created the search command that returns ONLY the modules you need,
