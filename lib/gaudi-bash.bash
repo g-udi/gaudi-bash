@@ -55,7 +55,8 @@ _gaudi-bash-reload() {
 function _gaudi-bash-restart() {
 	about 'Instead of reloading your Bash profile, this command re-runs Bash (using exec)'
 	group "gaudi-bash:core"
-
+	
+	_gaudi-bash-component-cache-clean
 	exec "${0#-}" --rcfile "${BASH_IT_BASHRC:-${HOME?}/"${GAUDI_BASH_PROFILE}"}"
 }
 
