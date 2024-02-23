@@ -96,10 +96,10 @@ _gaudi-bash-search() {
 
 	if [[ ${#args} -gt 0 ]]; then
 		if [[ -n $COMPONENT ]]; then
-			_gaudi-bash-search-component "${COMPONENT}" "${args[@]}" || return 1
+			_gaudi-bash-search-component "${COMPONENT}" "${args[@]}"
 		else
 			for component in "${GAUDI_BASH_COMPONENTS[@]}"; do
-				_gaudi-bash-search-component "${component}" "${args[@]}" || return 1
+				_gaudi-bash-search-component "${component}" "${args[@]}"
 			done
 		fi
 	fi
