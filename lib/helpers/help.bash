@@ -23,30 +23,32 @@ _help-aliases() {
 	about "shows help for all aliases, or a specific alias group"
 	group "gaudi-bash:core:help"
 
-	if [[ -n "$1" ]]; then
-		case $1 in
-			custom)
-				alias_path='custom/custom.aliases.bash'
-				;;
-			*)
-				alias_path="aliases/lib/$1.aliases.bash"
-				;;
-		esac
 
+	# Helper function to list the aliases in a given *.aliases.bash file using the composure meta
+	__help-list-aliases() {
+		local file
+
+		file=$(basename "$1" | sed -e 's/[0-9]*[___]*\(.*\)\.aliases\.bash/\1/g')
+		printf '\n\n%b\n' "${GREEN}${file}${NC}"
+		printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -
+		cat "$1" | metafor alias | sed "s/$/'/"
+	}
+
+	if [[ -n "$1" ]]; then
+		local alias_path="aliases/lib/$1.aliases.bash"
+		
 		# If the alias doesn't exist .. return an error code
-		[[ -e "${GAUDI_BASH}/components/$alias_path" ]] || return 1
+		if [[ ! -e "${GAUDI_BASH}/components/$alias_path" ]]; then
+			printf "${RED}The provided alias: ${GREEN}%s${NC} ${RED}doesn't exist${NC}" "$1"
+			return 1
+		fi
 
 		cat "${GAUDI_BASH}/components/$alias_path" | metafor alias | sed "s/$/'/"
 	else
 		local __file
-
-		for __file in $(sort <(compgen -G "${GAUDI_BASH}/components/enabled/*.aliases.bash")); do
+		for __file in $(sort <(compgen -G "${GAUDI_BASH}/components/aliases/lib/*.aliases.bash")); do
 			__help-list-aliases "$__file"
 		done
-
-		if [[ -e "${GAUDI_BASH}/aliases/custom.aliases.bash" ]]; then
-			__help-list-aliases "${GAUDI_BASH}/aliases/custom.aliases.bash"
-		fi
 	fi
 }
 
@@ -82,6 +84,7 @@ _help-plugins() {
 		if [[ -n "$group" ]]; then
 			local about
 
+			[[ "$group" =~ "composure" ]] && continue;
 			if [[ $1 != "all" ]] && [[ "$group" =~ "gaudi-bash" ]]; then
 				continue
 			fi
@@ -102,14 +105,4 @@ _help-plugins() {
 		rm "$gfile" 2> /dev/null
 	done | less
 	rm "$grouplist" 2> /dev/null
-}
-
-# Helper function to list the aliases in a given *.aliases.bash file using the composure meta
-__help-list-aliases() {
-	local file
-
-	file=$(basename "$1" | sed -e 's/[0-9]*[___]*\(.*\)\.aliases\.bash/\1/g')
-	printf '\n\n%b\n' "${GREEN}${file}${NC}"
-	printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -
-	cat "$1" | metafor alias | sed "s/$/'/"
 }
