@@ -103,7 +103,6 @@ _gaudi-bash-search() {
 			done
 		fi
 	fi
-	return 0
 }
 
 # @function     _gaudi-bash-component-term-matches-negation
@@ -208,8 +207,13 @@ _gaudi-bash-search-component() {
 		_gaudi-bash-component-cache-clean "${component}"
 	fi
 
-	_gaudi-bash-search-print-result "${component}" "${matches[@]}"
-	unset matches final_matches terms
+	if [[ ${#matches[@]} == 0 || -z $matches ]]; then
+		return 1
+	else
+		_gaudi-bash-search-print-result "${component}" "${matches[@]}"
+		unset matches final_matches terms
+
+	fi
 }
 
 # @function     _gaudi-bash-search-print-result
