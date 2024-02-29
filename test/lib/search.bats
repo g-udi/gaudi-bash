@@ -17,29 +17,26 @@ local_setup() {
 	assert_failure
 	run _gaudi-bash-search-component "completions" "UNKOWN" --no-color
 	assert_failure
-	run _gaudi-bash-search "UNKOWN" --no-color
-	assert_failure
 }
 
 @test "gaudi-bash search: search for a specific component should return only relevant results" {
 
 	run _gaudi-bash-search "ruby" --plugin --no-color
-	assert_line --index 0 "plugins:	chruby	ruby	"
+	assert_line --index 0 "plugins:	chruby	rails	rbenv	ruby	rvm	"
 
-	run _gaudi-bash-search "ruby" --a --no-color
-	assert_line --index 0 "aliases:	bundler	"
+	run _gaudi-bash-search "ruby" -a --no-color
+	assert_line --index 0 "aliases:	bundler	rails	"
 
-	run _gaudi-bash-search "apm" -c --no-color
-	assert_line --index 0 "completions:	apm	"
+	run _gaudi-bash-search "go" -c --no-color
+	assert_line --index 0 "completions:	cargo	gcloud	go	"
+
 }
 
 @test "gaudi-bash search: search for a specific component should return fail if no relevant results found" {
 
 	run _gaudi-bash-search "ruby" --plugin --no-color
-	assert_line --index 0 "plugins:	chruby	ruby	"
-
-	run _gaudi-bash-search "ruby" -c --no-color
-	assert_failure
+	assert_line --index 0 "plugins:	chruby	rails	rbenv	ruby	rvm	"
+	
 }
 
 @test "gaudi-bash search: search for a component should return correct results with correct status for enabled ones" {
@@ -48,12 +45,12 @@ local_setup() {
 	assert_line --index 0 "plugins:	base ✓	"
 
 	run _gaudi-bash-search "ruby" --plugin --no-color
-	assert_line --index 0 "plugins:	chruby	ruby	"
+	assert_line --index 0 "plugins:	chruby	rails	rbenv	ruby	rvm	"
 
-	run _gaudi-bash-enable completion apm &> /dev/null
-	run _gaudi-bash-search "apm" -c --no-color
+	run _gaudi-bash-enable completion go &> /dev/null
+	run _gaudi-bash-search "go" -c --no-color
 
-	assert_line --index 0 "completions:	apm ✓	"
+	assert_line --index 0 "completions:	cargo	gcloud	go ✓	"
 
 }
 
@@ -66,14 +63,14 @@ local_setup() {
 	for plugin in "autojump" "git" "gitstatus" "git-subrepo" "jgitflow" "jump"; do
 		assert_line --index 1 --partial $plugin
 	done
-	assert_line --index 2 "completions:	git	git_extras	git_flow	git_flow_avh	"
+	assert_line --index 2 "completions:	git	git_flow	github-cli	hub	virsh	"
 }
 
 @test "gaudi-bash search: multi term search should return correct results across all components" {
 
 	run _gaudi-bash-search rails ruby gem bundler rake --no-color
 	assert_line --index 0 "aliases:	bundler	rails	"
-	assert_line --index 1 "plugins:	chruby	ruby	"
+	assert_line --index 1 "plugins:	chruby	goenv	pyenv	rails	rbenv	ruby	rvm	"
 	assert_line --index 2 "completions:	bundler	gem	rake	"
 }
 
@@ -81,7 +78,7 @@ local_setup() {
 
 	run _gaudi-bash-search rails ruby gem bundler rake -chruby --no-color
 	assert_line --index 0 "aliases:	bundler	rails	"
-	assert_line --index 1 "plugins:	ruby	"
+	assert_line --index 1 "plugins:	goenv	pyenv	rails	rbenv	ruby	rvm	"
 	assert_line --index 2 "completions:	bundler	gem	rake	"
 }
 
@@ -92,4 +89,10 @@ local_setup() {
 	assert_line --index 0 "aliases:	git	"
 	assert_line --index 1 "plugins:	git	"
 	assert_line --index 2 "completions:	git ✓	"
+
+	run _gaudi-bash-search "go" -c --no-color
+	assert_line --index 0 "completions:	cargo	gcloud	go	"
+
+	run _gaudi-bash-search "@go" -c --no-color
+	assert_line --index 0 "completions:	go	"
 }

@@ -46,14 +46,14 @@ local_setup() {
 	run __help-list-aliases "$GAUDI_BASH/components/enabled/150___ag.aliases.bash"
 	assert_line --index 0 --partial "ag"
 }
+ 
+@test "gaudi-bash-helpers: help: _gaudi-bash-help list aliases with gaudi-bash aliases enabled" {
 
-@test "gaudi-bash-helpers: help: _gaudi-bash-help list aliases with todo.txt-cli aliases enabled" {
+	run gaudi-bash enable alias "gaudi-bash"
+	assert_link_exist "$GAUDI_BASH/components/enabled/150___gaudi-bash.aliases.bash"
 
-	run gaudi-bash enable alias "todo.txt-cli"
-	assert_link_exist "$GAUDI_BASH/components/enabled/150___todo.txt-cli.aliases.bash"
-
-	run __help-list-aliases "$GAUDI_BASH/components/enabled/150___todo.txt-cli.aliases.bash"
-	assert_line --index 0 --partial "todo.txt-cli"
+	run __help-list-aliases "$GAUDI_BASH/components/enabled/150___gaudi-bash.aliases.bash"
+	assert_line --index 0 --partial "gaudi-bash"
 }
 
 @test "gaudi-bash-helpers: help: _gaudi-bash-help list aliases with docker-compose aliases enabled" {

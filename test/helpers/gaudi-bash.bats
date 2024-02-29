@@ -69,10 +69,11 @@ _check-results-count() {
 }
 
 @test "gaudi-bash helpers: _gaudi-bash-describe: should display a component name and description" {
+
 	run _gaudi-bash-describe plugins
 	assert_success
 	assert_output --partial "base"
-	assert_output --partial "miscellaneous tools"
+	assert_output --partial "Miscellaneous tools"
 }
 
 @test "gaudi-bash helpers: _gaudi-bash-describe: should list all plugins (enabled/disabled)" {

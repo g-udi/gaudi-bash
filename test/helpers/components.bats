@@ -97,7 +97,7 @@ local_setup() {
 	run _gaudi-bash-component-help plugin
 	assert_success
 	assert_output --partial "alias-completion"
-	assert_output --partial "git helper function"
+	assert_output --partial "Git helper function"
 	assert_output --partial "autojump"
 	refute_output --partial "FAIL"
 
@@ -111,7 +111,7 @@ local_setup() {
 	run _gaudi-bash-component-help plugin base
 	assert_success
 	assert_line --partial "base"
-	assert_output --partial "miscellaneous tools"
+	assert_output --partial "Miscellaneous tools"
 }
 
 @test "gaudi-bash helpers: components: _gaudi-bash-component-help: should fail if the plugin passed as the second param doesn't exist" {
@@ -125,7 +125,7 @@ local_setup() {
 	run _gaudi-bash-component-help alias osx
 	assert_success
 	assert_output --partial "osx"
-	assert_output --partial "osx-specific aliases"
+	assert_output --partial "OSX specific aliases"
 }
 
 @test "gaudi-bash helpers: components: _gaudi-bash-component-help: should display an alias help passed as the second param" {
@@ -133,7 +133,7 @@ local_setup() {
 	run _gaudi-bash-component-help plugin base
 	assert_success
 	assert_line --partial "base"
-	assert_output --partial "miscellaneous tools"
+	assert_output --partial "Miscellaneous tools"
 }
 
 @test "gaudi-bash helpers: components: _gaudi-bash-component-help: should fail if the alias passed as the second param doesn't exist" {
@@ -148,7 +148,7 @@ local_setup() {
 	assert_success
 	assert_output --partial "gaudi-bash"
 	assert_output --partial "git"
-	assert_output --partial "install and run python applications in isolated environments"
+	assert_output --partial "Install and run python applications in isolated environments"
 	refute_output --partial "FAIL"
 
 	run _gaudi-bash-component-help aliases
@@ -161,7 +161,7 @@ local_setup() {
 	run _gaudi-bash-component-help completion pipx
 	assert_success
 	assert_output --partial "pipx"
-	assert_output --partial "install and run python applications in isolated environments"
+	assert_output --partial "Install and run python applications in isolated environments"
 }
 
 @test "gaudi-bash helpers: components: _gaudi-bash-component-help: should fail if the completion passed as the second param doesn't exist" {
