@@ -2,10 +2,14 @@
 # shellcheck shell=bash
 # shellcheck disable=SC2181
 
+# @function     _gaudi-bash_update_and_restart
+# @description  Checks out the wanted version, pops directory and restart
+# @param $1     (optional) Which branch to checkout to
+# @param $2     (optional) Which type of version we are using
+# @example      ❯ _gaudi-bash_update_and_restarts
 function _gaudi-bash_update_and_restart() {
 	about 'Checks out the wanted version, pops directory and restart. Does not return (because of the restart!)'
-	param '1: Which branch to checkout to'
-	param '2: Which type of version we are using'
+	group 'gaudi-bash:core:updater'
 
 	git checkout "$1" &> /dev/null
 	if [[ $? -eq 0 ]]; then
@@ -17,10 +21,13 @@ function _gaudi-bash_update_and_restart() {
 	fi
 }
 
+# @function      _gaudi-bash-update
+# @description  Updates gaudi-bash
+# @param $1     (optional) What kind of update to do (stable|dev)
+# @example      ❯  _gaudi-bash-update
 function _gaudi-bash-update() {
 	about 'updates gaudi-bash'
-	param '1: What kind of update to do (stable|dev)'
-	group 'lib'
+	group 'gaudi-bash:core:updater'
 
 	local silent word DIFF version TARGET revision status revert log_color RESP
 	for word in "$@"; do
@@ -47,7 +54,7 @@ function _gaudi-bash-update() {
 	if [[ -z "$GAUDI_BASH_DEVELOPMENT_BRANCH" ]]; then
 		GAUDI_BASH_DEVELOPMENT_BRANCH="master"
 	fi
-	# Defaults to stable update
+
 	if [[ -z "${1:-}" || "$1" == "stable" ]]; then
 		version="stable"
 		TARGET=$(git describe --tags "$(git rev-list --tags --max-count=1)" 2> /dev/null)
