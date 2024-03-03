@@ -148,7 +148,7 @@ local_setup() {
 	assert_success
 	assert_output --partial "gaudi-bash"
 	assert_output --partial "git"
-	assert_output --partial "Install and run python applications in isolated environments"
+	assert_output --partial "Python pip package manager bash completions"
 	refute_output --partial "FAIL"
 
 	run _gaudi-bash-component-help aliases
@@ -158,10 +158,10 @@ local_setup() {
 
 @test "gaudi-bash helpers: components: _gaudi-bash-component-help: should display a completion help passed as the second param" {
 
-	run _gaudi-bash-component-help completion pipx
+	run _gaudi-bash-component-help completion pip
 	assert_success
-	assert_output --partial "pipx"
-	assert_output --partial "Install and run python applications in isolated environments"
+	assert_output --partial "pip"
+	assert_output --partial "Python pip package manager bash completions"
 }
 
 @test "gaudi-bash helpers: components: _gaudi-bash-component-help: should fail if the completion passed as the second param doesn't exist" {

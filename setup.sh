@@ -133,7 +133,6 @@ if [[ "$no_default_components" != "true" ]]; then
 	_gaudi-bash-enable completion gaudi-bash
 	_gaudi-bash-enable completion system
 	_gaudi-bash-enable plugin base
-	_gaudi-bash-enable plugin alias-completion
 	_gaudi-bash-enable alias general
 	_gaudi-bash-enable alias gaudi-bash
 fi

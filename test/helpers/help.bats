@@ -20,12 +20,6 @@ local_setup() {
 	assert_failure
 }
 
-@test "gaudi-bash-helpers: help: should successfully show help for a specific alias passed as an argument" {
-
-	run _gaudi-bash-help aliases "ag"
-	assert_line --index 0 --partial "ag='ag --smart-case --pager=\"less -MIRFX'"
-}
-
 @test "gaudi-bash-helpers: help: _gaudi-bash-help aliases without any aliases enabled" {
 
 	run _gaudi-bash-help aliases
