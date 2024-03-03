@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # shellcheck shell=bash
-# shellcheck disable=SC1090,SC1091,SC2034,SC2003
+# shellcheck disable=SC1090,SC1091,SC2034,SC2003,SC2317
 
 GAUDI_SETUP_DIRECTORY="$(cd "$(dirname "$0")" && pwd)"
 
@@ -124,7 +124,7 @@ cite about param example group priority
 source "$GAUDI_BASH/lib/gaudi-bash.bash"
 
 # Check if the folder is a valid git and pull all submodules
-[[ -d "$GAUDI_BASH/.git" &&  "$no_default_components" != "true" ]] && git submodule update --init --recursive
+[[ -d "$GAUDI_BASH/.git" && "$no_default_components" != "true" ]] && git submodule update --init --recursive
 
 if [[ "$no_default_components" != "true" ]]; then
 

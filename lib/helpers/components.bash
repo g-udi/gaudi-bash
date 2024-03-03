@@ -112,7 +112,8 @@ _gaudi-bash-component-list-matching() {
 
 	__check-function-parameters "$1" || return 1
 	if [[ -n "$1" ]] && [[ -n "$2" ]]; then
-		local match; local term
+		local match
+		local term
 		term=$(echo "$2" | tr "[:upper:]" "[:lower:]")
 		match=$(_gaudi-bash-component-help "$1" | awk '{print tolower($0)}' | $(_gaudi-bash-grep) -E -- "$term" | awk '{print $1}' | uniq | sort | tr '\n' ' ')
 		[[ -n "$match" ]] && echo "$match" && return 0

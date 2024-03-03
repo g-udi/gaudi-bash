@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # shellcheck shell=bash
-# shellcheck disable=SC2143,SC2154
+# shellcheck disable=SC2143,SC2154,SC2016
 
 # A collection of reusable functions
 

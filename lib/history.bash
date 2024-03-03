@@ -23,7 +23,6 @@ HISTDIR="${XDG_STATE_HOME:-${HOME?}/.local/state}/bash"
 [[ -d ${HISTDIR?} ]] || mkdir -p "${HISTDIR?}"
 HISTFILE="${HISTDIR?}/history" 2> /dev/null || true
 
-
 # @function     hr
 # @description  outputs the history of commands used sorted by usage and count
 hr() {

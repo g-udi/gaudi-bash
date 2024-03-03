@@ -43,8 +43,8 @@ local_setup() {
 
 @test "gaudi-bash helpers: utils: _binary_exists function positive test" {
 
-  run type -a _binary_exists &> /dev/null
-  assert_success
+	run type -a _binary_exists &> /dev/null
+	assert_success
 }
 
 @test "gaudi-bash helpers: utils: _command_exists function negative test with a default message" {

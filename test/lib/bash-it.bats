@@ -17,7 +17,6 @@ local_setup() {
 	assert_file_exist "$GAUDI_BASH/components/enabled/150___general.aliases.bash"
 	assert_file_exist "$GAUDI_BASH/components/enabled/150___gaudi-bash.aliases.bash"
 	assert_file_exist "$GAUDI_BASH/components/enabled/250___base.plugins.bash"
-	assert_file_exist "$GAUDI_BASH/components/enabled/365___alias-completion.plugins.bash"
 	assert_file_exist "$GAUDI_BASH/components/enabled/350___gaudi-bash.completions.bash"
 	assert_file_exist "$GAUDI_BASH/components/enabled/350___system.completions.bash"
 
@@ -41,7 +40,6 @@ local_setup() {
 	assert_file_exist "$GAUDI_BASH/components/enabled/150___general.aliases.bash"
 	assert_file_exist "$GAUDI_BASH/components/enabled/150___gaudi-bash.aliases.bash"
 	assert_file_exist "$GAUDI_BASH/components/enabled/250___base.plugins.bash"
-	assert_file_exist "$GAUDI_BASH/components/enabled/365___alias-completion.plugins.bash"
 	assert_file_exist "$GAUDI_BASH/components/enabled/350___gaudi-bash.completions.bash"
 	assert_file_exist "$GAUDI_BASH/components/enabled/350___system.completions.bash"
 
@@ -71,7 +69,6 @@ local_setup() {
 	assert_file_exist "$GAUDI_BASH/components/enabled/150___general.aliases.bash"
 	assert_file_exist "$GAUDI_BASH/components/enabled/150___gaudi-bash.aliases.bash"
 	assert_file_exist "$GAUDI_BASH/components/enabled/250___base.plugins.bash"
-	assert_file_exist "$GAUDI_BASH/components/enabled/365___alias-completion.plugins.bash"
 	assert_file_exist "$GAUDI_BASH/components/enabled/350___gaudi-bash.completions.bash"
 	assert_file_exist "$GAUDI_BASH/components/enabled/350___system.completions.bash"
 
@@ -101,7 +98,6 @@ local_setup() {
 	assert_file_exist "$GAUDI_BASH/components/enabled/150___general.aliases.bash"
 	assert_file_exist "$GAUDI_BASH/components/enabled/150___gaudi-bash.aliases.bash"
 	assert_file_exist "$GAUDI_BASH/components/enabled/250___base.plugins.bash"
-	assert_file_exist "$GAUDI_BASH/components/enabled/365___alias-completion.plugins.bash"
 	assert_file_exist "$GAUDI_BASH/components/enabled/350___gaudi-bash.completions.bash"
 	assert_file_exist "$GAUDI_BASH/components/enabled/350___system.completions.bash"
 

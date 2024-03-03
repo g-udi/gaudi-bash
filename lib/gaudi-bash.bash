@@ -23,7 +23,7 @@ _gaudi-bash-version() {
 		GAUDI_BASH_REMOTE="origin"
 	fi
 
-	GAUDI_BASH_GIT_REMOTE=$(git remote get-url $GAUDI_BASH_REMOTE)
+	GAUDI_BASH_GIT_REMOTE=$(git remote get-url "$GAUDI_BASH_REMOTE")
 	GAUDI_BASH_GIT_URL=${GAUDI_BASH_GIT_REMOTE%.git}
 
 	GAUDI_BASH_GIT_VERSION_INFO="$(git log --pretty=format:'%h on %aI' -n 1)"
@@ -55,7 +55,7 @@ _gaudi-bash-reload() {
 function _gaudi-bash-restart() {
 	about 'Instead of reloading your Bash profile, this command re-runs Bash (using exec)'
 	group "gaudi-bash:core"
-	
+
 	_gaudi-bash-component-cache-clean
 	exec "${0#-}" --rcfile "${BASH_IT_BASHRC:-${HOME?}/"${GAUDI_BASH_PROFILE}"}"
 }

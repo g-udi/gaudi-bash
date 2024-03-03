@@ -23,7 +23,6 @@ _help-aliases() {
 	about "shows help for all aliases, or a specific alias group"
 	group "gaudi-bash:core:help"
 
-
 	local __file
 	for __file in $(sort <(compgen -G "${GAUDI_BASH}/components/enabled/*.aliases.bash")); do
 		__help-list-aliases "$__file"
@@ -64,7 +63,7 @@ _help-plugins() {
 		if [[ -n "$group" ]]; then
 			local about
 
-			[[ "$group" =~ "composure" ]] && continue;
+			[[ "$group" =~ "composure" ]] && continue
 			if [[ $1 != "all" ]] && [[ "$group" =~ "gaudi-bash" ]]; then
 				continue
 			fi

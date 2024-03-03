@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # shellcheck shell=bash
-# shellcheck disable=SC2034,SC1090,SC2091,SC2207,SC2059
+# shellcheck disable=SC2034,SC1090,SC2091,SC2207,SC2059,SC2128
 
 # @function _gaudi-bash-search
 # @description  returns list of aliases, plugins and completions in gaudi-bash

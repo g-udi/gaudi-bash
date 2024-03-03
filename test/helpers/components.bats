@@ -246,9 +246,6 @@ local_setup() {
 	IFS=', ' read -r -a array <<< "$output"
 
 	run echo "${array[0]-not array}"
-	assert_output "alias-completion"
-
-	run echo "${array[1]-not array}"
 	assert_output "base"
 }
 
@@ -270,7 +267,7 @@ local_setup() {
 	IFS=', ' read -r -a array <<< "$output"
 
 	run echo "${array[0]-not array}"
-	refute_output "alias-completion"
+	refute_output "base"
 
 	run echo "${array[0]-not array}"
 	assert_output "autojump"

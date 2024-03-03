@@ -36,7 +36,7 @@ local_setup() {
 
 	run _gaudi-bash-search "ruby" --plugin --no-color
 	assert_line --index 0 "plugins:	chruby	rails	rbenv	ruby	rvm	"
-	
+
 }
 
 @test "gaudi-bash search: search for a component should return correct results with correct status for enabled ones" {

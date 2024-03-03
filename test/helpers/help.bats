@@ -40,7 +40,7 @@ local_setup() {
 	run __help-list-aliases "$GAUDI_BASH/components/enabled/150___ag.aliases.bash"
 	assert_line --index 0 --partial "ag"
 }
- 
+
 @test "gaudi-bash-helpers: help: _gaudi-bash-help list aliases with gaudi-bash aliases enabled" {
 
 	run gaudi-bash enable alias "gaudi-bash"
