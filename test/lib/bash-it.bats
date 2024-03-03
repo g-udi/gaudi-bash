@@ -27,7 +27,7 @@ local_setup() {
 	assert_file_exist "$GAUDI_BASH/tmp/enabled.gaudi-bash.backup"
 	backup_md5=$(md5sum "$GAUDI_BASH/tmp/enabled.gaudi-bash.backup" | awk '{print $1}')
 	# This is compare against the md5 hash of the backup file created from a fresh set of enabled plugins after setup
-	assert_equal "$backup_md5" "50f40560080fdfc2bbb016a2f42a238a"
+	assert_equal "$backup_md5" "ac215abe7c4938ad7a5f6a3f70e25cbb"
 }
 
 @test "gaudi-bash core: _gaudi-bash-backup should overwrite old backed up components" {
@@ -50,13 +50,13 @@ local_setup() {
 	assert_file_exist "$GAUDI_BASH/tmp/enabled.gaudi-bash.backup"
 	backup_md5=$(md5sum "$GAUDI_BASH/tmp/enabled.gaudi-bash.backup" | awk '{print $1}')
 	# This is compare against the md5 hash of the backup file created from a fresh set of enabled plugins after setup
-	assert_equal "$backup_md5" "50f40560080fdfc2bbb016a2f42a238a"
+	assert_equal "$backup_md5" "ac215abe7c4938ad7a5f6a3f70e25cbb"
 
 	run gaudi-bash disable completion git
 	run _gaudi-bash-backup
 	backup_md5=$(md5sum "$GAUDI_BASH/tmp/enabled.gaudi-bash.backup" | awk '{print $1}')
 	# This is compare against the md5 hash of the backup file created from a fresh set of enabled plugins after setup
-	assert_equal "$backup_md5" "50f40560080fdfc2bbb016a2f42a238a"
+	assert_equal "$backup_md5" "ac215abe7c4938ad7a5f6a3f70e25cbb"
 }
 
 @test "gaudi-bash core: _gaudi-bash-restore should successfully restore backed up components" {

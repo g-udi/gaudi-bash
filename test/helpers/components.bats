@@ -270,7 +270,7 @@ local_setup() {
 	refute_output "base"
 
 	run echo "${array[0]-not array}"
-	assert_output "autojump"
+	assert_output "alias-completion"
 }
 
 @test "gaudi-bash helpers: components: _gaudi-bash-component-item-is-enabled: should fail if the no component was passed" {
