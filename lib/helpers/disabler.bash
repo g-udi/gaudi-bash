@@ -49,7 +49,7 @@ _gaudi-bash-disable() {
 		_component=$(command ls $ "${GAUDI_BASH}/components/enabled/"[0-9]*"$GAUDI_BASH_LOAD_PRIORITY_SEPARATOR$component.$type.bash" 2> /dev/null | head -1)
 
 		if [[ -z "$_component" ]]; then
-			printf "${CYAN}$component ${RED}%s ${GREEN}$type_singular${NC}\n" "does not appear to be an enabled"
+			printf "${RED}∴${NC} ${CYAN}$component ${NC}%s ${GREEN}$type_singular${NC}\n" "does not appear to be an enabled"
 			return 1
 		else
 			rm "${GAUDI_BASH}/components/enabled/$(basename "$_component")"
@@ -58,7 +58,7 @@ _gaudi-bash-disable() {
 
 	_gaudi-bash-component-cache-clean "${type}"
 
-	printf "${RED}%s ${GREEN}$type_singular: ${CYAN}$component${NC}\n" "◯ disabled"
+	printf "${CYAN}%s ${GREEN}$type_singular: ${CYAN}$component${NC}\n" "◯ disabled"
 
 	[[ $type == "plugins" ]] && _on-disable-callback "$component"
 
