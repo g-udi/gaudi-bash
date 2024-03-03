@@ -47,6 +47,22 @@ _binary_exists() {
 	fi
 }
 
+# @function     _completion_exists
+# @description  check if the a completion passed as the argument exists
+# @param $1     command: the command to check
+# @param $2     message (optional) for a log message to include when the command not found
+# @return       status code success (0) if the function is found or fails otherwise
+# @example      ❯ _completion_exists gh && echo exists'
+function _completion_exists() {
+	local msg="${2:-Completion for '$1' already exists}"
+	if complete -p "$1" &> /dev/null; then
+		_log_debug "$msg"
+		return 0
+	else
+		return 1
+	fi
+}
+
 # @function     _read_input
 # @description  reads input from the prompt for a yes/no (one character) input
 #               ensure no empty response will be passed by looping the read prompt until a valid non empty response is entered
