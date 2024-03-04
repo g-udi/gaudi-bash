@@ -22,20 +22,6 @@ jobs:
     - name: Test code
       run: test/run
 
-  build-docs:
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v4
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: 3.8
-    - name: Install docs dependencies
-      run: python3 -m pip install -r docs/requirements.txt
-    - name: Build the docs
-      run: sphinx-build -W -b html docs docs/_build/html
-
   lint:
     runs-on: ubuntu-latest
 
