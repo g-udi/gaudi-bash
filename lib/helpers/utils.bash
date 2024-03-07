@@ -163,3 +163,22 @@ _array-dedupe() {
 
 	_clean-string "$(echo "$*" | tr ' ' '\n' | sort -u | tr '\n' ' ')" "all"
 }
+
+# @function     __homebrew-check
+# @description  check the installation ot homebrew
+# @return       boolean status code success (0) if the function is found or fails otherwise
+function _homebrew-check() {
+	if _binary_exists 'brew'; then
+		# Homebrew is installed
+		if [[ "${GAUDI_BASH_HOMEBREW_PREFIX:-unset}" == 'unset' ]]; then
+			# variable isn't set
+			GAUDI_BASH_HOMEBREW_PREFIX="$(brew --prefix)"
+		else
+			true # Variable is set already, don't invoke `brew`.
+		fi
+	else
+		# Homebrew is not installed: clear variable.
+		GAUDI_BASH_HOMEBREW_PREFIX=
+		false # return failure if brew not installed.
+	fi
+}
