@@ -98,7 +98,7 @@ local_setup() {
 	assert_success
 	assert_output --partial "alias-completion"
 	assert_output --partial "Git helper function"
-	assert_output --partial "autojump"
+	assert_output --partial "atuin"
 	refute_output --partial "FAIL"
 
 	run _gaudi-bash-component-help plugins

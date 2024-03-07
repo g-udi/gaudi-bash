@@ -162,17 +162,3 @@ Enabled components will then be shown with a checkmark:
       plugins  =>   ✓ruby
   completions  =>   bundler gem rake
 ```
-
-## Custom scripts, aliases, themes, and functions
-
-For custom scripts, and aliases, just create the following files (they'll be ignored by the git repo):
-
-* `aliases/custom.aliases.bash`
-* `completion/custom.completion.bash`
-* any file insude the `custom` folder
-* `plugins/custom.plugins.bash`
-
-Now, if you want to change any of the main configuration and have it saved in your own fork, then i recommend you edit the `template/bash-profile.template.bash` as this is the main `bash_profile` file that will be copied and sourced in your home folder. For example, i have changed the theme and the default editors so that i will not have to change them every time i do a fresh install.
-
-Alternately, if you would like to keep your custom scripts under version control, you can set `GAUDI_BASH_CUSTOM` in your `~/.bashrc` to another location outside of the `$GAUDI_BASH` folder.
-In this case, any `*.bash` file under every directory below `GAUDI_BASH_CUSTOM` folder will be used.
