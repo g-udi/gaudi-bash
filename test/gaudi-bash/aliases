@@ -1,0 +1,39 @@
+ag                  [0;31m  ◯     (B[m    The Silver Searcher (ag) aliases
+ansible             [0;31m  ◯     (B[m    Ansible abbreviations
+apt                 [0;31m  ◯     (B[m    apt and dpkg aliases for Ubuntu and Debian distros.
+bundler             [0;31m  ◯     (B[m    Ruby Bundler
+clipboard           [0;31m  ◯     (B[m    pbcopy and pbpaste shortcuts to linux
+composer            [0;31m  ◯     (B[m    common composer abbreviations
+curl                [0;31m  ◯     (B[m    Curl aliases for convenience.
+directory           [0;31m  ◯     (B[m    Shortcuts for directory commands: ls, cd, &c.
+docker-compose      [0;31m  ◯     (B[m    docker-compose abbreviations
+docker              [0;31m  ◯     (B[m    Docker abbreviations/aliases
+emacs               [0;31m  ◯     (B[m    Emacs editor
+fuck                [0;31m  ◯     (B[m    fuck/please to retry last command with sudo
+gaudi-bash          [0;32m  ◉     (B[m    Aliases for the gaudi-bash command (these aliases are automatically included with the "general" aliases)
+general             [0;32m  ◉     (B[m    General aliases (files and directory listings ls, ll, etc.), navigation (cd, ..), etc. 
+git                 [0;31m  ◯     (B[m    Common git abbreviations
+gitsvn              [0;31m  ◯     (B[m    Common git-svn abbreviations
+gls                 [0;31m  ◯     (B[m    gls enhanced ls (port from Linux using coreutils)
+heroku              [0;31m  ◯     (B[m    Heroku task abbreviations
+hg                  [0;31m  ◯     (B[m    Mercurial abbreviations
+homebrew            [0;31m  ◯     (B[m    Homebrew abbreviations
+homesick            [0;31m  ◯     (B[m    Homesick aliases
+kubectl             [0;31m  ◯     (B[m    kubectl aliases
+ls                  [0;31m  ◯     (B[m    ls aliases to add coloring and extra arguments
+maven               [0;31m  ◯     (B[m    maven abbreviations
+node                [0;31m  ◯     (B[m    Node.js environment aliases
+npm                 [0;31m  ◯     (B[m    Common npm abbreviations
+osx                 [0;31m  ◯     (B[m    OSX specific aliases
+puppet              [0;31m  ◯     (B[m    Puppet aliases
+rails               [0;31m  ◯     (B[m    Ruby Rails aliases
+svn                 [0;31m  ◯     (B[m    Common svn aliases
+systemd             [0;31m  ◯     (B[m    systemd service aliases
+terraform           [0;31m  ◯     (B[m    Aliases for Terraform/OpenTofu and Terragrunt
+textmate            [0;31m  ◯     (B[m    textmate aliases
+tmux                [0;31m  ◯     (B[m    tmux terminal multiplexer aliases
+uuidgen             [0;31m  ◯     (B[m    uuidgen aliases
+vagrant             [0;31m  ◯     (B[m    Vagrant aliases
+vault               [0;31m  ◯     (B[m    Vault aliases
+vim                 [0;31m  ◯     (B[m    vim abbreviations
+yarn                [0;31m  ◯     (B[m    Yarn package manager aliases

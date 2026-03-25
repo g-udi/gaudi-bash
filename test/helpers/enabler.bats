@@ -44,6 +44,19 @@ local_setup() {
 	assert_output --partial "is already enabled"
 }
 
+@test "gaudi-bash helpers: _gaudi-bash-enable: should replace a stale enabled link" {
+
+	ln -s "${BATS_TEST_TMPDIR}/definitely-missing/base.plugins.bash" "$GAUDI_BASH/components/enabled/250___base.plugins.bash"
+
+	run _gaudi-bash-enable plugin base
+	assert_success
+	assert_output --partial "enabled with priority"
+	assert_file_exist "$GAUDI_BASH/components/enabled/250___base.plugins.bash"
+
+	run readlink "$GAUDI_BASH/components/enabled/250___base.plugins.bash"
+	assert_output "$GAUDI_BASH/components/plugins/lib/base.plugins.bash"
+}
+
 @test "gaudi-bash helpers: _gaudi-bash-enable: should respect custom priority defined in component" {
 
 	run _gaudi-bash-enable plugin alias-completion

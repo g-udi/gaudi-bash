@@ -82,3 +82,19 @@ local_setup() {
 	assert_line --index 0 --partial "ag"
 	assert_line --index 2 "ag='ag --smart-case --pager=\"less -MIRFX'"
 }
+
+@test "gaudi-bash-helpers: help: _help-aliases should support GAUDI_BASH paths with spaces" {
+
+	local spaced_gaudi_bash="${BATS_TEST_TMPDIR}/gaudi bash"
+	local original_gaudi_bash="$GAUDI_BASH"
+
+	mkdir -p "$spaced_gaudi_bash/components/enabled" "$spaced_gaudi_bash/components/aliases/lib"
+	cp "$GAUDI_BASH/components/aliases/lib/ag.aliases.bash" "$spaced_gaudi_bash/components/aliases/lib/ag.aliases.bash"
+	ln -s "$spaced_gaudi_bash/components/aliases/lib/ag.aliases.bash" "$spaced_gaudi_bash/components/enabled/150___ag.aliases.bash"
+
+	GAUDI_BASH="$spaced_gaudi_bash"
+	run _help-aliases
+	GAUDI_BASH="$original_gaudi_bash"
+
+	assert_output --partial "ag='ag --smart-case --pager=\"less -MIRFX'"
+}

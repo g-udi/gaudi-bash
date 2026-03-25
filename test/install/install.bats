@@ -3,6 +3,20 @@
 
 load "$GAUDI_TEST_DIRECTORY"/helper.bash
 
+assert_sane_defaults() {
+	local gaudi_root="${1:-$GAUDI_BASH}"
+
+	assert_file_exist "$gaudi_root/components/enabled/150___general.aliases.bash"
+	assert_file_exist "$gaudi_root/components/enabled/150___gaudi-bash.aliases.bash"
+	assert_file_exist "$gaudi_root/components/enabled/250___base.plugins.bash"
+	assert_file_exist "$gaudi_root/components/enabled/325___system.completions.bash"
+	assert_file_exist "$gaudi_root/components/enabled/350___gaudi-bash.completions.bash"
+
+	assert_file_not_exist "$gaudi_root/components/enabled/150___gls.aliases.bash"
+	assert_file_not_exist "$gaudi_root/components/enabled/350___git.completions.bash"
+	assert_file_not_exist "$gaudi_root/components/enabled/365___alias-completion.plugins.bash"
+}
+
 @test "gaudi-bash install: verify that the install script exists" {
 
 	assert_file_exist "$GAUDI_BASH/install.sh"
@@ -33,10 +47,29 @@ load "$GAUDI_TEST_DIRECTORY"/helper.bash
 
 	./setup.sh --silent
 
-	assert_file_exist "$GAUDI_BASH/components/enabled/150___general.aliases.bash"
-	assert_file_exist "$GAUDI_BASH/components/enabled/250___base.plugins.bash"
-	assert_file_exist "$GAUDI_BASH/components/enabled/350___gaudi-bash.completions.bash"
-	assert_file_exist "$GAUDI_BASH/components/enabled/350___system.completions.bash"
+	assert_sane_defaults
+}
+
+@test "gaudi-bash install: setup should work without GAUDI_BASH and repair stale defaults from a path with spaces" {
+
+	local standalone_checkout="${BATS_TEST_TMPDIR}/standalone gaudi-bash"
+	local standalone_home="${BATS_TEST_TMPDIR}/standalone home"
+	local normalized_checkout
+
+	cp -R "$GAUDI_BASH" "$standalone_checkout"
+	rm -rf "$standalone_checkout/.git"
+	rm -rf "$standalone_checkout/components/enabled"
+	mkdir -p "$standalone_checkout/components/enabled" "$standalone_home"
+	ln -s "/tmp/missing/system.completions.bash" "$standalone_checkout/components/enabled/325___system.completions.bash"
+
+	run env -u GAUDI_BASH HOME="$standalone_home" /bin/bash "$standalone_checkout/setup.sh" --silent --no-modify-config
+	assert_success
+
+	assert_sane_defaults "$standalone_checkout"
+
+	normalized_checkout="$(cd "$standalone_checkout" && pwd)"
+	run readlink "$standalone_checkout/components/enabled/325___system.completions.bash"
+	assert_output "$normalized_checkout/components/completions/lib/system.completions.bash"
 }
 
 @test "gaudi-bash install: run the install script silently and don't modify configs" {

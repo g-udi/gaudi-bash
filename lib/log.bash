@@ -62,18 +62,20 @@ _log_general() {
 	GAUDI_BASH_LOG_PREFIX=${GAUDI_BASH_LOG_PREFIX:-"CORE"}
 
 	local log_type log_color log_prefix
+	local log_type_upper
 
 	log_type=${2:-GENERAL}
+	log_type_upper=$(printf "%s" "$log_type" | tr '[:lower:]' '[:upper:]')
 	log_prefix="${NC}${YELLOW}[${GAUDI_BASH_LOG_PREFIX}]${NC}"
 
 	local output_fd=1
 	[[ "${log_type}" == "ERROR" || "${log_type}" == "WARNING" ]] && output_fd=2
 
 	if [[ -n $GAUDI_LOG_DISABLE_COLOR ]]; then
-		printf "%s\n" " [ ${log_type^^} ] ${log_prefix} $1" >&"$output_fd"
+		printf "%s\n" " [ ${log_type_upper} ] ${log_prefix} $1" >&"$output_fd"
 	else
-		log_color=GAUDI_BASH_LOG_${log_type^^}_COLOR
-		printf "%b\n" "${!log_color} [ ${log_type^^} ] ${log_prefix} $1" >&"$output_fd"
+		log_color="GAUDI_BASH_LOG_${log_type_upper}_COLOR"
+		printf "%b\n" "${!log_color} [ ${log_type_upper} ] ${log_prefix} $1" >&"$output_fd"
 	fi
 }
 

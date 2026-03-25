@@ -1,0 +1,73 @@
+alias-completion    [0;31m  ◯     (B[m    Automatic completion of aliases
+atuin               [0;31m  ◯     (B[m    Load Atuin! The magical shell history via ble.sh
+autojump            [0;31m  ◯     (B[m    Autojump configuration [ref: https://github.com/wting/autojump]
+aws                 [0;31m  ◯     (B[m    AWS helper functions
+base                [0;32m  ◉     (B[m    Miscellaneous tools
+basher              [0;31m  ◯     (B[m    Initializes basher, the shell package manager
+blesh               [0;31m  ◯     (B[m    Load ble.sh, the Bash line editor!
+boot2docker         [0;31m  ◯     (B[m    Helpers to get Docker setup correctly for boot2docker
+brew                [0;31m  ◯     (B[m    Make sure that brew is accessible and exported properly in your shell
+chruby              [0;31m  ◯     (B[m    Load chruby (from /usr/local/share/chruby)
+cht-sh              [0;31m  ◯     (B[m    Simplify `curl cht.sh/<query>` to `cht.sh <query>`
+cmd-returned-notify [0;31m  ◯     (B[m    Alert (BEL) when a command takes longer than a threshold to complete
+compress            [0;31m  ◯     (B[m    Compression tools
+direnv              [0;31m  ◯     (B[m    Load direnv, if you are using it: https://direnv.net/
+dirs                [0;31m  ◯     (B[m    Directory stack navigation
+docker-compose      [0;31m  ◯     (B[m    Helper functions for using docker-compose
+docker              [0;31m  ◯     (B[m    Helpers to more easily work with Docker
+edit-mode-emacs     [0;31m  ◯     (B[m    Enable emacs editing mode
+edit-mode-vi        [0;31m  ◯     (B[m    Enable vi editing mode
+encode              [0;31m  ◯     (B[m    Encoding and decoding functions
+explain             [0;31m  ◯     (B[m    mankier.com explain function to explain other commands
+extract             [0;31m  ◯     (B[m    Extractor helper functions for various archive types
+fasd                [0;31m  ◯     (B[m    load fasd, if you are using it
+fzf                 [0;31m  ◯     (B[m    Load fzf, a Command-line fuzzy finder written in Go
+gif                 [0;31m  ◯     (B[m    Video to gif, gif to WebM helper functions
+git-subrepo         [0;31m  ◯     (B[m    Loads Git Submodule Alternative via git-subrepo and initialize completions
+git                 [0;31m  ◯     (B[m    Git helper functions
+gitstatus           [0;31m  ◯     (B[m    Speeds up your life by using gitstatus for git status calculations. install from https://github.com/romkatv/gitstatus
+go                  [0;31m  ◯     (B[m    Go environment variables & path configuration
+goenv               [0;31m  ◯     (B[m    Load Go version management via goenv
+gradle              [0;31m  ◯     (B[m    Add a gw command to use gradle wrapper if present, else use system gradle
+hg                  [0;31m  ◯     (B[m    Mercurial helper functions
+history-eternal     [0;31m  ◯     (B[m    eternal bash history
+history-substring-search[0;31m  ◯     (B[m    search history using the substring already entered
+history             [0;31m  ◯     (B[m    history manipulation
+hub                 [0;31m  ◯     (B[m    Load GitHub support to git on the command-line via hub
+java                [0;31m  ◯     (B[m    Java and JAR helper functions
+jekyll              [0;31m  ◯     (B[m    Manage your jekyll site
+jenv                [0;31m  ◯     (B[m    Manage your Java environment via jenv
+jgitflow            [0;31m  ◯     (B[m    Maven jgitflow build helpers
+json                [0;31m  ◯     (B[m    Syntax-highlight JSON strings or files
+jump                [0;31m  ◯     (B[m    Initialize jump (see https://github.com/gsamokovarov/jump). Add `export JUMP_OPTS=("--bind=z")` to change keybinding
+latex               [0;31m  ◯     (B[m    Add mactex to the path if its present
+man                 [0;31m  ◯     (B[m    Colorize man pages for better readability
+nginx               [0;31m  ◯     (B[m    Manage your nginx service
+node                [0;31m  ◯     (B[m    Node.js helper functions
+nvm                 [0;31m  ◯     (B[m    Node version manager configuration (lazy-loaded for fast startup)
+osx                 [0;31m  ◯     (B[m    OSX specific functions
+pack                [0;31m  ◯     (B[m    CNB pack cli aliases
+percol              [0;31m  ◯     (B[m    Search & Select history with percol
+pipx                [0;31m  ◯     (B[m    Install and Run Python Applications in Isolated Environments
+postgres            [0;31m  ◯     (B[m    Postgres helper functions
+powerline           [0;31m  ◯     (B[m    Enables powerline daemon
+proxy               [0;31m  ◯     (B[m    Proxy Tools
+pyenv               [0;31m  ◯     (B[m    Python version management via pyenv (lazy-loaded for fast startup)
+pygmentize          [0;31m  ◯     (B[m    pygmentize instead of cat to terminal if possible
+python              [0;31m  ◯     (B[m    alias "shttp" to SimpleHTTPServer
+rails               [0;31m  ◯     (B[m    Helper functions for Ruby on Rails
+rbenv               [0;31m  ◯     (B[m    Ruby Version Manager via rbenv
+ruby                [0;31m  ◯     (B[m    Ruby and rubygems specific functions and settings
+rvm                 [0;31m  ◯     (B[m    Ruby Version Manager (RVM)
+sdkman              [0;31m  ◯     (B[m    Load Software Development Kit Manager
+server              [0;31m  ◯     (B[m    Create Simple HTTP Server
+ssh                 [0;31m  ◯     (B[m    SSH helper functions
+sshagent            [0;31m  ◯     (B[m    SSH Agent helper functions
+subversion          [0;31m  ◯     (B[m    SVN helper functions
+sudo                [0;31m  ◯     (B[m    Toggle sudo at the beginning of the current or the previous command by hitting the ESC key twice
+thefuck             [0;31m  ◯     (B[m    Initialization for fuck
+tmux                [0;31m  ◯     (B[m    Make sure that tmux is launched in 256 color mode
+tmuxinator          [0;31m  ◯     (B[m    Sources tmuxinator script if available
+url                 [0;31m  ◯     (B[m    Basic url handling and manipulation functions
+xterm               [0;31m  ◯     (B[m    Automatically set your xterm title with host and location info
+zoxide              [0;31m  ◯     (B[m    Zoxide is a smarter cd command for your shell

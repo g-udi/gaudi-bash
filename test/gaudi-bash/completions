@@ -1,0 +1,62 @@
+asdf                [0;31m  ◯     (B[m    asdf completions | The multiple runtime version manager
+awscli              [0;31m  ◯     (B[m    AWS CLI completions
+brew                [0;31m  ◯     (B[m    Brew completions
+bundler             [0;31m  ◯     (B[m    Bash completion for the `bundle` command
+capistrano          [0;31m  ◯     (B[m    Bash completion support for Capistrano
+cargo               [0;31m  ◯     (B[m    cargo (Rust package manager) completion
+composer            [0;31m  ◯     (B[m    Composer completion
+conda               [0;31m  ◯     (B[m    Enable Conda completions
+consul              [0;31m  ◯     (B[m    Consul bash completions
+defaults            [0;31m  ◯     (B[m    Bash command line completion for defaults
+dirs                [0;31m  ◯     (B[m    Bash completion support for the 'dirs' plugin (commands G, R).
+docker-compose      [0;31m  ◯     (B[m    Dokcer compose bash completions
+docker-machine      [0;31m  ◯     (B[m    Docker machine bash completions
+docker              [0;31m  ◯     (B[m    Docker bash completions
+dotnet              [0;31m  ◯     (B[m    bash parameter completion for the dotnet CLI
+export              [0;31m  ◯     (B[m    Export bash completions
+fabric              [0;31m  ◯     (B[m    Fabric bash completions
+flutter             [0;31m  ◯     (B[m    Flutter bash completions
+gaudi-bash          [0;32m  ◉     (B[m    Gaudi bash completions
+gcloud              [0;31m  ◯     (B[m    Google Cloud bash completions
+gem                 [0;31m  ◯     (B[m    Gem bash completions
+git_flow            [0;31m  ◯     (B[m    Gitflow bash completions
+git                 [0;32m  ◉     (B[m    Git bash completions
+github-cli          [0;31m  ◯     (B[m    GitHub CLI completion
+go                  [0;31m  ◯     (B[m    Go bash completions
+gradle              [0;31m  ◯     (B[m    Gradle bash completions
+grunt               [0;31m  ◯     (B[m    Grunt bash completions
+gulp                [0;31m  ◯     (B[m    Gulp bash completions
+helm                [0;31m  ◯     (B[m    Helm (Kubernetes Package Manager) completions
+homesick            [0;31m  ◯     (B[m    Homesick bash completions
+hub                 [0;31m  ◯     (B[m    Hub bash completions. This script complements the completion script that ships with git
+kind                [0;31m  ◯     (B[m    kind (Kubernetes IN Docker) completion
+kubectl             [0;31m  ◯     (B[m    Kubectl (Kubernetes CLI) completion
+lerna               [0;31m  ◯     (B[m    Lerna bash completions
+makefile            [0;31m  ◯     (B[m    Makefile bash completions
+maven               [0;31m  ◯     (B[m    Maven bash completions
+minikube            [0;31m  ◯     (B[m    Minikube (Local Kubernetes) completion
+ngrok               [0;31m  ◯     (B[m    Ngrok bash completions
+npm                 [0;31m  ◯     (B[m    NPM (Node Package Manager) completion
+nvm                 [0;31m  ◯     (B[m    NVM (Node Version Manager) bash completions
+openshift           [0;31m  ◯     (B[m    Openshift bash completions
+packer              [0;31m  ◯     (B[m    Packer bash completions
+pip                 [0;31m  ◯     (B[m    Python pip package manager bash completions
+pm2                 [0;31m  ◯     (B[m    PM2 bash completions
+rabbitmq            [0;31m  ◯     (B[m    RabbitMQ bash completions
+rake                [0;31m  ◯     (B[m    Bash completion support for Rake, Ruby Make
+rustup              [0;31m  ◯     (B[m    rustup (Rust toolchain installer) completion
+rvm                 [0;31m  ◯     (B[m    Bash completion support for RVM
+sdkman              [0;31m  ◯     (B[m    Sdkman bash completions
+sqlmap              [0;31m  ◯     (B[m    SQL Map bash completions
+ssh                 [0;31m  ◯     (B[m    Bash completion support for SSH
+svn                 [0;31m  ◯     (B[m    SVN bash completions
+system              [0;32m  ◉     (B[m    Loads the systems Bash completion modules
+terraform           [0;31m  ◯     (B[m    Terraform bash completions
+tmux                [0;31m  ◯     (B[m    Tmux bash completions
+travis              [0;31m  ◯     (B[m    Travis bash completions
+vagrant             [0;31m  ◯     (B[m    Vagrant bash completions
+vault               [0;31m  ◯     (B[m    Vault bash completion
+virsh               [0;31m  ◯     (B[m    Bash completion for virsh - main CLI of libvirt borrowed from https://github.com/LuyaoHuang/virsh-bash-completion
+virtualbox          [0;31m  ◯     (B[m    Virtualbox completions
+vuejs               [0;31m  ◯     (B[m    Vue.js completions
+yarn                [0;31m  ◯     (B[m    yarn cli completions

@@ -64,7 +64,11 @@ To update gaudi-bash to the latest version, simply run:
 gaudi-bash update
 ```
 
-gaudi-bash separates the core engine from the components (plugins, aliases, completions, themes). The `gaudi-bash update` command pulls the latest **core** code. If you would like to also pull the latest components, pass the `all` parameter:
+Update modes:
+
+- `gaudi-bash update` or `gaudi-bash update stable` updates the core to the latest stable release.
+- `gaudi-bash update dev` updates the core to the configured development branch.
+- `gaudi-bash update all` updates the core to the latest stable release and then syncs all component submodules recursively.
 
 ```bash
 gaudi-bash update all
@@ -121,7 +125,7 @@ gaudi-bash/
   bin/                   # Vendored dependencies (bats, composure, preexec)
 ```
 
-The core engine loads libraries from `lib/`, then the loader walks `components/enabled/` to source every enabled alias, completion and plugin. Components are enabled and disabled by creating or removing symlinks in the `enabled/` directory, managed through the `gaudi-bash enable` and `gaudi-bash disable` commands.
+The core engine loads libraries from `lib/`, then the loader walks `components/enabled/` to source every enabled alias, completion and plugin. Components are enabled and disabled by creating or removing symlinks in the local `enabled/` runtime directory, managed through the `gaudi-bash enable` and `gaudi-bash disable` commands.
 
 Key design principles:
 
@@ -209,7 +213,7 @@ gaudi-bash profile save <name> # save enabled components as a named profile
 gaudi-bash profile load <name> # load a saved profile
 gaudi-bash profile list        # list saved profiles
 gaudi-bash profile rm <name>   # remove a saved profile
-gaudi-bash update [all]        # updates gaudi-bash core (or core + components)
+gaudi-bash update [stable|dev|all]  # updates gaudi-bash core or core + components
 gaudi-bash search <terms>      # searches for components by keyword
 ```
 

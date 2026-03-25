@@ -6,6 +6,32 @@ GAUDI_BASH_LOAD_PRIORITY_DEFAULT_ALIASES=${GAUDI_BASH_LOAD_PRIORITY_DEFAULT_ALIA
 GAUDI_BASH_LOAD_PRIORITY_DEFAULT_PLUGINS=${GAUDI_BASH_LOAD_PRIORITY_DEFAULT_PLUGINS:-250}
 GAUDI_BASH_LOAD_PRIORITY_DEFAULT_COMPLETIONS=${GAUDI_BASH_LOAD_PRIORITY_DEFAULT_COMPLETIONS:-350}
 
+_gaudi-bash-component-source-path() {
+	local type="$1"
+	local component="$2"
+	local -a matches=("${GAUDI_BASH}/components/${type}/lib/${component}".*bash)
+
+	[[ -e "${matches[0]}" ]] || return 1
+	printf "%s" "${matches[0]}"
+}
+
+_gaudi-bash-enabled-component-link() {
+	local component_file="$1"
+	local -a matches=("${GAUDI_BASH}/components/enabled/"[0-9][0-9][0-9]"${GAUDI_BASH_LOAD_PRIORITY_SEPARATOR}${component_file}")
+
+	[[ -e "${matches[0]}" || -L "${matches[0]}" ]] || return 1
+	printf "%s" "${matches[0]}"
+}
+
+_gaudi-bash-enabled-link-is-current() {
+	local link_path="$1"
+	local expected_target="$2"
+
+	[[ -L "${link_path}" ]] || return 1
+	[[ "$(readlink "${link_path}")" == "${expected_target}" ]] || return 1
+	[[ -e "${link_path}" ]]
+}
+
 # @function     _gaudi-bash-enable
 # @description  enables a component
 # @param $1     component type: gaudi-bash component of type aliases, plugins, completions
@@ -20,12 +46,13 @@ _gaudi-bash-enable() {
 
 	! __check-function-parameters "$1" && printf "%s\n" "Please enter a valid component to enable" && return 1
 
-	local type type_singular component load_priority
+	local type type_singular component load_priority load_priority_key
 
 	# Make sure the component is pluralized in case this function is called directly e.g., for unit tests
 	type=$(_gaudi-bash-pluralize-component "$1")
 	type_singular=$(_gaudi-bash-singularize-component "$1")
-	_load_priority="GAUDI_BASH_LOAD_PRIORITY_DEFAULT_${type^^}"
+	load_priority_key=$(printf "%s" "$type" | tr '[:lower:]' '[:upper:]')
+	_load_priority="GAUDI_BASH_LOAD_PRIORITY_DEFAULT_${load_priority_key}"
 	component="$2"
 	load_priority="${!_load_priority}"
 
@@ -47,28 +74,34 @@ _gaudi-bash-enable() {
 		for _component in "${GAUDI_BASH}/components/$type/lib/"*.bash; do
 			_gaudi-bash-enable "$type" "$(basename "$_component" ."$type".bash)"
 		done
+		return 0
 	else
-		local _component
+		local _component component_source expected_target
 
-		_component=$(command ls "${GAUDI_BASH}/components/$type/lib/$component".*bash 2> /dev/null | head -1)
+		component_source=$(_gaudi-bash-component-source-path "$type" "$component")
 
-		[[ -z "$_component" ]] && printf "${CYAN}$component ${RED}%s ${GREEN}$type_singular${NC}\n" "does not appear to be an available" && return 1
-		_component=$(basename "$_component")
+		[[ -z "$component_source" ]] && printf "${CYAN}$component ${RED}%s ${GREEN}$type_singular${NC}\n" "does not appear to be an available" && return 1
+		_component=$(basename "$component_source")
+		expected_target="${GAUDI_BASH}/components/${type}/lib/${_component}"
 
 		local enabled_component
 
-		enabled_component=$(command compgen -G "${GAUDI_BASH}/components/enabled/[0-9][0-9][0-9]$GAUDI_BASH_LOAD_PRIORITY_SEPARATOR$_component" 2> /dev/null | head -1)
+		enabled_component="$(_gaudi-bash-enabled-component-link "$_component")"
 		if [[ -n "$enabled_component" ]]; then
-			printf "${GREEN}$type_singular ${CYAN}$component${NC} %s\n" "is already enabled"
-			return 0
+			if _gaudi-bash-enabled-link-is-current "$enabled_component" "$expected_target"; then
+				printf "${GREEN}$type_singular ${CYAN}$component${NC} %s\n" "is already enabled"
+				return 0
+			fi
+
+			rm -f "$enabled_component"
 		fi
 
 		# Load the priority from the file if it present there
 		declare local_file_priority use_load_priority
 
-		local_file_priority=$(metafor priority < "${GAUDI_BASH}/components/$type/lib/$_component")
+		local_file_priority=$(metafor priority < "$expected_target")
 		use_load_priority=${local_file_priority:-$load_priority}
-		ln -s "${GAUDI_BASH}"/components/"$type"/lib/"$_component" "${GAUDI_BASH}/components/enabled/${use_load_priority}${GAUDI_BASH_LOAD_PRIORITY_SEPARATOR}${_component}"
+		ln -sf "$expected_target" "${GAUDI_BASH}/components/enabled/${use_load_priority}${GAUDI_BASH_LOAD_PRIORITY_SEPARATOR}${_component}"
 	fi
 
 	_gaudi-bash-component-cache-clean "${type}"

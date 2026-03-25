@@ -23,10 +23,16 @@ _help-aliases() {
 	about "shows help for all aliases, or a specific alias group"
 	group "gaudi-bash:core:help"
 
+	local _gaudi_bash_nullglob
 	local __file
-	for __file in $(sort <(compgen -G "${GAUDI_BASH}/components/enabled/*.aliases.bash")); do
+
+	_gaudi_bash_nullglob=$(shopt -p nullglob 2> /dev/null)
+	shopt -s nullglob
+	for __file in "${GAUDI_BASH}/components/enabled/"*.aliases.bash; do
 		__help-list-aliases "$__file"
 	done
+	eval "$_gaudi_bash_nullglob"
+	unset _gaudi_bash_nullglob
 	return 1
 
 }
