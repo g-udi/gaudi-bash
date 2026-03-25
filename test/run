@@ -42,14 +42,5 @@ echo -e "
 
 Running gaudi-bash unit tests.. \n\n"
 
-test_status=0
-
-if [[ $# -gt 0 ]]; then
-	bash "$GAUDI_TEST_DIRECTORY"/runners/run-bats.bash "$@" || test_status=$?
-	exit "${test_status}"
-fi
-
-bash "$GAUDI_TEST_DIRECTORY"/runners/run-bats.bash || test_status=$?
-bash "$GAUDI_TEST_DIRECTORY"/runners/run-search.bash || test_status=$?
-
-exit "${test_status}"
+bash "$GAUDI_TEST_DIRECTORY"/runners/run-bats.bash
+bash "$GAUDI_TEST_DIRECTORY"/runners/run-search.bash

@@ -23,16 +23,10 @@ _help-aliases() {
 	about "shows help for all aliases, or a specific alias group"
 	group "gaudi-bash:core:help"
 
-	local _gaudi_bash_nullglob
 	local __file
-
-	_gaudi_bash_nullglob=$(shopt -p nullglob 2> /dev/null)
-	shopt -s nullglob
-	for __file in "${GAUDI_BASH}/components/enabled/"*.aliases.bash; do
+	for __file in $(sort <(compgen -G "${GAUDI_BASH}/components/enabled/*.aliases.bash")); do
 		__help-list-aliases "$__file"
 	done
-	eval "$_gaudi_bash_nullglob"
-	unset _gaudi_bash_nullglob
 	return 1
 
 }
@@ -84,7 +78,7 @@ _help-plugins() {
 	local group gfile
 	for gfile in $(cat "$grouplist" | sort | uniq); do
 		printf '%s\n' "${gfile##*.}"
-		printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -
+		printf '%*s\n' "${COLUMNS:-$(tput cols 2> /dev/null || echo 80)}" '' | tr ' ' -
 		cat "$gfile"
 		printf '\n'
 		rm "$gfile" 2> /dev/null
@@ -100,6 +94,6 @@ __help-list-aliases() {
 
 	file=$(basename "$1" | sed -e 's/[0-9]*[___]*\(.*\)\.aliases\.bash/\1/g')
 	printf '\n\n%b\n' "${GREEN}${file}${NC}"
-	printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -
+	printf '%*s\n' "${COLUMNS:-$(tput cols 2> /dev/null || echo 80)}" '' | tr ' ' -
 	cat "$1" | metafor alias | sed "s/$/'/"
 }

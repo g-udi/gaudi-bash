@@ -4,12 +4,6 @@
 
 GAUDI_BASH="$HOME/.gaudi_bash"
 
-__update_existing_install() {
-	git -C "$GAUDI_BASH" pull --ff-only --recurse-submodules \
-		&& git -C "$GAUDI_BASH" submodule sync --recursive \
-		&& git -C "$GAUDI_BASH" submodule update --init --recursive
-}
-
 __install() {
 	# Prevent the cloned repository from having insecure permissions. Failing to do
 	# so causes compinit() calls to fail with "command not found: compdef" errors
@@ -23,7 +17,6 @@ __install() {
 		exit 1
 	}
 
-	# shellcheck disable=SC1091
 	source "$GAUDI_BASH/setup.sh" "$@"
 }
 
@@ -39,10 +32,7 @@ if [[ -d "$GAUDI_BASH" ]]; then
 		else
 			echo ""
 			printf "\n%s\n" "Running a gaudi-bash update to pull latest changes ..."
-			if ! __update_existing_install; then
-				printf "%s\n" "Error: failed to update the existing gaudi-bash installation" >&2
-				exit 1
-			fi
+			git -C "$GAUDI_BASH" pull
 		fi
 	done
 else

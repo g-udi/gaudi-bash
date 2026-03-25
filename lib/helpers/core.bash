@@ -22,18 +22,6 @@ _gaudi-bash-grep() {
 : "${GAUDI_BASH_GREP:=$(type -P egrep 2> /dev/null || type -P grep 2> /dev/null || echo '/usr/bin/grep')}"
 export GAUDI_BASH_GREP
 
-_gaudi-bash-capitalize() {
-	local text="$1"
-	local first_char rest
-
-	[[ -n "$text" ]] || return 0
-
-	first_char=$(printf "%s" "${text%"${text#?}"}" | tr '[:lower:]' '[:upper:]')
-	rest="${text#?}"
-
-	printf "%s%s" "$first_char" "$rest"
-}
-
 # @function     _gaudi-bash-describe
 # @description  describes gaudi-bash components by listing the component, description and its status (enabled vs. disabled)
 #               the function can display all the items for a specific component (alias, plugin or completion) passed as a param
@@ -54,8 +42,8 @@ _gaudi-bash-describe() {
 	component_type="$(_gaudi-bash-singularize-component "$component")"
 	mode=${2:-"all"}
 
-	printf "\n%-20s%-10s%s\n" "$(_gaudi-bash-capitalize "$component_type")" 'Enabled?' '  Description'
-	printf "%*s\n" "${COLUMNS:-$(tput cols)}" '' | tr ' ' -
+	printf "\n%-20s%-10s%s\n" "${component_type^}" 'Enabled?' '  Description'
+	printf "%*s\n" "${COLUMNS:-$(tput cols 2> /dev/null || echo 80)}" '' | tr ' ' -
 
 	file=$(_gaudi-bash-component-cache-add "$component-enabled")
 

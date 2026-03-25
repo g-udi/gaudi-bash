@@ -3,46 +3,8 @@
 # shellcheck disable=SC1090,SC1091,SC2034,SC2003,SC2317
 
 GAUDI_SETUP_DIRECTORY="$(cd "$(dirname "$0")" && pwd)"
-: "${GAUDI_BASH:=${GAUDI_SETUP_DIRECTORY}}"
-
-if ! GAUDI_BASH="$(cd "${GAUDI_BASH}" 2> /dev/null && pwd)"; then
-	printf "%s\n" "Error: unable to resolve gaudi-bash directory" >&2
-	exit 1
-fi
-export GAUDI_BASH
 
 source "$GAUDI_SETUP_DIRECTORY/lib/colors.bash"
-
-__require_file() {
-	local file="$1"
-
-	if [[ ! -f "$file" ]]; then
-		printf "%s\n" "Error: required gaudi-bash file not found: $file" >&2
-		return 1
-	fi
-}
-
-__sync_submodules() {
-	[[ -e "$GAUDI_BASH/.git" ]] || return 0
-
-	local submodule_path submodule_root
-
-	git -C "$GAUDI_BASH" submodule sync --recursive || return 1
-
-	while IFS=' ' read -r _ submodule_path; do
-		submodule_root="${GAUDI_BASH}/${submodule_path}"
-
-		if [[ -d "$submodule_root" ]] && [[ -z "$(find "$submodule_root" -mindepth 1 -maxdepth 1 -print -quit 2> /dev/null)" ]]; then
-			rmdir "$submodule_root" 2> /dev/null || true
-		fi
-
-		if [[ -d "$submodule_root" ]] && [[ -n "$(find "$submodule_root" -mindepth 1 -maxdepth 1 -print -quit 2> /dev/null)" ]] && [[ ! -e "$submodule_root/.git" ]]; then
-			continue
-		fi
-
-		git -C "$GAUDI_BASH" submodule update --init --recursive -- "$submodule_path" || return 1
-	done < <(git -C "$GAUDI_BASH" config --file .gitmodules --get-regexp '^submodule\..*\.path$')
-}
 
 _read_input() {
 	unset REPLY
@@ -97,7 +59,6 @@ for param in "$@"; do
 		"--silent") set -- "$@" "-s" ;;
 		"--basic") set -- "$@" "-b" ;;
 		"--no-modify-config") set -- "$@" "-n" ;;
-		"--no_modify_config") set -- "$@" "-n" ;;
 		*) set -- "$@" "$param" ;;
 	esac
 done
@@ -155,47 +116,25 @@ if ! [[ $no_modify_config ]]; then
 	fi
 fi
 
-# Ensure required submodules are present before sourcing libraries that depend on them.
-if ! __sync_submodules; then
-	printf "%s\n" "Error: failed to sync gaudi-bash submodules" >&2
-	exit 1
-fi
-
 # Load dependencies for enabling components
-if ! __require_file "$GAUDI_BASH/lib/composure.bash"; then
-	exit 1
-fi
-# shellcheck disable=SC1090
-if ! source "$GAUDI_BASH/lib/composure.bash"; then
-	printf "%s\n" "Error: failed to load gaudi-bash file: $GAUDI_BASH/lib/composure.bash" >&2
-	exit 1
-fi
+source "$GAUDI_BASH/lib/composure.bash"
 # Allow access for composure specific syntax to other functions
-if ! command -v cite > /dev/null 2>&1; then
-	printf "%s\n" "Error: failed to initialize gaudi-bash metadata helpers" >&2
-	exit 1
-fi
 cite about param example group priority
 
-if ! __require_file "$GAUDI_BASH/lib/gaudi-bash.bash"; then
-	exit 1
-fi
-# shellcheck disable=SC1090
-if ! source "$GAUDI_BASH/lib/gaudi-bash.bash"; then
-	printf "%s\n" "Error: failed to load gaudi-bash file: $GAUDI_BASH/lib/gaudi-bash.bash" >&2
-	exit 1
-fi
+source "$GAUDI_BASH/lib/gaudi-bash.bash"
+
+# Check if the folder is a valid git and pull all submodules
+[[ -d "$GAUDI_BASH/.git" && "$no_default_components" != "true" ]] && git submodule update --init --recursive
 
 if [[ "$no_default_components" != "true" ]]; then
 
 	echo -e "\n${MAGENTA}Enabling gaudi-bash default components${NC}"
-	unset GAUDI_BASH_AUTOMATIC_RELOAD_AFTER_CONFIG_CHANGE
 
-	_gaudi-bash-enable completion gaudi-bash || exit 1
-	_gaudi-bash-enable completion system || exit 1
-	_gaudi-bash-enable plugin base || exit 1
-	_gaudi-bash-enable alias general || exit 1
-	_gaudi-bash-enable alias gaudi-bash || exit 1
+	_gaudi-bash-enable completion gaudi-bash
+	_gaudi-bash-enable completion system
+	_gaudi-bash-enable plugin base
+	_gaudi-bash-enable alias general
+	_gaudi-bash-enable alias gaudi-bash
 fi
 
 echo -e "

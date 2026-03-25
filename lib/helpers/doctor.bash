@@ -14,7 +14,7 @@ _gaudi-bash-doctor() {
 
 	_log_level=${1:-all}
 	_log_level="GAUDI_BASH_LOG_LEVEL_${_log_level/s/}"
-	_log_level=$(printf "%s" "$_log_level" | tr '[:lower:]' '[:upper:]')
+	_log_level=${_log_level^^}
 
 	export GAUDI_BASH_LOG_LEVEL=${!_log_level}
 	_gaudi-bash-reload

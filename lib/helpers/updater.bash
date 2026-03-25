@@ -1,15 +1,6 @@
-#!/usr/bin/env bash
+# #!/usr/bin/env bash
 # shellcheck shell=bash
 # shellcheck disable=SC2181
-
-_gaudi-bash-update-usage() {
-	printf "%s\n" "Usage: gaudi-bash update [stable|dev|all] [--silent|-s]"
-}
-
-_gaudi-bash-update-sync-submodules() {
-	git submodule sync --recursive \
-		&& git submodule update --init --recursive
-}
 
 # @function     _gaudi-bash_update_and_restart
 # @description  Checks out the wanted version, pops directory and restart
@@ -20,22 +11,13 @@ function _gaudi-bash_update_and_restart() {
 	about 'Checks out the wanted version, pops directory and restart. Does not return (because of the restart!)'
 	group 'gaudi-bash:core:updater'
 
-	local target="$1"
-	local mode="$2"
-
-	git checkout "$target" &> /dev/null
+	git checkout "$1" &> /dev/null
 	if [[ $? -eq 0 ]]; then
-		if [[ "$mode" == "all" ]] && ! _gaudi-bash-update-sync-submodules; then
-			echo "Error updating gaudi-bash components, please check the components submodules."
-			return 1
-		fi
-
 		echo "gaudi-bash successfully updated."
 		popd &> /dev/null || return
 		_gaudi-bash-restart
 	else
-		echo "Error updating gaudi-bash, please check if your gaudi-bash installation folder (${GAUDI_BASH}) is clean."
-		return 1
+		echo "Error updating gaudi-bash, please, check if your gaudi-bash installation folder (${BASH_IT}) is clean."
 	fi
 }
 
@@ -47,29 +29,12 @@ function _gaudi-bash-update() {
 	about 'updates gaudi-bash'
 	group 'gaudi-bash:core:updater'
 
-	local silent word DIFF version TARGET revision status revert log_color RESP mode update_label
-	local -a modes=()
+	local silent word DIFF version TARGET revision status revert log_color RESP
 	for word in "$@"; do
-		case "${word}" in
-			"--silent" | "-s")
-				silent=true
-				;;
-			"stable" | "dev" | "all")
-				modes+=("${word}")
-				;;
-			*)
-				_gaudi-bash-update-usage
-				return 1
-				;;
-		esac
+		if [[ "${word}" == "--silent" || "${word}" == "-s" ]]; then
+			silent=true
+		fi
 	done
-
-	if [[ ${#modes[@]} -gt 1 ]]; then
-		_gaudi-bash-update-usage
-		return 1
-	fi
-
-	mode="${modes[0]:-stable}"
 
 	pushd "${GAUDI_BASH?}" > /dev/null || return
 
@@ -90,22 +55,19 @@ function _gaudi-bash-update() {
 		GAUDI_BASH_DEVELOPMENT_BRANCH="master"
 	fi
 
-	case "$mode" in
-		stable | all)
-			version="stable"
-			TARGET=$(git describe --tags "$(git rev-list --tags --max-count=1)" 2> /dev/null)
+	if [[ -z "${1:-}" || "$1" == "stable" ]]; then
+		version="stable"
+		TARGET=$(git describe --tags "$(git rev-list --tags --max-count=1)" 2> /dev/null)
 
-			if [[ -z "$TARGET" ]]; then
-				echo "Can not find tags, so can not update to latest stable version..."
-				popd > /dev/null || return
-				return 1
-			fi
-			;;
-		dev)
-			version="dev"
-			TARGET="${GAUDI_BASH_REMOTE}/${GAUDI_BASH_DEVELOPMENT_BRANCH}"
-			;;
-	esac
+		if [[ -z "$TARGET" ]]; then
+			echo "Can not find tags, so can not update to latest stable version..."
+			popd > /dev/null || return
+			return
+		fi
+	else
+		version="dev"
+		TARGET="${GAUDI_BASH_REMOTE}/${GAUDI_BASH_DEVELOPMENT_BRANCH}"
+	fi
 
 	revision="HEAD..${TARGET}"
 	status="$(git rev-list "${revision}" 2> /dev/null)"
@@ -127,51 +89,25 @@ function _gaudi-bash-update() {
 		git log --no-merges --format="${log_color}%h: %s (%an)" "${revision}"
 		echo ""
 
-		update_label="update to ${TARGET}($(git log -1 --format=%h "${TARGET}"))"
-		[[ "$mode" == "all" ]] && update_label="${update_label} and sync components"
-
 		if [[ -n "${silent}" ]]; then
-			echo "Updating to ${update_label#update to }..."
-			_gaudi-bash_update_and_restart "$TARGET" "$mode"
-			return $?
+			echo "Updating to ${TARGET}($(git log -1 --format=%h "${TARGET}"))..."
+			_gaudi-bash_update_and_restart "$TARGET" "$version"
 		else
-			read -r -e -n 1 -p "Would you like to ${update_label}? [Y/n] " RESP
+			read -r -e -n 1 -p "Would you like to update to ${TARGET}($(git log -1 --format=%h "${TARGET}"))? [Y/n] " RESP
 			case "$RESP" in
 				[yY] | "")
-					_gaudi-bash_update_and_restart "$TARGET" "$mode"
-					return $?
+					_gaudi-bash_update_and_restart "$TARGET" "$version"
 					;;
 				[nN])
 					echo "Not updating…"
 					;;
 				*)
-					echo "Please choose y or n."
-					popd > /dev/null || return
-					return 1
+					echo -e "${echo_orange?}Please choose y or n.${echo_reset_color?}"
 					;;
 			esac
 		fi
 	else
-		if [[ "$mode" == "all" ]]; then
-			local submodules_before submodules_after
-
-			submodules_before="$(git submodule status --recursive 2> /dev/null || true)"
-			if ! _gaudi-bash-update-sync-submodules; then
-				echo "Error updating gaudi-bash components, please check the components submodules."
-				popd > /dev/null || return
-				return 1
-			fi
-
-			submodules_after="$(git submodule status --recursive 2> /dev/null || true)"
-			if [[ "$submodules_before" != "$submodules_after" ]]; then
-				echo "gaudi-bash components successfully updated."
-				popd > /dev/null || return
-				_gaudi-bash-restart
-				return $?
-			fi
-
-			echo "gaudi-bash is up to date, nothing to do!"
-		elif [[ "${version}" == "stable" ]]; then
+		if [[ "${version}" == "stable" ]]; then
 			echo "You're on the latest stable version. If you want to check out the latest 'dev' version, please run \"gaudi-bash update dev\""
 		else
 			echo "gaudi-bash is up to date, nothing to do!"

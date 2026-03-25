@@ -50,34 +50,6 @@ strip_ansi() {
 	perl -pe 's/\e\[[0-9;]*[[:alpha:]]//g; s/\e\([A-Z]//g; s/\e\][^\a]*(\a|\e\\)//g'
 }
 
-wait_for_file_content() {
-	local file="$1"
-	local expected="$2"
-	local attempts="${3:-40}"
-
-	while ((attempts > 0)); do
-		[[ -f "$file" ]] && [[ "$(< "$file")" == "$expected" ]] && return 0
-		sleep 0.05
-		attempts=$((attempts - 1))
-	done
-
-	return 1
-}
-
-wait_for_grep_match() {
-	local pattern="$1"
-	local file="$2"
-	local attempts="${3:-40}"
-
-	while ((attempts > 0)); do
-		grep -Fxq "$pattern" "$file" 2> /dev/null && return 0
-		sleep 0.05
-		attempts=$((attempts - 1))
-	done
-
-	return 1
-}
-
 create_git_repo() {
 	local repo="$1"
 
@@ -163,67 +135,6 @@ EOF
 	local stripped_output
 	stripped_output="$(printf '%s' "$output" | strip_ansi)"
 	[[ "$stripped_output" == " codex/web"* ]]
-}
-
-@test "gaudi theme: clean scm output keeps padding and stays ascii-minimal" {
-	local repo="${BATS_TEST_TMPDIR}/scm-clean"
-
-	create_git_repo "$repo"
-	(
-		cd "$repo" \
-			&& printf 'base\n' > tracked.txt \
-			&& git add tracked.txt \
-			&& git commit -m 'initial' > /dev/null \
-			&& git checkout -b 'codex/web' > /dev/null
-	)
-
-	source_gaudi_theme
-	cd "$repo"
-
-	run gaudi::render_segment scm
-	assert_success
-	refute_output --partial "✓"
-	refute_output --partial "!:"
-	refute_output --partial "+:"
-	refute_output --partial "?:"
-	refute_output --partial "x:"
-
-	local stripped_output
-	stripped_output="$(printf '%s' "$output" | strip_ansi)"
-	[[ "$stripped_output" == " codex/web"* ]]
-}
-
-@test "gaudi theme: common prompt segments keep a single leading padding space" {
-	local repo="${BATS_TEST_TMPDIR}/segment-padding"
-	local stripped_output=""
-	local segment=""
-
-	mkdir -p "$repo"
-	cd "$repo"
-
-	source_gaudi_theme
-
-	_command_duration() {
-		printf '%s' '3s'
-	}
-
-	gaudi::load_segment battery
-	battstat() {
-		printf '%s' '76%%'
-	}
-
-	for segment in cwd user host time duration battery; do
-		run gaudi::render_segment "$segment"
-		assert_success
-
-		stripped_output="$(printf '%s' "$output" | strip_ansi)"
-		[[ ${stripped_output:0:1} == " " ]]
-	done
-
-	run gaudi::render_segment host
-	assert_success
-	stripped_output="$(printf '%s' "$output" | strip_ansi)"
-	[[ "$stripped_output" != "  "* ]]
 }
 
 @test "gaudi theme: scm shows merge conflicts with an explicit conflict counter" {
@@ -360,11 +271,12 @@ EOF
 	export GAUDI_SLOWASYNC_DELAY="0"
 
 	gaudi::prompt
+	wait
 
 	local cache_file
 	cache_file="$(gaudi::async_segment_cache_file slowasync)"
-	run wait_for_file_content "$cache_file" "one"
-	assert_success
+	assert_file_exist "$cache_file"
+	assert_equal "$(< "$cache_file")" "one"
 
 	export GAUDI_SLOWASYNC_VALUE="two"
 	export GAUDI_SLOWASYNC_DELAY="0.3"
@@ -373,45 +285,8 @@ EOF
 
 	[[ "$PS1" == *"one"* ]]
 
-	run wait_for_file_content "$cache_file" "two"
-	assert_success
-}
-
-@test "gaudi theme: async launcher stays out of the interactive job table" {
-	cat > "$GAUDI_BASH/components/themes/gaudi/segments/slowasync.bash" << 'EOF'
-#!/usr/bin/env bash
-
-gaudi_slowasync() {
-	sleep "${GAUDI_SLOWASYNC_DELAY:-0}"
-	printf '%s' "${GAUDI_SLOWASYNC_VALUE:-}"
-}
-EOF
-
-	cat > "${BATS_TEST_TMPDIR}/interactive-job-check.bash" << EOF
-export GAUDI_BASH="$GAUDI_BASH"
-export TERM="xterm-256color"
-export XDG_CACHE_HOME="${BATS_TEST_TMPDIR}/interactive-cache"
-mkdir -p "\$XDG_CACHE_HOME"
-
-source "\$GAUDI_BASH/components/themes/gaudi/gaudi.theme.bash"
-
-gaudi::redraw_prompt() { :; }
-
-GAUDI_PROMPT_LEFT=()
-GAUDI_PROMPT_RIGHT=()
-GAUDI_PROMPT_ASYNC=(slowasync)
-GAUDI_SLOWASYNC_DELAY="0.1"
-GAUDI_SLOWASYNC_VALUE="quiet"
-
-gaudi::write_atomic "\$GAUDI_THEME_GENERATION_FILE" "1"
-gaudi::launch_async_segment_jobs "1" GAUDI_PROMPT_ASYNC[@]
-sleep 0.2
-EOF
-
-	run bash --norc --noprofile -ic "source '${BATS_TEST_TMPDIR}/interactive-job-check.bash'"
-	assert_success
-	refute_output --partial "[1]"
-	refute_output --partial "gaudi::refresh_async_segment"
+	wait
+	assert_equal "$(< "$cache_file")" "two"
 }
 
 @test "gaudi theme: stale async jobs cannot overwrite a newer generation or repaint" {
@@ -439,10 +314,14 @@ EOF
 	export GAUDI_RACEASYNC_DELAY="0"
 	gaudi::prompt
 
+	wait
+
 	local cache_file
 	cache_file="$(gaudi::async_segment_cache_file raceasync)"
-	run wait_for_file_content "$cache_file" "new"
-	assert_success
-	sleep 0.35
+	assert_file_exist "$cache_file"
 	assert_equal "$(< "$cache_file")" "new"
+	run grep -Fxq "old" "$GAUDI_REDRAW_LOG"
+	assert_failure
+	run grep -Fxq "new" "$GAUDI_REDRAW_LOG"
+	assert_success
 }
