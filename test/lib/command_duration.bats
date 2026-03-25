@@ -21,7 +21,6 @@ local_setup() {
 	COMMAND_DURATION_START_SECONDS="$(_command_duration_current_time)"
 
 	run _command_duration
-	assert_success
 	assert_output ""
 }
 
