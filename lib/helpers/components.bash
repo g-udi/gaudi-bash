@@ -51,10 +51,11 @@ _gaudi-bash-singularize-component() {
 	__check-function-parameters "$1" || return 1
 
 	local component="${1}"
+	local component_singular
 
 	# Handle aliases -> alias and plugins -> plugin, etc.
-	[[ "$component" == *es ]] && component_singular=${component/es/}
-	[[ "$component" == *ns ]] && component_singular=${component/ns/n}
+	[[ "$component" == *es ]] && component_singular=${component%es}
+	[[ "$component" == *ns ]] && component_singular=${component%s}
 
 	printf "%s" "${component_singular:-$component}"
 }
