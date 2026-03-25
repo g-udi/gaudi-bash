@@ -4,7 +4,7 @@
 
 GAUDI_BASH_LOG_PREFIX="LOADER"
 
-pushd "${GAUDI_BASH}" > /dev/null || exit 1
+pushd "${GAUDI_BASH}" > /dev/null || return 1
 if [[ -d "$GAUDI_BASH/components/enabled" ]]; then
 	_gaudi_bash_config_type=""
 	_log_debug "Loading all enabled components..."
@@ -20,4 +20,4 @@ unset _gaudi_bash_config_file
 unset _gaudi_bash_config_type
 unset GAUDI_BASH_LOG_PREFIX
 
-popd > /dev/null || exit 1
+popd > /dev/null || return 1
