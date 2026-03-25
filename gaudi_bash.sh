@@ -16,6 +16,9 @@ case $OSTYPE in
 		;;
 esac
 
+# Array of callbacks to run after all components are loaded
+declare -a GAUDI_BASH_LIBRARY_FINALIZE_HOOK
+
 # Load composure first, so we support function metadata and then logging
 source "${GAUDI_BASH}/lib/composure.bash"
 source "${GAUDI_BASH}/lib/log.bash"
@@ -40,6 +43,12 @@ unset _gaudi_bash_glob_save
 
 # Load the bash theme
 source "${GAUDI_BASH}/lib/appearance.bash"
+
+# Run any registered finalize hooks (for plugins that need everything loaded first)
+for _gaudi_bash_hook in "${GAUDI_BASH_LIBRARY_FINALIZE_HOOK[@]}"; do
+	"$_gaudi_bash_hook"
+done
+unset _gaudi_bash_hook
 
 # handle the case where GAUDI_BASH_RELOAD_LEGACY is set
 if ! command -v reload &> /dev/null && [[ -n "$GAUDI_BASH_RELOAD_LEGACY" ]]; then
