@@ -5,7 +5,7 @@
 # Initialize Bash It
 GAUDI_BASH_LOG_PREFIX="CORE"
 : "${GAUDI_BASH:=${BASH_SOURCE%/*}}"
-: "${GAUDI_BASH_BASHRC:=${BASH_SOURCE[${#BASH_SOURCE[@]} - 1]}}"
+: "${GAUDI_BASH_BASHRC:=${BASH_SOURCE[${#BASH_SOURCE[@]}-1]}}"
 
 case $OSTYPE in
 	darwin*)
@@ -15,7 +15,6 @@ case $OSTYPE in
 		export GAUDI_BASH_PROFILE=".bashrc"
 		;;
 esac
-
 
 # Load composure first, so we support function metadata and then logging
 source "${GAUDI_BASH}/lib/composure.bash"
@@ -31,7 +30,7 @@ source "${GAUDI_BASH}/scripts/loader.bash"
 
 # Load custom aliases, completions, plugins
 : "${GAUDI_BASH_CUSTOM:=${GAUDI_BASH}/components/custom}"
-_gaudi_bash_glob_save=$(shopt -p nullglob globstar 2>/dev/null)
+_gaudi_bash_glob_save=$(shopt -p nullglob globstar 2> /dev/null)
 shopt -s nullglob globstar
 for custom in "${GAUDI_BASH_CUSTOM}"/*.bash "${GAUDI_BASH_CUSTOM}"/**/*.bash; do
 	_log_component "$custom" "custom" && source "$custom"

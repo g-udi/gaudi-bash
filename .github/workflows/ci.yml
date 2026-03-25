@@ -31,9 +31,14 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y parallel
 
-    - name: Run tests
+    - name: Run tests (Linux)
+      if: startsWith(runner.os, 'Linux')
       shell: 'script -q -e -c "bash {0}"'
       run: test/run
+
+    - name: Run tests (macOS)
+      if: startsWith(runner.os, 'macOS')
+      run: script -q /dev/null bash -c 'test/run'
 
   lint:
     runs-on: ubuntu-latest
