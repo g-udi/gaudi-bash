@@ -49,19 +49,20 @@ _gaudi-bash-describe() {
 
 	[[ "$mode" = "all" ]] && file=${file/-enabled/}
 
-	if [[ ! -s "${file}" || -z $(find "${file}" -mmin -300) ]]; then
+	if [[ ! -s "${file}" ]]; then
 		rm -f "${file}" 2> /dev/null
 		local __file
 		for __file in "${GAUDI_BASH}/components/$component/lib/"*.bash; do
-			# Check for both the old format without the load priority, and the extended format with the priority
-			declare enabled_files enabled_file
-			enabled_file=$(basename "$__file")
-			enabled_files=$(sort <(compgen -G "${GAUDI_BASH}/components/enabled/*$GAUDI_BASH_LOAD_PRIORITY_SEPARATOR${enabled_file}") | wc -l)
+			local enabled_file component_name about_text
+			enabled_file="${__file##*/}"
+			component_name="${enabled_file%%.*}"
 
-			if [[ "$enabled_files" -gt 0 ]]; then
-				printf "%-20s${GREEN}%-10s${NC}%s\n" "$(basename "$__file" | sed -e 's/\(.*\)\..*\.bash/\1/g')" "  ◉" "    $(cat "$__file" | metafor about-"$component_type")" 2>&1 | tee -a "${file}"
+			about_text="$(metafor about-"$component_type" < "$__file")"
+
+			if compgen -G "${GAUDI_BASH}/components/enabled/*${GAUDI_BASH_LOAD_PRIORITY_SEPARATOR}${enabled_file}" > /dev/null 2>&1; then
+				printf "%-20s${GREEN}%-10s${NC}%s\n" "$component_name" "  ◉" "    $about_text" | tee -a "${file}"
 			elif [[ "$mode" = "all" ]]; then
-				printf "%-20s${RED}%-10s${NC}%s\n" "$(basename "$__file" | sed -e 's/\(.*\)\..*\.bash/\1/g')" "  ◯" "    $(cat "$__file" | metafor about-"$component_type")" 2>&1 | tee -a "${file}"
+				printf "%-20s${RED}%-10s${NC}%s\n" "$component_name" "  ◯" "    $about_text" | tee -a "${file}"
 			fi
 		done
 	else
