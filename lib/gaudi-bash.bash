@@ -49,20 +49,32 @@ _gaudi-bash-reload() {
 	about "reloads the bash profile that corresponds to the correct OS type (.bashrc, .bash_profile)"
 	group "gaudi-bash:core"
 
-	[[ -z $GAUDI_TEST_RUNNER ]] && source "${GAUDI_BASH_BASHRC:-${HOME?}/$GAUDI_BASH_PROFILE}"
+	if [[ -n $GAUDI_TEST_RUNNER ]]; then
+		return 0
+	fi
+
+	_gaudi-bash-component-cache-clean
+
+	local profile="${HOME?}/${GAUDI_BASH_PROFILE}"
+	if [[ -f "$profile" ]]; then
+		source "$profile"
+		echo "gaudi-bash reloaded from $profile"
+	else
+		echo "Profile not found: $profile"
+		return 1
+	fi
 }
 
 # @function     _gaudi-bash-restart
-# @description  restarts the bash profile
-#               restarts the profile that corresponds to the correct OS type (.bashrc, .bash_profile) preserving context
-#               Instead of reloading your Bash profile, this command re-runs Bash (using exec)
-#               This is stronger than simple reload, and is similar to the effect of closing and reopening your terminal
+# @description  restarts the bash shell
+#               re-executes bash (using exec) which is stronger than reload
+#               similar to the effect of closing and reopening your terminal
 function _gaudi-bash-restart() {
-	about 'Instead of reloading your Bash profile, this command re-runs Bash (using exec)'
+	about 'Re-executes bash (using exec), stronger than reload'
 	group "gaudi-bash:core"
 
 	_gaudi-bash-component-cache-clean
-	exec "${0#-}" --rcfile "${GAUDI_BASH_BASHRC:-${HOME?}/"${GAUDI_BASH_PROFILE}"}"
+	exec bash --login
 }
 
 # @function     _gaudi-bash-help
