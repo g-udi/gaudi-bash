@@ -1,20 +1,23 @@
 #!/usr/bin/env bash
 # shellcheck shell=bash
 
+# Cache directory: prefer XDG_CACHE_HOME, fall back to $GAUDI_BASH/tmp/cache
+GAUDI_BASH_CACHE_DIR="${XDG_CACHE_HOME:-${HOME}/.cache}/gaudi-bash"
+
 # @function     _gaudi-bash-component-cache-add
-# @description  gets the component cache path in the /tmp directory
-#               will create a cache folder if doesn't exist in /tmp
+# @description  gets the component cache path
+#               will create a cache folder if it doesn't exist
 # @param $1     type: the component type
 # @return       returns the cache file path
 # @example      ❯ _gaudi-bash-component-cache-add plugin
 _gaudi-bash-component-cache-add() {
-	about "gets the component cache path in the /tmp directory"
+	about "gets the component cache path"
 	group "gaudi-bash:core:cache"
 
 	[[ -z $1 ]] && return 1
 
 	local file
-	file="${GAUDI_BASH}/tmp/cache/${1}"
+	file="${GAUDI_BASH_CACHE_DIR}/${1}"
 	[[ -f ${file} ]] || mkdir -p "${file%/*}"
 	printf "%s" "${file}"
 }
