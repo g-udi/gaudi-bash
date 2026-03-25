@@ -2,11 +2,27 @@
 # shellcheck shell=bash
 
 function load_gaudi_libs() {
+	local component
 	for lib in "$@"; do
 		component=$(find "${GAUDI_BASH}/lib" -type f -iname "${lib}.bash")
 		load "$component"
 	done
 	return 0
+}
+
+sync_gaudi_test_worktree() {
+	(
+		cd "${GAUDI_BASH_ORIGIN}" \
+			&& tar \
+				--exclude='.git' \
+				--exclude='bin' \
+				--exclude='components' \
+				--exclude='test/gaudi-bash' \
+				-cf - .
+	) | (
+		cd "${GAUDI_BASH}" \
+			&& tar -xf -
+	)
 }
 
 function setup() {
@@ -18,6 +34,10 @@ function setup() {
 	# This sets up a local test fixture, i.e. a completely fresh and isolated gaudi-bash directory. This is done to avoid messing with your own gaudi-bash source directory.
 	[[ ! -d "$GAUDI_BASH" ]] && echo "NO EXIST" && git --git-dir="${GAUDI_BASH_GIT_DIR?}" worktree add -d -f "${GAUDI_BASH}"
 
+	sync_gaudi_test_worktree
+
+	# Ensure clean runtime state for each test
+	rm -rf "$GAUDI_BASH/tmp"
 	mkdir -p "$GAUDI_BASH/components/enabled"
 
 	cp -r "$GAUDI_BASH_ORIGIN/components/aliases" "$GAUDI_BASH/components/aliases"
@@ -64,6 +84,7 @@ function setup_file() {
 	# Locate the temporary folder, avoid double-slash.
 	GAUDI_BASH="${BATS_FILE_TMPDIR//\/\///}/.gaudi_bash"
 	git --git-dir="${GAUDI_BASH_GIT_DIR?}" worktree add -d "${GAUDI_BASH}"
+	sync_gaudi_test_worktree
 
 	load "$GAUDI_BASH_ORIGIN/lib/composure.bash"
 	cite about param example group priority

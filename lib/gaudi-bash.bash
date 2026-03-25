@@ -28,9 +28,12 @@ _gaudi-bash-version() {
 	GAUDI_BASH_GIT_REMOTE=$(git remote get-url "$GAUDI_BASH_REMOTE")
 	GAUDI_BASH_GIT_URL=${GAUDI_BASH_GIT_REMOTE%.git}
 
+	local GAUDI_BASH_GIT_TAG
+	GAUDI_BASH_GIT_TAG="$(git describe --tags --abbrev=0 2> /dev/null)"
 	GAUDI_BASH_GIT_VERSION_INFO="$(git log --pretty=format:'%h on %aI' -n 1)"
 	GAUDI_BASH_GIT_SHA=${GAUDI_BASH_GIT_VERSION_INFO%% *}
 
+	[[ -n "$GAUDI_BASH_GIT_TAG" ]] && echo -e "Version: ${CYAN}$GAUDI_BASH_GIT_TAG${NC}"
 	echo -e "Current git SHA: ${GREEN}$GAUDI_BASH_GIT_VERSION_INFO${NC}"
 	echo -e "${MAGENTA}$GAUDI_BASH_GIT_URL/commit/$GAUDI_BASH_GIT_SHA${NC}"
 	echo -e "Compare to latest: ${YELLOW}$GAUDI_BASH_GIT_URL/compare/$GAUDI_BASH_GIT_SHA...master${NC}"
@@ -107,6 +110,8 @@ _gaudi-bash-backup() {
 	about "backs up enabled components (plugins, aliases, completions)"
 	group "gaudi-bash:core"
 
+	mkdir -p "${GAUDI_BASH}/tmp"
+
 	# Clear out the existing backup file
 	echo -n "" > "${GAUDI_BASH}/tmp/enabled.gaudi-bash.backup"
 
@@ -146,7 +151,7 @@ _gaudi-bash-restore() {
 gaudi-bash() {
 	about 'provides a solid framework for using, developing and maintaining shell scripts and custom commands for your daily work'
 	param '1: verb [one of: version | help | doctor | reload | restart | search | update | backup | restore | profile | disable | enable | show ]] '
-	param '2: component type [one of: alias(es) | completion(s) | plugin(s) ]] or search term(s)'
+	param '2: component type [one of: alias(es) | completion(s) | plugin(s) ]] or search term(s) or update mode [stable | dev | all]'
 	param '3: specific component [optional]'
 
 	example '$ gaudi-bash show plugins'
@@ -154,6 +159,7 @@ gaudi-bash() {
 	example '$ gaudi-bash enable plugin git [tmux]...'
 	example '$ gaudi-bash disable alias hg [tmux]...'
 	example '$ gaudi-bash update'
+	example '$ gaudi-bash update all'
 	example '$ gaudi-bash backup'
 	example '$ gaudi-bash help plugins'
 	example '$ gaudi-bash search [-|@]term1 [-|@]term2 ... [[ -e/--enable ]] [[ -d/--disable ]] [[ -r/--refresh ]] [[ -c/--no-color ]]'
@@ -230,3 +236,6 @@ gaudi-bash() {
 	fi
 
 }
+
+# Short alias for gaudi-bash command
+alias gbash='gaudi-bash'
