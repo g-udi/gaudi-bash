@@ -30,8 +30,14 @@ done
 source "${GAUDI_BASH}/scripts/loader.bash"
 
 # Load custom aliases, completions, plugins
-CUSTOM_LIB="${GAUDI_BASH_CUSTOM:=${GAUDI_BASH}/components/custom}/*.bash ${GAUDI_BASH_CUSTOM:=${GAUDI_BASH}/components/custom}/**/*.bash"
-for custom in ${CUSTOM_LIB}; do [[ -e "${custom}" ]] && _log_component "$custom" "custom" && source "$custom"; done
+: "${GAUDI_BASH_CUSTOM:=${GAUDI_BASH}/components/custom}"
+_gaudi_bash_glob_save=$(shopt -p nullglob globstar 2>/dev/null)
+shopt -s nullglob globstar
+for custom in "${GAUDI_BASH_CUSTOM}"/*.bash "${GAUDI_BASH_CUSTOM}"/**/*.bash; do
+	_log_component "$custom" "custom" && source "$custom"
+done
+eval "$_gaudi_bash_glob_save"
+unset _gaudi_bash_glob_save
 
 # Load the bash theme
 source "${GAUDI_BASH}/lib/appearance.bash"
