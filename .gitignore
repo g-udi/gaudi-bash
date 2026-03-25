@@ -11,6 +11,7 @@ bats
 # gaudi-bash enabled items and custom and temporary files
 components/enabled
 tmp/
+test/gaudi-bash/
 
 # OS specific files (mainly OSX)
 .DS_Store

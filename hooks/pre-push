@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+# Pre-push hook: runs lint and tests before allowing a push.
+# Install: ln -sf ../../hooks/pre-push .git/hooks/pre-push
+
+set -e
+
+GAUDI_BASH_DIR="$(cd "$(dirname "$0")/../.." && pwd)"
+
+echo "Running pre-push checks..."
+
+# Run pre-commit linting if available
+if command -v pre-commit &>/dev/null; then
+  echo "[pre-push] Running pre-commit lint..."
+  pre-commit run --all-files || {
+    echo "[pre-push] Lint failed. Fix issues before pushing."
+    exit 1
+  }
+else
+  # Fallback: run shellcheck and shfmt directly
+  if command -v shellcheck &>/dev/null; then
+    echo "[pre-push] Running shellcheck..."
+    find "$GAUDI_BASH_DIR" -name '*.bash' -not -path '*/bin/*' -not -path '*/components/*' -print0 |
+      xargs -0 shellcheck --shell=bash || {
+      echo "[pre-push] shellcheck failed."
+      exit 1
+    }
+  fi
+
+  if command -v shfmt &>/dev/null; then
+    echo "[pre-push] Running shfmt..."
+    shfmt -d "$GAUDI_BASH_DIR/lib" "$GAUDI_BASH_DIR/scripts" "$GAUDI_BASH_DIR/gaudi_bash.sh" "$GAUDI_BASH_DIR/setup.sh" || {
+      echo "[pre-push] shfmt found formatting issues."
+      exit 1
+    }
+  fi
+fi
+
+# Run tests
+echo "[pre-push] Running tests..."
+bash "$GAUDI_BASH_DIR/test/run" || {
+  echo "[pre-push] Tests failed. Fix issues before pushing."
+  exit 1
+}
+
+echo "[pre-push] All checks passed."

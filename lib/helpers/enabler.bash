@@ -17,10 +17,11 @@ _gaudi-bash-component-source-path() {
 
 _gaudi-bash-enabled-component-link() {
 	local component_file="$1"
-	local -a matches=("${GAUDI_BASH}/components/enabled/"[0-9][0-9][0-9]"${GAUDI_BASH_LOAD_PRIORITY_SEPARATOR}${component_file}")
+	local match
 
-	[[ -e "${matches[0]}" || -L "${matches[0]}" ]] || return 1
-	printf "%s" "${matches[0]}"
+	match=$(compgen -G "${GAUDI_BASH}/components/enabled/[0-9][0-9][0-9]${GAUDI_BASH_LOAD_PRIORITY_SEPARATOR}${component_file}" 2> /dev/null | head -1)
+	[[ -n "$match" ]] || return 1
+	printf "%s" "$match"
 }
 
 _gaudi-bash-enabled-link-is-current() {
