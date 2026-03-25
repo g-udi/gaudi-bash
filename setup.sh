@@ -101,7 +101,7 @@ if ! [[ $no_modify_config ]]; then
 	elif [[ -e "$HOME/$CONFIG_FILE" ]]; then
 
 		cp -aL "$HOME/$CONFIG_FILE" "$HOME/$CONFIG_FILE.bak"
-		echo -e"${GREEN}Your original $CONFIG_FILE has been backed up to $CONFIG_FILE.bak${NC}"
+		echo -e "${GREEN}Your original $CONFIG_FILE has been backed up to $CONFIG_FILE.bak${NC}"
 
 	fi
 
