@@ -20,7 +20,7 @@ _gaudi-bash-disable() {
 
 	! __check-function-parameters "$1" && printf "${RED}%s${NC}\n" "Please enter a valid component to disable" && return 1
 
-	local type component
+	local type type_singular component
 
 	# Make sure the component is pluralized in case this function is called directly e.g., for unit tests
 	type=$(_gaudi-bash-pluralize-component "$1")
@@ -46,7 +46,7 @@ _gaudi-bash-disable() {
 
 		local _component
 
-		_component=$(command ls $ "${GAUDI_BASH}/components/enabled/"[0-9]*"$GAUDI_BASH_LOAD_PRIORITY_SEPARATOR$component.$type.bash" 2> /dev/null | head -1)
+		_component=$(command ls "${GAUDI_BASH}/components/enabled/"[0-9]*"$GAUDI_BASH_LOAD_PRIORITY_SEPARATOR$component.$type.bash" 2> /dev/null | head -1)
 
 		if [[ -z "$_component" ]]; then
 			printf "${RED}∴${NC} ${CYAN}$component ${NC}%s ${GREEN}$type_singular${NC}\n" "does not appear to be an enabled"
