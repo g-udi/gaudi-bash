@@ -132,7 +132,12 @@ _gaudi-bash-restore() {
 	! [[ -f "${GAUDI_BASH}/tmp/enabled.gaudi-bash.backup" ]] && echo -e "${RED}No valid backup file found :(${NC}" && return
 
 	while IFS= read -r line; do
-		$line
+		# Validate that the line matches the expected format before executing
+		if [[ "$line" =~ ^gaudi-bash\ enable\ (alias|plugin|completion)\ [a-zA-Z0-9_-]+$ ]]; then
+			$line
+		else
+			_log_warning "Skipping invalid backup entry: $line"
+		fi
 	done < "${GAUDI_BASH}/tmp/enabled.gaudi-bash.backup"
 }
 
