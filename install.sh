@@ -5,9 +5,9 @@
 GAUDI_BASH="$HOME/.gaudi_bash"
 
 __update_existing_install() {
-	git -C "$GAUDI_BASH" pull --ff-only --recurse-submodules &&
-		git -C "$GAUDI_BASH" submodule sync --recursive &&
-		git -C "$GAUDI_BASH" submodule update --init --recursive
+	git -C "$GAUDI_BASH" pull --ff-only --recurse-submodules \
+		&& git -C "$GAUDI_BASH" submodule sync --recursive \
+		&& git -C "$GAUDI_BASH" submodule update --init --recursive
 }
 
 __install() {

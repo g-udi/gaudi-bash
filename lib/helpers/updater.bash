@@ -7,8 +7,8 @@ _gaudi-bash-update-usage() {
 }
 
 _gaudi-bash-update-sync-submodules() {
-	git submodule sync --recursive &&
-		git submodule update --init --recursive
+	git submodule sync --recursive \
+		&& git submodule update --init --recursive
 }
 
 # @function     _gaudi-bash_update_and_restart
@@ -92,14 +92,14 @@ function _gaudi-bash-update() {
 
 	case "$mode" in
 		stable | all)
-		version="stable"
-		TARGET=$(git describe --tags "$(git rev-list --tags --max-count=1)" 2> /dev/null)
+			version="stable"
+			TARGET=$(git describe --tags "$(git rev-list --tags --max-count=1)" 2> /dev/null)
 
-		if [[ -z "$TARGET" ]]; then
-			echo "Can not find tags, so can not update to latest stable version..."
-			popd > /dev/null || return
-			return 1
-		fi
+			if [[ -z "$TARGET" ]]; then
+				echo "Can not find tags, so can not update to latest stable version..."
+				popd > /dev/null || return
+				return 1
+			fi
 			;;
 		dev)
 			version="dev"
