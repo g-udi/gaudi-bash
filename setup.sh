@@ -79,7 +79,7 @@ while getopts "hsnb" opt; do
 			;;
 	esac
 done
-shift "$(expr $OPTIND - 1)"
+shift $(( OPTIND - 1 ))
 
 # Check if the silent flag is set and direct the output to /dev/null
 if [[ -n $silent ]]; then
