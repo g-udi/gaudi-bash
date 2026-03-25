@@ -6,6 +6,9 @@ on:
   pull_request:
     branches: [master, main]
 
+permissions:
+  contents: write
+
 jobs:
   test:
     strategy:
@@ -85,3 +88,60 @@ jobs:
       uses: redhat-plumbers-in-action/differential-shellcheck@v5
       with:
         severity: warning
+
+  release:
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main')
+    needs: [test, lint]
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        submodules: recursive
+
+    - name: Bump version and create tag
+      id: tag
+      run: |
+        # Get latest tag, default to v0.0.0 if none
+        LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")
+        echo "Latest tag: $LATEST_TAG"
+
+        # Check if HEAD is already tagged
+        if git describe --exact-match HEAD 2>/dev/null; then
+          echo "HEAD is already tagged, skipping"
+          echo "skip=true" >> "$GITHUB_OUTPUT"
+          exit 0
+        fi
+
+        # Parse version components
+        VERSION="${LATEST_TAG#v}"
+        IFS='.' read -r MAJOR MINOR PATCH <<< "$VERSION"
+        PATCH=$((PATCH + 1))
+        NEW_TAG="v${MAJOR}.${MINOR}.${PATCH}"
+
+        echo "New tag: $NEW_TAG"
+        echo "tag=$NEW_TAG" >> "$GITHUB_OUTPUT"
+        echo "prev_tag=$LATEST_TAG" >> "$GITHUB_OUTPUT"
+        echo "skip=false" >> "$GITHUB_OUTPUT"
+
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
+        git tag -a "$NEW_TAG" -m "Release $NEW_TAG"
+        git push origin "$NEW_TAG"
+
+    - name: Generate release notes
+      if: steps.tag.outputs.skip != 'true'
+      id: notes
+      run: |
+        echo "body<<NOTES_EOF" >> "$GITHUB_OUTPUT"
+        git log --no-merges --format="- %s (%h)" "${{ steps.tag.outputs.prev_tag }}..HEAD" >> "$GITHUB_OUTPUT"
+        echo "NOTES_EOF" >> "$GITHUB_OUTPUT"
+
+    - name: Create GitHub Release
+      if: steps.tag.outputs.skip != 'true'
+      uses: softprops/action-gh-release@v2
+      with:
+        tag_name: ${{ steps.tag.outputs.tag }}
+        body: ${{ steps.notes.outputs.body }}
+        generate_release_notes: false
