@@ -19,6 +19,8 @@ _gaudi-bash-version() {
 
 	cd "${GAUDI_BASH}" || return
 
+	local GAUDI_BASH_GIT_REMOTE GAUDI_BASH_GIT_URL GAUDI_BASH_GIT_VERSION_INFO GAUDI_BASH_GIT_SHA
+
 	if [[ -z $GAUDI_BASH_REMOTE ]]; then
 		GAUDI_BASH_REMOTE="origin"
 	fi
