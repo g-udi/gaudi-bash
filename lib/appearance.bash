@@ -112,9 +112,8 @@ GAUDI_BASH_LOG_PREFIX="THEME"
 export CLICOLOR=1
 export LSCOLORS='cxfxdxgxbxegedabagacad'
 
-# Colored grep
-GREP_OPTIONS="--color=auto"
-alias grep='grep $GREP_OPTIONS'
+# Colored grep (GREP_OPTIONS is deprecated since GNU grep 2.21)
+alias grep='grep --color=auto'
 
 : "${GAUDI_BASH_ORIGIN:="$GAUDI_BASH"}"
 
