@@ -16,14 +16,6 @@ case $OSTYPE in
 		;;
 esac
 
-# Only set $GAUDI_BASH if it's not already set
-if [[ -z "$GAUDI_BASH" ]]; then
-	# Setting $BASH to maintain backwards compatibility
-	export GAUDI_BASH=$BASH
-	BASH="$(bash -c 'echo $BASH')"
-	export BASH
-
-fi
 
 # Load composure first, so we support function metadata and then logging
 source "${GAUDI_BASH}/lib/composure.bash"
