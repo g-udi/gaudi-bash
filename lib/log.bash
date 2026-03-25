@@ -39,7 +39,10 @@ _gaudi-bash-get-component-type-from-path() {
 	local filename
 
 	filename=${1##*/}
-	filename=$(echo "${filename##*"$GAUDI_BASH_LOAD_PRIORITY_SEPARATOR"}" | cut -d "." -f 2)
+	filename="${filename##*"$GAUDI_BASH_LOAD_PRIORITY_SEPARATOR"}"
+	# Extract type field: name.TYPE.bash -> TYPE
+	filename="${filename#*.}"
+	filename="${filename%%.*}"
 	_gaudi-bash-singularize-component "$filename"
 }
 
