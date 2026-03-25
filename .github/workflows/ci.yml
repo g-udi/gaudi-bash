@@ -66,3 +66,22 @@ jobs:
 
     - name: Run lint
       run: pre-commit run --all-files
+
+  lint-differential:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      security-events: write
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        submodules: recursive
+        fetch-depth: 0
+
+    - name: Differential ShellCheck
+      uses: redhat-plumbers-in-action/differential-shellcheck@v5
+      with:
+        severity: warning
