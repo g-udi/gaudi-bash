@@ -134,15 +134,22 @@ _clean-string() {
 	group "gaudi-bash:core:utils"
 
 	local mode=${2:-"all"}
+	local text="$1"
 
 	if [[ $mode = "all" ]]; then
-		echo -e "${1}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//'
+		# Trim leading whitespace
+		text="${text#"${text%%[![:space:]]*}"}"
+		# Trim trailing whitespace
+		text="${text%"${text##*[![:space:]]}"}"
+		printf '%s' "$text"
 	elif [[ $mode = "trailing" ]]; then
-		echo -e "${1}" | sed -e 's/[[:space:]]*$//'
+		text="${text%"${text##*[![:space:]]}"}"
+		printf '%s' "$text"
 	elif [[ $mode = "leading" ]]; then
-		echo -e "${1}" | sed -e 's/^[[:space:]]*//'
+		text="${text#"${text%%[![:space:]]*}"}"
+		printf '%s' "$text"
 	elif [[ $mode = "any" ]]; then
-		echo -e "${1}" | tr -d '[:space:]'
+		printf '%s' "${text//[[:space:]]/}"
 	fi
 }
 
