@@ -145,7 +145,7 @@ _gaudi-bash-restore() {
 
 gaudi-bash() {
 	about 'provides a solid framework for using, developing and maintaining shell scripts and custom commands for your daily work'
-	param '1: verb [one of: version | help | doctor | reload | restart | search | update | backup | restore | disable | enable | show ]] '
+	param '1: verb [one of: version | help | doctor | reload | restart | search | update | backup | restore | profile | disable | enable | show ]] '
 	param '2: component type [one of: alias(es) | completion(s) | plugin(s) ]] or search term(s)'
 	param '3: specific component [optional]'
 
@@ -160,6 +160,10 @@ gaudi-bash() {
 	example '$ gaudi-bash version'
 	example '$ gaudi-bash reload'
 	example '$ gaudi-bash doctor errors|warnings|all'
+	example '$ gaudi-bash profile save mysetup'
+	example '$ gaudi-bash profile load mysetup'
+	example '$ gaudi-bash profile list'
+	example '$ gaudi-bash profile rm mysetup'
 
 	local verb=${1:-}
 	shift
@@ -196,6 +200,10 @@ gaudi-bash() {
 			;;
 		restore)
 			func=_gaudi-bash-restore
+			;;
+		profile)
+			_gaudi-bash-profile "$component" "$@"
+			return
 			;;
 		reload)
 			func=_gaudi-bash-reload
