@@ -12,7 +12,7 @@ _is_function() {
 	about "check if the passed parameter is a function"
 	group "gaudi-bash:core:utils"
 
-	[[ -n "$(LANG=C type -t "$1" 2> /dev/null | grep 'function')" ]]
+	declare -F "$1" &> /dev/null
 }
 
 # @function     _command_exists
