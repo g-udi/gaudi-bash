@@ -17,7 +17,7 @@ case $OSTYPE in
 esac
 
 # Array of callbacks to run after all components are loaded
-declare -a GAUDI_BASH_LIBRARY_FINALIZE_HOOK
+GAUDI_BASH_LIBRARY_FINALIZE_HOOK=()
 
 # Load composure first, so we support function metadata and then logging
 source "${GAUDI_BASH}/lib/composure.bash"

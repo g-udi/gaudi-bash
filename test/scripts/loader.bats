@@ -128,6 +128,24 @@ local_setup() {
 	assert_line --index 0 "alias test_alias='c'"
 }
 
+@test "gaudi-bash loader: finalize hooks should run after all components are loaded" {
+
+	ln -s "$GAUDI_BASH/components/plugins/lib/base.plugin.bash" "$GAUDI_BASH/components/enabled/250___base.plugin.bash"
+	assert_link_exist "$GAUDI_BASH/components/enabled/250___base.plugin.bash"
+
+	ln -s "$GAUDI_BASH/components/plugins/lib/d.plugins.bash" "$GAUDI_BASH/components/enabled/250___d.plugins.bash"
+	assert_link_exist "$GAUDI_BASH/components/enabled/250___d.plugins.bash"
+
+	load "$GAUDI_BASH/gaudi_bash.sh"
+
+	# Verify the plugin was loaded
+	run alias test_finalize_hook &> /dev/null
+	assert_success
+
+	# Verify the finalize hook ran
+	assert [ "${GAUDI_FINALIZE_HOOK_RAN}" == "true" ]
+}
+
 @test "gaudi-bash loader: load aliases and plugins in priority order, with one alias higher than plugins" {
 
 	ln -s "$GAUDI_BASH/components/plugins/lib/base.plugin.bash" "$GAUDI_BASH/components/enabled/250___base.plugin.bash"
