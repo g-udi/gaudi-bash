@@ -12,11 +12,15 @@ _gaudi-bash-grep() {
 	group "gaudi-bash:core"
 
 	if [[ -z "${GAUDI_BASH_GREP}" ]]; then
-		GAUDI_BASH_GREP="$(which egrep || which grep || '/usr/bin/grep')"
+		GAUDI_BASH_GREP="$(type -P egrep || type -P grep || echo '/usr/bin/grep')"
 		export GAUDI_BASH_GREP
 	fi
-	printf "%s " "${GAUDI_BASH_GREP}"
+	printf "%s" "${GAUDI_BASH_GREP}"
 }
+
+# Cache grep path immediately to avoid repeated subshells
+: "${GAUDI_BASH_GREP:=$(type -P egrep 2> /dev/null || type -P grep 2> /dev/null || echo '/usr/bin/grep')}"
+export GAUDI_BASH_GREP
 
 # @function     _gaudi-bash-describe
 # @description  describes gaudi-bash components by listing the component, description and its status (enabled vs. disabled)
