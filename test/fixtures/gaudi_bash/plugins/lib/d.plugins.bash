@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 _finalize_hook_test() {
-	GAUDI_FINALIZE_HOOK_RAN="true"
+	export GAUDI_FINALIZE_HOOK_RAN="true"
 }
 
 GAUDI_BASH_LIBRARY_FINALIZE_HOOK+=("_finalize_hook_test")

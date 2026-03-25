@@ -38,7 +38,8 @@ _gaudi-bash-profile-save() {
 
 		local _component _type
 
-		_component="$(echo "$_file" | sed -e "s/.*$GAUDI_BASH_LOAD_PRIORITY_SEPARATOR\(.*\).bash.*/\1/")"
+		_component="${_file##*"$GAUDI_BASH_LOAD_PRIORITY_SEPARATOR"}"
+		_component="${_component%.bash}"
 		_type=$(_gaudi-bash-singularize-component "${_component##*.}")
 		_component=${_component%%.*}
 
