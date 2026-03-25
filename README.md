@@ -266,6 +266,135 @@ $ NO_COLOR=1 gaudi-bash search ruby rake gem bundle irb rails -chruby
   completions  =>   bundler gem rake
 ```
 
+## Gaudi Theme
+
+gaudi-bash ships with the **gaudi** prompt theme — a modular, segment-based prompt with async rendering and Nerd Font icon support.
+
+### Prompt Layout
+
+The prompt is divided into three zones, each defined as an array of segment names in `gaudi.configs.bash`:
+
+```
+ RIGHT_PROMPT                                    LEFT_PROMPT   ASYNC_PROMPT
+ [battery] [time] [user] [host]    \r            [cwd]         [scm] [node] [docker] [k8s] ...
+                                                  >> _
+```
+
+| Zone | Config Array | Rendering | Purpose |
+|------|-------------|-----------|---------|
+| **Left** | `GAUDI_PROMPT_LEFT` | Synchronous | Core context: multiplexer, command duration, cwd |
+| **Right** | `GAUDI_PROMPT_RIGHT` | Synchronous | System info: battery, time, user, host |
+| **Async** | `GAUDI_PROMPT_ASYNC` | Background | Expensive checks: git status, language versions, cloud/k8s context |
+
+Async segments render in the background after the prompt is drawn, then overwrite the prompt line with the result. A cache ensures the prompt always shows the last known async state while fresh data is computed — no blank flashes between renders.
+
+### Display Modes
+
+| Variable | Default | Description |
+|---|---|---|
+| `GAUDI_SPLIT_PROMPT` | `true` | `true`: right-aligned RIGHT + left-aligned LEFT on one line. `false`: stacked vertically |
+| `GAUDI_SPLIT_PROMPT_TWO_LINES` | `false` | When split is enabled, use a newline instead of carriage return between sides |
+| `GAUDI_ENABLE_SYMBOLS` | `true` | Show Nerd Font icons. Set to `false` for plain text fallback |
+| `GAUDI_ENABLE_HUSHLOGIN` | `true` | Suppress "Last login" message on macOS Terminal |
+| `GAUDI_PROMPT_DEFAULT_PREFIX` | `" "` | Default prefix for all segments |
+| `GAUDI_PROMPT_DEFAULT_SUFFIX` | `" "` | Default suffix for all segments |
+
+### Available Segments
+
+Each segment is a standalone file in `components/themes/gaudi/segments/` and can be placed in any of the three prompt arrays.
+
+**Environment and tooling:**
+
+| Segment | Shows | Key Variables |
+|---------|-------|---------------|
+| `scm` | Git/Hg/SVN branch, dirty/clean/staged state | `GAUDI_SCM_SHOW`, `GAUDI_SCM_FETCH` |
+| `node` | Node.js version (from nvm/nodenv/system) | `GAUDI_NODE_SHOW`, `GAUDI_NODE_DEFAULT_VERSION`, `GAUDI_NODE_COLOR` |
+| `pyenv` | Python version via pyenv | `GAUDI_PYENV_SHOW`, `GAUDI_PYENV_COLOR` |
+| `ruby` | Ruby version (rvm/rbenv/chruby) | `GAUDI_RUBY_SHOW`, `GAUDI_RUBY_COLOR` |
+| `golang` | Go version | `GAUDI_GOLANG_SHOW`, `GAUDI_GOLANG_COLOR` |
+| `rust` | Rust version | `GAUDI_RUST_SHOW`, `GAUDI_RUST_COLOR` |
+| `java` | Java version | `GAUDI_JAVA_SHOW`, `GAUDI_JAVA_COLOR` |
+| `elixir` | Elixir version | `GAUDI_ELIXIR_SHOW`, `GAUDI_ELIXIR_COLOR` |
+| `php` | PHP version | `GAUDI_PHP_SHOW`, `GAUDI_PHP_COLOR` |
+| `haskell` | Haskell Stack version | `GAUDI_HASKELL_SHOW`, `GAUDI_HASKELL_COLOR` |
+| `julia` | Julia version | `GAUDI_JULIA_SHOW`, `GAUDI_JULIA_COLOR` |
+| `elm` | Elm version | `GAUDI_ELM_SHOW`, `GAUDI_ELM_COLOR` |
+| `angular` | Angular CLI version | `GAUDI_ANGULAR_SHOW`, `GAUDI_ANGULAR_COLOR` |
+| `react` | React version from package.json | `GAUDI_REACT_SHOW`, `GAUDI_REACT_COLOR` |
+| `package` | npm/yarn package version | `GAUDI_PACKAGE_SHOW`, `GAUDI_PACKAGE_COLOR` |
+
+**Infrastructure:**
+
+| Segment | Shows | Key Variables |
+|---------|-------|---------------|
+| `docker` | Docker version / running containers | `GAUDI_DOCKER_SHOW`, `GAUDI_DOCKER_VERBOSE`, `GAUDI_DOCKER_COLOR` |
+| `kubecontext` | kubectl context, namespace, server version | `GAUDI_KUBECONTEXT_SHOW`, `GAUDI_KUBECONTEXT_COLOR` |
+
+**Shell context:**
+
+| Segment | Shows | Key Variables |
+|---------|-------|---------------|
+| `cwd` | Current working directory (shortened) | `GAUDI_CWD_SHOW`, `GAUDI_CWD_SHORTEN`, `GAUDI_CWD_COLOR` |
+| `duration` | Last command execution time | `GAUDI_DURATION_SHOW`, `GAUDI_DURATION_MIN_SECONDS`, `GAUDI_DURATION_COLOR` |
+| `battery` | Battery level and charging state | `GAUDI_BATTERY_SHOW`, `GAUDI_BATTERY_THRESHOLD` |
+| `time` | Current timestamp | `GAUDI_TIME_SHOW`, `GAUDI_TIME_COLOR` |
+| `user` | Current username | `GAUDI_USER_SHOW`, `GAUDI_USER_COLOR` |
+| `host` | Hostname | `GAUDI_HOST_SHOW`, `GAUDI_HOST_COLOR` |
+| `multiplexer` | Tmux session indicator | `GAUDI_MULTIPLEXER_SHOW` |
+
+### Configuring Segments
+
+Every segment follows the same pattern and supports these variables (replace `SEGMENT` with the segment name in uppercase):
+
+- `GAUDI_SEGMENT_SHOW` — set to `false` to hide without removing from the array
+- `GAUDI_SEGMENT_COLOR` — foreground/background color
+- `GAUDI_SEGMENT_SYMBOL` — Nerd Font icon (Unicode escape)
+- `GAUDI_SEGMENT_PREFIX` / `GAUDI_SEGMENT_SUFFIX` — padding around the content
+
+Set these in your `.bash_profile` before gaudi-bash is sourced, or in a custom component file.
+
+### Customizing the Prompt
+
+To change which segments appear and where, override the arrays in your `.bash_profile`:
+
+```bash
+# Minimal prompt: just cwd and git
+GAUDI_PROMPT_LEFT=(cwd)
+GAUDI_PROMPT_RIGHT=(time user)
+GAUDI_PROMPT_ASYNC=(scm)
+
+# Or add kubecontext to async
+GAUDI_PROMPT_ASYNC=(scm kubecontext docker node)
+```
+
+### Creating a Custom Segment
+
+Create a file `components/themes/gaudi/segments/mysegment.bash`:
+
+```bash
+# shellcheck shell=bash
+
+GAUDI_MYSEGMENT_SHOW="${GAUDI_MYSEGMENT_SHOW=true}"
+GAUDI_MYSEGMENT_COLOR="${GAUDI_MYSEGMENT_COLOR="$GAUDI_GREEN"}"
+GAUDI_MYSEGMENT_SYMBOL="\uf005"
+
+gaudi_mysegment() {
+  [[ $GAUDI_MYSEGMENT_SHOW == false ]] && return
+
+  local content="my info here"
+  [[ -z "$content" ]] && return
+
+  gaudi::section \
+    "$GAUDI_MYSEGMENT_COLOR" \
+    "" \
+    "$GAUDI_MYSEGMENT_SYMBOL" \
+    "$content" \
+    "$GAUDI_PROMPT_DEFAULT_SUFFIX"
+}
+```
+
+Then add `mysegment` to one of the prompt arrays in your config.
+
 ## Command Duration
 
 gaudi-bash can track and display how long each command takes to run. To enable this feature, set the following in your `.bash_profile` (or `.bashrc`) before gaudi-bash is sourced:
