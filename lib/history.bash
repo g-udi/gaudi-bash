@@ -5,7 +5,7 @@ shopt -s histappend
 
 if [[ ${BASH_VERSINFO[0]} -lt 4 ]] || [[ ${BASH_VERSINFO[0]} -eq 4 && ${BASH_VERSINFO[1]} -lt 3 ]]; then
 	_log_warning "Bash version 4.3 introduced the 'unlimited' history size capability."
-	return 1
+	return 0
 fi
 
 # Modify history sizes before changing location to avoid unintentionally

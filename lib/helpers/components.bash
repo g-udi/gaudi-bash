@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # shellcheck shell=bash
 
-export GAUDI_BASH_COMPONENT_TYPES=(plugins aliases completions)
+GAUDI_BASH_COMPONENT_TYPES=(plugins aliases completions)
 
 # Component-specific functions (component is either an alias, a plugin, or a completion).
 

@@ -47,7 +47,7 @@
 #      completions:  git
 #
 
-declare -a search_commands=(enable disable)
+search_commands=(enable disable)
 
 _gaudi-bash-search() {
 	about "searches for given terms amongst gaudi-bash plugins, aliases and completions"

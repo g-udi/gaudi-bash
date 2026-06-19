@@ -17,7 +17,7 @@ function _gaudi-bash_update_and_restart() {
 		popd &> /dev/null || return
 		_gaudi-bash-restart
 	else
-		echo "Error updating gaudi-bash, please, check if your gaudi-bash installation folder (${BASH_IT}) is clean."
+		echo "Error updating gaudi-bash, please check if your gaudi-bash installation folder (${GAUDI_BASH}) is clean."
 	fi
 }
 
@@ -102,7 +102,7 @@ function _gaudi-bash-update() {
 					echo "Not updating…"
 					;;
 				*)
-					echo -e "${echo_orange?}Please choose y or n.${echo_reset_color?}"
+					echo -e "${YELLOW}Please choose y or n.${NC}"
 					;;
 			esac
 		fi

@@ -3,4 +3,4 @@
 # shellcheck disable=SC2155
 
 printf "\n\n%s\n\n" "[[ Running the search tests in single threaded mode ]]"
-find "${GAUDI_TEST_DIRECTORY}"/**/search.bats -exec "$GAUDI_BATS" {} \;
+find "${GAUDI_TEST_DIRECTORY}" -name search.bats -type f -exec "$GAUDI_BATS" {} \;

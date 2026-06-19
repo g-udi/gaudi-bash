@@ -25,7 +25,9 @@ _gaudi-bash-enable() {
 	# Make sure the component is pluralized in case this function is called directly e.g., for unit tests
 	type=$(_gaudi-bash-pluralize-component "$1")
 	type_singular=$(_gaudi-bash-singularize-component "$1")
-	_load_priority="GAUDI_BASH_LOAD_PRIORITY_DEFAULT_${type^^}"
+	local _load_priority type_upper
+	type_upper=$(printf "%s" "$type" | tr "[:lower:]" "[:upper:]")
+	_load_priority="GAUDI_BASH_LOAD_PRIORITY_DEFAULT_${type_upper}"
 	component="$2"
 	load_priority="${!_load_priority}"
 
@@ -55,9 +57,14 @@ _gaudi-bash-enable() {
 		[[ -z "$_component" ]] && printf "${CYAN}$component ${RED}%s ${GREEN}$type_singular${NC}\n" "does not appear to be an available" && return 1
 		_component=$(basename "$_component")
 
-		local enabled_component
+		local enabled_component existing_component
 
-		enabled_component=$(command compgen -G "${GAUDI_BASH}/components/enabled/[0-9][0-9][0-9]$GAUDI_BASH_LOAD_PRIORITY_SEPARATOR$_component" 2> /dev/null | head -1)
+		enabled_component=""
+		for existing_component in "${GAUDI_BASH}"/components/enabled/[0-9][0-9][0-9]"$GAUDI_BASH_LOAD_PRIORITY_SEPARATOR$_component"; do
+			[[ -e "$existing_component" ]] || continue
+			enabled_component="$existing_component"
+			break
+		done
 		if [[ -n "$enabled_component" ]]; then
 			printf "${GREEN}$type_singular ${CYAN}$component${NC} %s\n" "is already enabled"
 			return 0

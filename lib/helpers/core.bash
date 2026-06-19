@@ -42,7 +42,9 @@ _gaudi-bash-describe() {
 	component_type="$(_gaudi-bash-singularize-component "$component")"
 	mode=${2:-"all"}
 
-	printf "\n%-20s%-10s%s\n" "${component_type^}" 'Enabled?' '  Description'
+	local component_type_label
+	component_type_label="$(printf "%s" "$component_type" | awk '{print toupper(substr($0, 1, 1)) substr($0, 2)}')"
+	printf "\n%-20s%-10s%s\n" "$component_type_label" 'Enabled?' '  Description'
 	printf "%*s\n" "${COLUMNS:-$(tput cols 2> /dev/null || echo 80)}" '' | tr ' ' -
 
 	file=$(_gaudi-bash-component-cache-add "$component-enabled")

@@ -9,7 +9,9 @@
 # pathmunge /path/to/dir after is equivalent to PATH=$PATH:/path/to/dir
 if ! type pathmunge > /dev/null 2>&1; then
 	pathmunge() {
-		IFS=':' local -a 'a=($1)'
+		local IFS=':'
+		local -a a
+		read -r -a a <<< "$1"
 		local i=${#a[@]}
 		while [[ $i -gt 0 ]]; do
 			i=$((i - 1))

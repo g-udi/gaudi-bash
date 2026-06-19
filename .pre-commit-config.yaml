@@ -32,12 +32,11 @@ repos:
         language: system
         files: "\\.sh$"
         types: [file]
-        exclude: ^(^test/fixtures/|^template/)
+        exclude: ^(test/fixtures/|template/)
       - id: shellcheck-audit
         name: Check .bash files against gaudi-bash requirements (shellcheck shebang)
-        exclude: "test/test_helper.bash"
         entry: ./hooks/shellcheck-audit.sh
         language: system
         files: "\\.bash$"
         types: [file]
-        exclude: ^(^test/fixtures/|^template/)
+        exclude: ^(test/fixtures/|test/test_helper\\.bash|template/)

@@ -5,7 +5,7 @@
 # Initialize Bash It
 GAUDI_BASH_LOG_PREFIX="CORE"
 : "${GAUDI_BASH:=${BASH_SOURCE%/*}}"
-: "${GAUDI_BASH_BASHRC:=${BASH_SOURCE[${#BASH_SOURCE[@]}-1]}}"
+: "${GAUDI_BASH_BASHRC:=${BASH_SOURCE[${#BASH_SOURCE[@]} - 1]}}"
 
 case $OSTYPE in
 	darwin*)
@@ -33,13 +33,11 @@ source "${GAUDI_BASH}/scripts/loader.bash"
 
 # Load custom aliases, completions, plugins
 : "${GAUDI_BASH_CUSTOM:=${GAUDI_BASH}/components/custom}"
-_gaudi_bash_glob_save=$(shopt -p nullglob globstar 2> /dev/null)
-shopt -s nullglob globstar
-for custom in "${GAUDI_BASH_CUSTOM}"/*.bash "${GAUDI_BASH_CUSTOM}"/**/*.bash; do
-	_log_component "$custom" "custom" && source "$custom"
-done
-eval "$_gaudi_bash_glob_save"
-unset _gaudi_bash_glob_save
+if [[ -d "$GAUDI_BASH_CUSTOM" ]]; then
+	while IFS= read -r custom; do
+		_log_component "$custom" "custom" && source "$custom"
+	done < <(find "$GAUDI_BASH_CUSTOM" -type f -name '*.bash' | sort)
+fi
 
 # Load the bash theme
 source "${GAUDI_BASH}/lib/appearance.bash"
