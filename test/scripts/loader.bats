@@ -169,3 +169,35 @@ local_setup() {
 	assert_success
 	assert_line --index 0 "alias test_alias='a'"
 }
+
+@test "gaudi-bash loader: load local custom scripts from multiple custom paths" {
+	local custom_one custom_two
+	custom_one="${BATS_TEST_TMPDIR}/custom-one"
+	custom_two="${BATS_TEST_TMPDIR}/custom-two"
+	mkdir -p "$custom_one" "$custom_two"
+
+	cat > "$custom_one/100-local.aliases.bash" <<'CUSTOM'
+alias local_custom_one='echo one'
+CUSTOM
+
+	cat > "$custom_two/200-local.aliases.bash" <<'CUSTOM'
+alias local_custom_two='echo two'
+CUSTOM
+
+	export GAUDI_BASH_CUSTOM_PATHS="${custom_one}:${custom_two}"
+
+	run alias local_custom_one &> /dev/null
+	assert_failure
+	run alias local_custom_two &> /dev/null
+	assert_failure
+
+	load "$GAUDI_BASH/gaudi_bash.sh"
+
+	run alias local_custom_one &> /dev/null
+	assert_success
+	assert_line --index 0 "alias local_custom_one='echo one'"
+
+	run alias local_custom_two &> /dev/null
+	assert_success
+	assert_line --index 0 "alias local_custom_two='echo two'"
+}

@@ -73,8 +73,19 @@ function _gaudi-bash-restart() {
 	about 'Re-executes bash (using exec), stronger than reload'
 	group "gaudi-bash:core"
 
+	local restart_shell="${GAUDI_BASH_RESTART_SHELL:-${BASH:-}}"
+
+	if [[ -z "$restart_shell" || ! -x "$restart_shell" ]]; then
+		restart_shell="$(command -v bash 2> /dev/null || true)"
+	fi
+
+	if [[ -z "$restart_shell" || ! -x "$restart_shell" ]]; then
+		_log_error "Unable to find a Bash executable for restart"
+		return 1
+	fi
+
 	_gaudi-bash-component-cache-clean
-	exec bash --login
+	exec "$restart_shell" --login
 }
 
 # @function     _gaudi-bash-help

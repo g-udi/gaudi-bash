@@ -10,6 +10,7 @@ bats
 
 # gaudi-bash enabled items and custom and temporary files
 components/enabled
+components/custom
 tmp/
 test/gaudi-bash/
 

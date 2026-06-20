@@ -116,6 +116,7 @@ gaudi-bash/
     plugins/lib/         # Plugin definitions
     themes/              # Prompt themes
     enabled/             # Symlinks to enabled components
+    custom/              # Untracked local scripts loaded after enabled components
   scripts/
     loader.bash          # Loads all enabled components at startup
   bin/                   # Vendored dependencies (bats, composure, preexec)
@@ -130,6 +131,35 @@ Key design principles:
 - Consistent coding style: function definitions, comments and variable naming follow a single convention.
 - Compliance with [shellcheck](http://shellcheck.net) wherever possible.
 - Comprehensive unit tests (via [bats](https://github.com/bats-core/bats-core)) for all core functions.
+
+## Local Untracked Customizations
+
+Use `components/custom/` for machine-local aliases, functions, exports, and plugin-like behavior that should not be committed.
+
+```bash
+mkdir -p "$GAUDI_BASH/components/custom"
+cat > "$GAUDI_BASH/components/custom/100-local.aliases.bash" <<'EOF'
+# shellcheck shell=bash
+alias work='cd ~/Projects'
+alias kctx='kubectl config current-context'
+EOF
+```
+
+Files under `components/custom/` are ignored by git and are sourced after enabled components. Prefix filenames with numbers if you need deterministic ordering, for example `100-env.bash`, `200-aliases.bash`, and `900-overrides.bash`.
+
+You can also keep local scripts outside the repository:
+
+```bash
+export GAUDI_BASH_CUSTOM="$HOME/.config/gaudi-bash/custom"
+```
+
+Or load several custom directories:
+
+```bash
+export GAUDI_BASH_CUSTOM_PATHS="$GAUDI_BASH/components/custom:$HOME/.config/gaudi-bash/private"
+```
+
+Set `GAUDI_BASH_CUSTOM` or `GAUDI_BASH_CUSTOM_PATHS` in `.bash_profile` before sourcing `gaudi_bash.sh`.
 
 ## Components
 

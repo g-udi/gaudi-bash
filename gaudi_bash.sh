@@ -33,11 +33,13 @@ source "${GAUDI_BASH}/scripts/loader.bash"
 
 # Load custom aliases, completions, plugins
 : "${GAUDI_BASH_CUSTOM:=${GAUDI_BASH}/components/custom}"
-if [[ -d "$GAUDI_BASH_CUSTOM" ]]; then
+: "${GAUDI_BASH_CUSTOM_PATHS:=$GAUDI_BASH_CUSTOM}"
+while IFS= read -r custom_dir; do
+	[[ -n "$custom_dir" && -d "$custom_dir" ]] || continue
 	while IFS= read -r custom; do
 		_log_component "$custom" "custom" && source "$custom"
-	done < <(find "$GAUDI_BASH_CUSTOM" -type f -name '*.bash' | sort)
-fi
+	done < <(find "$custom_dir" -type f -name '*.bash' | sort)
+done < <(printf "%s\n" "$GAUDI_BASH_CUSTOM_PATHS" | tr ':' '\n')
 
 # Load the bash theme
 source "${GAUDI_BASH}/lib/appearance.bash"
