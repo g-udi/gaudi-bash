@@ -62,7 +62,7 @@ _gaudi-bash-singularize-component() {
 
 # @function     _gaudi-bash-component-help
 # @description  show the about description for a component
-#               if no component is passed then the list of all components of the passed type will be show (proxy for gaudi-bash show <component>)
+#               if no component is passed then the list of all components of the passed type will be show (proxy for gbash show <component>)
 #               the function caches the first call to speed up search and grep after the first run
 # @param $1     type: the component type (plugin, alias, completion)
 # @param $2     component: the component name

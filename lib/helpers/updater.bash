@@ -108,7 +108,7 @@ function _gaudi-bash-update() {
 		fi
 	else
 		if [[ "${version}" == "stable" ]]; then
-			echo "You're on the latest stable version. If you want to check out the latest 'dev' version, please run \"gaudi-bash update dev\""
+			echo "You're on the latest stable version. If you want to check out the latest 'dev' version, please run \"gbash update dev\""
 		else
 			echo "gaudi-bash is up to date, nothing to do!"
 		fi

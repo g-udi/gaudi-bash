@@ -54,7 +54,7 @@ local_setup() {
 
 @test "gaudi-bash helpers: _gaudi-bash-enable: should enable multiple components passed" {
 
-	run gaudi-bash enable plugin "node" "nvm"
+	run gbash enable plugin "node" "nvm"
 	assert_line --index 0 --partial "enabled with priority"
 	assert_line --index 1 --partial "enabled with priority"
 	assert_link_exist "$GAUDI_BASH/components/enabled/250___node.plugins.bash"
@@ -73,10 +73,10 @@ local_setup() {
 
 @test "gaudi-bash helpers: _gaudi-bash-enable: should handle properly enabling a set of mixed existing and non-existing components" {
 
-	run gaudi-bash enable plugin "node"
+	run gbash enable plugin "node"
 	assert_line --index 0 --partial "enabled with priority"
 
-	run gaudi-bash enable plugin node INVALID nvm
+	run gbash enable plugin node INVALID nvm
 	assert_line --index 0 --partial "is already enabled"
 	assert_line --index 1 --partial "does not appear to be an available"
 	assert_line --index 2 --partial "enabled with priority"

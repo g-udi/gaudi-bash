@@ -75,10 +75,10 @@ _gaudi-bash-describe() {
 		printf "\n%b\n" "gaudi-bash allows you easily enable/disable components:
 
 to enable ${GREEN}$component_type${NC}, do:
-gaudi-bash enable ${GREEN}$component_type${NC}  <${GREEN}$component_type${NC} name> [${GREEN}$component_type${NC} name]... -or- $ gaudi-bash enable ${GREEN}$component${NC} all
+gbash enable ${GREEN}$component_type${NC}  <${GREEN}$component_type${NC} name> [${GREEN}$component_type${NC} name]... -or- $ gbash enable ${GREEN}$component${NC} all
 
 to disable ${GREEN}$component_type${NC}, do:
-gaudi-bash disable ${GREEN}$component_type${NC} <${GREEN}$component_type${NC} name> [${GREEN}$component_type${NC} name]... -or- $ gaudi-bash disable ${GREEN}$component${NC} all
+gbash disable ${GREEN}$component_type${NC} <${GREEN}$component_type${NC} name> [${GREEN}$component_type${NC} name]... -or- $ gbash disable ${GREEN}$component${NC} all
 "
 	fi
 }

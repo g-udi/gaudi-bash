@@ -34,7 +34,7 @@ local_setup() {
 
 @test "gaudi-bash-helpers: help: _gaudi-bash-help list aliases with ag aliases enabled" {
 
-	run gaudi-bash enable alias "ag"
+	run gbash enable alias "ag"
 	assert_link_exist "$GAUDI_BASH/components/enabled/150___ag.aliases.bash"
 
 	run __help-list-aliases "$GAUDI_BASH/components/enabled/150___ag.aliases.bash"
@@ -43,7 +43,7 @@ local_setup() {
 
 @test "gaudi-bash-helpers: help: _gaudi-bash-help list aliases with gaudi-bash aliases enabled" {
 
-	run gaudi-bash enable alias "gaudi-bash"
+	run gbash enable alias "gaudi-bash"
 	assert_link_exist "$GAUDI_BASH/components/enabled/150___gaudi-bash.aliases.bash"
 
 	run __help-list-aliases "$GAUDI_BASH/components/enabled/150___gaudi-bash.aliases.bash"
@@ -52,7 +52,7 @@ local_setup() {
 
 @test "gaudi-bash-helpers: help: _gaudi-bash-help list aliases with docker-compose aliases enabled" {
 
-	run gaudi-bash enable alias "docker-compose"
+	run gbash enable alias "docker-compose"
 	assert_link_exist "$GAUDI_BASH/components/enabled/150___docker-compose.aliases.bash"
 
 	run __help-list-aliases "$GAUDI_BASH/components/enabled/150___docker-compose.aliases.bash"
@@ -61,7 +61,7 @@ local_setup() {
 
 @test "gaudi-bash-helpers: help: _gaudi-bash-help list aliases with ag aliases enabled in global directory" {
 
-	run gaudi-bash enable alias "ag"
+	run gbash enable alias "ag"
 	assert_link_exist "$GAUDI_BASH/components/enabled/150___ag.aliases.bash"
 
 	run __help-list-aliases "$GAUDI_BASH/components/enabled/150___ag.aliases.bash"
@@ -70,11 +70,11 @@ local_setup() {
 
 @test "gaudi-bash-helpers: help: _gaudi-bash-help aliases with multiple enabled aliases" {
 
-	run gaudi-bash enable alias "ag"
+	run gbash enable alias "ag"
 	assert_line --index 0 --partial 'enabled with priority'
 	assert_link_exist "$GAUDI_BASH/components/enabled/150___ag.aliases.bash"
 
-	run gaudi-bash enable plugin "aws"
+	run gbash enable plugin "aws"
 	assert_line --index 0 --partial 'enabled with priority'
 	assert_link_exist "$GAUDI_BASH/components/enabled/250___aws.plugins.bash"
 
