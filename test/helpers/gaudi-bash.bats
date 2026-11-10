@@ -84,7 +84,7 @@ _check-results-count() {
 	run _check-results-count plugin all
 	assert_success
 
-	run gaudi-bash disable plugins all
+	run gbash disable plugins all
 	run _check-results-count plugins
 	assert_success
 }
@@ -96,7 +96,7 @@ _check-results-count() {
 	run _check-results-count alias all
 	assert_success
 
-	run gaudi-bash disable all
+	run gbash disable all
 	run _check-results-count aliases
 	assert_success
 }
@@ -108,7 +108,7 @@ _check-results-count() {
 	run _check-results-count completions all
 	assert_success
 
-	run gaudi-bash disable all
+	run gbash disable all
 	run _check-results-count completions
 	assert_success
 }

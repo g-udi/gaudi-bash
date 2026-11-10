@@ -47,25 +47,25 @@
 
 # @test "gaudi-bash completion: doctor - show options" {
 
-# 	run __check_completion 'gaudi-bash doctor '
+# 	run __check_completion 'gbash doctor '
 # 	assert_line --index 0 "errors warnings all"
 # }
 
 # @test "gaudi-bash completion: help - show options" {
 
-# 	run __check_completion 'gaudi-bash help '
+# 	run __check_completion 'gbash help '
 # 	assert_line --index 0 "aliases completions migrate plugins update"
 # }
 
 # @test "gaudi-bash completion: update - show no options" {
 
-# 	run __check_completion 'gaudi-bash update '
+# 	run __check_completion 'gbash update '
 # 	refute_output
 # }
 
 # @test "gaudi-bash completion: show options" {
 
-# 	run __check_completion 'gaudi-bash '
+# 	run __check_completion 'gbash '
 # 	assert_line --index 0 "version help doctor reload restart search update backup restore disable enable show"
 # }
 
@@ -94,39 +94,39 @@
 
 # @test "gaudi-bash completion: show - show options" {
 
-# 	run __check_completion 'gaudi-bash show '
+# 	run __check_completion 'gbash show '
 # 	assert_line --index 0 "aliases completions plugins"
 # }
 
 # @test "gaudi-bash completion: disable - show options" {
 
-# 	run __check_completion 'gaudi-bash disable '
+# 	run __check_completion 'gbash disable '
 # 	assert_line --index 0 "alias completion plugin"
 # }
 
 # @test "gaudi-bash completion: disable - show options a" {
 
-# 	run __check_completion 'gaudi-bash disable a'
+# 	run __check_completion 'gbash disable a'
 # 	assert_line --index 0 "alias"
 # }
 
 # @test "gaudi-bash completion: disable - provide nothing when atom is not enabled" {
 
-# 	run __check_completion 'gaudi-bash disable alias ato'
+# 	run __check_completion 'gbash disable alias ato'
 # 	refute_output
 # }
 
 # @test "gaudi-bash completion: disable - provide all when atom is not enabled" {
-# 	run __check_completion 'gaudi-bash disable alias a'
+# 	run __check_completion 'gbash disable alias a'
 # 	assert_line --index 0 "all"
 # }
 
 # # @test "gaudi-bash completion: disable - provide the a* aliases when atom is enabled with the old location and name" {
 
-# #   run gaudi-bash enable alias atom
+# #   run gbash enable alias atom
 # #   assert_link_exist $GAUDI_BASH/components/enabled/150___atom.aliases.bash
 
-# #   run __check_completion 'gaudi-bash disable alias a'
+# #   run __check_completion 'gbash disable alias a'
 # #   assert_line --index 0 "all atom"
 # # }
 
@@ -137,7 +137,7 @@
 # #   ln -s $GAUDI_BASH/completion/available/apm.completion.bash $GAUDI_BASH/completion/enabled/350---apm.completion.bash
 # #   assert_link_exist "$GAUDI_BASH/completion/enabled/350---apm.completion.bash"
 
-# #   run __check_completion 'gaudi-bash disable alias a'
+# #   run __check_completion 'gbash disable alias a'
 # #   assert_line --index 0 "all atom"
 # # }
 
@@ -148,7 +148,7 @@
 # #   ln -s $GAUDI_BASH/completion/available/apm.completion.bash $GAUDI_BASH/enabled/350---apm.completion.bash
 # #   assert_link_exist "$GAUDI_BASH/enabled/350---apm.completion.bash"
 
-# #   run __check_completion 'gaudi-bash disable alias a'
+# #   run __check_completion 'gbash disable alias a'
 # #   assert_line --index 0 "all atom"
 # # }
 
@@ -159,7 +159,7 @@
 # #   ln -s $GAUDI_BASH/plugins/available/docker-machine.plugin.bash $GAUDI_BASH/plugins/enabled/docker-machine.plugin.bash
 # #   assert_link_exist "$GAUDI_BASH/plugins/enabled/docker-machine.plugin.bash"
 
-# #   run __check_completion 'gaudi-bash disable plugin docker'
+# #   run __check_completion 'gbash disable plugin docker'
 # #   assert_line --index 0 "docker-machine"
 # # }
 
@@ -170,7 +170,7 @@
 # #   ln -s $GAUDI_BASH/plugins/available/docker-machine.plugin.bash $GAUDI_BASH/plugins/enabled/350---docker-machine.plugin.bash
 # #   assert_link_exist "$GAUDI_BASH/plugins/enabled/350---docker-machine.plugin.bash"
 
-# #   run __check_completion 'gaudi-bash disable plugin docker'
+# #   run __check_completion 'gbash disable plugin docker'
 # #   assert_line --index 0 "docker-machine"
 # # }
 
@@ -181,7 +181,7 @@
 # #   ln -s $GAUDI_BASH/plugins/available/docker-machine.plugin.bash $GAUDI_BASH/enabled/350---docker-machine.plugin.bash
 # #   assert_link_exist "$GAUDI_BASH/enabled/350---docker-machine.plugin.bash"
 
-# #   run __check_completion 'gaudi-bash disable plugin docker'
+# #   run __check_completion 'gbash disable plugin docker'
 # #   assert_line --index 0 "docker-machine"
 # # }
 
@@ -192,7 +192,7 @@
 # #   ln -s $GAUDI_BASH/plugins/available/todo.plugin.bash $GAUDI_BASH/plugins/enabled/todo.plugin.bash
 # #   assert_link_exist "$GAUDI_BASH/plugins/enabled/todo.plugin.bash"
 
-# #   run __check_completion 'gaudi-bash disable alias to'
+# #   run __check_completion 'gbash disable alias to'
 # #   assert_line --index 0 "todo.txt-cli"
 # # }
 
@@ -203,7 +203,7 @@
 # #   ln -s $GAUDI_BASH/plugins/available/todo.plugin.bash $GAUDI_BASH/plugins/enabled/350---todo.plugin.bash
 # #   assert_link_exist "$GAUDI_BASH/plugins/enabled/350---todo.plugin.bash"
 
-# #   run __check_completion 'gaudi-bash disable alias to'
+# #   run __check_completion 'gbash disable alias to'
 # #   assert_line --index 0 "todo.txt-cli"
 # # }
 
@@ -214,27 +214,27 @@
 # #   ln -s $GAUDI_BASH/plugins/available/todo.plugin.bash $GAUDI_BASH/enabled/350---todo.plugin.bash
 # #   assert_link_exist "$GAUDI_BASH/enabled/350---todo.plugin.bash"
 
-# #   run __check_completion 'gaudi-bash disable alias to'
+# #   run __check_completion 'gbash disable alias to'
 # #   assert_line --index 0 "todo.txt-cli"
 # # }
 
 # # @test "gaudi-bash completion: enable - show options" {
-# #   run __check_completion 'gaudi-bash enable '
+# #   run __check_completion 'gbash enable '
 # #   assert_line --index 0 "alias completion plugin"
 # # }
 
 # # @test "gaudi-bash completion: enable - show options a" {
-# #   run __check_completion 'gaudi-bash enable a'
+# #   run __check_completion 'gbash enable a'
 # #   assert_line --index 0 "alias"
 # # }
 
 # # @test "gaudi-bash completion: enable - provide the atom aliases when not enabled" {
-# #   run __check_completion 'gaudi-bash enable alias ato'
+# #   run __check_completion 'gbash enable alias ato'
 # #   assert_line --index 0 "atom"
 # # }
 
 # # @test "gaudi-bash completion: enable - provide the a* aliases when not enabled" {
-# #   run __check_completion 'gaudi-bash enable alias a'
+# #   run __check_completion 'gbash enable alias a'
 # #   assert_line --index 0 "all ag ansible applications apt atom"
 # # }
 
@@ -242,7 +242,7 @@
 # #   ln -s $GAUDI_BASH/aliases/available/atom.aliases.bash $GAUDI_BASH/aliases/enabled/atom.aliases.bash
 # #   assert_link_exist "$GAUDI_BASH/aliases/enabled/atom.aliases.bash"
 
-# #   run __check_completion 'gaudi-bash enable alias a'
+# #   run __check_completion 'gbash enable alias a'
 # #   assert_line --index 0 "all ag ansible applications apt"
 # # }
 
@@ -250,7 +250,7 @@
 # #   ln -s $GAUDI_BASH/aliases/available/atom.aliases.bash $GAUDI_BASH/aliases/enabled/150---atom.aliases.bash
 # #   assert_link_exist "$GAUDI_BASH/aliases/enabled/150---atom.aliases.bash"
 
-# #   run __check_completion 'gaudi-bash enable alias a'
+# #   run __check_completion 'gbash enable alias a'
 # #   assert_line --index 0 "all ag ansible applications apt"
 # # }
 
@@ -258,7 +258,7 @@
 # #   ln -s $GAUDI_BASH/aliases/available/atom.aliases.bash $GAUDI_BASH/enabled/150---atom.aliases.bash
 # #   assert_link_exist "$GAUDI_BASH/enabled/150---atom.aliases.bash"
 
-# #   run __check_completion 'gaudi-bash enable alias a'
+# #   run __check_completion 'gbash enable alias a'
 # #   assert_line --index 0 "all ag ansible applications apt"
 # # }
 
@@ -266,7 +266,7 @@
 # #   ln -s $GAUDI_BASH/aliases/available/docker-compose.aliases.bash $GAUDI_BASH/aliases/enabled/docker-compose.aliases.bash
 # #   assert_link_exist "$GAUDI_BASH/aliases/enabled/docker-compose.aliases.bash"
 
-# #   run __check_completion 'gaudi-bash enable plugin docker'
+# #   run __check_completion 'gbash enable plugin docker'
 # #   assert_line --index 0 "docker-compose docker-machine docker"
 # # }
 
@@ -274,7 +274,7 @@
 # #   ln -s $GAUDI_BASH/aliases/available/docker-compose.aliases.bash $GAUDI_BASH/aliases/enabled/150---docker-compose.aliases.bash
 # #   assert_link_exist "$GAUDI_BASH/aliases/enabled/150---docker-compose.aliases.bash"
 
-# #   run __check_completion 'gaudi-bash enable plugin docker'
+# #   run __check_completion 'gbash enable plugin docker'
 # #   assert_line --index 0 "docker-compose docker-machine docker"
 # # }
 
@@ -282,7 +282,7 @@
 # #   ln -s $GAUDI_BASH/aliases/available/docker-compose.aliases.bash $GAUDI_BASH/enabled/150---docker-compose.aliases.bash
 # #   assert_link_exist "$GAUDI_BASH/enabled/150---docker-compose.aliases.bash"
 
-# #   run __check_completion 'gaudi-bash enable plugin docker'
+# #   run __check_completion 'gbash enable plugin docker'
 # #   assert_line --index 0 "docker-compose docker-machine docker"
 # # }
 
@@ -290,7 +290,7 @@
 # #   ln -s $GAUDI_BASH/aliases/available/docker-compose.aliases.bash $GAUDI_BASH/aliases/enabled/docker-compose.aliases.bash
 # #   assert_link_exist "$GAUDI_BASH/aliases/enabled/docker-compose.aliases.bash"
 
-# #   run __check_completion 'gaudi-bash enable completion docker'
+# #   run __check_completion 'gbash enable completion docker'
 # #   assert_line --index 0 "docker docker-compose docker-machine"
 # # }
 
@@ -298,7 +298,7 @@
 # #   ln -s $GAUDI_BASH/aliases/available/docker-compose.aliases.bash $GAUDI_BASH/aliases/enabled/150---docker-compose.aliases.bash
 # #   assert_link_exist "$GAUDI_BASH/aliases/enabled/150---docker-compose.aliases.bash"
 
-# #   run __check_completion 'gaudi-bash enable completion docker'
+# #   run __check_completion 'gbash enable completion docker'
 # #   assert_line --index 0 "docker docker-compose docker-machine"
 # # }
 
@@ -306,7 +306,7 @@
 # #   ln -s $GAUDI_BASH/aliases/available/docker-compose.aliases.bash $GAUDI_BASH/enabled/150---docker-compose.aliases.bash
 # #   assert_link_exist "$GAUDI_BASH/enabled/150---docker-compose.aliases.bash"
 
-# #   run __check_completion 'gaudi-bash enable completion docker'
+# #   run __check_completion 'gbash enable completion docker'
 # #   assert_line --index 0 "docker docker-compose docker-machine"
 # # }
 
@@ -314,7 +314,7 @@
 # #   ln -s $GAUDI_BASH/plugins/available/todo.plugin.bash $GAUDI_BASH/plugins/enabled/todo.plugin.bash
 # #   assert_link_exist "$GAUDI_BASH/plugins/enabled/todo.plugin.bash"
 
-# #   run __check_completion 'gaudi-bash enable alias to'
+# #   run __check_completion 'gbash enable alias to'
 # #   assert_line --index 0 "todo.txt-cli"
 # # }
 
@@ -322,7 +322,7 @@
 # #   ln -s $GAUDI_BASH/plugins/available/todo.plugin.bash $GAUDI_BASH/plugins/enabled/350---todo.plugin.bash
 # #   assert_link_exist "$GAUDI_BASH/plugins/enabled/350---todo.plugin.bash"
 
-# #   run __check_completion 'gaudi-bash enable alias to'
+# #   run __check_completion 'gbash enable alias to'
 # #   assert_line --index 0 "todo.txt-cli"
 # # }
 
@@ -330,6 +330,6 @@
 # #   ln -s $GAUDI_BASH/plugins/available/todo.plugin.bash $GAUDI_BASH/enabled/350---todo.plugin.bash
 # #   assert_link_exist "$GAUDI_BASH/enabled/350---todo.plugin.bash"
 
-# #   run __check_completion 'gaudi-bash enable alias to'
+# #   run __check_completion 'gbash enable alias to'
 # #   assert_line --index 0 "todo.txt-cli"
 # # }

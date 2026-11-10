@@ -93,11 +93,11 @@ function _gaudi-bash-restart() {
 # @param $1     type: component type of: aliases, plugins, completions
 # @param $2     component: component name to show help for
 # @return       help list for each component
-#               completions: show list of completion components in the gaudi-bash show table
+#               completions: show list of completion components in the gbash show table
 #               aliases: show list of aliases in either 1) all enabled aliases if no alias was passed or 2) a specific alias
 #               plugins: show function descriptions of either 1) all enabled plugins if no plugin was passed or 2) a specific plugin
 _gaudi-bash-help() {
-	! __check-function-parameters "$1" && reference gaudi-bash && return 0
+	! __check-function-parameters "$1" && reference gbash && return 0
 
 	local type component
 
@@ -128,7 +128,7 @@ _gaudi-bash-show() {
 # @function     _gaudi-bash-backup
 # @description  backs up enabled components (plugins, aliases, completions)
 #               the function writes "enable" commands into a file in $GAUDI_BASH/tmp/enabled.gaudi-bash.backup
-# @return       $GAUDI_BASH/tmp/enabled.gaudi-bash.backup file with 'gaudi-bash enable' commands
+# @return       $GAUDI_BASH/tmp/enabled.gaudi-bash.backup file with 'gbash enable' commands
 _gaudi-bash-backup() {
 	about "backs up enabled components (plugins, aliases, completions)"
 	group "gaudi-bash:core"
@@ -146,7 +146,7 @@ _gaudi-bash-backup() {
 		_component=${_component%%.*}
 
 		echo "Backing up $_type: ${_component}"
-		printf "%s\n" "gaudi-bash enable ${_type} ${_component}" >> "${GAUDI_BASH}/tmp/enabled.gaudi-bash.backup"
+		printf "%s\n" "gbash enable ${_type} ${_component}" >> "${GAUDI_BASH}/tmp/enabled.gaudi-bash.backup"
 
 	done
 }
@@ -154,6 +154,7 @@ _gaudi-bash-backup() {
 # @function     _gaudi-bash-restore
 # @description  restores enabled gaudi-bash components
 #               the function gets the list of enabled commands from the backup file in $GAUDI_BASH/tmp/enabled.gaudi-bash.backup
+#               entries written by older versions (prefixed with `gaudi-bash enable`) are accepted as well as `gbash enable`
 # @return       status message to indicate the outcome
 _gaudi-bash-restore() {
 	about "restores enabled components (plugins, aliases, completions)"
@@ -163,36 +164,41 @@ _gaudi-bash-restore() {
 
 	while IFS= read -r line; do
 		# Validate that the line matches the expected format before executing
-		if [[ "$line" =~ ^gaudi-bash\ enable\ (alias|plugin|completion)\ [a-zA-Z0-9_-]+$ ]]; then
-			$line
+		if [[ "$line" =~ ^(gbash|gaudi-bash)\ enable\ (alias|plugin|completion)\ ([a-zA-Z0-9_-]+)$ ]]; then
+			gbash enable "${BASH_REMATCH[2]}" "${BASH_REMATCH[3]}"
 		else
 			_log_warning "Skipping invalid backup entry: $line"
 		fi
 	done < "${GAUDI_BASH}/tmp/enabled.gaudi-bash.backup"
 }
 
-gaudi-bash() {
+# Drop the stale `gbash` alias and `gaudi-bash` function left by older versions in a running shell, so the
+# alias is not expanded while defining the function below and the previous command name does not linger
+unalias gbash 2> /dev/null || true
+unset -f gaudi-bash 2> /dev/null || true
+
+gbash() {
 	about 'provides a solid framework for using, developing and maintaining shell scripts and custom commands for your daily work'
 	param '1: verb [one of: version | help | doctor | reload | restart | search | update | backup | restore | profile | disable | enable | show ]] '
 	param '2: component type [one of: alias(es) | completion(s) | plugin(s) ]] or search term(s) or update mode [stable | dev | all]'
 	param '3: specific component [optional]'
 
-	example '$ gaudi-bash show plugins'
-	example '$ gaudi-bash help aliases'
-	example '$ gaudi-bash enable plugin git [tmux]...'
-	example '$ gaudi-bash disable alias hg [tmux]...'
-	example '$ gaudi-bash update'
-	example '$ gaudi-bash update all'
-	example '$ gaudi-bash backup'
-	example '$ gaudi-bash help plugins'
-	example '$ gaudi-bash search [-|@]term1 [-|@]term2 ... [[ -e/--enable ]] [[ -d/--disable ]] [[ -r/--refresh ]] [[ -c/--no-color ]]'
-	example '$ gaudi-bash version'
-	example '$ gaudi-bash reload'
-	example '$ gaudi-bash doctor errors|warnings|all'
-	example '$ gaudi-bash profile save mysetup'
-	example '$ gaudi-bash profile load mysetup'
-	example '$ gaudi-bash profile list'
-	example '$ gaudi-bash profile rm mysetup'
+	example '$ gbash show plugins'
+	example '$ gbash help aliases'
+	example '$ gbash enable plugin git [tmux]...'
+	example '$ gbash disable alias hg [tmux]...'
+	example '$ gbash update'
+	example '$ gbash update all'
+	example '$ gbash backup'
+	example '$ gbash help plugins'
+	example '$ gbash search [-|@]term1 [-|@]term2 ... [[ -e/--enable ]] [[ -d/--disable ]] [[ -r/--refresh ]] [[ -c/--no-color ]]'
+	example '$ gbash version'
+	example '$ gbash reload'
+	example '$ gbash doctor errors|warnings|all'
+	example '$ gbash profile save mysetup'
+	example '$ gbash profile load mysetup'
+	example '$ gbash profile list'
+	example '$ gbash profile rm mysetup'
 
 	local verb=${1:-}
 	shift
@@ -245,7 +251,7 @@ gaudi-bash() {
 			return
 			;;
 		*)
-			reference gaudi-bash
+			reference gbash
 			return
 			;;
 	esac
@@ -259,6 +265,3 @@ gaudi-bash() {
 	fi
 
 }
-
-# Short alias for gaudi-bash command
-alias gbash='gaudi-bash'

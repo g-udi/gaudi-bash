@@ -199,7 +199,7 @@ _gaudi-bash-profile() {
 			;;
 		*)
 			printf "${RED}%s${NC}\n" "Unknown profile action: ${action:-<none>}"
-			printf "%s\n" "Usage: gaudi-bash profile [save|load|list|rm] [name]"
+			printf "%s\n" "Usage: gbash profile [save|load|list|rm] [name]"
 			return 1
 			;;
 	esac

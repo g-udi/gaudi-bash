@@ -198,10 +198,10 @@ ${GREEN}Installation finished successfully! Enjoy gaudi-bash!${NC}
 ${MAGENTA}To start using it, open a new tab or 'source ${HOME}/$CONFIG_FILE'${NC}
 
 To show the available aliases/completions/plugins, type one of the following:
-  gaudi-bash show
-  gaudi-bash show aliases
-  gaudi-bash show completions
-  gaudi-bash show plugins
+  gbash show
+  gbash show aliases
+  gbash show completions
+  gbash show plugins
 
 To avoid issues and to keep your shell lean, please enable only features you really want to use.
 Enabling everything can lead to issues

@@ -61,13 +61,13 @@ fi
 To update gaudi-bash to the latest version, simply run:
 
 ```bash
-gaudi-bash update
+gbash update
 ```
 
-gaudi-bash separates the core engine from the components (plugins, aliases, completions, themes). The `gaudi-bash update` command pulls the latest **core** code. If you would like to also pull the latest components, pass the `all` parameter:
+gaudi-bash separates the core engine from the components (plugins, aliases, completions, themes). The `gbash update` command pulls the latest **core** code. If you would like to also pull the latest components, pass the `all` parameter:
 
 ```bash
-gaudi-bash update all
+gbash update all
 ```
 
 ### Uninstalling
@@ -90,7 +90,7 @@ gaudi-bash is structured around a clear separation between the core engine and u
 gaudi-bash/
   gaudi_bash.sh          # Entry point, sourced from your .bash_profile/.bashrc
   lib/
-    gaudi-bash.bash      # Main command dispatcher (gaudi-bash show, enable, disable, ...)
+    gaudi-bash.bash      # Main command dispatcher (gbash show, enable, disable, ...)
     composure.bash       # Function metadata (about, group, param, example)
     log.bash             # Logging subsystem
     appearance.bash      # Theme loading
@@ -105,10 +105,10 @@ gaudi-bash/
       cache.bash         # Component cache management
       enabler.bash       # Component enabling logic
       disabler.bash      # Component disabling logic
-      doctor.bash        # Diagnostics (gaudi-bash doctor)
+      doctor.bash        # Diagnostics (gbash doctor)
       generic.bash       # Shared helper functions
       help.bash          # Help display for components
-      updater.bash       # Update logic (gaudi-bash update)
+      updater.bash       # Update logic (gbash update)
       utils.bash         # General utilities
   components/
     aliases/lib/         # Alias definitions
@@ -122,7 +122,7 @@ gaudi-bash/
   bin/                   # Vendored dependencies (bats, composure, preexec)
 ```
 
-The core engine loads libraries from `lib/`, then the loader walks `components/enabled/` to source every enabled alias, completion and plugin. Components are enabled and disabled by creating or removing symlinks in the `enabled/` directory, managed through the `gaudi-bash enable` and `gaudi-bash disable` commands.
+The core engine loads libraries from `lib/`, then the loader walks `components/enabled/` to source every enabled alias, completion and plugin. Components are enabled and disabled by creating or removing symlinks in the `enabled/` directory, managed through the `gbash enable` and `gbash disable` commands.
 
 Key design principles:
 
@@ -215,32 +215,32 @@ Shortcut aliases for frequently used commands:
 - **ls** / **general** -- Common listing and utility aliases
 - **npm** / **yarn** / **node** -- JavaScript tooling
 
-Use `gaudi-bash show plugins`, `gaudi-bash show completions` or `gaudi-bash show aliases` to see the full list of available components and their descriptions.
+Use `gbash show plugins`, `gbash show completions` or `gbash show aliases` to see the full list of available components and their descriptions.
 
 ## Help Screens
 
 ```bash
-gaudi-bash show                # shows all currently enabled components
-gaudi-bash show aliases        # shows installed and available aliases
-gaudi-bash show completions    # shows installed and available completions
-gaudi-bash show plugins        # shows installed and available plugins
-gaudi-bash help aliases        # shows help for installed aliases
-gaudi-bash help completions    # shows help for installed completions
-gaudi-bash help plugins        # shows help for installed plugins
-gaudi-bash enable plugin <name>    # enables a plugin
-gaudi-bash disable plugin <name>   # disables a plugin
-gaudi-bash doctor [errors|warnings|all]  # diagnose loading issues
-gaudi-bash version             # shows current gaudi-bash version and git SHA
-gaudi-bash reload              # reloads your bash profile
-gaudi-bash restart             # re-executes bash (stronger than reload)
-gaudi-bash backup              # backs up list of enabled components
-gaudi-bash restore             # restores components from a backup
-gaudi-bash profile save <name> # save enabled components as a named profile
-gaudi-bash profile load <name> # load a saved profile
-gaudi-bash profile list        # list saved profiles
-gaudi-bash profile rm <name>   # remove a saved profile
-gaudi-bash update [all]        # updates gaudi-bash core (or core + components)
-gaudi-bash search <terms>      # searches for components by keyword
+gbash show                # shows all currently enabled components
+gbash show aliases        # shows installed and available aliases
+gbash show completions    # shows installed and available completions
+gbash show plugins        # shows installed and available plugins
+gbash help aliases        # shows help for installed aliases
+gbash help completions    # shows help for installed completions
+gbash help plugins        # shows help for installed plugins
+gbash enable plugin <name>    # enables a plugin
+gbash disable plugin <name>   # disables a plugin
+gbash doctor [errors|warnings|all]  # diagnose loading issues
+gbash version             # shows current gaudi-bash version and git SHA
+gbash reload              # reloads your bash profile
+gbash restart             # re-executes bash (stronger than reload)
+gbash backup              # backs up list of enabled components
+gbash restore             # restores components from a backup
+gbash profile save <name> # save enabled components as a named profile
+gbash profile load <name> # load a saved profile
+gbash profile list        # list saved profiles
+gbash profile rm <name>   # remove a saved profile
+gbash update [all]        # updates gaudi-bash core (or core + components)
+gbash search <terms>      # searches for components by keyword
 ```
 
 ## Search
@@ -251,14 +251,14 @@ Search will find and print out modules with the name or description matching the
 ### Syntax
 
 ```bash
-  gaudi-bash search term1 [[-]term2] [[-]term3]....
+  gbash search term1 [[-]term2] [[-]term3]....
 ```
 
 As an example, a ruby developer might want to enable everything related to the commands such as `ruby`, `rake`, `gem`, `bundler`, and `rails`.
 Search command helps you find related modules so that you can decide which of them you'd like to use:
 
 ```bash
-$ gaudi-bash search ruby rake gem bundle irb rails
+$ gbash search ruby rake gem bundle irb rails
       aliases:  bundler rails
       plugins:  chruby chruby-auto ruby
   completions:  bundler gem rake
@@ -273,7 +273,7 @@ In the above example, if we wanted to hide `chruby` and `chruby-auto`,
 we could change the command as follows:
 
 ```bash
-$ gaudi-bash search ruby rake gem bundle irb rails -chruby
+$ gbash search ruby rake gem bundle irb rails -chruby
       aliases:  bundler rails
       plugins:  ruby
   completions:  bundler gem rake
@@ -290,7 +290,7 @@ To remove non-printing non-ASCII characters responsible for the coloring of the 
 Enabled components will then be shown with a checkmark:
 
 ```bash
-$ NO_COLOR=1 gaudi-bash search ruby rake gem bundle irb rails -chruby
+$ NO_COLOR=1 gbash search ruby rake gem bundle irb rails -chruby
       aliases  =>   bundler rails
       plugins  =>   ruby
   completions  =>   bundler gem rake
@@ -448,10 +448,10 @@ The command duration output is available for use in your prompt theme via the `_
 Profiles let you save, switch between and share complete component configurations. This is an upgrade over the basic backup/restore — you can maintain multiple named profiles for different workflows.
 
 ```bash
-gaudi-bash profile save <name>     # save current enabled components as a named profile
-gaudi-bash profile load <name>     # disable everything, then enable components from profile
-gaudi-bash profile list            # list all saved profiles
-gaudi-bash profile rm <name>       # delete a saved profile
+gbash profile save <name>     # save current enabled components as a named profile
+gbash profile load <name>     # disable everything, then enable components from profile
+gbash profile list            # list all saved profiles
+gbash profile rm <name>       # delete a saved profile
 ```
 
 Profiles are stored as plain text files in `$GAUDI_BASH/profiles/` with a simple `<type> <name>` format (one component per line). The `load` command validates the profile before applying any changes.
@@ -461,8 +461,8 @@ Profiles are stored as plain text files in `$GAUDI_BASH/profiles/` with a simple
 For quick one-off backups (e.g., before experimenting), you can use the simpler backup/restore commands:
 
 ```bash
-gaudi-bash backup    # writes enabled components to $GAUDI_BASH/tmp/enabled.gaudi-bash.backup
-gaudi-bash restore   # re-enables components from the backup file
+gbash backup    # writes enabled components to $GAUDI_BASH/tmp/enabled.gaudi-bash.backup
+gbash restore   # re-enables components from the backup file
 ```
 
 For named, reusable configurations, use profiles instead.

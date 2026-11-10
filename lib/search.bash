@@ -6,7 +6,7 @@
 # @description  returns list of aliases, plugins and completions in gaudi-bash
 #               name or description should match one of the search terms provided as arguments
 # @usage:
-#    ❯ gaudi-bash search [-|@]term1 [-|@]term2 ... \
+#    ❯ gbash search [-|@]term1 [-|@]term2 ... \
 #       [[ --enable   | -e ]] \
 #       [[ --disable  | -d ]] \
 #       [[ --no-color | -c ]] \
@@ -19,29 +19,29 @@
 #    An '@' sign indicates an exact (not partial) match.
 #
 # @example
-#    ❯ gaudi-bash search ruby rbenv rvm gem rake
+#    ❯ gbash search ruby rbenv rvm gem rake
 #          aliases:  bundler
 #          plugins:  chruby rbenv ruby rvm
 #      completions:  gem rake rvm
 #
-#    ❯ gaudi-bash search ruby rbenv rvm gem rake -chruby
+#    ❯ gbash search ruby rbenv rvm gem rake -chruby
 #          aliases:  bundler
 #          plugins:  rbenv ruby rvm
 #      completions:  gem rake rvm
 #
 # Examples of enabling or disabling results of the search:
 #
-#    ❯ gaudi-bash search ruby
+#    ❯ gbash search ruby
 #          aliases:  bundler
 #          plugins:  chruby chruby-auto ruby
 #
-#    ❯ gaudi-bash search ruby -chruby --enable
+#    ❯ gbash search ruby -chruby --enable
 #          aliases:  bundler
 #          plugins:  ruby
 #
 # Examples of using exact match:
 #
-#    ❯ gaudi-bash search @git @ruby
+#    ❯ gbash search @git @ruby
 #          aliases:  git
 #          plugins:  git ruby
 #      completions:  git
@@ -253,7 +253,7 @@ _gaudi-bash-search-help() {
 
 ${YELLOW}USAGE${NC}
 
-   gaudi-bash search [-|@]term1 [-|@]term2 ... \\
+   gbash search [-|@]term1 [-|@]term2 ... \\
      [[ --enable   | -e ]] \\
      [[ --disable  | -d ]] \\
      [[ --no-color | -c ]] \\
@@ -262,7 +262,7 @@ ${YELLOW}USAGE${NC}
 
 ${YELLOW}DESCRIPTION${NC}
 
-   Use ${GREEN}search${NC} gaudi-bash command to search for a list of terms or term negations
+   Use ${GREEN}search${NC} gbash command to search for a list of terms or term negations
    across all components: aliases, completions and plugins. Components that are
    enabled are shown in green (or with a check box if --no-color option is used).
 
@@ -288,19 +288,19 @@ ${YELLOW}FLAGS${NC}
 
 ${YELLOW}EXAMPLES${NC}
 
-   For example, ${GREEN}gaudi-bash search git${NC} would match any alias, completion
+   For example, ${GREEN}gbash search git${NC} would match any alias, completion
    or plugin that has the word 'git' in either the module name or
    it's description. You should see something like this when you run this
    command:
 
-         ${GREEN}❯ gaudi-bash search git${NC}
+         ${GREEN}❯ gbash search git${NC}
                ${YELLOW}aliases:  ${GREEN}git ${NC}gitsvn
                ${YELLOW}plugins:  ${NC}autojump ${GREEN}git ${NC}git-subrepo jgitflow jump
            ${YELLOW}completions:  ${GREEN}git ${NC}git_flow git_flow_avh${NC}
 
    You can exclude some terms by prefixing a term with a minus, eg:
 
-         ${GREEN}❯ gaudi-bash search git -flow -svn${NC}
+         ${GREEN}❯ gbash search git -flow -svn${NC}
                ${YELLOW}aliases:  ${NC}git
                ${YELLOW}plugins:  ${NC}autojump git git-subrepo jump
            ${YELLOW}completions:  ${NC}git${NC}
@@ -309,7 +309,7 @@ ${YELLOW}EXAMPLES${NC}
    match. Note, that we also pass the '--enable' flag, which would ensure
    that all matches are automatically enabled. The example is below:
 
-         ${GREEN}❯ gaudi-bash search @git --enable${NC}
+         ${GREEN}❯ gbash search @git --enable${NC}
                ${YELLOW}aliases:  ${NC}git
                ${YELLOW}plugins:  ${NC}git
            ${YELLOW}completions:  ${NC}git${NC}

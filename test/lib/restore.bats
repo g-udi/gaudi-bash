@@ -16,16 +16,16 @@ local_setup() {
 
 	# Write a backup file with a mix of valid and invalid entries
 	cat > "$GAUDI_BASH/tmp/enabled.gaudi-bash.backup" << 'BACKUP'
-gaudi-bash enable plugin base
+gbash enable plugin base
 echo INJECTED
-gaudi-bash enable alias general
+gbash enable alias general
 rm -rf /tmp/should-not-run
 BACKUP
 
 	# Disable everything first
-	run gaudi-bash disable plugins all
-	run gaudi-bash disable aliases all
-	run gaudi-bash disable completion all
+	run gbash disable plugins all
+	run gbash disable aliases all
+	run gbash disable completion all
 
 	# Restore should only process valid lines
 	run _gaudi-bash-restore
@@ -48,14 +48,14 @@ BACKUP
 	mkdir -p "$GAUDI_BASH/tmp"
 
 	cat > "$GAUDI_BASH/tmp/enabled.gaudi-bash.backup" << 'BACKUP'
-gaudi-bash enable plugin base
-gaudi-bash enable alias general
-gaudi-bash enable completion gaudi-bash
+gbash enable plugin base
+gbash enable alias general
+gbash enable completion gaudi-bash
 BACKUP
 
-	run gaudi-bash disable plugins all
-	run gaudi-bash disable aliases all
-	run gaudi-bash disable completion all
+	run gbash disable plugins all
+	run gbash disable aliases all
+	run gbash disable completion all
 
 	run _gaudi-bash-restore
 	assert_success
@@ -63,6 +63,28 @@ BACKUP
 	assert_file_exist "$GAUDI_BASH/components/enabled/250___base.plugins.bash"
 	assert_file_exist "$GAUDI_BASH/components/enabled/150___general.aliases.bash"
 	assert_file_exist "$GAUDI_BASH/components/enabled/350___gaudi-bash.completions.bash"
+}
+
+@test "gaudi-bash core: _gaudi-bash-restore should accept backup entries written with the legacy gaudi-bash prefix" {
+
+	cd "$GAUDI_BASH"
+	./setup.sh --silent
+
+	mkdir -p "$GAUDI_BASH/tmp"
+
+	cat > "$GAUDI_BASH/tmp/enabled.gaudi-bash.backup" << 'BACKUP'
+gaudi-bash enable plugin base
+gbash enable alias general
+BACKUP
+
+	run gbash disable plugins all
+	run gbash disable aliases all
+
+	run _gaudi-bash-restore
+	assert_success
+
+	assert_file_exist "$GAUDI_BASH/components/enabled/250___base.plugins.bash"
+	assert_file_exist "$GAUDI_BASH/components/enabled/150___general.aliases.bash"
 }
 
 @test "gaudi-bash core: _gaudi-bash-restore should fail gracefully with no backup file" {

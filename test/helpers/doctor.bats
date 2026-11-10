@@ -12,7 +12,7 @@ local_setup() {
 
 @test "gaudi-bash helpers: doctor: _gaudi-bash-doctor should show all logs by default" {
 
-	run gaudi-bash doctor
+	run gbash doctor
 	assert_success
 }
 
