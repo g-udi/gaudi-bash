@@ -176,11 +176,11 @@ local_setup() {
 	custom_two="${BATS_TEST_TMPDIR}/custom-two"
 	mkdir -p "$custom_one" "$custom_two"
 
-	cat > "$custom_one/100-local.aliases.bash" <<'CUSTOM'
+	cat > "$custom_one/100-local.aliases.bash" << 'CUSTOM'
 alias local_custom_one='echo one'
 CUSTOM
 
-	cat > "$custom_two/200-local.aliases.bash" <<'CUSTOM'
+	cat > "$custom_two/200-local.aliases.bash" << 'CUSTOM'
 alias local_custom_two='echo two'
 CUSTOM
 
