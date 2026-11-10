@@ -3,8 +3,10 @@
 
 # Use colors, but only if connected to a terminal, and that terminal supports them
 
-if which tput > /dev/null 2>&1; then
-	ncolors=$(tput colors)
+# tput fails (and complains on stderr) when TERM is unset or unknown, e.g. in CI or cron
+ncolors=""
+if command -v tput > /dev/null 2>&1; then
+	ncolors=$(tput colors 2> /dev/null) || ncolors=""
 fi
 
 # Check if the stdout is a terminal that supports text colors
