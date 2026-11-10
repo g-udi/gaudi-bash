@@ -20,8 +20,8 @@ please feel free to read through it if you're interested in how gaudi-bash loads
 gaudi-bash is installed by running one of the following commands in your terminal. You can install this via the command-line with either `curl` or `wget`, whichever is installed on your machine.
 
 ```shell
-bash -c "$(curl -fsSL https://raw.githubusercontent.com/g-udi/gaudi-bash/master/install.sh)"
-bash -c "$(wget -qO- https://raw.githubusercontent.com/g-udi/gaudi-bash/master/install.sh)"
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/g-udi/gaudi-bash/main/install.sh)"
+bash -c "$(wget -qO- https://raw.githubusercontent.com/g-udi/gaudi-bash/main/install.sh)"
 ```
 
 The install script clones gaudi-bash (including its component submodules) into `~/.gaudi_bash` and then runs `setup.sh`.
@@ -71,7 +71,7 @@ To update gaudi-bash to the latest stable release (the most recent git tag), sim
 gbash update
 ```
 
-To follow the development branch instead (`master` on the `origin` remote, configurable with `GAUDI_BASH_DEVELOPMENT_BRANCH` and `GAUDI_BASH_REMOTE`), run:
+To follow the development branch instead (`main` on the `origin` remote, configurable with `GAUDI_BASH_DEVELOPMENT_BRANCH` and `GAUDI_BASH_REMOTE`), run:
 
 ```bash
 gbash update dev
