@@ -6,20 +6,25 @@ Inspired by [oh-my-zsh](https://github.com/robbyrussell/oh-my-zsh), gaudi-bash p
 If you're using the _Bourne Again Shell_ (Bash) on a regular basis and have been looking for an easy way to keep all of these nice little scripts and aliases under control, then gaudi-bash is for you.
 Stop polluting your `~/bin` directory and your `.bashrc` file, fork/clone gaudi-bash and start hacking away.
 
+> **Using zsh as well?** [gaudi-shell](https://github.com/g-udi/gaudi-shell) evolved from gaudi-bash and supersedes it: the same component model for both bash and zsh, driven by the `gshell` command.
+
 ## Contributing
 
-Please take a look at the [Contribution Guidelines](CONTRIBUTING.md) before reporting a bug or providing a new feature.
+The unit tests live in `test/`; [test/README.md](test/README.md) explains how to run them before you send a change.
 
-The [Development Guidelines](DEVELOPMENT.md) have more information on some of the internal workings of gaudi-bash,
-please feel free to read through this page if you're interested in how gaudi-bash loads its components.
+The [Architecture](#architecture) section below has more information on some of the internal workings of gaudi-bash,
+please feel free to read through it if you're interested in how gaudi-bash loads its components.
 
 ## Installation
 
-gaudi-bash is installed by running the following commands in your terminal. You can install this via the command-line with either `curl` or `wget`, whichever is installed on your machine.
+gaudi-bash is installed by running one of the following commands in your terminal. You can install this via the command-line with either `curl` or `wget`, whichever is installed on your machine.
 
 ```shell
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/ahmadassaf/gaudi-bash/master/install.sh)"
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/g-udi/gaudi-bash/master/install.sh)"
+bash -c "$(wget -qO- https://raw.githubusercontent.com/g-udi/gaudi-bash/master/install.sh)"
 ```
+
+The install script clones gaudi-bash (including its component submodules) into `~/.gaudi_bash` and then runs `setup.sh`.
 
 > **Manual inspection**:
   It's a good idea to inspect the install script from projects you don't yet know. You can do that by downloading the install script first, looking through it so everything looks normal, then running it.
@@ -28,15 +33,17 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/ahmadassaf/gaudi-bash/mast
 If you wish to do a standalone installation then you proceed with the following steps:
 
 1. Check a clone of this repo: `git clone https://github.com/g-udi/gaudi-bash.git ~/.gaudi_bash`
-2. Run `~/.gaudi_bash/setup.sh` (it automatically backs up your `~/.bash_profile`)
-3. Edit your `~/.bash_profile` file in order to customize gaudi-bash.
+2. Run `~/.gaudi_bash/setup.sh` (it fetches the git submodules if they are missing and automatically backs up your `~/.bash_profile` on macOS, or `~/.bashrc` elsewhere, to a `.bak` file)
+3. Edit your `~/.bash_profile` (or `~/.bashrc`) file in order to customize gaudi-bash.
 
-The install script can take the following options:
+`setup.sh` can take the following options:
 
-* `--silent`: Ask nothing and install using default settings.
-* `--no-modify-config`: Do not modify the existing config file (`~/.bash_profile` or `~/.bashrc`).
+* `--silent` (`-s`): Ask nothing and install using default settings.
+* `--basic` (`-b`): Do not enable the default gaudi-bash components.
+* `--no-modify-config` (`-n`): Do not modify the existing config file (`~/.bash_profile` or `~/.bashrc`).
+* `--help` (`-h`): Display the usage message.
 
-When run without the `--silent` switch, gaudi-bash only enables a sane default set of functionality to keep your shell clean and to avoid issues with missing dependencies. Feel free to enable the tools you want to use after the installation.
+Unless you pass `--basic`, gaudi-bash only enables a sane default set of functionality (the `gaudi-bash` and `system` completions, the `base` plugin and the `general` and `gaudi-bash` aliases) to keep your shell clean and to avoid issues with missing dependencies. Feel free to enable the tools you want to use after the installation.
 
 When you run without the `--no-modify-config` switch, the gaudi-bash installer automatically modifies/replaces your existing config file.
 Use the `--no-modify-config` switch to avoid unwanted modifications, e.g. if your Bash config file already contains the code that loads gaudi-bash.
@@ -58,16 +65,24 @@ fi
 
 ### Updating
 
-To update gaudi-bash to the latest version, simply run:
+To update gaudi-bash to the latest stable release (the most recent git tag), simply run:
 
 ```bash
 gbash update
 ```
 
-gaudi-bash separates the core engine from the components (plugins, aliases, completions, themes). The `gbash update` command pulls the latest **core** code. If you would like to also pull the latest components, pass the `all` parameter:
+To follow the development branch instead (`master` on the `origin` remote, configurable with `GAUDI_BASH_DEVELOPMENT_BRANCH` and `GAUDI_BASH_REMOTE`), run:
 
 ```bash
-gbash update all
+gbash update dev
+```
+
+The command shows the incoming commits, asks for confirmation (pass `--silent` to skip the question), checks out the target and restarts Bash. It refuses to run while the gaudi-bash directory has local changes. Any argument other than `stable` (including `all`) is treated as `dev`.
+
+gaudi-bash separates the core engine from the components (plugins, aliases, completions, themes), which live in git submodules. `gbash update` checks out the **core** code only; to bring the components to the versions pinned by that core, run:
+
+```bash
+git -C "$GAUDI_BASH" submodule update --init --recursive
 ```
 
 ### Uninstalling
@@ -79,8 +94,8 @@ cd $GAUDI_BASH
 ./uninstall.sh
 ```
 
-This will restore your previous Bash profile.
-After the uninstall script finishes, remove the gaudi-bash directory from your machine (`rm -rf $GAUDI_BASH`) and start a new shell.
+This will restore your previous Bash profile from its `.bak` backup (if there is no backup, the current profile is moved aside to a `.uninstall` file) and remove the gaudi-bash directory (`$GAUDI_BASH`) from your machine.
+After the uninstall script finishes, start a new shell.
 
 ## Architecture
 
@@ -108,6 +123,7 @@ gaudi-bash/
       doctor.bash        # Diagnostics (gbash doctor)
       generic.bash       # Shared helper functions
       help.bash          # Help display for components
+      profile.bash       # Profile save/load/list/rm (gbash profile)
       updater.bash       # Update logic (gbash update)
       utils.bash         # General utilities
   components/
@@ -119,6 +135,8 @@ gaudi-bash/
     custom/              # Untracked local scripts loaded after enabled components
   scripts/
     loader.bash          # Loads all enabled components at startup
+  template/              # Bash profile template written by setup.sh
+  test/                  # Unit tests (bats)
   bin/                   # Vendored dependencies (bats, composure, preexec)
 ```
 
@@ -163,23 +181,22 @@ Set `GAUDI_BASH_CUSTOM` or `GAUDI_BASH_CUSTOM_PATHS` in `.bash_profile` before s
 
 ## Components
 
-gaudi-bash ships with a large collection of community-contributed components organized into three categories.
+gaudi-bash ships with a large collection of community-contributed components organized into three categories. The [components README](https://github.com/g-udi/gaudi-bash-components#readme) lists all of them.
 
 ### Plugins
 
 Plugins add new shell functions, behaviors and integrations. Some highlights:
 
-- **sudo** -- press Escape twice to prepend `sudo` to the current command
+- **sudo** -- press Escape twice to toggle `sudo` at the beginning of the current or the previous command
 - **fzf** -- fuzzy finder integration
-- **history-eternal** -- persist unlimited command history across sessions
-- **history-substring-search** -- search history by substring with arrow keys
-- **cmd-returned-notify** -- desktop notification when a long-running command finishes
-- **python** -- virtualenv helpers and Python utilities
-- **url** -- URL encoding/decoding functions
+- **history** -- history manipulation
+- **cmd-returned-notify** -- terminal bell (BEL) when a long-running command finishes
+- **python** -- `shttp` alias for a quick HTTP server and `pyedit` to open a Python module in your editor
+- **url** -- `slugify` to turn text into a URL slug (plain, HTML, Markdown or RST output)
 - **fasd** / **zoxide** / **autojump** -- fast directory jumping
 - **extract** -- extract any archive format with a single command
 - **git** / **gitstatus** -- Git helpers and status information
-- **node** / **nvm** / **nodenv** -- Node.js version management
+- **node** / **nvm** -- Node.js helpers and version management
 - **docker** / **docker-compose** -- Docker workflow helpers
 - **ssh** / **sshagent** -- SSH agent management
 - **tmux** / **tmuxinator** -- Tmux session management
@@ -196,7 +213,7 @@ Tab-completion definitions for common tools:
 - **yarn** / **npm** / **nvm** -- JavaScript package managers
 - **kubectl** / **helm** / **kind** / **minikube** -- Kubernetes
 - **terraform** / **vault** / **consul** -- HashiCorp tools
-- **system** -- system-level completions (kill, mount, etc.)
+- **system** -- loads the system's Bash completion modules
 - **ssh** / **brew** / **pip** / **gem** / **rake** -- Common CLI tools
 - **gcloud** / **awscli** -- Cloud provider CLIs
 
@@ -209,7 +226,7 @@ Shortcut aliases for frequently used commands:
 - **terraform** / **vault** -- Infrastructure as code
 - **tmux** -- Tmux session shortcuts
 - **composer** -- PHP Composer aliases
-- **directory** -- quick directory navigation (`..`, `...`, `mkcd`, etc.)
+- **directory** -- quick directory navigation (`..`, `...`, `md`, `rd`, etc.)
 - **kubectl** -- Kubernetes aliases
 - **homebrew** -- Homebrew shortcuts
 - **ls** / **general** -- Common listing and utility aliases
@@ -239,7 +256,7 @@ gbash profile save <name> # save enabled components as a named profile
 gbash profile load <name> # load a saved profile
 gbash profile list        # list saved profiles
 gbash profile rm <name>   # remove a saved profile
-gbash update [all]        # updates gaudi-bash core (or core + components)
+gbash update [stable|dev] # updates gaudi-bash core to the latest release (or the development branch)
 gbash search <terms>      # searches for components by keyword
 ```
 
@@ -251,17 +268,19 @@ Search will find and print out modules with the name or description matching the
 ### Syntax
 
 ```bash
-  gbash search term1 [[-]term2] [[-]term3]....
+  gbash search term1 [[-|@]term2] [[-|@]term3]....
 ```
+
+A term prefixed with `-` excludes matches; a term prefixed with `@` only matches a component with exactly that name.
 
 As an example, a ruby developer might want to enable everything related to the commands such as `ruby`, `rake`, `gem`, `bundler`, and `rails`.
 Search command helps you find related modules so that you can decide which of them you'd like to use:
 
 ```bash
 $ gbash search ruby rake gem bundle irb rails
-      aliases:  bundler rails
-      plugins:  chruby chruby-auto ruby
-  completions:  bundler gem rake
+aliases:      bundler  rails
+plugins:      chruby  goenv  pyenv  rails  rbenv  ruby  rvm
+completions:  bundler  gem  rake
 ```
 
 Currently enabled modules will be shown in green.
@@ -269,14 +288,14 @@ Currently enabled modules will be shown in green.
 ### Searching with Negations
 
 You can prefix a search term with a "-" to exclude it from the results.
-In the above example, if we wanted to hide `chruby` and `chruby-auto`,
+In the above example, if we wanted to hide `chruby`,
 we could change the command as follows:
 
 ```bash
 $ gbash search ruby rake gem bundle irb rails -chruby
-      aliases:  bundler rails
-      plugins:  ruby
-  completions:  bundler gem rake
+aliases:      bundler  rails
+plugins:      goenv  pyenv  rails  rbenv  ruby  rvm
+completions:  bundler  gem  rake
 ```
 
 ### Using Search to Enable or Disable Components
@@ -286,14 +305,14 @@ This could be quite handy if you like to enable a bunch of components related to
 
 ### Disabling ASCII Color
 
-To remove non-printing non-ASCII characters responsible for the coloring of the search output, you can set environment variable `NO_COLOR`.
-Enabled components will then be shown with a checkmark:
+To remove the non-printing characters responsible for the coloring of the search output, pass the `--no-color` (`-x`) flag.
+Enabled components are marked with a checkmark (`✓`) after their name:
 
 ```bash
-$ NO_COLOR=1 gbash search ruby rake gem bundle irb rails -chruby
-      aliases  =>   bundler rails
-      plugins  =>   ruby
-  completions  =>   bundler gem rake
+$ gbash search ruby rake gem bundle irb rails -chruby --no-color
+aliases:      bundler  rails
+plugins:      goenv  pyenv  rails  rbenv  ruby  rvm
+completions:  bundler  gem  rake
 ```
 
 ## Gaudi Theme
@@ -322,25 +341,24 @@ Async segments render in the background after the prompt is drawn, then overwrit
 
 | Variable | Default | Description |
 |---|---|---|
-| `GAUDI_SPLIT_PROMPT` | `true` | `true`: right-aligned RIGHT + left-aligned LEFT on one line. `false`: stacked vertically |
+| `GAUDI_SPLIT_PROMPT` | `true` | `true`: right-aligned RIGHT + left-aligned LEFT on one line. `false`: RIGHT, LEFT and ASYNC rendered inline, one after the other |
 | `GAUDI_SPLIT_PROMPT_TWO_LINES` | `false` | When split is enabled, use a newline instead of carriage return between sides |
 | `GAUDI_ENABLE_SYMBOLS` | `true` | Show Nerd Font icons. Set to `false` for plain text fallback |
-| `GAUDI_ENABLE_HUSHLOGIN` | `true` | Suppress "Last login" message on macOS Terminal |
 | `GAUDI_PROMPT_DEFAULT_PREFIX` | `" "` | Default prefix for all segments |
 | `GAUDI_PROMPT_DEFAULT_SUFFIX` | `" "` | Default suffix for all segments |
 
 ### Available Segments
 
-Each segment is a standalone file in `components/themes/gaudi/segments/` and can be placed in any of the three prompt arrays.
+Each segment is a standalone file in `components/themes/gaudi/segments/` and can be placed in any of the three prompt arrays. The tables below cover the most commonly used ones; the [theme README](https://github.com/g-udi/gaudi-theme#readme) describes every segment.
 
 **Environment and tooling:**
 
 | Segment | Shows | Key Variables |
 |---------|-------|---------------|
-| `scm` | Git/Hg/SVN branch, dirty/clean/staged state | `GAUDI_SCM_SHOW`, `GAUDI_SCM_FETCH` |
+| `scm` | Git/Hg/SVN/Perforce branch, dirty/clean/staged state | `GAUDI_SCM_SHOW`, `GAUDI_SCM_FETCH` |
 | `node` | Node.js version (from nvm/nodenv/system) | `GAUDI_NODE_SHOW`, `GAUDI_NODE_DEFAULT_VERSION`, `GAUDI_NODE_COLOR` |
 | `pyenv` | Python version via pyenv | `GAUDI_PYENV_SHOW`, `GAUDI_PYENV_COLOR` |
-| `ruby` | Ruby version (rvm/rbenv/chruby) | `GAUDI_RUBY_SHOW`, `GAUDI_RUBY_COLOR` |
+| `ruby` | Ruby version (from `ruby -v`) | `GAUDI_RUBY_SHOW`, `GAUDI_RUBY_COLOR` |
 | `golang` | Go version | `GAUDI_GOLANG_SHOW`, `GAUDI_GOLANG_COLOR` |
 | `rust` | Rust version | `GAUDI_RUST_SHOW`, `GAUDI_RUST_COLOR` |
 | `java` | Java version | `GAUDI_JAVA_SHOW`, `GAUDI_JAVA_COLOR` |
@@ -349,16 +367,16 @@ Each segment is a standalone file in `components/themes/gaudi/segments/` and can
 | `haskell` | Haskell Stack version | `GAUDI_HASKELL_SHOW`, `GAUDI_HASKELL_COLOR` |
 | `julia` | Julia version | `GAUDI_JULIA_SHOW`, `GAUDI_JULIA_COLOR` |
 | `elm` | Elm version | `GAUDI_ELM_SHOW`, `GAUDI_ELM_COLOR` |
-| `angular` | Angular CLI version | `GAUDI_ANGULAR_SHOW`, `GAUDI_ANGULAR_COLOR` |
-| `react` | React version from package.json | `GAUDI_REACT_SHOW`, `GAUDI_REACT_COLOR` |
-| `package` | npm/yarn package version | `GAUDI_PACKAGE_SHOW`, `GAUDI_PACKAGE_COLOR` |
+| `angular` | Angular version from `node_modules/angular` | `GAUDI_ANGULAR_SHOW`, `GAUDI_ANGULAR_COLOR` |
+| `react` | React version from `node_modules/react` | `GAUDI_REACT_SHOW`, `GAUDI_REACT_COLOR` |
+| `package` | Package version from `package.json` | `GAUDI_PACKAGE_SHOW`, `GAUDI_PACKAGE_COLOR` |
 
 **Infrastructure:**
 
 | Segment | Shows | Key Variables |
 |---------|-------|---------------|
-| `docker` | Docker version / running containers | `GAUDI_DOCKER_SHOW`, `GAUDI_DOCKER_VERBOSE`, `GAUDI_DOCKER_COLOR` |
-| `kubecontext` | kubectl context, namespace, server version | `GAUDI_KUBECONTEXT_SHOW`, `GAUDI_KUBECONTEXT_COLOR` |
+| `docker` | Docker server version | `GAUDI_DOCKER_SHOW`, `GAUDI_DOCKER_COLOR` |
+| `kubecontext` | kubectl context and namespace | `GAUDI_KUBECONTEXT_SHOW`, `GAUDI_KUBECONTEXT_COLOR` |
 
 **Shell context:**
 
@@ -370,22 +388,22 @@ Each segment is a standalone file in `components/themes/gaudi/segments/` and can
 | `time` | Current timestamp | `GAUDI_TIME_SHOW`, `GAUDI_TIME_COLOR` |
 | `user` | Current username | `GAUDI_USER_SHOW`, `GAUDI_USER_COLOR` |
 | `host` | Hostname | `GAUDI_HOST_SHOW`, `GAUDI_HOST_COLOR` |
-| `multiplexer` | Tmux session indicator | `GAUDI_MULTIPLEXER_SHOW` |
+| `multiplexer` | Detached tmux and screen session counts | `GAUDI_MULTIPLEXER_SHOW` |
 
 ### Configuring Segments
 
-Every segment follows the same pattern and supports these variables (replace `SEGMENT` with the segment name in uppercase):
+Segments follow the same pattern and most of them support these variables (replace `SEGMENT` with the segment name in uppercase):
 
 - `GAUDI_SEGMENT_SHOW` — set to `false` to hide without removing from the array
 - `GAUDI_SEGMENT_COLOR` — foreground/background color
 - `GAUDI_SEGMENT_SYMBOL` — Nerd Font icon (Unicode escape)
 - `GAUDI_SEGMENT_PREFIX` / `GAUDI_SEGMENT_SUFFIX` — padding around the content
 
-Set these in your `.bash_profile` before gaudi-bash is sourced, or in a custom component file.
+Set these in your `.bash_profile` before gaudi-bash is sourced, and `export` them: segments in `GAUDI_PROMPT_ASYNC` are rendered by a background Bash process that only sees exported variables.
 
 ### Customizing the Prompt
 
-To change which segments appear and where, override the arrays in your `.bash_profile`:
+To change which segments appear and where, override the arrays in your `.bash_profile` **after** the line that sources `gaudi_bash.sh` (the theme assigns its default arrays when it loads):
 
 ```bash
 # Minimal prompt: just cwd and git
@@ -464,5 +482,7 @@ For quick one-off backups (e.g., before experimenting), you can use the simpler 
 gbash backup    # writes enabled components to $GAUDI_BASH/tmp/enabled.gaudi-bash.backup
 gbash restore   # re-enables components from the backup file
 ```
+
+The backup file is a list of `gbash enable <type> <name>` lines. `gbash restore` also accepts backups written by older versions, which used `gaudi-bash enable ...` lines, and skips anything that does not match that format.
 
 For named, reusable configurations, use profiles instead.
