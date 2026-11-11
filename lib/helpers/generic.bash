@@ -12,7 +12,7 @@ if ! type pathmunge > /dev/null 2>&1; then
 		local IFS=':'
 		local -a a
 		read -r -a a <<< "$1"
-		local i=${#a[@]}
+		local i=${#a[@]} p
 		while [[ $i -gt 0 ]]; do
 			i=$((i - 1))
 			p=${a[i]}

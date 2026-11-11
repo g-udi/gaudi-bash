@@ -84,3 +84,15 @@ local_setup() {
 	assert_link_exist "$GAUDI_BASH/components/enabled/250___node.plugins.bash"
 	assert_link_exist "$GAUDI_BASH/components/enabled/250___nvm.plugins.bash"
 }
+
+@test "gaudi-bash helpers: _gaudi-bash-enable: should fail and say so when the component can not be linked" {
+
+	# shellcheck disable=SC2329
+	ln() { return 1; }
+
+	run _gaudi-bash-enable plugin base
+	assert_failure
+	assert_output --partial "Could not enable"
+	refute_output --partial "enabled with priority"
+	assert_file_not_exist "$GAUDI_BASH/components/enabled/250___base.plugins.bash"
+}

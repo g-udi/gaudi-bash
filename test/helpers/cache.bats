@@ -65,3 +65,14 @@ local_setup() {
 	_gaudi-bash-component-cache-clean plugins
 	assert_file_not_exist "$GAUDI_BASH_CACHE_DIR/plugins-enabled"
 }
+
+@test "gaudi-bash helpers: cache: _gaudi-bash-component-cache-clean should clear the cached descriptions" {
+
+	_plugins_cache=$(_gaudi-bash-component-cache-add plugins)
+	touch "${_plugins_cache}-descriptions"
+
+	assert_file_exist "$GAUDI_BASH_CACHE_DIR/plugins-descriptions"
+
+	_gaudi-bash-component-cache-clean
+	assert_file_not_exist "$GAUDI_BASH_CACHE_DIR/plugins-descriptions"
+}

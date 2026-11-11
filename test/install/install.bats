@@ -35,6 +35,10 @@ case "$3" in
 	rev-list)
 		echo "0000000"
 		;;
+	config)
+		# The submodule paths of .gitmodules
+		printf "%s\n" "submodule.components.path components" "submodule.bin/composure.path bin/composure" "submodule.bin/bats-core.path bin/bats-core"
+		;;
 esac
 exit 0
 GIT
@@ -138,6 +142,7 @@ WRAPPER
 	cat > "$fakebin/git" << 'GIT'
 #!/usr/bin/env bash
 if [[ "$1" == "clone" ]]; then
+	printf "%s\n" "$*" > "$GIT_CLONE_CALL"
 	destination=""
 	for arg in "$@"; do
 		destination="$arg"
@@ -155,8 +160,12 @@ exit 1
 GIT
 	chmod +x "$fakebin/git"
 
-	run env PATH="$fakebin:$PATH" HOME="$install_home" "$GAUDI_BASH_ORIGIN/install.sh" --silent --basic
+	run env PATH="$fakebin:$PATH" HOME="$install_home" GIT_CLONE_CALL="$BATS_TEST_TMPDIR/git-clone-call" "$GAUDI_BASH_ORIGIN/install.sh" --silent --basic
 	assert_success
+
+	# The clone leaves the git submodules to setup.sh, which only fetches the ones gaudi-bash runs on
+	run cat "$BATS_TEST_TMPDIR/git-clone-call"
+	assert_output "clone --depth=1 https://github.com/g-udi/gaudi-bash.git $install_home/.gaudi_bash"
 
 	assert_file_exist "$install_home/.gaudi_bash/setup.sh"
 	assert_file_exist "$install_home/$GAUDI_BASH_PROFILE"
@@ -166,24 +175,22 @@ GIT
 
 @test "gaudi-bash install: verify that a backup file is created" {
 
-	local md5_orig
-	local md5_bak
+	local original="$BATS_TEST_TMPDIR/original-profile"
 
 	cd "$GAUDI_BASH" || exit
 
 	__remove_profile_backups
-	touch "$HOME/$GAUDI_BASH_PROFILE"
 	echo "test file content" > "$HOME/$GAUDI_BASH_PROFILE"
-	md5_orig=$(md5sum "$HOME/$GAUDI_BASH_PROFILE" | awk '{print $1}')
+	cp "$HOME/$GAUDI_BASH_PROFILE" "$original"
 
 	./setup.sh --silent
 
 	assert_file_exist "$HOME/$GAUDI_BASH_PROFILE"
 	assert_file_exist "$HOME/$GAUDI_BASH_PROFILE.bak"
 
-	md5_bak=$(md5sum "$HOME/$GAUDI_BASH_PROFILE.bak" | awk '{print $1}')
-
-	assert_equal "$md5_orig" "$md5_bak"
+	# The backup is the profile as it was, byte for byte (cmp is available everywhere, md5sum is not)
+	run cmp "$original" "$HOME/$GAUDI_BASH_PROFILE.bak"
+	assert_success
 }
 
 @test "gaudi-bash install: a silent setup never overwrites an existing backup" {
@@ -315,4 +322,21 @@ GIT
 	assert_line "-C $INSTALL_HOME/.gaudi_bash checkout v9.9.9"
 	assert_line "-C $INSTALL_HOME/.gaudi_bash submodule update --init --recursive"
 	refute_output --partial "pull"
+}
+
+@test "gaudi-bash install: installer update only fetches the submodules gaudi-bash runs on" {
+
+	# The updated version brings the helper that knows which submodules these are
+	mkdir -p "$BATS_TEST_TMPDIR/install-home/.gaudi_bash/lib/helpers"
+	cp "$GAUDI_BASH_ORIGIN/lib/helpers/updater.bash" "$BATS_TEST_TMPDIR/install-home/.gaudi_bash/lib/helpers/updater.bash"
+
+	__run_installer_again "n"
+	assert_success
+
+	run cat "$GIT_CALLS"
+	assert_line "-C $INSTALL_HOME/.gaudi_bash checkout v9.9.9"
+	assert_line "-C $INSTALL_HOME/.gaudi_bash submodule update --init --recursive -- components bin/composure"
+	assert_line "-C $INSTALL_HOME/.gaudi_bash submodule update --recursive"
+	refute_line "-C $INSTALL_HOME/.gaudi_bash submodule update --init --recursive"
+	refute_output --partial "bin/bats-core"
 }

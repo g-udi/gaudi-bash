@@ -5,14 +5,12 @@
 GAUDI_BASH="$HOME/.gaudi_bash"
 
 __install() {
-	# Prevent the cloned repository from having insecure permissions. Failing to do
-	# so causes compinit() calls to fail with "command not found: compdef" errors
-	# for users with insecure umasks (e.g., "002", allowing group writability). Note
-	# that this will be ignored under Cygwin by default, as Windows ACLs take
-	# precedence over umasks except for filesystems mounted with option "noacl".
+	# Keep the cloned files from being writable by the group or by others, whatever the umask of the user is
+	# (e.g., "002"): these files are sourced by every new shell
 	umask g-w,o-w
 
-	env git clone --depth=1 --recurse-submodules https://github.com/g-udi/gaudi-bash.git "$GAUDI_BASH" || {
+	# The git submodules are fetched by setup.sh, which leaves out the ones that only the tests need (bats)
+	env git clone --depth=1 https://github.com/g-udi/gaudi-bash.git "$GAUDI_BASH" || {
 		printf "%s\n" "Error: Cloning of gaudi into this machine failed :("
 		exit 1
 	}
@@ -30,7 +28,13 @@ __update() {
 	target=$(git -C "$GAUDI_BASH" describe --tags "$(git -C "$GAUDI_BASH" rev-list --tags --max-count=1 2> /dev/null)" 2> /dev/null)
 
 	git -C "$GAUDI_BASH" checkout "${target:-origin/main}" || return 1
-	git -C "$GAUDI_BASH" submodule update --init --recursive
+
+	# The checked out version knows which git submodules it runs on, versions without that helper get them all
+	if [[ -s "$GAUDI_BASH/lib/helpers/updater.bash" ]] && source "$GAUDI_BASH/lib/helpers/updater.bash" && declare -F _gaudi-bash-submodules-update > /dev/null; then
+		_gaudi-bash-submodules-update "$GAUDI_BASH"
+	else
+		git -C "$GAUDI_BASH" submodule update --init --recursive
+	fi
 }
 
 # Reads a single answer into REPLY, which is left empty when there is nothing to read (e.g., non-interactive run).

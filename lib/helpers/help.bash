@@ -27,8 +27,7 @@ _help-aliases() {
 
 	if [[ -n "${1:-}" ]]; then
 		# A specific alias group: prefer the enabled copy, fall back to the available one
-		__file="$(compgen -G "${GAUDI_BASH}/components/enabled/*${GAUDI_BASH_LOAD_PRIORITY_SEPARATOR:-___}${1}.aliases.bash" | head -n 1)"
-		[[ -n "$__file" ]] || __file="${GAUDI_BASH}/components/aliases/lib/${1}.aliases.bash"
+		__file="$(_gaudi-bash-component-enabled-file aliases "$1")" || __file="${GAUDI_BASH}/components/aliases/lib/${1}.aliases.bash"
 		if [[ ! -e "$__file" ]]; then
 			printf '%b
 ' "${RED:-}No aliases named '${1}' were found${NC:-}" >&2
@@ -38,7 +37,8 @@ _help-aliases() {
 		return 0
 	fi
 
-	for __file in $(sort <(compgen -G "${GAUDI_BASH}/components/enabled/*.aliases.bash")); do
+	for __file in "${GAUDI_BASH}"/components/enabled/*.aliases.bash; do
+		[[ -e "$__file" ]] || continue
 		__help-list-aliases "$__file"
 	done
 	return 0
@@ -57,53 +57,55 @@ _help-plugins() {
 	about 'summarize all functions defined by enabled gaudi-bash plugins'
 	group 'gaudi-bash:core:help'
 
-	# Overrides the composure default letterpress function to allow for custom column width setting for plugins help
-	__letterpress() {
-		typeset rightcol="$1" leftcol="${2:- }" leftwidth="${10:-45}"
-
-		if [ -z "$rightcol" ]; then
-			return
-		fi
-		printf "%-*s%s\n" "$leftwidth" "$leftcol" "$rightcol"
-	}
-
 	if [[ -n "${1:-}" && "$1" != "all" ]]; then
 		__help-plugin "$1"
 		return
 	fi
 
-	printf "${GREEN}%s${NC}" "please wait, building help..."
-	local grouplist func
+	# The progress note and the pager are for a terminal only, so that the help can be piped or captured
+	[[ -t 1 ]] && printf "${GREEN}%s${NC}\n" "please wait, building help..."
 
-	grouplist=$(mktemp -t grouplist.XXXXXX)
+	local func group about entries="" newline=$'\n'
+
 	for func in $(_typeset_functions); do
-		local group
 		group="$(local -f "$func" | metafor group)"
+		group="${group%%"$newline"*}"
 		# Make sure only to include items with a valid group
-		if [[ -n "$group" ]]; then
-			local about
+		[[ -n "$group" ]] || continue
 
-			[[ "$group" =~ "composure" ]] && continue
-			if [[ $1 != "all" ]] && [[ "$group" =~ "gaudi-bash" ]]; then
-				continue
-			fi
-
-			about="$(local -f "$func" | metafor about)"
-			__letterpress "$about" "$func" >> "$grouplist"."$group"
-			echo "$grouplist"."$group" >> "$grouplist"
-
+		[[ "$group" =~ "composure" ]] && continue
+		if [[ ${1:-} != "all" ]] && [[ "$group" =~ "gaudi-bash" ]]; then
+			continue
 		fi
+
+		about="$(local -f "$func" | metafor about)"
+		entries+="${group}"$'\t'"${func}"$'\t'"${about%%"$newline"*}${newline}"
 	done
 
-	local group gfile
-	for gfile in $(cat "$grouplist" | sort | uniq); do
-		printf '%s\n' "${gfile##*.}"
-		printf '%*s\n' "${COLUMNS:-$(tput cols 2> /dev/null || echo 80)}" '' | tr ' ' -
-		cat "$gfile"
-		printf '\n'
-		rm "$gfile" 2> /dev/null
-	done | less
-	rm "$grouplist" 2> /dev/null
+	if [[ -t 1 ]]; then
+		printf "%s" "$entries" | sort | __help-print-groups | less
+	else
+		printf "%s" "$entries" | sort | __help-print-groups
+	fi
+}
+
+# Helper function to print the "<group><tab><function><tab><about>" lines read from stdin (sorted by group) as one
+# block per group, the function name in a 45 characters wide column followed by its about text
+__help-print-groups() {
+	local group func about current=""
+
+	while IFS=$'\t' read -r group func about; do
+		if [[ "$group" != "$current" ]]; then
+			[[ -n "$current" ]] && printf '\n'
+			printf '%s\n' "$group"
+			printf '%*s\n' "${COLUMNS:-$(tput cols 2> /dev/null || echo 80)}" '' | tr ' ' -
+			current="$group"
+		fi
+		# A function without an about text is left out, its group is still listed
+		[[ -n "$about" ]] && printf '%-45s%s\n' "$func" "$about"
+	done
+	[[ -n "$current" ]] && printf '\n'
+	return 0
 }
 
 # Helper function to list the aliases in a given *.aliases.bash file using the composure meta

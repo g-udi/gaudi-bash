@@ -11,6 +11,7 @@ bats
 # gaudi-bash enabled items and custom and temporary files
 components/enabled
 components/custom
+profiles/
 tmp/
 test/gaudi-bash/
 

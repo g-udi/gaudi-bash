@@ -1,6 +1,36 @@
 #!/usr/bin/env bash
 # shellcheck shell=bash
 
+# @function     _gaudi-bash-profile-write
+# @description  writes the enabled components to a profile file, one "<type> <name>" line per component
+#               an existing file is replaced
+# @param $1     file: path of the profile file to write
+# @return       fail status (1) when the file can not be written
+# @example      ❯ _gaudi-bash-profile-write "$GAUDI_BASH/profiles/mysetup.gaudi-bash"
+_gaudi-bash-profile-write() {
+	about "writes the enabled components to a profile file"
+	group "gaudi-bash:core"
+
+	local profile_file="$1" _file _component _type
+
+	[[ -n "$profile_file" ]] || return 1
+
+	mkdir -p "${profile_file%/*}" || return 1
+	: > "${profile_file}" || return 1
+
+	for _file in "${GAUDI_BASH}"/components/enabled/*.bash; do
+		# Nothing is enabled when the pattern itself comes back
+		[[ -e "$_file" || -L "$_file" ]] || continue
+
+		_component="${_file##*"$GAUDI_BASH_LOAD_PRIORITY_SEPARATOR"}"
+		_component="${_component%.bash}"
+		_type=$(_gaudi-bash-singularize-component "${_component##*.}") || continue
+		_component=${_component%%.*}
+
+		printf "%s\n" "${_type} ${_component}" >> "${profile_file}"
+	done
+}
+
 # @function     _gaudi-bash-profile-save
 # @description  saves the current enabled components to a named profile
 #               writes each enabled component as "<type> <name>" to $GAUDI_BASH/profiles/<name>.gaudi-bash
@@ -18,8 +48,6 @@ _gaudi-bash-profile-save() {
 	local profile_dir="${GAUDI_BASH}/profiles"
 	local profile_file="${profile_dir}/${profile_name}.gaudi-bash"
 
-	mkdir -p "${profile_dir}"
-
 	if [[ -f "$profile_file" ]]; then
 		_read_input "Profile '${profile_name}' already exists. Overwrite? [yY/nN]"
 		if [[ ! $REPLY =~ ^[yY]$ ]]; then
@@ -28,24 +56,10 @@ _gaudi-bash-profile-save() {
 		fi
 	fi
 
-	# Clear out the existing profile file
-	echo -n "" > "${profile_file}"
+	local _count
 
-	local _count=0
-
-	for _file in "${GAUDI_BASH}"/components/enabled/*.bash; do
-		[[ ! -e "$_file" ]] && continue
-
-		local _component _type
-
-		_component="${_file##*"$GAUDI_BASH_LOAD_PRIORITY_SEPARATOR"}"
-		_component="${_component%.bash}"
-		_type=$(_gaudi-bash-singularize-component "${_component##*.}")
-		_component=${_component%%.*}
-
-		printf "%s\n" "${_type} ${_component}" >> "${profile_file}"
-		_count=$((_count + 1))
-	done
+	_gaudi-bash-profile-write "${profile_file}" || return 1
+	_count=$(wc -l < "${profile_file}" | tr -d ' ')
 
 	printf "${GREEN}%s${NC} %s ${CYAN}%s${NC} %s\n" "Profile saved:" "${_count} component(s) written to" "${profile_name}" "(${profile_file})"
 
@@ -76,6 +90,7 @@ _gaudi-bash-profile-load() {
 	# Dry run: validate all entries in the profile
 	local _line_num=0
 	local _errors=0
+	local line file_type
 
 	while IFS= read -r line || [[ -n "$line" ]]; do
 		_line_num=$((_line_num + 1))
@@ -122,7 +137,7 @@ _gaudi-bash-profile-list() {
 	about "lists all available gaudi-bash profiles"
 	group "gaudi-bash:core"
 
-	local profile_dir="${GAUDI_BASH}/profiles"
+	local profile_dir="${GAUDI_BASH}/profiles" _profile
 
 	if [[ ! -d "$profile_dir" ]] || [[ -z "$(command ls -A "${profile_dir}"/*.gaudi-bash 2> /dev/null)" ]]; then
 		printf "${CYAN}%s${NC}\n" "No profiles found"

@@ -95,6 +95,7 @@ _submodules_needed() {
 	local dependency_root="${GAUDI_BASH_ORIGIN:-$GAUDI_BASH}"
 
 	[[ ! -s "$dependency_root/bin/composure/composure.sh" ]] && return 0
+	[[ ! -s "$dependency_root/bin/preexec/bash-preexec.sh" ]] && return 0
 
 	if [[ "$no_default_components" != "true" ]]; then
 		[[ ! -d "$GAUDI_BASH/components/aliases/lib" ]] && return 0
@@ -106,9 +107,11 @@ _submodules_needed() {
 	return 1
 }
 
+# Fetches the git submodules gaudi-bash runs on (composure, preexec and the components), not the ones only the tests need
 _init_submodules() {
 	if _submodules_needed && git -C "$GAUDI_BASH" rev-parse --is-inside-work-tree > /dev/null 2>&1; then
-		git -C "$GAUDI_BASH" submodule update --init --recursive || return 1
+		source "$GAUDI_BASH/lib/helpers/updater.bash" || return 1
+		_gaudi-bash-submodules-update "$GAUDI_BASH" || return 1
 	fi
 }
 
@@ -117,6 +120,7 @@ _validate_install_paths() {
 
 	[[ -s "$GAUDI_BASH/template/bash_profile.template.bash" ]] || _die "Missing profile template: $GAUDI_BASH/template/bash_profile.template.bash" || return 1
 	[[ -s "$dependency_root/bin/composure/composure.sh" ]] || _die "Missing composure dependency. Run: git submodule update --init --recursive" || return 1
+	[[ -s "$dependency_root/bin/preexec/bash-preexec.sh" ]] || _die "Missing bash-preexec dependency. Run: git submodule update --init --recursive" || return 1
 	[[ -s "$GAUDI_BASH/lib/gaudi-bash.bash" ]] || _die "Missing gaudi-bash core library: $GAUDI_BASH/lib/gaudi-bash.bash" || return 1
 }
 

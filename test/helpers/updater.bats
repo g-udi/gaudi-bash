@@ -194,3 +194,23 @@ _install_head() {
 	GAUDI_BASH="$UPDATER_INSTALL" _gaudi-bash-update --silent
 	assert_equal "$PWD" "$current"
 }
+
+@test "gaudi-bash helpers: updater: _gaudi-bash-submodules-update should fetch what gaudi-bash runs on and leave out what only the tests need" {
+
+	# The core gets a second submodule, standing for bats
+	git init -q -b main "$UPDATER_ROOT/origin/bin/bats-core"
+	_commit origin/bin/bats-core "bats 1"
+	git -C "$UPDATER_ROOT/origin" submodule --quiet add "$UPDATER_ROOT/origin/bin/bats-core" bin/bats-core 2> /dev/null
+	_commit origin "core with bats"
+
+	# A clone without submodules, as the installer makes it
+	git clone -q "$UPDATER_ROOT/origin" "$UPDATER_ROOT/fresh"
+	assert_file_not_exist "$UPDATER_ROOT/fresh/components/changes.txt"
+
+	# git only fetches a submodule from a local path when it is told that this is fine
+	GIT_CONFIG_COUNT=1 GIT_CONFIG_KEY_0=protocol.file.allow GIT_CONFIG_VALUE_0=always run _gaudi-bash-submodules-update "$UPDATER_ROOT/fresh"
+	assert_success
+
+	assert_file_exist "$UPDATER_ROOT/fresh/components/changes.txt"
+	assert_file_not_exist "$UPDATER_ROOT/fresh/bin/bats-core/changes.txt"
+}

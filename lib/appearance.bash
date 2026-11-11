@@ -123,8 +123,5 @@ if [[ -n $GAUDI_BASH_THEME ]]; then
 fi
 
 _log_component "$GAUDI_BASH_THEME" "theme"
-if [[ $PROMPT ]]; then
-	export PS1="\[""$PROMPT""\]"
-fi
 
 unset GAUDI_BASH_LOG_PREFIX

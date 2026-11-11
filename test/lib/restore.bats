@@ -98,3 +98,16 @@ BACKUP
 	assert_failure
 	assert_output --partial "No valid backup file found"
 }
+
+@test "gaudi-bash core: _gaudi-bash-restore should prefer the backup profile over the backup file of older versions" {
+
+	mkdir -p "$GAUDI_BASH/tmp" "$GAUDI_BASH/profiles"
+	printf "%s\n" "gbash enable plugin base" > "$GAUDI_BASH/tmp/enabled.gaudi-bash.backup"
+	printf "%s\n" "alias general" "echo INJECTED" > "$GAUDI_BASH/profiles/backup.gaudi-bash"
+
+	run _gaudi-bash-restore
+	assert_success
+	refute_output --partial "INJECTED"
+	assert_file_exist "$GAUDI_BASH/components/enabled/150___general.aliases.bash"
+	assert_file_not_exist "$GAUDI_BASH/components/enabled/250___base.plugins.bash"
+}

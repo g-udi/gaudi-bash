@@ -5,7 +5,8 @@
 export GAUDI_BASH_LOAD_PRIORITY_SEPARATOR="___"
 
 # Load all the helper libraries
-for helper in "${GAUDI_BASH}"/lib/helpers/*.bash; do source "$helper"; done
+for _gaudi_bash_helper in "${GAUDI_BASH}"/lib/helpers/*.bash; do source "$_gaudi_bash_helper"; done
+unset _gaudi_bash_helper
 
 # @function     _gaudi-bash-version
 # @description  prints the gaudi-bash version
@@ -50,8 +51,6 @@ _gaudi-bash-reload() {
 	if [[ -n $GAUDI_TEST_RUNNER ]]; then
 		return 0
 	fi
-
-	_gaudi-bash-component-cache-clean
 
 	local profile="${HOME?}/${GAUDI_BASH_PROFILE}"
 	if [[ -f "$profile" ]]; then
@@ -129,6 +128,8 @@ _gaudi-bash-show() {
 	about "list available gaudi_bash components or allow filtering for a specific type e.g., plugins, aliases, completions"
 	group "gaudi-bash:core"
 
+	local file_type
+
 	if [[ -n "$1" ]]; then
 		_gaudi-bash-describe "$1" "$2"
 	else
@@ -140,49 +141,51 @@ _gaudi-bash-show() {
 
 # @function     _gaudi-bash-backup
 # @description  backs up enabled components (plugins, aliases, completions)
-#               the function writes "enable" commands into a file in $GAUDI_BASH/tmp/enabled.gaudi-bash.backup
-# @return       $GAUDI_BASH/tmp/enabled.gaudi-bash.backup file with 'gbash enable' commands
+#               the backup is the profile named "backup" (see gbash profile), which is overwritten without asking
+# @return       $GAUDI_BASH/profiles/backup.gaudi-bash file with a "<type> <name>" line per enabled component
 _gaudi-bash-backup() {
 	about "backs up enabled components (plugins, aliases, completions)"
 	group "gaudi-bash:core"
 
-	mkdir -p "${GAUDI_BASH}/tmp"
+	local backup_file="${GAUDI_BASH}/profiles/backup.gaudi-bash" line
 
-	# Clear out the existing backup file
-	echo -n "" > "${GAUDI_BASH}/tmp/enabled.gaudi-bash.backup"
+	_gaudi-bash-profile-write "$backup_file" || return 1
 
-	for _file in "${GAUDI_BASH}"/components/enabled/*.bash; do
-		local _component _type
+	if [[ ! -s "$backup_file" ]]; then
+		echo "No component is enabled, the backup is empty"
+		return 0
+	fi
 
-		_component="$(echo "$_file" | sed -e "s/.*$GAUDI_BASH_LOAD_PRIORITY_SEPARATOR\(.*\).bash.*/\1/")"
-		_type=$(_gaudi-bash-singularize-component "${_component##*.}")
-		_component=${_component%%.*}
-
-		echo "Backing up $_type: ${_component}"
-		printf "%s\n" "gbash enable ${_type} ${_component}" >> "${GAUDI_BASH}/tmp/enabled.gaudi-bash.backup"
-
-	done
+	while IFS= read -r line; do
+		echo "Backing up ${line%% *}: ${line#* }"
+	done < "$backup_file"
 }
 
 # @function     _gaudi-bash-restore
 # @description  restores enabled gaudi-bash components
-#               the function gets the list of enabled commands from the backup file in $GAUDI_BASH/tmp/enabled.gaudi-bash.backup
-#               entries written by older versions (prefixed with `gaudi-bash enable`) are accepted as well as `gbash enable`
+#               the function enables every component listed in the "backup" profile, components that are enabled stay enabled
+#               (gbash profile load backup also disables the components that are not part of the backup)
+#               when there is no such profile the backup file of older versions is used: $GAUDI_BASH/tmp/enabled.gaudi-bash.backup,
+#               whose entries are prefixed with `gbash enable` (or `gaudi-bash enable`)
 # @return       status message to indicate the outcome
 _gaudi-bash-restore() {
 	about "restores enabled components (plugins, aliases, completions)"
 	group "gaudi-bash:core"
 
-	! [[ -f "${GAUDI_BASH}/tmp/enabled.gaudi-bash.backup" ]] && echo -e "${RED}No valid backup file found :(${NC}" && return 1
+	local backup_file="${GAUDI_BASH}/profiles/backup.gaudi-bash" line
 
-	while IFS= read -r line; do
+	[[ -f "$backup_file" ]] || backup_file="${GAUDI_BASH}/tmp/enabled.gaudi-bash.backup"
+	! [[ -f "$backup_file" ]] && echo -e "${RED}No valid backup file found :(${NC}" && return 1
+
+	while IFS= read -r line || [[ -n "$line" ]]; do
+		[[ -z "$line" ]] && continue
 		# Validate that the line matches the expected format before executing
-		if [[ "$line" =~ ^(gbash|gaudi-bash)\ enable\ (alias|plugin|completion)\ ([a-zA-Z0-9_-]+)$ ]]; then
-			gbash enable "${BASH_REMATCH[2]}" "${BASH_REMATCH[3]}"
+		if [[ "$line" =~ ^((gbash|gaudi-bash)\ enable\ )?(alias|plugin|completion)\ ([a-zA-Z0-9_-]+)$ ]]; then
+			gbash enable "${BASH_REMATCH[3]}" "${BASH_REMATCH[4]}"
 		else
 			_log_warning "Skipping invalid backup entry: $line"
 		fi
-	done < "${GAUDI_BASH}/tmp/enabled.gaudi-bash.backup"
+	done < "$backup_file"
 }
 
 # Drop the stale `gbash` alias and `gaudi-bash` function left by older versions in a running shell, so the
@@ -241,7 +244,7 @@ _gaudi-bash-dispatch() {
 	shift
 	local component=${1:-}
 	shift
-	local func
+	local func arg
 
 	case $verb in
 		show)
@@ -258,7 +261,8 @@ _gaudi-bash-dispatch() {
 			return
 			;;
 		doctor)
-			func=_gaudi-bash-doctor
+			_gaudi-bash-doctor "$component" "$@"
+			return
 			;;
 		update)
 			_gaudi-bash-update "$component" "$@"
