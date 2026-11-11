@@ -73,7 +73,7 @@ _check-results-count() {
 	run _gaudi-bash-describe plugins
 	assert_success
 	assert_output --partial "base"
-	assert_output --partial "Miscellaneous tools"
+	assert_output --partial "Miscellaneous base tools"
 }
 
 @test "gaudi-bash helpers: _gaudi-bash-describe: should list all plugins (enabled/disabled)" {

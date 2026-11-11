@@ -5,6 +5,14 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
+  # Releases are cut by hand: Actions > CI > Run workflow, on main, with the kind of bump
+  workflow_dispatch:
+    inputs:
+      bump:
+        description: Which part of the version to raise for the release
+        type: choice
+        options: [patch, minor, major]
+        default: patch
 
 # Jobs only read the repository, the release job asks for write access on its own
 permissions:
@@ -92,7 +100,8 @@ jobs:
         severity: warning
 
   release:
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    # Only a run started by hand on main releases; pushes and pull requests never tag
+    if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main'
     needs: [test, lint]
     runs-on: ubuntu-latest
 
@@ -112,6 +121,8 @@ jobs:
 
     - name: Bump version and create tag
       id: tag
+      env:
+        BUMP: ${{ inputs.bump }}
       run: |
         # Get latest tag, default to v0.0.0 if none
         LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")
@@ -127,7 +138,11 @@ jobs:
         # Parse version components
         VERSION="${LATEST_TAG#v}"
         IFS='.' read -r MAJOR MINOR PATCH <<< "$VERSION"
-        PATCH=$((PATCH + 1))
+        case "$BUMP" in
+          major) MAJOR=$((MAJOR + 1)); MINOR=0; PATCH=0 ;;
+          minor) MINOR=$((MINOR + 1)); PATCH=0 ;;
+          *) PATCH=$((PATCH + 1)) ;;
+        esac
         NEW_TAG="v${MAJOR}.${MINOR}.${PATCH}"
 
         echo "New tag: $NEW_TAG"

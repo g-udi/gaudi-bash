@@ -171,21 +171,63 @@ _array-dedupe() {
 	_clean-string "$(echo "$*" | tr ' ' '\n' | sort -u | tr '\n' ' ')" "all"
 }
 
-# @function     __homebrew-check
-# @description  check the installation ot homebrew
-# @return       boolean status code success (0) if the function is found or fails otherwise
+# @function     _homebrew-check
+# @description  check the installation of homebrew
+#               when it is installed, its prefix is in GAUDI_HOST_HOMEBREW_PREFIX (the name components use,
+#               see the host contract below) and in GAUDI_BASH_HOMEBREW_PREFIX; `brew --prefix` runs once at most
+# @return       boolean status code success (0) if homebrew is installed or fails otherwise
 function _homebrew-check() {
 	if _binary_exists 'brew'; then
-		# Homebrew is installed
-		if [[ "${GAUDI_BASH_HOMEBREW_PREFIX:-unset}" == 'unset' ]]; then
-			# variable isn't set
-			GAUDI_BASH_HOMEBREW_PREFIX="$(brew --prefix)"
-		else
-			true # Variable is set already, don't invoke `brew`.
-		fi
+		# Homebrew is installed: only invoke `brew` when the prefix is not known yet
+		: "${GAUDI_HOST_HOMEBREW_PREFIX:=${GAUDI_BASH_HOMEBREW_PREFIX:-$(brew --prefix)}}"
+		GAUDI_BASH_HOMEBREW_PREFIX="$GAUDI_HOST_HOMEBREW_PREFIX"
 	else
 		# Homebrew is not installed: clear variable.
 		GAUDI_BASH_HOMEBREW_PREFIX=
+		GAUDI_HOST_HOMEBREW_PREFIX=
 		false # return failure if brew not installed.
 	fi
+}
+
+# Component host contract
+# -----------------------
+# The files under components/{aliases,completions,plugins}/lib are shared, byte for byte, with gaudi-shell
+# They never name a framework: they use only the names below, which each framework defines once
+# (gaudi-shell does it in its own lib/helpers/utils.bash), plus the helpers both frameworks already share:
+#   cite, about, about-alias, about-plugin, about-completion, group, param, example, priority (lib/composure.bash)
+#   _log_debug, _log_warning, _log_error (lib/log.bash)
+#   pathmunge (lib/helpers/generic.bash)
+#   _command_exists, _binary_exists, _homebrew-check (this file)
+#
+#   GAUDI_HOST_NAME              the framework's name, for messages and cache folders
+#   GAUDI_HOST_COMMAND           the command its users type
+#   GAUDI_HOST_HOME              its install directory (components/enabled and components/custom live under it)
+#   GAUDI_HOST_SED_I_PARAMETERS  array: the arguments that make sed edit in place on this OS
+#   GAUDI_HOST_HOMEBREW_PREFIX   the Homebrew prefix; empty until _homebrew-check (or the brew plugin) has found it
+#   _gaudi_host_setting NAME     prints the user's setting NAME (HTTP_PROXY, THEME, ...)
+# shellcheck disable=SC2034
+GAUDI_HOST_NAME="gaudi-bash"
+# shellcheck disable=SC2034
+GAUDI_HOST_COMMAND="gbash"
+# shellcheck disable=SC2034
+GAUDI_HOST_HOME="${GAUDI_BASH:-}"
+# shellcheck disable=SC2034
+GAUDI_HOST_SED_I_PARAMETERS=("${GAUDI_BASH_SED_I_PARAMETERS[@]}")
+: "${GAUDI_HOST_HOMEBREW_PREFIX:=${GAUDI_BASH_HOMEBREW_PREFIX:-}}"
+
+# @function     _gaudi_host_setting
+# @description  prints the value of a user setting, read when called:
+#               GAUDI_<name> if set, otherwise this framework's GAUDI_BASH_<name>, otherwise nothing
+# @param $1     name: the setting, in capitals (digits and "_" allowed), e.g. HTTP_PROXY
+# @return       the value of the setting
+# @example      ❯ _gaudi_host_setting THEME
+_gaudi_host_setting() {
+	about "prints the value of a user setting (GAUDI_<name>, otherwise GAUDI_BASH_<name>)"
+	group "gaudi-bash:core:utils"
+
+	local _name _fallback
+	[[ ${1:-} =~ ^[A-Z0-9_]+$ ]] || return 1
+	_name="GAUDI_$1"
+	_fallback="GAUDI_BASH_$1"
+	printf '%s' "${!_name:-${!_fallback:-}}"
 }
