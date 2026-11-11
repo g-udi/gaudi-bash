@@ -44,7 +44,12 @@ Running gaudi-bash unit tests.. \n\n"
 
 status=0
 
-bash "$GAUDI_TEST_DIRECTORY"/runners/run-bats.bash || status=$?
-bash "$GAUDI_TEST_DIRECTORY"/runners/run-search.bash || status=$?
+if [[ $# -gt 0 ]]; then
+	# Run only the test files or directories passed as arguments
+	bash "$GAUDI_TEST_DIRECTORY"/runners/run-bats.bash "$@" || status=$?
+else
+	bash "$GAUDI_TEST_DIRECTORY"/runners/run-bats.bash || status=$?
+	bash "$GAUDI_TEST_DIRECTORY"/runners/run-search.bash || status=$?
+fi
 
 exit "$status"

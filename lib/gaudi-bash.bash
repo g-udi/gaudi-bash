@@ -180,7 +180,7 @@ unset -f gaudi-bash 2> /dev/null || true
 gbash() {
 	about 'provides a solid framework for using, developing and maintaining shell scripts and custom commands for your daily work'
 	param '1: verb [one of: version | help | doctor | reload | restart | search | update | backup | restore | profile | disable | enable | show ]] '
-	param '2: component type [one of: alias(es) | completion(s) | plugin(s) ]] or search term(s) or update mode [stable | dev | all]'
+	param '2: component type [one of: alias(es) | completion(s) | plugin(s) ]] or search term(s) or update mode [stable | dev]'
 	param '3: specific component [optional]'
 
 	example '$ gbash show plugins'
@@ -188,10 +188,10 @@ gbash() {
 	example '$ gbash enable plugin git [tmux]...'
 	example '$ gbash disable alias hg [tmux]...'
 	example '$ gbash update'
-	example '$ gbash update all'
+	example '$ gbash update dev'
 	example '$ gbash backup'
 	example '$ gbash help plugins'
-	example '$ gbash search [-|@]term1 [-|@]term2 ... [[ -e/--enable ]] [[ -d/--disable ]] [[ -r/--refresh ]] [[ -c/--no-color ]]'
+	example '$ gbash search [-|@]term1 [-|@]term2 ... [[ --enable ]] [[ --disable ]] [[ -r/--refresh ]] [[ -x/--no-color ]] [[ -a/--alias | -p/--plugin | -c/--completion ]]'
 	example '$ gbash version'
 	example '$ gbash reload'
 	example '$ gbash doctor errors|warnings|all'
