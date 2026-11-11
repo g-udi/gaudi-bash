@@ -96,7 +96,7 @@ local_setup() {
 
 	run _gaudi-bash-component-descriptions plugins
 	assert_success
-	assert_line "base	Miscellaneous tools"
+	assert_line "base	Miscellaneous base tools"
 
 	run _gaudi-bash-component-descriptions INVALID
 	assert_failure
@@ -144,7 +144,7 @@ local_setup() {
 	run _gaudi-bash-component-help plugin base
 	assert_success
 	assert_line --partial "base"
-	assert_output --partial "Miscellaneous tools"
+	assert_output --partial "Miscellaneous base tools"
 }
 
 @test "gaudi-bash helpers: components: _gaudi-bash-component-help: should fail if the plugin passed as the second param doesn't exist" {
@@ -166,7 +166,7 @@ local_setup() {
 	run _gaudi-bash-component-help plugin base
 	assert_success
 	assert_line --partial "base"
-	assert_output --partial "Miscellaneous tools"
+	assert_output --partial "Miscellaneous base tools"
 }
 
 @test "gaudi-bash helpers: components: _gaudi-bash-component-help: should fail if the alias passed as the second param doesn't exist" {
@@ -249,7 +249,7 @@ local_setup() {
 	run _gaudi-bash-component-list-matching aliases easily
 	assert_failure
 
-	run _gaudi-bash-component-list-matching plugins "MISCELLANEOUS tools"
+	run _gaudi-bash-component-list-matching plugins "MISCELLANEOUS base tools"
 	assert_success
 	assert_output "base "
 }
