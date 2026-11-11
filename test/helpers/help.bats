@@ -82,3 +82,46 @@ local_setup() {
 	assert_line --index 0 --partial "ag"
 	assert_line --index 2 "ag='ag --smart-case --pager=\"less -MIRFX'"
 }
+
+@test "gaudi-bash-helpers: help: aliases <name> should list only that alias group" {
+
+	run gbash enable alias "ag"
+	run gbash enable alias "docker-compose"
+
+	run _gaudi-bash-help aliases ag
+	assert_success
+	assert_output --partial "ag"
+	refute_output --partial "docker-compose"
+}
+
+@test "gaudi-bash-helpers: help: aliases <name> should fail for an unknown alias group" {
+
+	run _gaudi-bash-help aliases INVALID
+	assert_failure
+	assert_output --partial "No aliases named 'INVALID' were found"
+}
+
+@test "gaudi-bash-helpers: help: plugins <name> should fail for an unknown plugin" {
+
+	run _gaudi-bash-help plugins INVALID
+	assert_failure
+	assert_output --partial "No plugin named 'INVALID' was found"
+}
+
+@test "gaudi-bash-helpers: help: plugins <name> should point at enable when the plugin is not loaded" {
+
+	run _gaudi-bash-help plugins git
+	assert_success
+	assert_output --partial "gbash enable plugin git"
+}
+
+@test "gaudi-bash-helpers: help: plugins <name> should describe the functions of a loaded plugin" {
+
+	# shellcheck disable=SC1091
+	source "$GAUDI_BASH/components/plugins/lib/git.plugins.bash"
+
+	run _gaudi-bash-help plugins git
+	assert_success
+	assert_line --partial "git_remote"
+	refute_output --partial "gbash enable plugin git"
+}
