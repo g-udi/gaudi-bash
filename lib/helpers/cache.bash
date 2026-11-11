@@ -41,8 +41,6 @@ _gaudi-bash-component-cache-clean() {
 		done
 	else
 		cache=$(_gaudi-bash-component-cache-add "${component}")
-		if [[ -f "${cache}" ]]; then
-			rm -f "${cache}" && rm -f "${cache}-enabled"
-		fi
+		rm -f "${cache}" "${cache}-enabled"
 	fi
 }

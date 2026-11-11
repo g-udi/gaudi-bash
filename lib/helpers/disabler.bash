@@ -63,7 +63,7 @@ _gaudi-bash-disable() {
 	[[ $type == "plugins" ]] && _on-disable-callback "$component"
 
 	if [[ -n "$GAUDI_BASH_AUTOMATIC_RELOAD_AFTER_CONFIG_CHANGE" ]]; then
-		_gaudi-bash-reload
+		_gaudi-bash-reload-after-change
 	fi
 
 	return 0

@@ -95,5 +95,6 @@ BACKUP
 	rm -f "$GAUDI_BASH/tmp/enabled.gaudi-bash.backup"
 
 	run _gaudi-bash-restore
+	assert_failure
 	assert_output --partial "No valid backup file found"
 }

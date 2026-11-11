@@ -1,7 +1,51 @@
 #!/usr/bin/env bats
 # shellcheck shell=bats
+# shellcheck disable=SC2016,SC1091,SC2317,SC2031
 
 load "$GAUDI_TEST_DIRECTORY"/helper.bash
+
+# Removes the profile backups that earlier tests left in the test home
+__remove_profile_backups() {
+	local backup
+
+	for backup in "${HOME:?}/${GAUDI_BASH_PROFILE:?}.bak"*; do
+		[[ -e "$backup" ]] && rm -f "$backup"
+	done
+	return 0
+}
+
+# Runs the installer on a home that already holds an installation, with a git that only records how it was called
+# $1: the answer given to the installer, nothing can be read when it is left out
+__run_installer_again() {
+	local fakebin="$BATS_TEST_TMPDIR/fakebin"
+
+	INSTALL_HOME="$BATS_TEST_TMPDIR/install-home"
+	GIT_CALLS="$BATS_TEST_TMPDIR/git-calls"
+
+	mkdir -p "$fakebin" "$INSTALL_HOME/.gaudi_bash"
+	touch "$INSTALL_HOME/.gaudi_bash/existing-installation" "$GIT_CALLS"
+
+	cat > "$fakebin/git" << 'GIT'
+#!/usr/bin/env bash
+printf "%s\n" "$*" >> "$GIT_CALLS"
+case "$3" in
+	describe)
+		echo "v9.9.9"
+		;;
+	rev-list)
+		echo "0000000"
+		;;
+esac
+exit 0
+GIT
+	chmod +x "$fakebin/git"
+
+	if [[ $# -gt 0 ]]; then
+		run env PATH="$fakebin:$PATH" HOME="$INSTALL_HOME" GIT_CALLS="$GIT_CALLS" "$GAUDI_BASH_ORIGIN/install.sh" --silent --basic <<< "$1"
+	else
+		run env PATH="$fakebin:$PATH" HOME="$INSTALL_HOME" GIT_CALLS="$GIT_CALLS" "$GAUDI_BASH_ORIGIN/install.sh" --silent --basic < /dev/null
+	fi
+}
 
 @test "gaudi-bash install: verify that the install script exists" {
 
@@ -127,6 +171,7 @@ GIT
 
 	cd "$GAUDI_BASH" || exit
 
+	__remove_profile_backups
 	touch "$HOME/$GAUDI_BASH_PROFILE"
 	echo "test file content" > "$HOME/$GAUDI_BASH_PROFILE"
 	md5_orig=$(md5sum "$HOME/$GAUDI_BASH_PROFILE" | awk '{print $1}')
@@ -139,4 +184,135 @@ GIT
 	md5_bak=$(md5sum "$HOME/$GAUDI_BASH_PROFILE.bak" | awk '{print $1}')
 
 	assert_equal "$md5_orig" "$md5_bak"
+}
+
+@test "gaudi-bash install: a silent setup never overwrites an existing backup" {
+
+	local -a backups
+
+	cd "$GAUDI_BASH" || exit
+
+	__remove_profile_backups
+	echo "the original profile" > "$HOME/$GAUDI_BASH_PROFILE.bak"
+	echo "a profile changed after the first setup" > "$HOME/$GAUDI_BASH_PROFILE"
+
+	./setup.sh --silent
+
+	assert_equal "$(< "$HOME/$GAUDI_BASH_PROFILE.bak")" "the original profile"
+
+	# The profile that was about to be replaced is kept in a timestamped backup
+	backups=("$HOME/$GAUDI_BASH_PROFILE.bak."*)
+	assert_equal "${#backups[@]}" 1
+	assert_equal "$(< "${backups[0]}")" "a profile changed after the first setup"
+}
+
+@test "gaudi-bash install: running the silent setup again keeps the backup and adds no other" {
+
+	local -a backups
+
+	cd "$GAUDI_BASH" || exit
+
+	__remove_profile_backups
+	echo "the original profile" > "$HOME/$GAUDI_BASH_PROFILE"
+
+	./setup.sh --silent
+	./setup.sh --silent
+	./setup.sh --silent
+
+	assert_equal "$(< "$HOME/$GAUDI_BASH_PROFILE.bak")" "the original profile"
+
+	backups=("$HOME/$GAUDI_BASH_PROFILE.bak"*)
+	assert_equal "${#backups[@]}" 1
+	assert_equal "$(grep -c "gaudi_bash.sh" "$HOME/$GAUDI_BASH_PROFILE")" 1
+}
+
+@test "gaudi-bash install: the profile template loads gaudi-bash from a quoted path inside its markers" {
+
+	cd "$GAUDI_BASH" || exit
+
+	./setup.sh --silent
+
+	run grep -Fx 'source "$GAUDI_BASH/gaudi_bash.sh"' "$HOME/$GAUDI_BASH_PROFILE"
+	assert_success
+	run grep -Fxc "# >>> gaudi-bash >>>" "$HOME/$GAUDI_BASH_PROFILE"
+	assert_output "1"
+	run grep -Fxc "# <<< gaudi-bash <<<" "$HOME/$GAUDI_BASH_PROFILE"
+	assert_output "1"
+}
+
+@test "gaudi-bash install: appending the template to a profile is idempotent" {
+
+	local profile="$HOME/$GAUDI_BASH_PROFILE"
+
+	# Asking for the usage defines the setup functions without running the setup
+	source "$GAUDI_BASH/setup.sh" --help > /dev/null || true
+
+	printf "%s\n" "export MY_SETTING=1" > "$profile"
+
+	run _write_profile_template append
+	assert_success
+	assert_output --partial "has been added"
+
+	run _write_profile_template append
+	assert_success
+	assert_output --partial "already loaded"
+
+	assert_equal "$(grep -Fxc "# >>> gaudi-bash >>>" "$profile")" 1
+	assert_equal "$(grep -c "gaudi_bash.sh" "$profile")" 1
+	assert_equal "$(head -n 1 "$profile")" "export MY_SETTING=1"
+
+	# A profile written by an older version has no markers but already loads gaudi-bash
+	printf "%s\n" "export MY_SETTING=1" 'source $GAUDI_BASH/gaudi_bash.sh' > "$profile"
+
+	run _write_profile_template append
+	assert_output --partial "already loaded"
+	assert_equal "$(wc -l < "$profile" | tr -d ' ')" 2
+}
+
+@test "gaudi-bash install: a silent setup fails and says why when a required file is missing" {
+
+	rm "$GAUDI_BASH/template/bash_profile.template.bash"
+	__remove_profile_backups
+	echo "untouched profile" > "$HOME/$GAUDI_BASH_PROFILE"
+
+	run "$GAUDI_BASH/setup.sh" --silent
+	assert_failure
+	assert_output --partial "Error: Missing profile template"
+
+	assert_equal "$(< "$HOME/$GAUDI_BASH_PROFILE")" "untouched profile"
+}
+
+@test "gaudi-bash install: installer stops when it is run again without an answer" {
+
+	__run_installer_again
+	assert_failure
+	assert_output --partial "You already have gaudi-bash installed"
+	assert_output --partial "leaving the existing installation untouched"
+
+	assert_file_exist "$INSTALL_HOME/.gaudi_bash/existing-installation"
+	assert_equal "$(< "$GIT_CALLS")" ""
+}
+
+@test "gaudi-bash install: installer stops when it is run again with an answer that is not y or n" {
+
+	__run_installer_again "maybe"
+	assert_failure
+	assert_output --partial "leaving the existing installation untouched"
+
+	assert_file_exist "$INSTALL_HOME/.gaudi_bash/existing-installation"
+	assert_equal "$(< "$GIT_CALLS")" ""
+}
+
+@test "gaudi-bash install: installer updates the existing installation with fetch and checkout" {
+
+	__run_installer_again "n"
+	assert_success
+
+	assert_file_exist "$INSTALL_HOME/.gaudi_bash/existing-installation"
+
+	run cat "$GIT_CALLS"
+	assert_line "-C $INSTALL_HOME/.gaudi_bash fetch origin --tags"
+	assert_line "-C $INSTALL_HOME/.gaudi_bash checkout v9.9.9"
+	assert_line "-C $INSTALL_HOME/.gaudi_bash submodule update --init --recursive"
+	refute_output --partial "pull"
 }

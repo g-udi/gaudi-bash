@@ -1,4 +1,4 @@
-# #!/usr/bin/env bash
+#!/usr/bin/env bash
 # shellcheck shell=bash
 # shellcheck disable=SC2181
 
@@ -11,14 +11,20 @@ function _gaudi-bash_update_and_restart() {
 	about 'Checks out the wanted version, pops directory and restart. Does not return (because of the restart!)'
 	group 'gaudi-bash:core:updater'
 
-	git checkout "$1" &> /dev/null
-	if [[ $? -eq 0 ]]; then
-		echo "gaudi-bash successfully updated."
-		popd &> /dev/null || return
-		_gaudi-bash-restart
-	else
+	if ! git checkout "$1" &> /dev/null; then
 		echo "Error updating gaudi-bash, please check if your gaudi-bash installation folder (${GAUDI_BASH}) is clean."
+		return 1
 	fi
+
+	# Bring the components (git submodules) to the versions pinned by the version that was just checked out
+	if ! git submodule update --init --recursive &> /dev/null; then
+		echo "gaudi-bash was updated but its components (git submodules) were not, please run: git -C '${GAUDI_BASH}' submodule update --init --recursive"
+		return 1
+	fi
+
+	echo "gaudi-bash successfully updated."
+	popd &> /dev/null || return
+	_gaudi-bash-restart
 }
 
 # @function      _gaudi-bash-update
@@ -30,6 +36,7 @@ function _gaudi-bash-update() {
 	group 'gaudi-bash:core:updater'
 
 	local silent word mode DIFF version TARGET revision status revert log_color RESP
+	local result=0
 	for word in "$@"; do
 		if [[ "${word}" == "--silent" || "${word}" == "-s" ]]; then
 			silent=true
@@ -39,9 +46,16 @@ function _gaudi-bash-update() {
 		fi
 	done
 
+	if [[ -n "${mode:-}" && "${mode}" != "stable" && "${mode}" != "dev" ]]; then
+		echo "Unknown update mode: ${mode}"
+		echo "Usage: gbash update [stable|dev] [--silent]"
+		return 1
+	fi
+
 	pushd "${GAUDI_BASH?}" > /dev/null || return
 
-	DIFF=$(git diff --name-status)
+	# Only changes to tracked files block an update: a submodule that is not at the pinned commit is brought back in line after the checkout
+	DIFF=$(git status --porcelain --untracked-files=no --ignore-submodules=all)
 	if [[ -n "$DIFF" ]]; then
 		echo -e "Local changes detected in gaudi-bash directory. Clean '$GAUDI_BASH' directory to proceed.\n$DIFF"
 		popd > /dev/null || return
@@ -52,7 +66,11 @@ function _gaudi-bash-update() {
 		GAUDI_BASH_REMOTE="origin"
 	fi
 
-	git fetch "$GAUDI_BASH_REMOTE" --tags &> /dev/null
+	if ! git fetch "$GAUDI_BASH_REMOTE" --tags &> /dev/null; then
+		echo "Unable to fetch from '$GAUDI_BASH_REMOTE', can not check for gaudi-bash updates."
+		popd > /dev/null || return
+		return 1
+	fi
 
 	if [[ -z "$GAUDI_BASH_DEVELOPMENT_BRANCH" ]]; then
 		GAUDI_BASH_DEVELOPMENT_BRANCH="main"
@@ -94,12 +112,12 @@ function _gaudi-bash-update() {
 
 		if [[ -n "${silent}" ]]; then
 			echo "Updating to ${TARGET}($(git log -1 --format=%h "${TARGET}"))..."
-			_gaudi-bash_update_and_restart "$TARGET" "$version"
+			_gaudi-bash_update_and_restart "$TARGET" "$version" || result=1
 		else
 			read -r -e -n 1 -p "Would you like to update to ${TARGET}($(git log -1 --format=%h "${TARGET}"))? [Y/n] " RESP
 			case "$RESP" in
 				[yY] | "")
-					_gaudi-bash_update_and_restart "$TARGET" "$version"
+					_gaudi-bash_update_and_restart "$TARGET" "$version" || result=1
 					;;
 				[nN])
 					echo "Not updating…"
@@ -117,4 +135,5 @@ function _gaudi-bash-update() {
 		fi
 	fi
 	popd > /dev/null || return
+	return "$result"
 }

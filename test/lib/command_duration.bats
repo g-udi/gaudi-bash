@@ -73,3 +73,27 @@ local_setup() {
 	# The icon should have been set (we can't easily assert emoji content, just verify no error)
 	assert_success
 }
+
+@test "gaudi-bash lib: command_duration: the hooks should be registered only once across reloads" {
+
+	local hook
+	local -i pre_exec=0 pre_cmd=0
+
+	preexec_functions=(some_other_hook)
+	precmd_functions=()
+
+	_gaudi_bash_command_duration_init
+	_gaudi_bash_command_duration_init
+	_gaudi_bash_command_duration_init
+
+	for hook in "${preexec_functions[@]}"; do
+		[[ "$hook" == "_command_duration_pre_exec" ]] && pre_exec+=1
+	done
+	for hook in "${precmd_functions[@]}"; do
+		[[ "$hook" == "_command_duration_pre_cmd" ]] && pre_cmd+=1
+	done
+
+	assert_equal "$pre_exec" 1
+	assert_equal "$pre_cmd" 1
+	assert_equal "${#preexec_functions[@]}" 2
+}
