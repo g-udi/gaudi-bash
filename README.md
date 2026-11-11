@@ -99,6 +99,16 @@ This removes the gaudi-bash block from your Bash profile (`~/.bash_profile` on m
 If `setup.sh` took a `.bak` backup of your profile, the script asks whether to put it back instead (this discards whatever was added to the profile since); `./uninstall.sh --restore-backup` does so without asking. When the profile can not be determined nothing is removed.
 After the uninstall script finishes, start a new shell.
 
+## Releasing
+
+Merging to `main` does not create a release. A release is cut by hand:
+
+1. Open **Actions > CI > Run workflow** on GitHub and pick the `main` branch.
+2. Choose which part of the version to raise: `patch`, `minor` or `major`.
+3. Once the tests and lint pass, the run tags `main` and publishes a GitHub release.
+
+`gbash update` moves an installation to the latest release tag, and `gbash update dev` to the tip of `main`, so the two only differ once `main` has moved past the last release.
+
 ## Architecture
 
 gaudi-bash is structured around a clear separation between the core engine and user-facing components:
