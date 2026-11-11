@@ -1,335 +1,216 @@
-# #!/usr/bin/env bats
-# # shellcheck shell=bats
-# # shellcheck disable=SC2294,SC2004
+#!/usr/bin/env bats
+# shellcheck shell=bats
+# shellcheck disable=SC2294,SC2004,SC2034
 
-# load "$GAUDI_TEST_DIRECTORY/helper.bash"
+load "$GAUDI_TEST_DIRECTORY"/helper.bash
 
-# load "$GAUDI_BASH/components/completions/lib/gaudi-bash.completions.bash"
+local_setup() {
+	load_gaudi_libs gaudi-bash
 
-# local_setup() {
-# 	prepare
-# }
+	# The components are copied into the test directory for every test, so the completion is loaded here
+	load "$GAUDI_BASH/components/completions/lib/gaudi-bash.completions.bash"
 
-# __check_completion() {
-# 	# Get the parameters as a single value
-# 	COMP_LINE=$*
+	# Components that only exist for these tests, so the expectations do not depend on the real component lists
+	touch "$GAUDI_BASH/components/aliases/lib/zzgaudi-one.aliases.bash"
+	touch "$GAUDI_BASH/components/aliases/lib/zzgaudi-two.aliases.bash"
+	touch "$GAUDI_BASH/components/plugins/lib/zzgaudi-one.plugins.bash"
+	touch "$GAUDI_BASH/components/completions/lib/zzgaudi-one.completions.bash"
+}
 
-# 	# Get the parameters as an array
-# 	eval set -- "$@"
-# 	COMP_WORDS=("$@")
+__enable_fixture() {
+	ln -s "$GAUDI_BASH/components/$1/lib/$2.$1.bash" "$GAUDI_BASH/components/enabled/$3___$2.$1.bash"
+	assert_link_exist "$GAUDI_BASH/components/enabled/$3___$2.$1.bash"
+}
 
-# 	# Index of the cursor in the line
-# 	COMP_POINT=${#COMP_LINE}
+__check_completion() {
+	# Get the parameters as a single value
+	COMP_LINE=$*
 
-# 	# Get the last character of the line that was entered
-# 	COMP_LAST=$((${COMP_POINT} - 1))
+	# Get the parameters as an array
+	eval set -- "$@"
+	COMP_WORDS=("$@")
 
-# 	# If the last character was a space...
-# 	if [[ ${COMP_LINE:$COMP_LAST} = ' ' ]]; then
-# 		# ...then add an empty array item
-# 		COMP_WORDS+=('')
-# 	fi
+	# Index of the cursor in the line
+	COMP_POINT=${#COMP_LINE}
 
-# 	# Word index of the last word
-# 	COMP_CWORD=$((${#COMP_WORDS[@]} - 1))
+	# Get the last character of the line that was entered
+	COMP_LAST=$((${COMP_POINT} - 1))
 
-# 	# Run the gaudi-bash completion function
-# 	_gaudi-bash-comp
+	# If the last character was a space...
+	if [[ ${COMP_LINE:$COMP_LAST} = ' ' ]]; then
+		# ...then add an empty array item
+		COMP_WORDS+=('')
+	fi
 
-# 	# Return the completion output
-# 	echo "${COMPREPLY[@]}"
-# }
+	# Word index of the last word
+	COMP_CWORD=$((${#COMP_WORDS[@]} - 1))
 
-# @test "gaudi-bash completion: ensure that the _gaudi-bash-comp function is available" {
-# 	run type -a _gaudi-bash-comp &> /dev/null
-# 	assert_success
-# }
+	# Run the gaudi-bash completion function
+	_gaudi-bash-comp
 
-# @test "gaudi-bash completion: doctor - show options" {
+	# Return the completion output
+	echo "${COMPREPLY[@]}"
+}
 
-# 	run __check_completion 'gbash doctor '
-# 	assert_line --index 0 "errors warnings all"
-# }
+@test "gaudi-bash completion: ensure that the _gaudi-bash-comp function is available" {
+	run type -a _gaudi-bash-comp &> /dev/null
+	assert_success
+}
 
-# @test "gaudi-bash completion: help - show options" {
+@test "gaudi-bash completion: the completion is registered for the gbash command" {
+	run complete -p gbash
+	assert_success
+	assert_output --partial "_gaudi-bash-comp"
+}
 
-# 	run __check_completion 'gbash help '
-# 	assert_line --index 0 "aliases completions migrate plugins update"
-# }
+@test "gaudi-bash completion: show options" {
 
-# @test "gaudi-bash completion: update - show no options" {
+	run __check_completion 'gbash '
+	assert_line --index 0 "show enable disable reload restart search update backup restore profile doctor help version"
+}
 
-# 	run __check_completion 'gbash update '
-# 	refute_output
-# }
+@test "gaudi-bash completion: show options matching the typed verb" {
 
-# @test "gaudi-bash completion: show options" {
+	run __check_completion 'gbash re'
+	assert_line --index 0 "reload restart restore"
+}
 
-# 	run __check_completion 'gbash '
-# 	assert_line --index 0 "version help doctor reload restart search update backup restore disable enable show"
-# }
+@test "gaudi-bash completion: doctor - show options" {
 
-# @test "gaudi-bash completion: gudi-bash - show options" {
+	run __check_completion 'gbash doctor '
+	assert_line --index 0 "errors warnings all"
+}
 
-# 	run __check_completion 'gudi-bash '
-# 	assert_line --index 0 "version help doctor reload restart search update backup restore disable enable show"
-# }
+@test "gaudi-bash completion: help - show options" {
 
-# @test "gaudi-bash completion: g-udi-bash - show options" {
+	run __check_completion 'gbash help '
+	assert_line --index 0 "aliases completions plugins"
+}
 
-# 	run __check_completion 'g-udi-bash '
-# 	assert_line --index 0 "version help doctor reload restart search update backup restore disable enable show"
-# }
+@test "gaudi-bash completion: help - provide the available aliases" {
 
-# @test "gaudi-bash completion: gadi-bash - show options" {
+	run __check_completion 'gbash help aliases zzgaudi'
+	assert_line --index 0 "zzgaudi-one zzgaudi-two"
+}
 
-# 	run __check_completion 'gadi-bash '
-# 	assert_line --index 0 "version help doctor reload restart search update backup restore disable enable show"
-# }
+@test "gaudi-bash completion: help - provide the available plugins" {
 
-# @test "gaudi-bash completion: guadi-bash - show options" {
-# 	run __check_completion 'guadi-bash '
-# 	assert_line --index 0 "version help doctor reload restart search update backup restore disable enable show"
-# }
+	run __check_completion 'gbash help plugins zzgaudi'
+	assert_line --index 0 "zzgaudi-one"
+}
 
-# @test "gaudi-bash completion: show - show options" {
+@test "gaudi-bash completion: update - show no options" {
 
-# 	run __check_completion 'gbash show '
-# 	assert_line --index 0 "aliases completions plugins"
-# }
+	run __check_completion 'gbash update '
+	refute_output
+}
 
-# @test "gaudi-bash completion: disable - show options" {
+@test "gaudi-bash completion: show - show options" {
 
-# 	run __check_completion 'gbash disable '
-# 	assert_line --index 0 "alias completion plugin"
-# }
+	run __check_completion 'gbash show '
+	assert_line --index 0 "aliases completions plugins"
+}
 
-# @test "gaudi-bash completion: disable - show options a" {
+@test "gaudi-bash completion: disable - show options" {
 
-# 	run __check_completion 'gbash disable a'
-# 	assert_line --index 0 "alias"
-# }
+	run __check_completion 'gbash disable '
+	assert_line --index 0 "alias completion plugin"
+}
 
-# @test "gaudi-bash completion: disable - provide nothing when atom is not enabled" {
+@test "gaudi-bash completion: disable - show options a" {
 
-# 	run __check_completion 'gbash disable alias ato'
-# 	refute_output
-# }
+	run __check_completion 'gbash disable a'
+	assert_line --index 0 "alias"
+}
 
-# @test "gaudi-bash completion: disable - provide all when atom is not enabled" {
-# 	run __check_completion 'gbash disable alias a'
-# 	assert_line --index 0 "all"
-# }
+@test "gaudi-bash completion: disable - provide nothing when the alias is not enabled" {
 
-# # @test "gaudi-bash completion: disable - provide the a* aliases when atom is enabled with the old location and name" {
+	run __check_completion 'gbash disable alias zzgaudi'
+	refute_output
+}
 
-# #   run gbash enable alias atom
-# #   assert_link_exist $GAUDI_BASH/components/enabled/150___atom.aliases.bash
+@test "gaudi-bash completion: disable - provide all when no alias is enabled" {
 
-# #   run __check_completion 'gbash disable alias a'
-# #   assert_line --index 0 "all atom"
-# # }
+	run __check_completion 'gbash disable alias a'
+	assert_line --index 0 "all"
+}
 
-# # @test "gaudi-bash completion: disable - provide the a* aliases when atom is enabled with the old location and priority-based name" {
-# #   ln -s $GAUDI_BASH/aliases/available/atom.aliases.bash $GAUDI_BASH/aliases/enabled/150---atom.aliases.bash
-# #   assert_link_exist "$GAUDI_BASH/aliases/enabled/150---atom.aliases.bash"
+@test "gaudi-bash completion: disable - provide the enabled aliases only" {
 
-# #   ln -s $GAUDI_BASH/completion/available/apm.completion.bash $GAUDI_BASH/completion/enabled/350---apm.completion.bash
-# #   assert_link_exist "$GAUDI_BASH/completion/enabled/350---apm.completion.bash"
+	__enable_fixture aliases zzgaudi-one 150
+	__enable_fixture plugins zzgaudi-one 250
 
-# #   run __check_completion 'gbash disable alias a'
-# #   assert_line --index 0 "all atom"
-# # }
+	run __check_completion 'gbash disable alias zzgaudi'
+	assert_output --partial "zzgaudi-one"
+	refute_output --partial "zzgaudi-two"
+}
 
-# # @test "gaudi-bash completion: disable - provide the a* aliases when atom is enabled with the new location and priority-based name" {
-# #   ln -s $GAUDI_BASH/aliases/available/atom.aliases.bash $GAUDI_BASH/enabled/150---atom.aliases.bash
-# #   assert_link_exist "$GAUDI_BASH/enabled/150---atom.aliases.bash"
+@test "gaudi-bash completion: disable - provide the enabled plugins only" {
 
-# #   ln -s $GAUDI_BASH/completion/available/apm.completion.bash $GAUDI_BASH/enabled/350---apm.completion.bash
-# #   assert_link_exist "$GAUDI_BASH/enabled/350---apm.completion.bash"
+	__enable_fixture aliases zzgaudi-two 150
+	__enable_fixture plugins zzgaudi-one 250
 
-# #   run __check_completion 'gbash disable alias a'
-# #   assert_line --index 0 "all atom"
-# # }
+	run __check_completion 'gbash disable plugin zzgaudi'
+	assert_output --partial "zzgaudi-one"
+	refute_output --partial "zzgaudi-two"
+}
 
-# # @test "gaudi-bash completion: disable - provide the docker-machine plugin when docker-machine is enabled with the old location and name" {
-# #   ln -s $GAUDI_BASH/aliases/available/docker-compose.aliases.bash $GAUDI_BASH/aliases/enabled/docker-compose.aliases.bash
-# #   assert_link_exist "$GAUDI_BASH/aliases/enabled/docker-compose.aliases.bash"
+@test "gaudi-bash completion: disable - provide the enabled completions only" {
 
-# #   ln -s $GAUDI_BASH/plugins/available/docker-machine.plugin.bash $GAUDI_BASH/plugins/enabled/docker-machine.plugin.bash
-# #   assert_link_exist "$GAUDI_BASH/plugins/enabled/docker-machine.plugin.bash"
+	__enable_fixture completions zzgaudi-one 350
 
-# #   run __check_completion 'gbash disable plugin docker'
-# #   assert_line --index 0 "docker-machine"
-# # }
+	run __check_completion 'gbash disable completion zzgaudi'
+	assert_output --partial "zzgaudi-one"
+}
 
-# # @test "gaudi-bash completion: disable - provide the docker-machine plugin when docker-machine is enabled with the old location and priority-based name" {
-# #   ln -s $GAUDI_BASH/aliases/available/docker-compose.aliases.bash $GAUDI_BASH/aliases/enabled/150---docker-compose.aliases.bash
-# #   assert_link_exist "$GAUDI_BASH/aliases/enabled/150---docker-compose.aliases.bash"
+@test "gaudi-bash completion: enable - show options" {
 
-# #   ln -s $GAUDI_BASH/plugins/available/docker-machine.plugin.bash $GAUDI_BASH/plugins/enabled/350---docker-machine.plugin.bash
-# #   assert_link_exist "$GAUDI_BASH/plugins/enabled/350---docker-machine.plugin.bash"
+	run __check_completion 'gbash enable '
+	assert_line --index 0 "alias completion plugin"
+}
 
-# #   run __check_completion 'gbash disable plugin docker'
-# #   assert_line --index 0 "docker-machine"
-# # }
+@test "gaudi-bash completion: enable - show options a" {
 
-# # @test "gaudi-bash completion: disable - provide the docker-machine plugin when docker-machine is enabled with the new location and priority-based name" {
-# #   ln -s $GAUDI_BASH/aliases/available/docker-compose.aliases.bash $GAUDI_BASH/enabled/150---docker-compose.aliases.bash
-# #   assert_link_exist "$GAUDI_BASH/enabled/150---docker-compose.aliases.bash"
+	run __check_completion 'gbash enable a'
+	assert_line --index 0 "alias"
+}
 
-# #   ln -s $GAUDI_BASH/plugins/available/docker-machine.plugin.bash $GAUDI_BASH/enabled/350---docker-machine.plugin.bash
-# #   assert_link_exist "$GAUDI_BASH/enabled/350---docker-machine.plugin.bash"
+@test "gaudi-bash completion: enable - provide all and the aliases when none is enabled" {
 
-# #   run __check_completion 'gbash disable plugin docker'
-# #   assert_line --index 0 "docker-machine"
-# # }
+	run __check_completion 'gbash enable alias '
+	assert_output --regexp "^all .*zzgaudi-one zzgaudi-two"
+}
 
-# # @test "gaudi-bash completion: disable - provide the todo.txt-cli aliases when todo plugin is enabled with the old location and name" {
-# #   ln -s $GAUDI_BASH/aliases/available/todo.txt-cli.aliases.bash $GAUDI_BASH/aliases/enabled/todo.txt-cli.aliases.bash
-# #   assert_link_exist "$GAUDI_BASH/aliases/enabled/todo.txt-cli.aliases.bash"
+@test "gaudi-bash completion: enable - provide the aliases that are not enabled" {
 
-# #   ln -s $GAUDI_BASH/plugins/available/todo.plugin.bash $GAUDI_BASH/plugins/enabled/todo.plugin.bash
-# #   assert_link_exist "$GAUDI_BASH/plugins/enabled/todo.plugin.bash"
+	run __check_completion 'gbash enable alias zzgaudi'
+	assert_line --index 0 "zzgaudi-one zzgaudi-two"
+}
 
-# #   run __check_completion 'gbash disable alias to'
-# #   assert_line --index 0 "todo.txt-cli"
-# # }
+@test "gaudi-bash completion: enable - leave out the aliases that are already enabled" {
 
-# # @test "gaudi-bash completion: disable - provide the todo.txt-cli aliases when todo plugin is enabled with the old location and priority-based name" {
-# #   ln -s $GAUDI_BASH/aliases/available/todo.txt-cli.aliases.bash $GAUDI_BASH/aliases/enabled/150---todo.txt-cli.aliases.bash
-# #   assert_link_exist "$GAUDI_BASH/aliases/enabled/150---todo.txt-cli.aliases.bash"
+	__enable_fixture aliases zzgaudi-one 150
 
-# #   ln -s $GAUDI_BASH/plugins/available/todo.plugin.bash $GAUDI_BASH/plugins/enabled/350---todo.plugin.bash
-# #   assert_link_exist "$GAUDI_BASH/plugins/enabled/350---todo.plugin.bash"
+	run __check_completion 'gbash enable alias zzgaudi'
+	assert_line --index 0 "zzgaudi-two"
+}
 
-# #   run __check_completion 'gbash disable alias to'
-# #   assert_line --index 0 "todo.txt-cli"
-# # }
+@test "gaudi-bash completion: enable - an enabled plugin does not hide the alias with the same name" {
 
-# # @test "gaudi-bash completion: disable - provide the todo.txt-cli aliases when todo plugin is enabled with the new location and priority-based name" {
-# #   ln -s $GAUDI_BASH/aliases/available/todo.txt-cli.aliases.bash $GAUDI_BASH/enabled/150---todo.txt-cli.aliases.bash
-# #   assert_link_exist "$GAUDI_BASH/enabled/150---todo.txt-cli.aliases.bash"
+	__enable_fixture plugins zzgaudi-one 250
 
-# #   ln -s $GAUDI_BASH/plugins/available/todo.plugin.bash $GAUDI_BASH/enabled/350---todo.plugin.bash
-# #   assert_link_exist "$GAUDI_BASH/enabled/350---todo.plugin.bash"
+	run __check_completion 'gbash enable alias zzgaudi'
+	assert_line --index 0 "zzgaudi-one zzgaudi-two"
+}
 
-# #   run __check_completion 'gbash disable alias to'
-# #   assert_line --index 0 "todo.txt-cli"
-# # }
+@test "gaudi-bash completion: enable - provide the plugins that are not enabled" {
 
-# # @test "gaudi-bash completion: enable - show options" {
-# #   run __check_completion 'gbash enable '
-# #   assert_line --index 0 "alias completion plugin"
-# # }
+	run __check_completion 'gbash enable plugin zzgaudi'
+	assert_line --index 0 "zzgaudi-one"
+}
 
-# # @test "gaudi-bash completion: enable - show options a" {
-# #   run __check_completion 'gbash enable a'
-# #   assert_line --index 0 "alias"
-# # }
+@test "gaudi-bash completion: enable - provide the completions that are not enabled" {
 
-# # @test "gaudi-bash completion: enable - provide the atom aliases when not enabled" {
-# #   run __check_completion 'gbash enable alias ato'
-# #   assert_line --index 0 "atom"
-# # }
-
-# # @test "gaudi-bash completion: enable - provide the a* aliases when not enabled" {
-# #   run __check_completion 'gbash enable alias a'
-# #   assert_line --index 0 "all ag ansible applications apt atom"
-# # }
-
-# # @test "gaudi-bash completion: enable - provide the a* aliases when atom is enabled with the old location and name" {
-# #   ln -s $GAUDI_BASH/aliases/available/atom.aliases.bash $GAUDI_BASH/aliases/enabled/atom.aliases.bash
-# #   assert_link_exist "$GAUDI_BASH/aliases/enabled/atom.aliases.bash"
-
-# #   run __check_completion 'gbash enable alias a'
-# #   assert_line --index 0 "all ag ansible applications apt"
-# # }
-
-# # @test "gaudi-bash completion: enable - provide the a* aliases when atom is enabled with the old location and priority-based name" {
-# #   ln -s $GAUDI_BASH/aliases/available/atom.aliases.bash $GAUDI_BASH/aliases/enabled/150---atom.aliases.bash
-# #   assert_link_exist "$GAUDI_BASH/aliases/enabled/150---atom.aliases.bash"
-
-# #   run __check_completion 'gbash enable alias a'
-# #   assert_line --index 0 "all ag ansible applications apt"
-# # }
-
-# # @test "gaudi-bash completion: enable - provide the a* aliases when atom is enabled with the new location and priority-based name" {
-# #   ln -s $GAUDI_BASH/aliases/available/atom.aliases.bash $GAUDI_BASH/enabled/150---atom.aliases.bash
-# #   assert_link_exist "$GAUDI_BASH/enabled/150---atom.aliases.bash"
-
-# #   run __check_completion 'gbash enable alias a'
-# #   assert_line --index 0 "all ag ansible applications apt"
-# # }
-
-# # @test "gaudi-bash completion: enable - provide the docker-* plugins when nothing is enabled with the old location and name" {
-# #   ln -s $GAUDI_BASH/aliases/available/docker-compose.aliases.bash $GAUDI_BASH/aliases/enabled/docker-compose.aliases.bash
-# #   assert_link_exist "$GAUDI_BASH/aliases/enabled/docker-compose.aliases.bash"
-
-# #   run __check_completion 'gbash enable plugin docker'
-# #   assert_line --index 0 "docker-compose docker-machine docker"
-# # }
-
-# # @test "gaudi-bash completion: enable - provide the docker-* plugins when nothing is enabled with the old location and priority-based name" {
-# #   ln -s $GAUDI_BASH/aliases/available/docker-compose.aliases.bash $GAUDI_BASH/aliases/enabled/150---docker-compose.aliases.bash
-# #   assert_link_exist "$GAUDI_BASH/aliases/enabled/150---docker-compose.aliases.bash"
-
-# #   run __check_completion 'gbash enable plugin docker'
-# #   assert_line --index 0 "docker-compose docker-machine docker"
-# # }
-
-# # @test "gaudi-bash completion: enable - provide the docker-* plugins when nothing is enabled with the new location and priority-based name" {
-# #   ln -s $GAUDI_BASH/aliases/available/docker-compose.aliases.bash $GAUDI_BASH/enabled/150---docker-compose.aliases.bash
-# #   assert_link_exist "$GAUDI_BASH/enabled/150---docker-compose.aliases.bash"
-
-# #   run __check_completion 'gbash enable plugin docker'
-# #   assert_line --index 0 "docker-compose docker-machine docker"
-# # }
-
-# # @test "gaudi-bash completion: enable - provide the docker-* completions when nothing is enabled with the old location and name" {
-# #   ln -s $GAUDI_BASH/aliases/available/docker-compose.aliases.bash $GAUDI_BASH/aliases/enabled/docker-compose.aliases.bash
-# #   assert_link_exist "$GAUDI_BASH/aliases/enabled/docker-compose.aliases.bash"
-
-# #   run __check_completion 'gbash enable completion docker'
-# #   assert_line --index 0 "docker docker-compose docker-machine"
-# # }
-
-# # @test "gaudi-bash completion: enable - provide the docker-* completions when nothing is enabled with the old location and priority-based name" {
-# #   ln -s $GAUDI_BASH/aliases/available/docker-compose.aliases.bash $GAUDI_BASH/aliases/enabled/150---docker-compose.aliases.bash
-# #   assert_link_exist "$GAUDI_BASH/aliases/enabled/150---docker-compose.aliases.bash"
-
-# #   run __check_completion 'gbash enable completion docker'
-# #   assert_line --index 0 "docker docker-compose docker-machine"
-# # }
-
-# # @test "gaudi-bash completion: enable - provide the docker-* completions when nothing is enabled with the new location and priority-based name" {
-# #   ln -s $GAUDI_BASH/aliases/available/docker-compose.aliases.bash $GAUDI_BASH/enabled/150---docker-compose.aliases.bash
-# #   assert_link_exist "$GAUDI_BASH/enabled/150---docker-compose.aliases.bash"
-
-# #   run __check_completion 'gbash enable completion docker'
-# #   assert_line --index 0 "docker docker-compose docker-machine"
-# # }
-
-# # @test "gaudi-bash completion: enable - provide the todo.txt-cli aliases when todo plugin is enabled with the old location and name" {
-# #   ln -s $GAUDI_BASH/plugins/available/todo.plugin.bash $GAUDI_BASH/plugins/enabled/todo.plugin.bash
-# #   assert_link_exist "$GAUDI_BASH/plugins/enabled/todo.plugin.bash"
-
-# #   run __check_completion 'gbash enable alias to'
-# #   assert_line --index 0 "todo.txt-cli"
-# # }
-
-# # @test "gaudi-bash completion: enable - provide the todo.txt-cli aliases when todo plugin is enabled with the old location and priority-based name" {
-# #   ln -s $GAUDI_BASH/plugins/available/todo.plugin.bash $GAUDI_BASH/plugins/enabled/350---todo.plugin.bash
-# #   assert_link_exist "$GAUDI_BASH/plugins/enabled/350---todo.plugin.bash"
-
-# #   run __check_completion 'gbash enable alias to'
-# #   assert_line --index 0 "todo.txt-cli"
-# # }
-
-# # @test "gaudi-bash completion: enable - provide the todo.txt-cli aliases when todo plugin is enabled with the new location and priority-based name" {
-# #   ln -s $GAUDI_BASH/plugins/available/todo.plugin.bash $GAUDI_BASH/enabled/350---todo.plugin.bash
-# #   assert_link_exist "$GAUDI_BASH/enabled/350---todo.plugin.bash"
-
-# #   run __check_completion 'gbash enable alias to'
-# #   assert_line --index 0 "todo.txt-cli"
-# # }
+	run __check_completion 'gbash enable completion zzgaudi'
+	assert_line --index 0 "zzgaudi-one"
+}

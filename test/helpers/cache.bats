@@ -51,3 +51,17 @@ local_setup() {
 	assert_file_not_exist "$GAUDI_BASH_CACHE_DIR/plugins"
 	assert_file_not_exist "$GAUDI_BASH_CACHE_DIR/aliases"
 }
+
+@test "gaudi-bash helpers: cache: _gaudi-bash-component-cache-clean should clear the enabled view even when the full view was never cached" {
+
+	# `gbash show` only writes the "<type>-enabled" cache
+	_plugins_cache=$(_gaudi-bash-component-cache-add plugins)
+	rm -f "${_plugins_cache}"
+	touch "${_plugins_cache}-enabled"
+
+	assert_file_not_exist "$GAUDI_BASH_CACHE_DIR/plugins"
+	assert_file_exist "$GAUDI_BASH_CACHE_DIR/plugins-enabled"
+
+	_gaudi-bash-component-cache-clean plugins
+	assert_file_not_exist "$GAUDI_BASH_CACHE_DIR/plugins-enabled"
+}

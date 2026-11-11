@@ -20,21 +20,52 @@ __install() {
 	"$GAUDI_BASH/setup.sh" "$@"
 }
 
+# Updates an existing installation to the latest release (or to the main branch when there is no release yet).
+# Uses fetch + checkout because `gbash update` leaves a detached HEAD, on which `git pull` fails.
+__update() {
+	local target
+
+	git -C "$GAUDI_BASH" fetch origin --tags || return 1
+
+	target=$(git -C "$GAUDI_BASH" describe --tags "$(git -C "$GAUDI_BASH" rev-list --tags --max-count=1 2> /dev/null)" 2> /dev/null)
+
+	git -C "$GAUDI_BASH" checkout "${target:-origin/main}" || return 1
+	git -C "$GAUDI_BASH" submodule update --init --recursive
+}
+
+# Reads a single answer into REPLY, which is left empty when there is nothing to read (e.g., non-interactive run).
+# When the installer itself is piped into bash, stdin is the script so the answer is read from the terminal.
+__read_answer() {
+	REPLY=""
+	if [[ ! -t 0 && "$GAUDI_BASH_INSTALL_PIPED" == true ]]; then
+		{ read -r REPLY < /dev/tty; } 2> /dev/null || true
+	else
+		read -r REPLY || true
+	fi
+}
+
+# The script has no source file when it is read from stdin (curl ... | bash)
+GAUDI_BASH_INSTALL_PIPED=false
+[[ -z "${BASH_SOURCE[0]:-}" ]] && GAUDI_BASH_INSTALL_PIPED=true
+
 if [[ -d "$GAUDI_BASH" ]]; then
 	echo "You already have gaudi-bash installed.."
-	unset REPLY
-	while ! [[ $REPLY =~ ^[yY]$ ]] && ! [[ $REPLY =~ ^[nN]$ ]]; do
-		printf "Do you want to set up a fresh installation of gaudi-bash? [Yy/nN] "
-		read -r REPLY
-		if [[ $REPLY =~ ^[yY]$ ]]; then
-			rm -rf "$GAUDI_BASH"
-			__install "$@"
-		else
-			echo ""
-			printf "\n%s\n" "Running a gaudi-bash update to pull latest changes ..."
-			git -C "$GAUDI_BASH" pull
-		fi
-	done
+	printf "Do you want to set up a fresh installation of gaudi-bash? [Yy/nN] "
+	__read_answer
+
+	if [[ $REPLY =~ ^[yY]$ ]]; then
+		rm -rf "$GAUDI_BASH"
+		__install "$@"
+	elif [[ $REPLY =~ ^[nN]$ ]]; then
+		printf "\n%s\n" "Running a gaudi-bash update to get the latest changes ..."
+		__update || {
+			printf "%s\n" "Error: Updating gaudi-bash in $GAUDI_BASH failed :("
+			exit 1
+		}
+	else
+		printf "\n%s\n" "No valid answer (y or n) was given, leaving the existing installation untouched."
+		exit 1
+	fi
 else
 	__install "$@"
 fi

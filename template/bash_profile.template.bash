@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# >>> gaudi-bash >>>
+# The lines between these two markers are managed by gaudi-bash: setup.sh adds them once and uninstall.sh removes them
+
 # Path to the bash it configuration
 export GAUDI_BASH="{{GAUDI_BASH}}"
 
@@ -21,4 +24,5 @@ export GAUDI_BASH_AUTOMATIC_RELOAD_AFTER_CONFIG_CHANGE=1
 # export GAUDI_BASH_LOG_LEVEL=3
 
 # Load Bash It
-source $GAUDI_BASH/gaudi_bash.sh
+source "$GAUDI_BASH/gaudi_bash.sh"
+# <<< gaudi-bash <<<

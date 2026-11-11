@@ -208,6 +208,10 @@ _gaudi-bash-search-component() {
 			_output=$(_gaudi-bash-"$action" "$component" "$match")
 		done
 		_gaudi-bash-component-cache-clean "${component}"
+		# The actions above ran in subshells, so reload here (once) for the changes to reach this shell
+		if [[ ${#matches[@]} -gt 0 && -n "$GAUDI_BASH_AUTOMATIC_RELOAD_AFTER_CONFIG_CHANGE" ]]; then
+			_gaudi-bash-reload-after-change
+		fi
 	fi
 
 	if [[ ${#matches[@]} == 0 || -z $matches ]]; then

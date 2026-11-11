@@ -89,8 +89,9 @@ function _command_duration() {
 
 # Register hooks via bash-preexec (loaded by lib/preexec.bash)
 _gaudi_bash_command_duration_init() {
-	preexec_functions+=(_command_duration_pre_exec)
-	precmd_functions+=(_command_duration_pre_cmd)
+	# Register each hook only once, reloading the profile must not stack duplicates
+	[[ " ${preexec_functions[*]} " == *" _command_duration_pre_exec "* ]] || preexec_functions+=(_command_duration_pre_exec)
+	[[ " ${precmd_functions[*]} " == *" _command_duration_pre_cmd "* ]] || precmd_functions+=(_command_duration_pre_cmd)
 }
 
 GAUDI_BASH_LIBRARY_FINALIZE_HOOK+=("_gaudi_bash_command_duration_init")

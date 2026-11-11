@@ -17,29 +17,27 @@ _gaudi-bash-version() {
 	about "shows current gaudi-bash version with the Current git SHA and commit hash"
 	group "gaudi-bash:core"
 
-	cd "${GAUDI_BASH}" || return
-
 	local GAUDI_BASH_GIT_REMOTE GAUDI_BASH_GIT_URL GAUDI_BASH_GIT_VERSION_INFO GAUDI_BASH_GIT_SHA
 
 	if [[ -z $GAUDI_BASH_REMOTE ]]; then
 		GAUDI_BASH_REMOTE="origin"
 	fi
 
-	GAUDI_BASH_GIT_REMOTE=$(git remote get-url "$GAUDI_BASH_REMOTE")
+	GAUDI_BASH_GIT_REMOTE=$(git -C "${GAUDI_BASH}" remote get-url "$GAUDI_BASH_REMOTE")
 	GAUDI_BASH_GIT_URL=${GAUDI_BASH_GIT_REMOTE%.git}
 
 	local GAUDI_BASH_GIT_TAG
-	GAUDI_BASH_GIT_TAG="$(git describe --tags --abbrev=0 2> /dev/null)"
-	GAUDI_BASH_GIT_VERSION_INFO="$(git log --pretty=format:'%h on %aI' -n 1)"
+	# A checkout without tags (a shallow clone, for example) simply has no version to show
+	GAUDI_BASH_GIT_TAG="$(git -C "${GAUDI_BASH}" describe --tags --abbrev=0 2> /dev/null)" || GAUDI_BASH_GIT_TAG=""
+	GAUDI_BASH_GIT_VERSION_INFO="$(git -C "${GAUDI_BASH}" log --pretty=format:'%h on %aI' -n 1)"
 	GAUDI_BASH_GIT_SHA=${GAUDI_BASH_GIT_VERSION_INFO%% *}
 
-	[[ -n "$GAUDI_BASH_GIT_TAG" ]] && echo -e "Version: ${CYAN}$GAUDI_BASH_GIT_TAG${NC}"
+	if [[ -n "$GAUDI_BASH_GIT_TAG" ]]; then
+		echo -e "Version: ${CYAN}$GAUDI_BASH_GIT_TAG${NC}"
+	fi
 	echo -e "Current git SHA: ${GREEN}$GAUDI_BASH_GIT_VERSION_INFO${NC}"
 	echo -e "${MAGENTA}$GAUDI_BASH_GIT_URL/commit/$GAUDI_BASH_GIT_SHA${NC}"
 	echo -e "Compare to latest: ${YELLOW}$GAUDI_BASH_GIT_URL/compare/$GAUDI_BASH_GIT_SHA...main${NC}"
-
-	cd - &> /dev/null || return
-
 }
 
 # @function     _gaudi-bash-reload
@@ -62,6 +60,21 @@ _gaudi-bash-reload() {
 	else
 		echo "Profile not found: $profile"
 		return 1
+	fi
+}
+
+# @function     _gaudi-bash-reload-after-change
+# @description  reloads the bash profile after a component was enabled or disabled
+#               inside a gbash invocation the reload is only recorded, gbash then reloads once when it finishes
+#               instead of once per component (e.g., enable plugins all, profile load, restore)
+_gaudi-bash-reload-after-change() {
+	about "reloads the bash profile after a component change, once per gbash invocation"
+	group "gaudi-bash:core"
+
+	if [[ -n "${_gaudi_bash_reload_deferred:-}" ]]; then
+		_gaudi_bash_reload_pending=true
+	else
+		_gaudi-bash-reload
 	fi
 }
 
@@ -160,7 +173,7 @@ _gaudi-bash-restore() {
 	about "restores enabled components (plugins, aliases, completions)"
 	group "gaudi-bash:core"
 
-	! [[ -f "${GAUDI_BASH}/tmp/enabled.gaudi-bash.backup" ]] && echo -e "${RED}No valid backup file found :(${NC}" && return
+	! [[ -f "${GAUDI_BASH}/tmp/enabled.gaudi-bash.backup" ]] && echo -e "${RED}No valid backup file found :(${NC}" && return 1
 
 	while IFS= read -r line; do
 		# Validate that the line matches the expected format before executing
@@ -200,6 +213,30 @@ gbash() {
 	example '$ gbash profile list'
 	example '$ gbash profile rm mysetup'
 
+	# A nested call (e.g., from restore) leaves the reload to the outermost gbash invocation
+	if [[ -n "${_gaudi_bash_reload_deferred:-}" ]]; then
+		_gaudi-bash-dispatch "$@"
+		return
+	fi
+
+	# Both variables are local so they are seen by the functions called from here and never outlive this call
+	local _gaudi_bash_reload_deferred=true _gaudi_bash_reload_pending="" status
+
+	_gaudi-bash-dispatch "$@"
+	status=$?
+
+	_gaudi_bash_reload_deferred=""
+	[[ -n "$_gaudi_bash_reload_pending" ]] && _gaudi-bash-reload
+
+	return "$status"
+}
+
+# @function     _gaudi-bash-dispatch
+# @description  runs a gbash verb (see gbash for the list of verbs and their parameters)
+# @param $1     verb
+# @param $2     component type, search term(s) or update mode
+# @param $3     specific component [optional]
+_gaudi-bash-dispatch() {
 	local verb=${1:-}
 	shift
 	local component=${1:-}

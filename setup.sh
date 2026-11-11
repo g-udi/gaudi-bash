@@ -26,6 +26,9 @@ case $OSTYPE in
 		;;
 esac
 
+# First line of the gaudi-bash block in the profile template (see template/bash_profile.template.bash)
+GAUDI_PROFILE_MARKER="# >>> gaudi-bash >>>"
+
 # This is a special "print" function that prints the gaudi-bash ASCII art
 __print-gaudi-bash() {
 	echo -e "
@@ -112,9 +115,9 @@ _init_submodules() {
 _validate_install_paths() {
 	local dependency_root="${GAUDI_BASH_ORIGIN:-$GAUDI_BASH}"
 
-	[[ -s "$GAUDI_BASH/template/bash_profile.template.bash" ]] || _die "Missing profile template: $GAUDI_BASH/template/bash_profile.template.bash"
-	[[ -s "$dependency_root/bin/composure/composure.sh" ]] || _die "Missing composure dependency. Run: git submodule update --init --recursive"
-	[[ -s "$GAUDI_BASH/lib/gaudi-bash.bash" ]] || _die "Missing gaudi-bash core library: $GAUDI_BASH/lib/gaudi-bash.bash"
+	[[ -s "$GAUDI_BASH/template/bash_profile.template.bash" ]] || _die "Missing profile template: $GAUDI_BASH/template/bash_profile.template.bash" || return 1
+	[[ -s "$dependency_root/bin/composure/composure.sh" ]] || _die "Missing composure dependency. Run: git submodule update --init --recursive" || return 1
+	[[ -s "$GAUDI_BASH/lib/gaudi-bash.bash" ]] || _die "Missing gaudi-bash core library: $GAUDI_BASH/lib/gaudi-bash.bash" || return 1
 }
 
 _render_profile_template() {
@@ -131,12 +134,54 @@ _render_profile_template() {
 	done < "$GAUDI_BASH/template/bash_profile.template.bash"
 }
 
+# Checks if the profile already loads gaudi-bash: either the marked template block or the load line of an older install
+_profile_has_gaudi_bash() {
+	[[ -f "$1" ]] || return 1
+	grep -qF "$GAUDI_PROFILE_MARKER" "$1" || grep -qE '^[[:space:]]*(source|\.)[[:space:]].*gaudi_bash\.sh' "$1"
+}
+
+# Backs up the profile without ever overwriting an existing backup unattended
+_backup_profile() {
+	local profile="$HOME/$CONFIG_FILE"
+	local backup="$profile.bak"
+
+	[[ -e "$profile" ]] || return 0
+
+	if [[ -e "$backup" ]]; then
+		# Nothing to keep when the profile is the backup itself or the unmodified gaudi-bash template
+		cmp -s "$profile" "$backup" && return 0
+		cmp -s "$profile" <(_render_profile_template false) && return 0
+
+		if ! [[ $silent == true ]]; then
+			echo -e "${GREEN}Backup file already exists!${NC}"
+			_read_input "Would you like to overwrite the existing backup? This will delete your existing backup file ($backup) [Yy/Nn]"
+		fi
+
+		if ! [[ $silent == true ]] && [[ $REPLY =~ ^[yY]$ ]]; then
+			cp -aL "$profile" "$backup" || return 1
+		else
+			backup="$backup.$(date +%Y%m%d%H%M%S)"
+			cp -aL "$profile" "$backup" || return 1
+			echo -e "${GREEN}Your existing backup was kept, your current $CONFIG_FILE has been backed up to ${backup##*/}${NC}"
+		fi
+	else
+		cp -aL "$profile" "$backup" || return 1
+		echo -e "${GREEN}Your original $CONFIG_FILE has been backed up to $CONFIG_FILE.bak${NC}"
+	fi
+}
+
 _write_profile_template() {
 	local destination="$HOME/$CONFIG_FILE"
 	local mode="$1"
 
 	if [[ "$mode" == "append" ]]; then
+		# Appending is idempotent: running setup again must not add a second copy of the template
+		if _profile_has_gaudi_bash "$destination"; then
+			echo -e "${GREEN}gaudi-bash is already loaded from your $CONFIG_FILE, leaving it as is${NC}"
+			return 0
+		fi
 		_render_profile_template true >> "$destination"
+		echo -e "${GREEN}gaudi-bash template has been added to your $CONFIG_FILE${NC}"
 	else
 		_render_profile_template false > "$destination"
 	fi
@@ -152,20 +197,12 @@ _setup_gaudi_bash() {
 		echo ""
 		echo -e "${RED}We need to make sure to backup your $CONFIG_FILE before running this installation${NC}"
 
-		if [[ -e "$HOME/$CONFIG_FILE.bak" ]] && ! [[ $silent == true ]]; then
-			echo -e "${GREEN}Backup file already exists!${NC}"
-			_read_input "Would you like to overwrite the existing backup? This will delete your existing backup file ($HOME/$CONFIG_FILE.bak) [Yy/Nn]"
-			[[ $REPLY =~ ^[yY]$ ]] && cp -aL "$HOME/$CONFIG_FILE" "$HOME/$CONFIG_FILE.bak"
-		elif [[ -e "$HOME/$CONFIG_FILE" ]]; then
-			cp -aL "$HOME/$CONFIG_FILE" "$HOME/$CONFIG_FILE.bak"
-			echo -e "${GREEN}Your original $CONFIG_FILE has been backed up to $CONFIG_FILE.bak${NC}"
-		fi
+		_backup_profile || _die "Could not back up $HOME/$CONFIG_FILE, leaving it untouched" || return 1
 
 		! [[ $silent == true ]] && _read_input "Would you like to keep your $CONFIG_FILE and append gaudi-bash templates at the end? [Yy/Nn]"
 
-		if [[ $REPLY =~ ^[yY]$ ]]; then
+		if ! [[ $silent == true ]] && [[ $REPLY =~ ^[yY]$ ]]; then
 			_write_profile_template append
-			echo -e "${GREEN}gaudi-bash template has been added to your $CONFIG_FILE${NC}"
 		elif [[ $REPLY =~ ^[nN]$ ]] || [[ $silent == true ]]; then
 			_write_profile_template replace
 			echo -e "${YELLOW}Copied gaudi-bash template into ~/$CONFIG_FILE, edit this file to customize gaudi-bash${NC}"
@@ -209,20 +246,21 @@ Enabling everything can lead to issues
 }
 
 _main() {
-	_parse_args "$@"
-	local parse_status=$?
+	local parse_status=0
+	_parse_args "$@" || parse_status=$?
 	[[ "$parse_status" -eq 2 ]] && return 0
 	[[ "$parse_status" -ne 0 ]] && return "$parse_status"
 
 	if [[ $silent == true ]]; then
-		_setup_gaudi_bash > /dev/null 2>&1
+		# Errors are kept on stderr so that a failed silent install says why it failed
+		_setup_gaudi_bash > /dev/null
 	else
 		_setup_gaudi_bash
 	fi
 }
 
-_main "$@"
-setup_status=$?
+setup_status=0
+_main "$@" || setup_status=$?
 
 if [[ "${BASH_SOURCE[0]}" != "$0" ]]; then
 	return "$setup_status"

@@ -33,7 +33,7 @@ The install script clones gaudi-bash (including its component submodules) into `
 If you wish to do a standalone installation then you proceed with the following steps:
 
 1. Check a clone of this repo: `git clone https://github.com/g-udi/gaudi-bash.git ~/.gaudi_bash`
-2. Run `~/.gaudi_bash/setup.sh` (it fetches the git submodules if they are missing and automatically backs up your `~/.bash_profile` on macOS, or `~/.bashrc` elsewhere, to a `.bak` file)
+2. Run `~/.gaudi_bash/setup.sh` (it fetches the git submodules if they are missing and automatically backs up your `~/.bash_profile` on macOS, or `~/.bashrc` elsewhere, to a `.bak` file; an existing `.bak` is never overwritten unattended, a later profile goes to a timestamped `.bak.<date>` file instead)
 3. Edit your `~/.bash_profile` (or `~/.bashrc`) file in order to customize gaudi-bash.
 
 `setup.sh` can take the following options:
@@ -77,9 +77,9 @@ To follow the development branch instead (`main` on the `origin` remote, configu
 gbash update dev
 ```
 
-The command shows the incoming commits, asks for confirmation (pass `--silent` to skip the question), checks out the target and restarts Bash. It refuses to run while the gaudi-bash directory has local changes. Any argument other than `stable` (including `all`) is treated as `dev`.
+The command shows the incoming commits, asks for confirmation (pass `--silent` to skip the question), checks out the target, updates the git submodules and restarts Bash. It refuses to run while tracked files in the gaudi-bash directory have local changes, and fails when the remote can not be fetched. The only accepted modes are `stable` and `dev`.
 
-gaudi-bash separates the core engine from the components (plugins, aliases, completions, themes), which live in git submodules. `gbash update` checks out the **core** code only; to bring the components to the versions pinned by that core, run:
+gaudi-bash separates the core engine from the components (plugins, aliases, completions, themes), which live in git submodules. `gbash update` checks out the core code and then brings the components to the versions pinned by that core. Should that last step fail (e.g., no network), run it by hand:
 
 ```bash
 git -C "$GAUDI_BASH" submodule update --init --recursive
@@ -94,7 +94,9 @@ cd $GAUDI_BASH
 ./uninstall.sh
 ```
 
-This will restore your previous Bash profile from its `.bak` backup (if there is no backup, the current profile is moved aside to a `.uninstall` file) and remove the gaudi-bash directory (`$GAUDI_BASH`) from your machine.
+This removes the gaudi-bash block from your Bash profile (`~/.bash_profile` on macOS, `~/.bashrc` elsewhere, or `$GAUDI_BASH_PROFILE` when set), keeps the profile as it was in a `.uninstall` file, and removes the gaudi-bash directory (`$GAUDI_BASH`) from your machine. Everything else in your profile is left alone.
+
+If `setup.sh` took a `.bak` backup of your profile, the script asks whether to put it back instead (this discards whatever was added to the profile since); `./uninstall.sh --restore-backup` does so without asking. When the profile can not be determined nothing is removed.
 After the uninstall script finishes, start a new shell.
 
 ## Architecture

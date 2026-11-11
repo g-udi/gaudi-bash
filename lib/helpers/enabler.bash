@@ -83,7 +83,7 @@ _gaudi-bash-enable() {
 	printf "${GREEN}%s $type_singular: ${CYAN}$component${NC} %s ${RED}$use_load_priority${NC}\n" "◉" "enabled with priority"
 
 	if [[ -n "$GAUDI_BASH_AUTOMATIC_RELOAD_AFTER_CONFIG_CHANGE" ]]; then
-		_gaudi-bash-reload
+		_gaudi-bash-reload-after-change
 	fi
 
 	return 0
