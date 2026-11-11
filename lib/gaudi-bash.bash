@@ -27,11 +27,14 @@ _gaudi-bash-version() {
 	GAUDI_BASH_GIT_URL=${GAUDI_BASH_GIT_REMOTE%.git}
 
 	local GAUDI_BASH_GIT_TAG
-	GAUDI_BASH_GIT_TAG="$(git -C "${GAUDI_BASH}" describe --tags --abbrev=0 2> /dev/null)"
+	# A checkout without tags (a shallow clone, for example) simply has no version to show
+	GAUDI_BASH_GIT_TAG="$(git -C "${GAUDI_BASH}" describe --tags --abbrev=0 2> /dev/null)" || GAUDI_BASH_GIT_TAG=""
 	GAUDI_BASH_GIT_VERSION_INFO="$(git -C "${GAUDI_BASH}" log --pretty=format:'%h on %aI' -n 1)"
 	GAUDI_BASH_GIT_SHA=${GAUDI_BASH_GIT_VERSION_INFO%% *}
 
-	[[ -n "$GAUDI_BASH_GIT_TAG" ]] && echo -e "Version: ${CYAN}$GAUDI_BASH_GIT_TAG${NC}"
+	if [[ -n "$GAUDI_BASH_GIT_TAG" ]]; then
+		echo -e "Version: ${CYAN}$GAUDI_BASH_GIT_TAG${NC}"
+	fi
 	echo -e "Current git SHA: ${GREEN}$GAUDI_BASH_GIT_VERSION_INFO${NC}"
 	echo -e "${MAGENTA}$GAUDI_BASH_GIT_URL/commit/$GAUDI_BASH_GIT_SHA${NC}"
 	echo -e "Compare to latest: ${YELLOW}$GAUDI_BASH_GIT_URL/compare/$GAUDI_BASH_GIT_SHA...main${NC}"

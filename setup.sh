@@ -246,8 +246,8 @@ Enabling everything can lead to issues
 }
 
 _main() {
-	_parse_args "$@"
-	local parse_status=$?
+	local parse_status=0
+	_parse_args "$@" || parse_status=$?
 	[[ "$parse_status" -eq 2 ]] && return 0
 	[[ "$parse_status" -ne 0 ]] && return "$parse_status"
 
@@ -259,8 +259,8 @@ _main() {
 	fi
 }
 
-_main "$@"
-setup_status=$?
+setup_status=0
+_main "$@" || setup_status=$?
 
 if [[ "${BASH_SOURCE[0]}" != "$0" ]]; then
 	return "$setup_status"
