@@ -12,7 +12,7 @@ for helper in "${GAUDI_BASH}"/lib/helpers/*.bash; do source "$helper"; done
 #               shows current git SHA, commit hash and the remote that was compared against
 # @return       current git SHA e.g., Current git SHA: 47d1e26 on 2020-10-01T17:50:08-07:00
 #               last git commit link e.g., git@github.com:g-udi/gaudi-bash/commit/47d1e26
-#               latest remote e.g., Compare to latest: git@github.com:g-udi/gaudi-bash/compare/47d1e26...master
+#               latest remote e.g., Compare to latest: git@github.com:g-udi/gaudi-bash/compare/47d1e26...main
 _gaudi-bash-version() {
 	about "shows current gaudi-bash version with the Current git SHA and commit hash"
 	group "gaudi-bash:core"
@@ -36,7 +36,7 @@ _gaudi-bash-version() {
 	[[ -n "$GAUDI_BASH_GIT_TAG" ]] && echo -e "Version: ${CYAN}$GAUDI_BASH_GIT_TAG${NC}"
 	echo -e "Current git SHA: ${GREEN}$GAUDI_BASH_GIT_VERSION_INFO${NC}"
 	echo -e "${MAGENTA}$GAUDI_BASH_GIT_URL/commit/$GAUDI_BASH_GIT_SHA${NC}"
-	echo -e "Compare to latest: ${YELLOW}$GAUDI_BASH_GIT_URL/compare/$GAUDI_BASH_GIT_SHA...master${NC}"
+	echo -e "Compare to latest: ${YELLOW}$GAUDI_BASH_GIT_URL/compare/$GAUDI_BASH_GIT_SHA...main${NC}"
 
 	cd - &> /dev/null || return
 

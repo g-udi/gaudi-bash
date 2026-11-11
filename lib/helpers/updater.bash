@@ -52,7 +52,7 @@ function _gaudi-bash-update() {
 	git fetch "$GAUDI_BASH_REMOTE" --tags &> /dev/null
 
 	if [[ -z "$GAUDI_BASH_DEVELOPMENT_BRANCH" ]]; then
-		GAUDI_BASH_DEVELOPMENT_BRANCH="master"
+		GAUDI_BASH_DEVELOPMENT_BRANCH="main"
 	fi
 
 	if [[ -z "${1:-}" || "$1" == "stable" ]]; then
