@@ -65,7 +65,7 @@ local_setup() {
 	for plugin in "autojump" "git" "gitstatus" "git-subrepo" "jgitflow" "jump"; do
 		assert_line --index 1 --partial $plugin
 	done
-	assert_line --index 2 "completions:	git	git_flow	github-cli	hub	virsh	"
+	assert_line --index 2 "completions:	git	git_flow	github-cli	virsh	"
 }
 
 @test "gaudi-bash search: multi term search should return correct results across all components" {
