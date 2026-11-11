@@ -7,15 +7,18 @@
 #               name or description should match one of the search terms provided as arguments
 # @usage:
 #    ❯ gbash search [-|@]term1 [-|@]term2 ... \
-#       [[ --enable   | -e ]] \
-#       [[ --disable  | -d ]] \
-#       [[ --no-color | -c ]] \
-#       [[ --refresh  | -r ]] \
-#       [[ --help     | -h ]]
+#       [[ --enable ]] \
+#       [[ --disable ]] \
+#       [[ --no-color   | -x ]] \
+#       [[ --refresh    | -r ]] \
+#       [[ --alias      | -a ]] \
+#       [[ --plugin     | -p ]] \
+#       [[ --completion | -c ]] \
+#       [[ --help       | -h ]]
 #
 #    Single dash, as in "-chruby", indicates a negative search term.
-#    Double dash indicates a command that is to be applied to the search result.
-#    At the moment only --help, --enable and --disable are supported.
+#    Double dash indicates a command or option that is applied to the search.
+#    --enable and --disable have no short form (a single dash is a negative term).
 #    An '@' sign indicates an exact (not partial) match.
 #
 # @example
@@ -254,11 +257,14 @@ _gaudi-bash-search-help() {
 ${YELLOW}USAGE${NC}
 
    gbash search [-|@]term1 [-|@]term2 ... \\
-     [[ --enable   | -e ]] \\
-     [[ --disable  | -d ]] \\
-     [[ --no-color | -c ]] \\
-     [[ --refresh  | -r ]] \\
-     [[ --help     | -h ]]
+     [[ --enable ]] \\
+     [[ --disable ]] \\
+     [[ --no-color   | -x ]] \\
+     [[ --refresh    | -r ]] \\
+     [[ --alias      | -a ]] \\
+     [[ --plugin     | -p ]] \\
+     [[ --completion | -c ]] \\
+     [[ --help       | -h ]]
 
 ${YELLOW}DESCRIPTION${NC}
 
@@ -280,11 +286,14 @@ ${YELLOW}DESCRIPTION${NC}
         eg. '@git' would only match aliases, plugins and completions named 'git'.
 
 ${YELLOW}FLAGS${NC}
-   --enable   | -e    ${MAGENTA}Enable all matching componenents${NC}
-   --disable  | -d    ${MAGENTA}Disable all matching componenents${NC}
-   --help     | -h    ${MAGENTA}Print this help${NC}
-   --refresh  | -r    ${MAGENTA}Force a refresh of the search cache${NC}
-   --no-color | -c    ${MAGENTA}Disable color output and use monochrome text${NC}
+   --enable             ${MAGENTA}Enable all matching components${NC}
+   --disable            ${MAGENTA}Disable all matching components${NC}
+   --help       | -h    ${MAGENTA}Print this help${NC}
+   --refresh    | -r    ${MAGENTA}Force a refresh of the search cache${NC}
+   --no-color   | -x    ${MAGENTA}Disable color output and use monochrome text${NC}
+   --alias      | -a    ${MAGENTA}Search aliases only${NC}
+   --plugin     | -p    ${MAGENTA}Search plugins only${NC}
+   --completion | -c    ${MAGENTA}Search completions only${NC}
 
 ${YELLOW}EXAMPLES${NC}
 

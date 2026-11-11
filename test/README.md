@@ -21,6 +21,13 @@ test/run
 
 The `run` script will then run all tests found under the `test` directory, including subdirectories: first every `.bats` file except the search tests, then the search tests on their own.
 
+To run a subset, pass one or more `.bats` files or directories (relative to the current directory, or absolute). Only those are run:
+
+```bash
+test/run test/helpers/help.bats
+test/run test/lib/search.bats test/scripts
+```
+
 ## Writing Tests
 
 When adding or modifying tests, please stick to the format and conventions of the existing test cases.

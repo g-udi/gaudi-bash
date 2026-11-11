@@ -29,10 +29,13 @@ function _gaudi-bash-update() {
 	about 'updates gaudi-bash'
 	group 'gaudi-bash:core:updater'
 
-	local silent word DIFF version TARGET revision status revert log_color RESP
+	local silent word mode DIFF version TARGET revision status revert log_color RESP
 	for word in "$@"; do
 		if [[ "${word}" == "--silent" || "${word}" == "-s" ]]; then
 			silent=true
+		elif [[ -z "${mode:-}" ]]; then
+			# The first word that is not a flag is the update mode
+			mode="${word}"
 		fi
 	done
 
@@ -55,7 +58,7 @@ function _gaudi-bash-update() {
 		GAUDI_BASH_DEVELOPMENT_BRANCH="main"
 	fi
 
-	if [[ -z "${1:-}" || "$1" == "stable" ]]; then
+	if [[ -z "${mode:-}" || "${mode}" == "stable" ]]; then
 		version="stable"
 		TARGET=$(git describe --tags "$(git rev-list --tags --max-count=1)" 2> /dev/null)
 
