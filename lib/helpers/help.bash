@@ -24,20 +24,35 @@ _help-aliases() {
 	group "gaudi-bash:core:help"
 
 	local __file
+
+	if [[ -n "${1:-}" ]]; then
+		# A specific alias group: prefer the enabled copy, fall back to the available one
+		__file="$(compgen -G "${GAUDI_BASH}/components/enabled/*${GAUDI_BASH_LOAD_PRIORITY_SEPARATOR:-___}${1}.aliases.bash" | head -n 1)"
+		[[ -n "$__file" ]] || __file="${GAUDI_BASH}/components/aliases/lib/${1}.aliases.bash"
+		if [[ ! -e "$__file" ]]; then
+			printf '%b
+' "${RED:-}No aliases named '${1}' were found${NC:-}" >&2
+			return 1
+		fi
+		__help-list-aliases "$__file"
+		return 0
+	fi
+
 	for __file in $(sort <(compgen -G "${GAUDI_BASH}/components/enabled/*.aliases.bash")); do
 		__help-list-aliases "$__file"
 	done
-	return 1
-
+	return 0
 }
 
 # @function     _help-plugins
 # @description  summarize all functions defined by enabled gaudi-bash plugins
 # @param $1     mode: help mode to decide what to show (default: show help for enabled plugins only)
 #                 - all: show all help functions that has valid composure about and group (including gaudi-bash core functions)
+#                 - <plugin>: show only the functions defined by that plugin
 # @return       returns the list of function names and their descriptions
 # @example      ❯ _help-plugins
 #               ❯ _help-plugins all
+#               ❯ _help-plugins git
 _help-plugins() {
 	about 'summarize all functions defined by enabled gaudi-bash plugins'
 	group 'gaudi-bash:core:help'
@@ -51,6 +66,11 @@ _help-plugins() {
 		fi
 		printf "%-*s%s\n" "$leftwidth" "$leftcol" "$rightcol"
 	}
+
+	if [[ -n "${1:-}" && "$1" != "all" ]]; then
+		__help-plugin "$1"
+		return
+	fi
 
 	printf "${GREEN}%s${NC}" "please wait, building help..."
 	local grouplist func
@@ -96,4 +116,33 @@ __help-list-aliases() {
 	printf '\n\n%b\n' "${GREEN}${file}${NC}"
 	printf '%*s\n' "${COLUMNS:-$(tput cols 2> /dev/null || echo 80)}" '' | tr ' ' -
 	cat "$1" | metafor alias | sed "s/$/'/"
+}
+
+# Helper function to list the functions a single plugin defines, with their composure about text
+__help-plugin() {
+
+	[[ -n $1 ]] || return 1
+	local file func about found
+
+	file="${GAUDI_BASH}/components/plugins/lib/${1}.plugins.bash"
+	if [[ ! -e "$file" ]]; then
+		printf '%b\n' "${RED:-}No plugin named '${1}' was found${NC:-}" >&2
+		return 1
+	fi
+
+	printf '\n%b\n' "${GREEN:-}${1}${NC:-}"
+	printf '%*s\n' "${COLUMNS:-$(tput cols 2> /dev/null || echo 80)}" '' | tr ' ' -
+
+	# Function names are read from the plugin file; only the ones loaded in this shell can be described
+	for func in $(sed -nE -e 's/^[[:space:]]*function[[:space:]]+([^[:space:](){]+).*/\1/p' -e 's/^[[:space:]]*([^[:space:](){#=]+)[[:space:]]*\(\).*/\1/p' "$file" | sort -u); do
+		declare -F "$func" > /dev/null 2>&1 || continue
+		about="$(declare -f "$func" | metafor about)"
+		printf '%-45s%s\n' "$func" "$about"
+		found=true
+	done
+
+	if [[ -z "${found:-}" ]]; then
+		printf '%s\n' "No functions from this plugin are loaded. Enable it with: gbash enable plugin ${1}"
+	fi
+	return 0
 }
