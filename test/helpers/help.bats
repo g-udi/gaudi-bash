@@ -125,3 +125,35 @@ local_setup() {
 	assert_line --partial "git_remote"
 	refute_output --partial "gbash enable plugin git"
 }
+
+@test "gaudi-bash-helpers: help: plugins should group the functions and leave the composure functions alone" {
+
+	local composure_letterpress
+
+	composure_letterpress="$(declare -f _letterpress)"
+
+	# shellcheck disable=SC2329
+	a_function_in_a_spaced_group() {
+		about 'does something useful'
+		group 'my own group'
+	}
+
+	# Not on a terminal: the help is printed as is, no pager and no progress note
+	run _gaudi-bash-help plugins
+	assert_success
+	assert_line "my own group"
+	assert_line --regexp "^a_function_in_a_spaced_group +does something useful$"
+	refute_output --partial "please wait"
+	refute_output --partial "gaudi-bash:core"
+
+	run _gaudi-bash-help plugins all
+	assert_success
+	assert_line "gaudi-bash:core"
+	assert_line --regexp "^_gaudi-bash-enable +enable a gaudi-bash component"
+
+	# Nothing is defined or replaced globally while building the help
+	_gaudi-bash-help plugins > /dev/null
+	run declare -F __letterpress
+	assert_failure
+	assert_equal "$(declare -f _letterpress)" "$composure_letterpress"
+}

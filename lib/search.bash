@@ -50,18 +50,12 @@
 #      completions:  git
 #
 
-search_commands=(enable disable)
-
 _gaudi-bash-search() {
 	about "searches for given terms amongst gaudi-bash plugins, aliases and completions"
 	group "gaudi-bash:search"
 
-	[[ -z "$(type _array-contains 2> /dev/null)" ]]
-
 	local GAUDI_BASH_SEARCH_USE_COLOR="${GAUDI_BASH_SEARCH_USE_COLOR:=true}"
-	local COMPONENT
-	: "${GAUDI_BASH_GREP:=$(_gaudi-bash-grep)}"
-	export GAUDI_BASH_GREP=${GAUDI_BASH_GREP:-$(which egrep)}
+	local COMPONENT component word
 	local -a GAUDI_BASH_COMPONENTS=(aliases plugins completions)
 
 	if [[ -z "$*" ]]; then
@@ -97,7 +91,7 @@ _gaudi-bash-search() {
 		esac
 	done
 
-	if [[ ${#args} -gt 0 ]]; then
+	if [[ ${#args[@]} -gt 0 ]]; then
 		if [[ -n $COMPONENT ]]; then
 			_gaudi-bash-search-component "${COMPONENT}" "${args[@]}"
 		else
@@ -128,7 +122,7 @@ _gaudi-bash-component-term-matches-negation() {
 	return 1
 }
 
-# @function     _gaudi-bash-component-component
+# @function     _gaudi-bash-search-component
 # @description  searches a component to match the search terms
 # @param $1     component: the component to search in e.g., alias, completion, plugin
 # @param $2     search terms: the terms we want to search for
@@ -141,22 +135,15 @@ _gaudi-bash-search-component() {
 	local component="$1" && shift
 
 	# If one of the search terms is --enable or --disable, we will apply this action to the matches further down.
-	local component_singular action action_func
+	local action
 
-	# check if the arguments has a --enable or --disable flags passed
-	for search_command in "${search_commands[@]}"; do
-		if $(_array-contains "--${search_command}" "$@"); then
-			action="${search_command}"
-			action_func="_gaudi-bash-${action} ${component}"
-			break
-		fi
-	done
+	if _array-contains "--enable" "$@"; then
+		action="enable"
+	elif _array-contains "--disable" "$@"; then
+		action="disable"
+	fi
 
 	local -a terms=("$@")
-
-	unset exact_terms
-	unset partial_terms
-	unset negative_terms
 
 	# Terms that should be included only if they match exactly
 	local -a exact_terms=()
@@ -164,12 +151,10 @@ _gaudi-bash-search-component() {
 	local -a partial_terms=()
 	# Negated partial terms that should be excluded
 	local -a negative_terms=()
-	local modified=0
 
-	unset component_list
 	# The component list is the list/array of all components for each category (alias, plugin and completion)
 	local -a component_list=($(_gaudi-bash-component-list "${component}"))
-	local term
+	local term line match
 
 	for term in "${terms[@]}"; do
 		local search_term="${term:1}"
@@ -190,61 +175,66 @@ _gaudi-bash-search-component() {
 
 	local -a total_matches=($(_array-dedupe "${exact_terms[@]}" "${partial_terms[@]}"))
 
-	[[ ${#total_matches} -eq 0 ]] && return 1
+	[[ ${#total_matches[@]} -eq 0 ]] && return 1
 
-	unset matches
-	declare -a matches=()
+	local -a matches=()
 	for match in "${total_matches[@]}"; do
-		local include_match=true
-
-		if [[ ${#negative_terms[@]} -gt 0 ]]; then
-			(_gaudi-bash-component-term-matches-negation "${match}" "${negative_terms[@]}") && include_match=false
+		if [[ ${#negative_terms[@]} -gt 0 ]] && _gaudi-bash-component-term-matches-negation "${match}" "${negative_terms[@]}"; then
+			continue
 		fi
-		(${include_match}) && matches=("${matches[@]}" "${match}")
+		matches+=("${match}")
 	done
 
-	if [[ -n "${action}" ]]; then
+	[[ ${#matches[@]} -eq 0 ]] && return 1
+
+	if [[ -n "${action:-}" ]]; then
+		# The action runs in this shell (so that a plugin's disable callback takes effect) with its own reload
+		# switched off: the shell is reloaded once, after every match was handled
 		for match in "${matches[@]}"; do
-			_output=$(_gaudi-bash-"$action" "$component" "$match")
+			GAUDI_BASH_AUTOMATIC_RELOAD_AFTER_CONFIG_CHANGE="" _gaudi-bash-"$action" "$component" "$match" > /dev/null
 		done
-		_gaudi-bash-component-cache-clean "${component}"
-		# The actions above ran in subshells, so reload here (once) for the changes to reach this shell
-		if [[ ${#matches[@]} -gt 0 && -n "$GAUDI_BASH_AUTOMATIC_RELOAD_AFTER_CONFIG_CHANGE" ]]; then
+		if [[ -n "$GAUDI_BASH_AUTOMATIC_RELOAD_AFTER_CONFIG_CHANGE" ]]; then
 			_gaudi-bash-reload-after-change
 		fi
 	fi
 
-	if [[ ${#matches[@]} == 0 || -z $matches ]]; then
-		return 1
-	else
-		_gaudi-bash-search-print-result "${component}" "${matches[@]}"
-		unset matches final_matches terms
-
-	fi
+	_gaudi-bash-search-print-result "${component}" "${matches[@]}"
 }
 
 # @function     _gaudi-bash-search-print-result
 # @description  prints the results of search result
-# @param $1     component: the component to search in e.g., alias, completion, plugin
-# @param $4     search terms: the search result terms
+# @param $1     component: the component that was searched e.g., aliases, completions, plugins
+# @param $2     matches <array>: the names of the components that matched the search
 # @return       print the search results formatted and colored
-# @example      ❯ _gaudi-bash-search-print-result "${component}" "${action}" "${action_func}" "${matches[@]}"
+# @example      ❯ _gaudi-bash-search-print-result "${component}" "${matches[@]}"
 _gaudi-bash-search-print-result() {
 	local component="$1" && shift
 	local -a matches=("$@")
-	local match
+	local match use_color=""
+
+	[[ "${GAUDI_BASH_SEARCH_USE_COLOR}" == "true" ]] && use_color=true
 
 	if [[ "${#matches[@]}" -gt 0 ]]; then
 
-		(${GAUDI_BASH_SEARCH_USE_COLOR}) && printf "${YELLOW}%s:${NC}\t" "${component}" || printf "%s:\t" "${component}"
+		if [[ -n "$use_color" ]]; then
+			printf "${YELLOW}%s:${NC}\t" "${component}"
+		else
+			printf "%s:\t" "${component}"
+		fi
 
 		for match in "${matches[@]}"; do
-			local match enabled=0
-			(_gaudi-bash-component-item-is-enabled "${component}" "${match}") && enabled=1
-			if [[ $enabled == 1 ]]; then
-				(${GAUDI_BASH_SEARCH_USE_COLOR}) && match="${GREEN}${match} ✓${NC}" || match="${match} ✓"
+			if _gaudi-bash-component-item-is-enabled "${component}" "${match}"; then
+				if [[ -n "$use_color" ]]; then
+					match="${GREEN}${match} ✓${NC}"
+				else
+					match="${match} ✓"
+				fi
 			fi
-			(${GAUDI_BASH_SEARCH_USE_COLOR}) && echo -ne "${CYAN}$match  ${NC}" || printf "%s\t" "$match"
+			if [[ -n "$use_color" ]]; then
+				echo -ne "${CYAN}$match  ${NC}"
+			else
+				printf "%s\t" "$match"
+			fi
 		done
 
 		printf "\n"

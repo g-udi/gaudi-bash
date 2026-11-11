@@ -24,7 +24,7 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/g-udi/gaudi-bash/main/in
 bash -c "$(wget -qO- https://raw.githubusercontent.com/g-udi/gaudi-bash/main/install.sh)"
 ```
 
-The install script clones gaudi-bash (including its component submodules) into `~/.gaudi_bash` and then runs `setup.sh`.
+The install script clones gaudi-bash into `~/.gaudi_bash` and then runs `setup.sh`, which fetches the git submodules gaudi-bash runs on (the components, composure and bash-preexec). The submodules that only the unit tests need (bats) are not fetched.
 
 > **Manual inspection**:
   It's a good idea to inspect the install script from projects you don't yet know. You can do that by downloading the install script first, looking through it so everything looks normal, then running it.
@@ -33,7 +33,7 @@ The install script clones gaudi-bash (including its component submodules) into `
 If you wish to do a standalone installation then you proceed with the following steps:
 
 1. Check a clone of this repo: `git clone https://github.com/g-udi/gaudi-bash.git ~/.gaudi_bash`
-2. Run `~/.gaudi_bash/setup.sh` (it fetches the git submodules if they are missing and automatically backs up your `~/.bash_profile` on macOS, or `~/.bashrc` elsewhere, to a `.bak` file; an existing `.bak` is never overwritten unattended, a later profile goes to a timestamped `.bak.<date>` file instead)
+2. Run `~/.gaudi_bash/setup.sh` (it fetches the git submodules gaudi-bash runs on if they are missing and automatically backs up your `~/.bash_profile` on macOS, or `~/.bashrc` elsewhere, to a `.bak` file; an existing `.bak` is never overwritten unattended, a later profile goes to a timestamped `.bak.<date>` file instead)
 3. Edit your `~/.bash_profile` (or `~/.bashrc`) file in order to customize gaudi-bash.
 
 `setup.sh` can take the following options:
@@ -79,7 +79,7 @@ gbash update dev
 
 The command shows the incoming commits, asks for confirmation (pass `--silent` to skip the question), checks out the target, updates the git submodules and restarts Bash. It refuses to run while tracked files in the gaudi-bash directory have local changes, and fails when the remote can not be fetched. The only accepted modes are `stable` and `dev`.
 
-gaudi-bash separates the core engine from the components (plugins, aliases, completions, themes), which live in git submodules. `gbash update` checks out the core code and then brings the components to the versions pinned by that core. Should that last step fail (e.g., no network), run it by hand:
+gaudi-bash separates the core engine from the components (plugins, aliases, completions, themes), which live in git submodules. `gbash update` checks out the core code and then brings the components to the versions pinned by that core (the submodules that only the unit tests need are updated only where they were fetched before). Should that last step fail (e.g., no network), run it by hand:
 
 ```bash
 git -C "$GAUDI_BASH" submodule update --init --recursive
@@ -248,7 +248,7 @@ gbash help completions    # shows help for installed completions
 gbash help plugins        # shows help for installed plugins
 gbash enable plugin <name>    # enables a plugin
 gbash disable plugin <name>   # disables a plugin
-gbash doctor [errors|warnings|all]  # diagnose loading issues
+gbash doctor [errors|warnings|all]  # reloads with the logs of that level shown, to diagnose loading issues
 gbash version             # shows current gaudi-bash version and git SHA
 gbash reload              # reloads your bash profile
 gbash restart             # re-executes bash (stronger than reload)
@@ -481,10 +481,12 @@ Profiles are stored as plain text files in `$GAUDI_BASH/profiles/` with a simple
 For quick one-off backups (e.g., before experimenting), you can use the simpler backup/restore commands:
 
 ```bash
-gbash backup    # writes enabled components to $GAUDI_BASH/tmp/enabled.gaudi-bash.backup
-gbash restore   # re-enables components from the backup file
+gbash backup    # saves the enabled components as the profile named "backup"
+gbash restore   # enables every component listed in that backup
 ```
 
-The backup file is a list of `gbash enable <type> <name>` lines. `gbash restore` also accepts backups written by older versions, which used `gaudi-bash enable ...` lines, and skips anything that does not match that format.
+The backup is a profile like any other (`$GAUDI_BASH/profiles/backup.gaudi-bash`), so it shows up in `gbash profile list`. The name `backup` is reserved for it: `gbash backup` overwrites that profile without asking.
+
+`gbash restore` only enables what the backup lists, components enabled since then stay enabled; use `gbash profile load backup` to go back to exactly the saved set. When there is no `backup` profile, `gbash restore` reads the backup file written by older versions (`$GAUDI_BASH/tmp/enabled.gaudi-bash.backup`, a list of `gbash enable <type> <name>` or `gaudi-bash enable ...` lines). Lines that do not match either format are skipped.
 
 For named, reusable configurations, use profiles instead.

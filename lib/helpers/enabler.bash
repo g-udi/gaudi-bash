@@ -31,17 +31,6 @@ _gaudi-bash-enable() {
 	component="$2"
 	load_priority="${!_load_priority}"
 
-	# Capture if the user prompted for a disable all and iterate on all components
-	if [[ "$type" = "alls" ]] && [[ -z "$component" ]]; then
-		_read_input "This will enable all gaudi-bash components (aliases, plugins and completions). Are you sure you want to proceed? [yY/nN]"
-		if [[ $REPLY =~ ^[yY]$ ]]; then
-			for file_type in "aliases" "plugins" "completions"; do
-				_gaudi-bash-enable "$file_type" "all"
-			done
-		fi
-		return 0
-	fi
-
 	[[ -z "$component" ]] && printf "${RED}%s${NC}\n" "Please enter a valid $type_singular(s) to enable" && return 1
 
 	if [[ "$component" = "all" ]]; then
@@ -57,28 +46,21 @@ _gaudi-bash-enable() {
 		[[ -z "$_component" ]] && printf "${CYAN}$component ${RED}%s ${GREEN}$type_singular${NC}\n" "does not appear to be an available" && return 1
 		_component=$(basename "$_component")
 
-		local enabled_component existing_component
-
-		enabled_component=""
-		for existing_component in "${GAUDI_BASH}"/components/enabled/[0-9][0-9][0-9]"$GAUDI_BASH_LOAD_PRIORITY_SEPARATOR$_component"; do
-			[[ -e "$existing_component" ]] || continue
-			enabled_component="$existing_component"
-			break
-		done
-		if [[ -n "$enabled_component" ]]; then
+		if _gaudi-bash-component-enabled-file "$type" "${_component%%.*}" > /dev/null; then
 			printf "${GREEN}$type_singular ${CYAN}$component${NC} %s\n" "is already enabled"
 			return 0
 		fi
 
 		# Load the priority from the file if it present there
-		declare local_file_priority use_load_priority
+		local local_file_priority use_load_priority
 
 		local_file_priority=$(metafor priority < "${GAUDI_BASH}/components/$type/lib/$_component")
 		use_load_priority=${local_file_priority:-$load_priority}
-		ln -s "${GAUDI_BASH}"/components/"$type"/lib/"$_component" "${GAUDI_BASH}/components/enabled/${use_load_priority}${GAUDI_BASH_LOAD_PRIORITY_SEPARATOR}${_component}"
+		if ! ln -s "${GAUDI_BASH}"/components/"$type"/lib/"$_component" "${GAUDI_BASH}/components/enabled/${use_load_priority}${GAUDI_BASH_LOAD_PRIORITY_SEPARATOR}${_component}"; then
+			printf "${RED}%s ${GREEN}$type_singular${NC}: ${CYAN}$component${NC}\n" "Could not enable"
+			return 1
+		fi
 	fi
-
-	_gaudi-bash-component-cache-clean "${type}"
 
 	printf "${GREEN}%s $type_singular: ${CYAN}$component${NC} %s ${RED}$use_load_priority${NC}\n" "◉" "enabled with priority"
 

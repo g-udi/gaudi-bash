@@ -1,5 +1,5 @@
-# #!/usr/bin/env bats
-# # shellcheck shell=bats
+#!/usr/bin/env bats
+# shellcheck shell=bats
 
 load "$GAUDI_TEST_DIRECTORY"/helper.bash
 
@@ -84,12 +84,45 @@ local_setup() {
 	assert_failure
 }
 
-@test "gaudi-bash helpers: components: _gaudi-bash-component-help: should create cache file for component on the first run" {
+@test "gaudi-bash helpers: components: _gaudi-bash-component-help: should cache the descriptions on the first run" {
 	_gaudi-bash-component-cache-clean
-	assert_file_not_exist "$GAUDI_BASH_CACHE_DIR/plugins"
+	assert_file_not_exist "$GAUDI_BASH_CACHE_DIR/plugins-descriptions"
 
 	run _gaudi-bash-component-help plugin
-	assert_file_exist "$GAUDI_BASH_CACHE_DIR/plugins"
+	assert_file_exist "$GAUDI_BASH_CACHE_DIR/plugins-descriptions"
+}
+
+@test "gaudi-bash helpers: components: _gaudi-bash-component-descriptions: should list a name and a description per component" {
+
+	run _gaudi-bash-component-descriptions plugins
+	assert_success
+	assert_line "base	Miscellaneous tools"
+
+	run _gaudi-bash-component-descriptions INVALID
+	assert_failure
+}
+
+@test "gaudi-bash helpers: components: _gaudi-bash-component-descriptions: should rebuild the cache when a component was added or removed" {
+
+	local cache="$GAUDI_BASH_CACHE_DIR/plugins-descriptions"
+	local new_plugin="$GAUDI_BASH/components/plugins/lib/zz-brand-new.plugins.bash"
+
+	run _gaudi-bash-component-descriptions plugins
+	assert_file_exist "$cache"
+	refute_line --partial "zz-brand-new"
+
+	# The cache is made older than anything the test writes from here on
+	touch -t 200001010000 "$cache"
+	printf "%s\n" "about-plugin 'A brand new plugin'" > "$new_plugin"
+
+	run _gaudi-bash-component-descriptions plugins
+	assert_line "zz-brand-new	A brand new plugin"
+
+	touch -t 200001010000 "$cache"
+	rm "$new_plugin"
+
+	run _gaudi-bash-component-descriptions plugins
+	refute_line --partial "zz-brand-new"
 }
 
 @test "gaudi-bash helpers: components: _gaudi-bash-component-help: should display plugins help" {
@@ -189,6 +222,36 @@ local_setup() {
 	IFS=', ' read -r -a array <<< "$output"
 	run echo "${array[0]-not array}"
 	assert_output "alias-completion"
+}
+
+@test "gaudi-bash helpers: components: _gaudi-bash-component-list: should only list the components found on disk" {
+
+	local expected word
+	local -a files=("$GAUDI_BASH"/components/plugins/lib/*.bash)
+
+	expected="${#files[@]}"
+
+	run _gaudi-bash-component-list plugins
+	assert_success
+	IFS=' ' read -r -a array <<< "$output"
+	assert_equal "${#array[@]}" "$expected"
+
+	# Words of the usage text printed under the `gbash show` table used to end up in the list
+	for word in gaudi-bash gbash to; do
+		run _array-contains "$word" "${array[@]}"
+		assert_failure
+	done
+}
+
+@test "gaudi-bash helpers: components: _gaudi-bash-component-list-matching: should match on the name and the description only" {
+
+	# "easily" is a word of the usage text printed under the `gbash show` table, no alias is described with it
+	run _gaudi-bash-component-list-matching aliases easily
+	assert_failure
+
+	run _gaudi-bash-component-list-matching plugins "MISCELLANEOUS tools"
+	assert_success
+	assert_output "base "
 }
 
 @test "gaudi-bash helpers: components: _gaudi-bash-component-list-matching: should fail if the no component was passed" {
@@ -343,4 +406,70 @@ local_setup() {
 
 	run _gaudi-bash-component-item-is-disabled plugin git
 	assert_failure
+}
+
+@test "gaudi-bash helpers: components: _gaudi-bash-component-enabled-file: should find a component enabled with any load priority" {
+
+	run _gaudi-bash-component-enabled-file plugins git
+	assert_failure
+	refute_output
+
+	# Not the usual three digits
+	ln -s "$GAUDI_BASH/components/plugins/lib/git.plugins.bash" "$GAUDI_BASH/components/enabled/42___git.plugins.bash"
+
+	run _gaudi-bash-component-enabled-file plugins git
+	assert_success
+	assert_output "$GAUDI_BASH/components/enabled/42___git.plugins.bash"
+
+	run _gaudi-bash-component-item-is-enabled plugin git
+	assert_success
+
+	run _gaudi-bash-component-item-is-disabled plugin git
+	assert_failure
+
+	run _gaudi-bash-enable plugin git
+	assert_success
+	assert_output --partial "is already enabled"
+
+	run _gaudi-bash-disable plugin git
+	assert_success
+	assert_file_not_exist "$GAUDI_BASH/components/enabled/42___git.plugins.bash"
+}
+
+@test "gaudi-bash helpers: components: _gaudi-bash-component-item-is-enabled: should tell component types and similar names apart" {
+
+	run _gaudi-bash-enable alias git
+	assert_success
+
+	run _gaudi-bash-component-item-is-enabled alias git
+	assert_success
+
+	# Neither the plugin of the same name nor an alias whose name ends the same way is enabled
+	run _gaudi-bash-component-item-is-enabled plugin git
+	assert_failure
+
+	run _gaudi-bash-component-item-is-enabled alias it
+	assert_failure
+}
+
+@test "gaudi-bash helpers: components: _gaudi-bash-component-item-is-disabled: should fail for a component that does not exist" {
+
+	run _gaudi-bash-component-item-is-disabled plugin this-plugin-does-not-exist
+	assert_failure
+}
+
+@test "gaudi-bash helpers: components: _gaudi-bash-describe: should show a component as enabled right after it was enabled" {
+
+	run _gaudi-bash-describe plugins enabled
+	refute_line --regexp "^git +"
+
+	run _gaudi-bash-enable plugin git
+	assert_success
+
+	# Nothing clears a cache in between: whether a component is enabled is never cached
+	run _gaudi-bash-describe plugins enabled
+	assert_line --regexp "^git +"
+
+	run _gaudi-bash-describe plugins
+	assert_line --regexp "^git +.*◉"
 }

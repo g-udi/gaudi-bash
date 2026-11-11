@@ -2,6 +2,29 @@
 # shellcheck shell=bash
 # shellcheck disable=SC2181
 
+# @function     _gaudi-bash-submodules-update
+# @description  Brings the git submodules gaudi-bash runs on to the commits pinned by the checked out version
+#               The submodules that only the tests need (bats, under bin/bats-*) are not fetched: they are only
+#               updated where they were fetched before (a development checkout)
+#               Used by setup.sh and install.sh before composure is loaded, hence no function metadata here
+# @param $1     (optional) The gaudi-bash directory (default: $GAUDI_BASH)
+# @example      ❯ _gaudi-bash-submodules-update "$GAUDI_BASH"
+function _gaudi-bash-submodules-update() {
+	local directory="${1:-${GAUDI_BASH?}}" path
+	local -a paths=()
+
+	while read -r _ path; do
+		[[ -z "$path" || "$path" == bin/bats-* ]] || paths+=("$path")
+	done < <(git -C "$directory" config --file "$directory/.gitmodules" --get-regexp '^submodule\..*\.path$' 2> /dev/null)
+
+	if [[ ${#paths[@]} -gt 0 ]]; then
+		git -C "$directory" submodule update --init --recursive -- "${paths[@]}" || return 1
+	fi
+
+	# Without --init this only touches the submodules that were fetched before
+	git -C "$directory" submodule update --recursive
+}
+
 # @function     _gaudi-bash_update_and_restart
 # @description  Checks out the wanted version, pops directory and restart
 # @param $1     (optional) Which branch to checkout to
@@ -17,7 +40,7 @@ function _gaudi-bash_update_and_restart() {
 	fi
 
 	# Bring the components (git submodules) to the versions pinned by the version that was just checked out
-	if ! git submodule update --init --recursive &> /dev/null; then
+	if ! _gaudi-bash-submodules-update "$PWD" &> /dev/null; then
 		echo "gaudi-bash was updated but its components (git submodules) were not, please run: git -C '${GAUDI_BASH}' submodule update --init --recursive"
 		return 1
 	fi

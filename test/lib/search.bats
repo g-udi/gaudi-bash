@@ -1,4 +1,6 @@
 #!/usr/bin/env bats
+# shellcheck shell=bats
+# shellcheck disable=SC2329,SC2030,SC2031
 
 load "$GAUDI_TEST_DIRECTORY"/helper.bash
 
@@ -63,7 +65,7 @@ local_setup() {
 	for plugin in "autojump" "git" "gitstatus" "git-subrepo" "jgitflow" "jump"; do
 		assert_line --index 1 --partial $plugin
 	done
-	assert_line --index 2 "completions:	git	git_flow	github-cli	hub	virsh	"
+	assert_line --index 2 "completions:	git	git_flow	github-cli	virsh	"
 }
 
 @test "gaudi-bash search: multi term search should return correct results across all components" {
@@ -95,4 +97,39 @@ local_setup() {
 
 	run _gaudi-bash-search "@go" -c --no-color
 	assert_line --index 0 "completions:	go	"
+}
+
+@test "gaudi-bash search: search should not return words of the show usage text as components" {
+
+	# "easily" is part of the usage text printed under the `gbash show` table, only the docker plugin is described with it
+	run _gaudi-bash-search "easily" --no-color
+	assert_output "plugins:	docker	"
+}
+
+@test "gaudi-bash search: search should use every term, also when the first one is empty" {
+
+	run _gaudi-bash-search "" "ruby" --plugin --no-color
+	assert_line --index 0 "plugins:	chruby	rails	rbenv	ruby	rvm	"
+}
+
+@test "gaudi-bash search: search --enable and --disable should act in the current shell and reload once" {
+
+	GAUDI_BASH_AUTOMATIC_RELOAD_AFTER_CONFIG_CHANGE=1
+	_gaudi-bash-reload() { echo "RELOADED"; }
+
+	run _gaudi-bash-search "@git" "@ruby" --plugin --enable --no-color
+	assert_success
+	assert_file_exist "$GAUDI_BASH/components/enabled/250___git.plugins.bash"
+	assert_file_exist "$GAUDI_BASH/components/enabled/250___ruby.plugins.bash"
+	assert_equal "$(grep -c "^RELOADED$" <<< "$output")" 1
+	assert_line "plugins:	git ✓	ruby ✓	"
+
+	# The disable callback of a plugin has to run in the shell the search was started from
+	git_on_disable() { GAUDI_TEST_GIT_DISABLED=true; }
+
+	_gaudi-bash-search "@git" --plugin --disable --no-color > /dev/null
+	assert_file_not_exist "$GAUDI_BASH/components/enabled/250___git.plugins.bash"
+	assert_file_exist "$GAUDI_BASH/components/enabled/250___ruby.plugins.bash"
+	assert_equal "${GAUDI_TEST_GIT_DISABLED:-}" "true"
+	assert_equal "$GAUDI_BASH_AUTOMATIC_RELOAD_AFTER_CONFIG_CHANGE" 1
 }

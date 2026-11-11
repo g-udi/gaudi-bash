@@ -5,7 +5,7 @@
 # @description  calls the disabled plugin destructor, if present
 # @param $1     component name: gaudi-bash component name .e.g., base, git
 _on-disable-callback() {
-	callback=$1_on_disable
+	local callback=$1_on_disable
 	_command_exists "$callback" &> /dev/null && $callback
 }
 
@@ -27,17 +27,6 @@ _gaudi-bash-disable() {
 	type_singular=$(_gaudi-bash-singularize-component "$1")
 	component="$2"
 
-	# Capture if the user prompted for a disable all and iterate on all components
-	if [[ "$type" = "alls" ]] && [[ -z "$component" ]]; then
-		_read_input "This will disable all gaudi-bash components (aliases, plugins and completions). Are you sure you want to proceed? [yY/nN]"
-		if [[ $REPLY =~ ^[yY]$ ]]; then
-			for file_type in "aliases" "plugins" "completions"; do
-				_gaudi-bash-disable "$file_type" "all"
-			done
-		fi
-		return 0
-	fi
-
 	if [[ "$component" = "all" ]]; then
 		find "${GAUDI_BASH}/components/enabled" -name "*.${type}.bash" -exec rm {} \;
 	else
@@ -46,17 +35,12 @@ _gaudi-bash-disable() {
 
 		local _component
 
-		_component=$(command ls "${GAUDI_BASH}/components/enabled/"[0-9]*"$GAUDI_BASH_LOAD_PRIORITY_SEPARATOR$component.$type.bash" 2> /dev/null | head -1)
-
-		if [[ -z "$_component" ]]; then
+		if ! _component=$(_gaudi-bash-component-enabled-file "$type" "$component"); then
 			printf "${RED}∴${NC} ${CYAN}$component ${NC}%s ${GREEN}$type_singular${NC}\n" "does not appear to be an enabled"
 			return 1
-		else
-			rm "${GAUDI_BASH}/components/enabled/$(basename "$_component")"
 		fi
+		rm "$_component" || return 1
 	fi
-
-	_gaudi-bash-component-cache-clean "${type}"
 
 	printf "${CYAN}%s ${GREEN}$type_singular: ${CYAN}$component${NC}\n" "◯ disabled"
 

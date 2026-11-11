@@ -28,9 +28,11 @@ sync_gaudi_test_worktree() {
 function setup() {
 
 	export GIT_CONFIG_NOSYSTEM
-	export XDG_CACHE_HOME="${GAUDI_TEST_DIRECTORY?}"
+	# Every test gets a cache of its own, nothing is shared between tests or kept between runs
+	export XDG_CACHE_HOME="${BATS_TEST_TMPDIR?}/cache"
 
-	cp "$LEGACY_HOME/$GAUDI_BASH_PROFILE" "$HOME"
+	# Every test starts from the same profile (a fixture), never from the profile of the machine running the tests
+	cp "${GAUDI_TEST_DIRECTORY?}/fixtures/home/profile.bash" "$HOME/$GAUDI_BASH_PROFILE"
 	# This sets up a local test fixture, i.e. a completely fresh and isolated gaudi-bash directory. This is done to avoid messing with your own gaudi-bash source directory.
 	[[ ! -d "$GAUDI_BASH" ]] && echo "NO EXIST" && git --git-dir="${GAUDI_BASH_GIT_DIR?}" worktree add -d -f "${GAUDI_BASH}"
 
@@ -54,7 +56,6 @@ function setup_file() {
 	set -a
 
 	export GAUDI_TEST_RUNNER="enabled"
-	export LEGACY_HOME=$HOME
 
 	# Load the BATS modules we use:
 	load "${GAUDI_TEST_DEPS_DIR}/bats-support/load.bash"
@@ -118,7 +119,7 @@ function teardown() {
 
 	rm -rf "${GAUDI_BASH?}/components"
 	rm -rf "${GAUDI_BASH?}/tmp"
-	rm -rf "${GAUDI_BASH?}/profiles"/test*.bash_it
+	rm -rf "${GAUDI_BASH?}/profiles"
 
 	local_teardown
 

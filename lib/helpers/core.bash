@@ -37,39 +37,26 @@ _gaudi-bash-describe() {
 	__check-function-parameters "$1" || return 1
 	[[ -n "$2" ]] && ! _array-contains "$2" "${GAUDI_BASH_DESCRIBE_MODES[@]}" && echo "unsupported describe mode" && return 1
 
+	local component component_type mode component_type_label name about_text
+
 	# Make sure the component is pluralized in case this function is called directly e.g., for unit tests
 	component=$(_gaudi-bash-pluralize-component "$1")
 	component_type="$(_gaudi-bash-singularize-component "$component")"
 	mode=${2:-"all"}
 
-	local component_type_label
 	component_type_label="$(printf "%s" "$component_type" | awk '{print toupper(substr($0, 1, 1)) substr($0, 2)}')"
 	printf "\n%-20s%-10s%s\n" "$component_type_label" 'Enabled?' '  Description'
 	printf "%*s\n" "${COLUMNS:-$(tput cols 2> /dev/null || echo 80)}" '' | tr ' ' -
 
-	file=$(_gaudi-bash-component-cache-add "$component-enabled")
-
-	[[ "$mode" = "all" ]] && file=${file/-enabled/}
-
-	if [[ ! -s "${file}" ]]; then
-		rm -f "${file}" 2> /dev/null
-		local __file
-		for __file in "${GAUDI_BASH}/components/$component/lib/"*.bash; do
-			local enabled_file component_name about_text
-			enabled_file="${__file##*/}"
-			component_name="${enabled_file%%.*}"
-
-			about_text="$(metafor about-"$component_type" < "$__file")"
-
-			if compgen -G "${GAUDI_BASH}/components/enabled/*${GAUDI_BASH_LOAD_PRIORITY_SEPARATOR}${enabled_file}" > /dev/null 2>&1; then
-				printf "%-20s${GREEN}%-10s${NC}%s\n" "$component_name" "  ◉" "    $about_text" | tee -a "${file}"
-			elif [[ "$mode" = "all" ]]; then
-				printf "%-20s${RED}%-10s${NC}%s\n" "$component_name" "  ◯" "    $about_text" | tee -a "${file}"
-			fi
-		done
-	else
-		cat "${file}"
-	fi
+	# Only the descriptions are cached: whether a component is enabled is looked up for every row
+	while IFS=$'\t' read -r name about_text; do
+		[[ -n "$name" ]] || continue
+		if _gaudi-bash-component-enabled-file "$component" "$name" > /dev/null; then
+			printf "%-20s${GREEN}%-10s${NC}%s\n" "$name" "  ◉" "    $about_text"
+		elif [[ "$mode" = "all" ]]; then
+			printf "%-20s${RED}%-10s${NC}%s\n" "$name" "  ◯" "    $about_text"
+		fi
+	done < <(_gaudi-bash-component-descriptions "$component")
 
 	if [[ "$mode" = "all" ]]; then
 		printf "\n%b\n" "gaudi-bash allows you easily enable/disable components:

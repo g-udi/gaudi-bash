@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # shellcheck shell=bash
 
-# Cache directory: prefer XDG_CACHE_HOME, fall back to $GAUDI_BASH/tmp/cache
+# Cache directory: $XDG_CACHE_HOME/gaudi-bash when XDG_CACHE_HOME is set, ~/.cache/gaudi-bash otherwise
 GAUDI_BASH_CACHE_DIR="${XDG_CACHE_HOME:-${HOME}/.cache}/gaudi-bash"
 
 # @function     _gaudi-bash-component-cache-add
@@ -23,12 +23,13 @@ _gaudi-bash-component-cache-add() {
 }
 
 # @function     _gaudi-bash-component-cache-clean
-# @description  clears the cache view in the /tmp directory for a passed component type
+# @description  clears the cached descriptions of a passed component type from the cache directory
 #               clears all the caches if no component type was passed
+#               the "<type>" and "<type>-enabled" files are the table caches written by older versions
 # @param $1     type: the component type
 # @example      ❯ _gaudi-bash-component-cache-clean
 _gaudi-bash-component-cache-clean() {
-	about "caches the component view in the /tmp directory"
+	about "clears the cached component descriptions"
 	group "gaudi-bash:core:cache"
 
 	local component="$1"
@@ -41,6 +42,6 @@ _gaudi-bash-component-cache-clean() {
 		done
 	else
 		cache=$(_gaudi-bash-component-cache-add "${component}")
-		rm -f "${cache}" "${cache}-enabled"
+		rm -f "${cache}" "${cache}-enabled" "${cache}-descriptions"
 	fi
 }

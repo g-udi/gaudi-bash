@@ -201,3 +201,36 @@ CUSTOM
 	assert_success
 	assert_line --index 0 "alias local_custom_two='echo two'"
 }
+
+@test "gaudi-bash loader: every library is named once in the ordered list of gaudi_bash.sh" {
+
+	local lib expected="" listed
+
+	for lib in "$GAUDI_BASH"/lib/*.bash; do
+		lib="${lib##*/}"
+		# The theme is loaded last, on its own
+		[[ "$lib" == "appearance.bash" ]] && continue
+		expected+="${lib%.bash}"$'\n'
+	done
+
+	listed="$(sed -n 's/^for _gaudi_bash_lib in \(composure colors log .*\); do$/\1/p' "$GAUDI_BASH/gaudi_bash.sh" | tr ' ' '\n' | sort)"
+
+	assert_equal "$listed" "$(printf "%s" "$expected" | sort)"
+}
+
+@test "gaudi-bash loader: every library is loaded once" {
+
+	local lib
+
+	# Each library of the test copy counts how many times it is sourced
+	for lib in composure colors log gaudi-bash search; do
+		printf "\n%s\n" "GAUDI_TEST_LIB_LOADS=\"\${GAUDI_TEST_LIB_LOADS:-} ${lib}\"" >> "$GAUDI_BASH/lib/${lib}.bash"
+	done
+
+	load "$GAUDI_BASH/gaudi_bash.sh"
+
+	assert_equal "$GAUDI_TEST_LIB_LOADS" " composure colors log gaudi-bash search"
+
+	# The log colors are set in that single pass, the colors being loaded before the logging
+	assert_equal "$GAUDI_BASH_LOG_ERROR_COLOR" "$RED"
+}

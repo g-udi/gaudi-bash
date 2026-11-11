@@ -23,17 +23,17 @@ assert_sane_defaults() {
 
 	assert_sane_defaults
 
-	assert_file_not_exist "$GAUDI_BASH/tmp/enabled.gaudi-bash.backup"
+	assert_file_not_exist "$GAUDI_BASH/profiles/backup.gaudi-bash"
 
 	run _gaudi-bash-backup
 
-	assert_file_exist "$GAUDI_BASH/tmp/enabled.gaudi-bash.backup"
+	assert_file_exist "$GAUDI_BASH/profiles/backup.gaudi-bash"
 
-	run cat "$GAUDI_BASH/tmp/enabled.gaudi-bash.backup"
+	run cat "$GAUDI_BASH/profiles/backup.gaudi-bash"
 	assert_success
-	assert_output --partial "gbash enable alias general"
-	assert_output --partial "gbash enable plugin base"
-	assert_output --partial "gbash enable completion system"
+	assert_line "alias general"
+	assert_line "plugin base"
+	assert_line "completion system"
 }
 
 @test "gaudi-bash core: _gaudi-bash-backup should overwrite old backed up components" {
@@ -43,18 +43,18 @@ assert_sane_defaults() {
 
 	assert_sane_defaults
 
-	assert_file_not_exist "$GAUDI_BASH/tmp/enabled.gaudi-bash.backup"
+	assert_file_not_exist "$GAUDI_BASH/profiles/backup.gaudi-bash"
 
 	run _gaudi-bash-backup
 
-	assert_file_exist "$GAUDI_BASH/tmp/enabled.gaudi-bash.backup"
+	assert_file_exist "$GAUDI_BASH/profiles/backup.gaudi-bash"
 
 	run gbash disable completion git
 	run _gaudi-bash-backup
 
-	assert_file_exist "$GAUDI_BASH/tmp/enabled.gaudi-bash.backup"
-	run cat "$GAUDI_BASH/tmp/enabled.gaudi-bash.backup"
-	assert_output --partial "gbash enable alias general"
+	assert_file_exist "$GAUDI_BASH/profiles/backup.gaudi-bash"
+	run cat "$GAUDI_BASH/profiles/backup.gaudi-bash"
+	assert_line "alias general"
 }
 
 @test "gaudi-bash core: _gaudi-bash-restore should successfully restore backed up components" {
@@ -64,12 +64,12 @@ assert_sane_defaults() {
 
 	assert_sane_defaults
 
-	assert_file_not_exist "$GAUDI_BASH/tmp/enabled.gaudi-bash.backup"
+	assert_file_not_exist "$GAUDI_BASH/profiles/backup.gaudi-bash"
 
 	run _gaudi-bash-backup
 
 	assert_line --index 0 "Backing up alias: gaudi-bash"
-	assert_file_exist "$GAUDI_BASH/tmp/enabled.gaudi-bash.backup"
+	assert_file_exist "$GAUDI_BASH/profiles/backup.gaudi-bash"
 
 	run gbash disable plugins all
 	run gbash disable completion all
@@ -86,6 +86,60 @@ assert_sane_defaults() {
 
 	assert_sane_defaults
 
+}
+
+@test "gaudi-bash core: _gaudi-bash-backup should write an empty backup when nothing is enabled" {
+
+	run _gaudi-bash-backup
+	assert_success
+	assert_output "No component is enabled, the backup is empty"
+
+	assert_file_exist "$GAUDI_BASH/profiles/backup.gaudi-bash"
+	run cat "$GAUDI_BASH/profiles/backup.gaudi-bash"
+	refute_output
+}
+
+@test "gaudi-bash core: the backup is the profile named backup" {
+
+	run gbash enable plugin base
+	run gbash enable alias general
+	run gbash backup
+	assert_success
+
+	run gbash profile list
+	assert_line --partial "backup"
+	assert_line --partial "2 component(s)"
+
+	# A restore only enables: what was enabled after the backup stays
+	run gbash disable plugin base
+	run gbash enable alias git
+	run gbash restore
+	assert_success
+	assert_file_exist "$GAUDI_BASH/components/enabled/250___base.plugins.bash"
+	assert_file_exist "$GAUDI_BASH/components/enabled/150___git.aliases.bash"
+
+	# Loading the profile goes back to exactly what was backed up
+	run gbash profile load backup
+	assert_success
+	assert_file_exist "$GAUDI_BASH/components/enabled/250___base.plugins.bash"
+	assert_file_exist "$GAUDI_BASH/components/enabled/150___general.aliases.bash"
+	assert_file_not_exist "$GAUDI_BASH/components/enabled/150___git.aliases.bash"
+}
+
+@test "gaudi-bash core: gbash enable all and gbash disable all are not valid component types" {
+
+	# shellcheck disable=SC2329
+	_read_input() { echo "ASKED"; }
+
+	run gbash enable all
+	assert_failure
+	assert_output --partial "Please enter a valid component to enable"
+	refute_output --partial "ASKED"
+
+	run gbash disable all
+	assert_failure
+	assert_output --partial "Please enter a valid component to disable"
+	refute_output --partial "ASKED"
 }
 
 @test "gaudi-bash core: gbash should reload once after enabling several components" {
