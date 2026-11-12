@@ -1,8 +1,17 @@
 #!/usr/bin/env bash
 # shellcheck shell=bash
-# shellcheck disable=SC1090,SC1091,SC2034,SC2139
+# shellcheck disable=SC1090,SC1091,SC2034
 
-# Initialize Bash It
+# gaudi-bash needs Bash 4.3 or newer: an older Bash (e.g., the /bin/bash 3.2 of macOS) is told so and left as it is
+if [[ -z "${BASH_VERSINFO[0]:-}" ]] || ((BASH_VERSINFO[0] < 4 || (BASH_VERSINFO[0] == 4 && BASH_VERSINFO[1] < 3))); then
+	printf '%s\n' "gaudi-bash needs Bash 4.3 or newer and was not loaded (this is Bash ${BASH_VERSION:-unknown})." >&2
+	if [[ "${BASH_SOURCE[0]}" != "$0" ]]; then
+		return 1
+	fi
+	exit 1
+fi
+
+# Initialize gaudi-bash
 GAUDI_BASH_LOG_PREFIX="CORE"
 : "${GAUDI_BASH:=${BASH_SOURCE%/*}}"
 

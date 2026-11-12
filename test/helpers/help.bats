@@ -14,7 +14,7 @@ local_setup() {
 	assert_line --index 0 --partial "provides a solid framework for using, developing and maintaining shell scripts and custom commands for your daily work"
 }
 
-@test "gaudi-bash-helpers: help: should show default help menu if no valid alias was passed" {
+@test "gaudi-bash-helpers: help: should fail for an alias group that does not exist" {
 
 	run _gaudi-bash-help alias INVALID
 	assert_failure
@@ -28,8 +28,11 @@ local_setup() {
 
 @test "gaudi-bash-helpers: help: _gaudi-bash-help list aliases without any aliases enabled" {
 
-	run __help-list-aliases "$GAUDI_BASH/aliases/available/ag.aliases.bash"
+	assert_file_exist "$GAUDI_BASH/components/aliases/lib/ag.aliases.bash"
+	run __help-list-aliases "$GAUDI_BASH/components/aliases/lib/ag.aliases.bash"
+	assert_success
 	assert_line --index 0 --partial "ag"
+	assert_output --partial "ag='ag --smart-case"
 }
 
 @test "gaudi-bash-helpers: help: _gaudi-bash-help list aliases with ag aliases enabled" {
@@ -59,7 +62,7 @@ local_setup() {
 	assert_line --index 0 --partial "docker-compose"
 }
 
-@test "gaudi-bash-helpers: help: _gaudi-bash-help list aliases with ag aliases enabled in global directory" {
+@test "gaudi-bash-helpers: help: _gaudi-bash-help list aliases from the enabled link" {
 
 	run gbash enable alias "ag"
 	assert_link_exist "$GAUDI_BASH/components/enabled/150___ag.aliases.bash"

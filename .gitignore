@@ -5,15 +5,10 @@
 *.sublime-project
 .vscode
 
-# test libraries
-bats
-
-# gaudi-bash enabled items and custom and temporary files
-components/enabled
-components/custom
+# gaudi-bash profiles and temporary files
+# (the enabled and custom components live in the components submodule, which has its own ignore rules)
 profiles/
 tmp/
-test/gaudi-bash/
 
 # OS specific files (mainly OSX)
 .DS_Store

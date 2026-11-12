@@ -209,3 +209,30 @@ export AFTER=1"
 	assert_output --partial "status: 0"
 	assert_dir_not_exist "$UNINSTALL_TARGET"
 }
+
+@test "gaudi-bash uninstall: remove the cache and say where the command history is" {
+
+	__write_installed_profile
+	mkdir -p "$UNINSTALL_HOME/.cache/gaudi-bash" "$UNINSTALL_HOME/.cache/other" "$UNINSTALL_HOME/.local/state/bash"
+	touch "$UNINSTALL_HOME/.cache/gaudi-bash/plugins-descriptions" "$UNINSTALL_HOME/.local/state/bash/history"
+
+	run env -u GAUDI_BASH_PROFILE -u GAUDI_BASH -u XDG_CACHE_HOME -u XDG_STATE_HOME HOME="$UNINSTALL_HOME" bash "$GAUDI_BASH/uninstall.sh" < /dev/null
+	assert_success
+	assert_output --partial "kept your command history in $UNINSTALL_HOME/.local/state/bash/history"
+
+	assert_dir_not_exist "$UNINSTALL_HOME/.cache/gaudi-bash"
+	assert_dir_exist "$UNINSTALL_HOME/.cache/other"
+	assert_file_exist "$UNINSTALL_HOME/.local/state/bash/history"
+}
+
+@test "gaudi-bash uninstall: the messages are colored with the colors of the installation" {
+
+	__write_installed_profile
+	mkdir -p "$UNINSTALL_TARGET/lib"
+	printf "%s\n" 'GREEN="<green>"' 'NC="<nc>"' > "$UNINSTALL_TARGET/lib/colors.bash"
+
+	__uninstall
+	assert_success
+	assert_output --partial "<green>un-installation finished successfully! Sorry to see you go!<nc>"
+	refute_output --partial "kept your command history"
+}

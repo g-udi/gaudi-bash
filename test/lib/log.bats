@@ -315,3 +315,26 @@ local_setup() {
 	run _log_debug "test test test"
 	assert_output " [ DEBUG ] [nice: prefix:] test test test"
 }
+
+@test "gaudi-bash log: GAUDI_LOG_DISABLE_COLOR leaves every color code out, also on a color terminal" {
+
+	# What lib/colors.bash sets on a terminal that supports colors
+	NC="\033[0m" YELLOW="\033[0;33m" RED="\033[0;31m" GREEN="\033[0;32m" MAGENTA="\033[0;35m"
+	GAUDI_BASH_LOG_ERROR_COLOR="$RED" GAUDI_BASH_LOG_DEBUG_COLOR="$GREEN"
+	GAUDI_BASH_LOG_LEVEL=$GAUDI_BASH_LOG_LEVEL_ALL
+
+	run _log_error "boom"
+	assert_output " [ ERROR ] [CORE] boom"
+
+	run _log_component "$GAUDI_BASH/components/enabled/250___git.plugins.bash"
+	assert_output " [ DEBUG ] [CORE] Loading plugin: git"
+
+	run _log_component "history" "library"
+	assert_output " [ DEBUG ] [CORE] Loading library: history"
+
+	# With colors the codes are printed, never as text
+	unset GAUDI_LOG_DISABLE_COLOR
+	run _log_error "boom"
+	refute_output --partial "\033"
+	assert_output --partial "boom"
+}

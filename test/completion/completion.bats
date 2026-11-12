@@ -66,7 +66,7 @@ __check_completion() {
 @test "gaudi-bash completion: show options" {
 
 	run __check_completion 'gbash '
-	assert_line --index 0 "show enable disable reload restart search update backup restore profile doctor help version"
+	assert_line --index 0 "show enable disable reload restart search update migrate backup restore profile doctor help version"
 }
 
 @test "gaudi-bash completion: show options matching the typed verb" {

@@ -10,7 +10,7 @@ local_setup() {
 @test "gaudi-bash core: _gaudi-bash-restore should reject invalid backup entries" {
 
 	cd "$GAUDI_BASH"
-	./setup.sh --silent
+	"$GAUDI_BASH/setup.sh" --silent
 
 	mkdir -p "$GAUDI_BASH/tmp"
 
@@ -43,7 +43,7 @@ BACKUP
 @test "gaudi-bash core: _gaudi-bash-restore should accept all valid component types" {
 
 	cd "$GAUDI_BASH"
-	./setup.sh --silent
+	"$GAUDI_BASH/setup.sh" --silent
 
 	mkdir -p "$GAUDI_BASH/tmp"
 
@@ -68,7 +68,7 @@ BACKUP
 @test "gaudi-bash core: _gaudi-bash-restore should accept backup entries written with the legacy gaudi-bash prefix" {
 
 	cd "$GAUDI_BASH"
-	./setup.sh --silent
+	"$GAUDI_BASH/setup.sh" --silent
 
 	mkdir -p "$GAUDI_BASH/tmp"
 
@@ -90,7 +90,7 @@ BACKUP
 @test "gaudi-bash core: _gaudi-bash-restore should fail gracefully with no backup file" {
 
 	cd "$GAUDI_BASH"
-	./setup.sh --silent
+	"$GAUDI_BASH/setup.sh" --silent
 
 	rm -f "$GAUDI_BASH/tmp/enabled.gaudi-bash.backup"
 

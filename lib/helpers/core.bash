@@ -1,26 +1,7 @@
 #!/usr/bin/env bash
 # shellcheck shell=bash
-# shellcheck disable=SC2001,SC2002
 
 # A collection of reusable gaudi-bash functions
-
-# @function     _gaudi-bash-grep
-# @description  outputs a full path of the grep found on the filesystem
-# @return       Path to the egrep, grep bin e.g., /usr/bin/egrep
-_gaudi-bash-grep() {
-	about "outputs a full path of the grep found on the filesystem"
-	group "gaudi-bash:core"
-
-	if [[ -z "${GAUDI_BASH_GREP}" ]]; then
-		GAUDI_BASH_GREP="$(type -P egrep || type -P grep || echo '/usr/bin/grep')"
-		export GAUDI_BASH_GREP
-	fi
-	printf "%s" "${GAUDI_BASH_GREP}"
-}
-
-# Cache grep path immediately to avoid repeated subshells
-: "${GAUDI_BASH_GREP:=$(type -P egrep 2> /dev/null || type -P grep 2> /dev/null || echo '/usr/bin/grep')}"
-export GAUDI_BASH_GREP
 
 # @function     _gaudi-bash-describe
 # @description  describes gaudi-bash components by listing the component, description and its status (enabled vs. disabled)

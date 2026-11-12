@@ -19,8 +19,9 @@ permissions:
   contents: read
 
 # A newer push to a pull request replaces its running checks, runs on main are never cancelled
+# Every kind of event has a group of its own, so that a push to main can not replace a release that is waiting
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.ref }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
@@ -37,6 +38,14 @@ jobs:
       with:
         submodules: recursive
 
+    # gaudi-bash needs Bash 4.3 or newer, macOS only ships 3.2 as /bin/bash
+    - name: Install a current Bash (macOS)
+      if: startsWith(runner.os, 'macOS')
+      run: brew install bash
+
+    - name: Show the Bash that runs the tests
+      run: bash --version
+
     - name: Run tests (Linux)
       if: startsWith(runner.os, 'Linux')
       shell: 'script -q -e -c "bash {0}"'
@@ -47,7 +56,7 @@ jobs:
       run: script -q /dev/null bash -c 'test/run'
 
   lint:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     steps:
     - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
@@ -55,6 +64,7 @@ jobs:
         submodules: recursive
 
     - name: Install shellcheck
+      # The version is the one of the pinned runner image (ubuntu-24.04)
       run: sudo apt-get update && sudo apt-get install -y shellcheck
 
     - name: Install shfmt
@@ -75,14 +85,14 @@ jobs:
         python-version: '3.12'
 
     - name: Install pre-commit
-      run: python3 -m pip install pre-commit
+      run: python3 -m pip install pre-commit==4.2.0
 
     - name: Run lint
       run: pre-commit run --all-files
 
   lint-differential:
     if: github.event_name == 'pull_request'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     permissions:
       contents: read
@@ -103,7 +113,7 @@ jobs:
     # Only a run started by hand on main releases; pushes and pull requests never tag
     if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main'
     needs: [test, lint]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     permissions:
       contents: write
@@ -128,10 +138,13 @@ jobs:
         LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")
         echo "Latest tag: $LATEST_TAG"
 
-        # Check if HEAD is already tagged
-        if git describe --exact-match HEAD 2>/dev/null; then
-          echo "HEAD is already tagged, skipping"
-          echo "skip=true" >> "$GITHUB_OUTPUT"
+        # A run that tagged HEAD but failed before publishing can be started again: the release is then made
+        # for the tag that is already there, compared against the release before it
+        if EXISTING_TAG=$(git describe --tags --exact-match HEAD 2>/dev/null); then
+          echo "HEAD is already tagged as $EXISTING_TAG, publishing the release for that tag"
+          PREV_TAG=$(git describe --tags --abbrev=0 "${EXISTING_TAG}^" 2>/dev/null || true)
+          echo "tag=$EXISTING_TAG" >> "$GITHUB_OUTPUT"
+          echo "prev_tag=$PREV_TAG" >> "$GITHUB_OUTPUT"
           exit 0
         fi
 
@@ -148,7 +161,6 @@ jobs:
         echo "New tag: $NEW_TAG"
         echo "tag=$NEW_TAG" >> "$GITHUB_OUTPUT"
         echo "prev_tag=$LATEST_TAG" >> "$GITHUB_OUTPUT"
-        echo "skip=false" >> "$GITHUB_OUTPUT"
 
         git config user.name "github-actions[bot]"
         git config user.email "github-actions[bot]@users.noreply.github.com"
@@ -156,15 +168,20 @@ jobs:
         git push origin "$NEW_TAG"
 
     - name: Generate release notes
-      if: steps.tag.outputs.skip != 'true'
       id: notes
+      env:
+        PREV_TAG: ${{ steps.tag.outputs.prev_tag }}
       run: |
+        # Without an earlier release (or tag) the notes hold the whole history
+        RANGE="HEAD"
+        if [ -n "$PREV_TAG" ] && git rev-parse -q --verify "refs/tags/$PREV_TAG" >/dev/null; then
+          RANGE="${PREV_TAG}..HEAD"
+        fi
         echo "body<<NOTES_EOF" >> "$GITHUB_OUTPUT"
-        git log --no-merges --format="- %s (%h)" "${{ steps.tag.outputs.prev_tag }}..HEAD" >> "$GITHUB_OUTPUT"
+        git log --no-merges --format="- %s (%h)" "$RANGE" >> "$GITHUB_OUTPUT"
         echo "NOTES_EOF" >> "$GITHUB_OUTPUT"
 
     - name: Create GitHub Release
-      if: steps.tag.outputs.skip != 'true'
       uses: softprops/action-gh-release@3bb12739c298aeb8a4eeaf626c5b8d85266b0e65 # v2.6.2
       with:
         tag_name: ${{ steps.tag.outputs.tag }}

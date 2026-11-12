@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 # shellcheck shell=bash
-# shellcheck disable=SC1090
 
 export GAUDI_BASH_LOG_LEVEL_ERROR=1
 export GAUDI_BASH_LOG_LEVEL_WARNING=2
@@ -10,8 +9,6 @@ export GAUDI_BASH_LOG_GENERAL_COLOR=${MAGENTA}
 export GAUDI_BASH_LOG_DEBUG_COLOR=${GREEN}
 export GAUDI_BASH_LOG_WARNING_COLOR=${YELLOW}
 export GAUDI_BASH_LOG_ERROR_COLOR=${RED}
-
-# : "${GAUDI_LOG_DISABLE_COLOR:=0}"
 
 # @function     _gaudi-bash-get-component-name-from-path
 # @description  get a component name from a component path
@@ -49,8 +46,9 @@ _gaudi-bash-get-component-type-from-path() {
 # @function     _log_general
 # @description  logs a message to terminal
 #               uses GAUDI_BASH_LOG_PREFIX as a prefix or fallbacks to [CORE] if not defined
-# @param $1     log type: log type of: DEBUG, WARN, ERROR
-# @param $2     log message: the log message to print
+#               set GAUDI_LOG_DISABLE_COLOR to print the message without any color
+# @param $1     log message: the log message to print
+# @param $2     log type: log type of: GENERAL, DEBUG, WARNING, ERROR (default: GENERAL)
 # @return       message printed in the terminal
 _log_general() {
 	about "internal function used for logging, uses GAUDI_BASH_LOG_PREFIX as a prefix"
@@ -65,14 +63,14 @@ _log_general() {
 
 	log_type=${2:-GENERAL}
 	log_type_upper=$(printf "%s" "$log_type" | tr "[:lower:]" "[:upper:]")
-	log_prefix="${NC}${YELLOW}[${GAUDI_BASH_LOG_PREFIX}]${NC}"
 
 	local output_fd=1
 	[[ "${log_type_upper}" == "ERROR" || "${log_type_upper}" == "WARNING" ]] && output_fd=2
 
 	if [[ -n $GAUDI_LOG_DISABLE_COLOR ]]; then
-		printf "%s\n" " [ ${log_type_upper} ] ${log_prefix} $1" >&"$output_fd"
+		printf "%s\n" " [ ${log_type_upper} ] [${GAUDI_BASH_LOG_PREFIX}] $1" >&"$output_fd"
 	else
+		log_prefix="${NC}${YELLOW}[${GAUDI_BASH_LOG_PREFIX}]${NC}"
 		log_color=GAUDI_BASH_LOG_${log_type_upper}_COLOR
 		printf "%b\n" "${!log_color} [ ${log_type_upper} ] ${log_prefix} $1" >&"$output_fd"
 	fi
@@ -93,9 +91,9 @@ _log_debug() {
 }
 
 # @function     _log_warning
-# @description  log a wraning message by echoing to the screen
+# @description  log a warning message by echoing to the screen
 #               needs GAUDI_BASH_LOG_LEVEL >= GAUDI_BASH_LOG_LEVEL_WARNING"
-#               used the default warning color defined in GAUDI_BASH_LOG_WARN_COLOR
+#               used the default warning color defined in GAUDI_BASH_LOG_WARNING_COLOR
 # @param $1     log message: message to be logged
 # @return       log message printed in the terminal
 _log_warning() {
@@ -122,10 +120,10 @@ _log_error() {
 
 # @function     _log_component
 # @description  component-aware log proxy that logs a message when components are loaded
-#               the function print a log message using the _log_general function with the extractec component name and type
+#               the function print a log message using the _log_general function with the extracted component name and type
 # @param $1     component path: filesystem path for the component e.g., /Users/ahmadassaf/.gaudi_bash/lib/colors.plugins.bash
 # @param $2     component type: component type e.g., library, custom, theme, component (default: component)
-#                 - library: a gaudi-bash core library file e.g., colors, appearence, etc.
+#                 - library: a gaudi-bash core library file e.g., colors, appearance, etc.
 #                 - component: a gaudi-bash component of any of the types: alias, plugin or completion
 #                 - custom: a gaudi-bash custom component of any type
 # @return       message (log) printed in the terminal
@@ -136,6 +134,9 @@ _log_component() {
 	[[ "$GAUDI_BASH_LOG_LEVEL" -ge $GAUDI_BASH_LOG_LEVEL_ALL ]] || return 0
 
 	local type component_path component_name component_type
+	local type_color="$MAGENTA" name_color="$GREEN" reset="$NC"
+
+	[[ -n $GAUDI_LOG_DISABLE_COLOR ]] && type_color="" name_color="" reset=""
 
 	component_path=${1}
 	type=${2:-component}
@@ -143,10 +144,10 @@ _log_component() {
 	if [[ $type = "component" ]]; then
 		component_name="$(_gaudi-bash-get-component-name-from-path "$component_path")"
 		component_type="$(_gaudi-bash-get-component-type-from-path "$component_path")"
-		_log_general "Loading ${MAGENTA}$component_type${NC}: ${GREEN}$component_name${NC}" debug
+		_log_general "Loading ${type_color}$component_type${reset}: ${name_color}$component_name${reset}" debug
 	else
 		component_name=${component_path##*/}
-		_log_general "Loading ${MAGENTA}$type${NC}: ${component_name%*.bash}" debug
+		_log_general "Loading ${type_color}$type${reset}: ${component_name%*.bash}" debug
 	fi
 
 }

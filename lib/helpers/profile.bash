@@ -31,6 +31,18 @@ _gaudi-bash-profile-write() {
 	done
 }
 
+# @function     _gaudi-bash-profile-valid-name
+# @description  checks a profile name: letters, digits, "_" and "-" only, so that a profile is always a file
+#               directly under $GAUDI_BASH/profiles
+# @param $1     name: the profile name
+# @return       fail status (1) and a message when the name is not valid
+# @example      ❯ _gaudi-bash-profile-valid-name mysetup
+_gaudi-bash-profile-valid-name() {
+	[[ "$1" =~ ^[a-zA-Z0-9_-]+$ ]] && return 0
+	printf "${RED}%s${NC}\n" "A profile name can only hold letters, digits, '_' and '-'"
+	return 1
+}
+
 # @function     _gaudi-bash-profile-save
 # @description  saves the current enabled components to a named profile
 #               writes each enabled component as "<type> <name>" to $GAUDI_BASH/profiles/<name>.gaudi-bash
@@ -44,6 +56,7 @@ _gaudi-bash-profile-save() {
 	local profile_name="$1"
 
 	[[ -z "$profile_name" ]] && printf "${RED}%s${NC}\n" "Please provide a profile name" && return 1
+	_gaudi-bash-profile-valid-name "$profile_name" || return 1
 
 	local profile_dir="${GAUDI_BASH}/profiles"
 	local profile_file="${profile_dir}/${profile_name}.gaudi-bash"
@@ -68,7 +81,8 @@ _gaudi-bash-profile-save() {
 
 # @function     _gaudi-bash-profile-load
 # @description  loads a named profile by disabling all components and re-enabling from profile
-#               validates the profile file before applying changes
+#               validates the profile file before applying changes: every line has to be "<type> <name>" and
+#               name a component that exists
 # @param $1     name: the profile name to load
 # @return       message to indicate the outcome
 # @example      ❯ _gaudi-bash-profile-load mysetup
@@ -79,6 +93,7 @@ _gaudi-bash-profile-load() {
 	local profile_name="$1"
 
 	[[ -z "$profile_name" ]] && printf "${RED}%s${NC}\n" "Please provide a profile name" && return 1
+	_gaudi-bash-profile-valid-name "$profile_name" || return 1
 
 	local profile_file="${GAUDI_BASH}/profiles/${profile_name}.gaudi-bash"
 
@@ -90,15 +105,22 @@ _gaudi-bash-profile-load() {
 	# Dry run: validate all entries in the profile
 	local _line_num=0
 	local _errors=0
-	local line file_type
+	local line file_type _type _component _plural _failed=""
 
 	while IFS= read -r line || [[ -n "$line" ]]; do
 		_line_num=$((_line_num + 1))
 		# Skip empty lines
 		[[ -z "$line" ]] && continue
 		# Validate format: "<type> <name>"
-		if [[ ! "$line" =~ ^(alias|plugin|completion)[[:space:]]+[a-zA-Z0-9_-]+$ ]]; then
+		if [[ ! "$line" =~ ^(alias|plugin|completion)[[:space:]]+([a-zA-Z0-9_-]+)$ ]]; then
 			printf "${RED}%s${NC} %s: %s\n" "Invalid entry" "line ${_line_num}" "${line}"
+			_errors=$((_errors + 1))
+			continue
+		fi
+		# The component has to exist, otherwise everything would be disabled for a profile that can not be loaded
+		_plural="$(_gaudi-bash-pluralize-component "${BASH_REMATCH[1]}")"
+		if [[ ! -e "${GAUDI_BASH}/components/${_plural}/lib/${BASH_REMATCH[2]}.${_plural}.bash" ]]; then
+			printf "${RED}%s${NC} %s: %s\n" "Unknown component" "line ${_line_num}" "${line}"
 			_errors=$((_errors + 1))
 		fi
 	done < "${profile_file}"
@@ -118,11 +140,14 @@ _gaudi-bash-profile-load() {
 	# Re-enable components from profile
 	while IFS= read -r line || [[ -n "$line" ]]; do
 		[[ -z "$line" ]] && continue
-		local _type _component
-		_type="${line%% *}"
-		_component="${line#* }"
-		_gaudi-bash-enable "$(_gaudi-bash-pluralize-component "$_type")" "$_component"
+		read -r _type _component <<< "$line"
+		_gaudi-bash-enable "$(_gaudi-bash-pluralize-component "$_type")" "$_component" || _failed=true
 	done < "${profile_file}"
+
+	if [[ -n "$_failed" ]]; then
+		printf "${RED}%s ${CYAN}%s${RED}%s${NC}\n" "Profile" "${profile_name}" " was loaded only in part, see the messages above"
+		return 1
+	fi
 
 	printf "${GREEN}%s ${CYAN}%s${GREEN}%s${NC}\n" "Profile" "${profile_name}" " loaded successfully"
 
@@ -157,7 +182,7 @@ _gaudi-bash-profile-list() {
 }
 
 # @function     _gaudi-bash-profile-rm
-# @description  removes a named profile. Protects the "default" profile from deletion.
+# @description  removes a named profile
 # @param $1     name: the profile name to remove
 # @return       message to indicate the outcome
 # @example      ❯ _gaudi-bash-profile-rm mysetup
@@ -168,11 +193,7 @@ _gaudi-bash-profile-rm() {
 	local profile_name="$1"
 
 	[[ -z "$profile_name" ]] && printf "${RED}%s${NC}\n" "Please provide a profile name to remove" && return 1
-
-	if [[ "$profile_name" == "default" ]]; then
-		printf "${RED}%s${NC}\n" "The 'default' profile is protected and cannot be removed"
-		return 1
-	fi
+	_gaudi-bash-profile-valid-name "$profile_name" || return 1
 
 	local profile_file="${GAUDI_BASH}/profiles/${profile_name}.gaudi-bash"
 

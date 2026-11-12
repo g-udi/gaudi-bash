@@ -10,7 +10,7 @@ local_setup() {
 	else
 		find "$GAUDI_BASH/test/fixtures/gaudi_bash" \
 			-mindepth 1 -maxdepth 1 \
-			-exec cp -r {} "$GAUDI_BASH/" \;
+			-exec cp -r {} "$GAUDI_BASH/components/" \;
 	fi
 }
 
@@ -233,4 +233,38 @@ CUSTOM
 
 	# The log colors are set in that single pass, the colors being loaded before the logging
 	assert_equal "$GAUDI_BASH_LOG_ERROR_COLOR" "$RED"
+}
+
+@test "gaudi-bash loader: an enabled link that points to a missing file is reported, not skipped silently" {
+
+	ln -s "/this/installation/was/moved/a.aliases.bash" "$GAUDI_BASH/components/enabled/150___a.aliases.bash"
+	ln -s "../aliases/lib/b.aliases.bash" "$GAUDI_BASH/components/enabled/150___b.aliases.bash"
+
+	# Scripts stay quiet, the warning is for interactive shells and for `gbash doctor` (warnings and up)
+	run bash -c 'source "$GAUDI_BASH/gaudi_bash.sh"'
+	refute_output --partial "points to a missing file"
+
+	run bash -c 'GAUDI_BASH_LOG_LEVEL=2; source "$GAUDI_BASH/gaudi_bash.sh"; alias test_alias'
+	assert_success
+	assert_line "gaudi-bash: enabled component '150___a.aliases.bash' points to a missing file, skipped. Fix: gbash migrate"
+	# The component with a working (relative) link is loaded all the same
+	assert_line "alias test_alias='b'"
+}
+
+@test "gaudi-bash loader: a Bash older than 4.3 is told that gaudi-bash was not loaded" {
+
+	# shellcheck disable=SC2016
+	if [[ ! -x /bin/bash ]] || /bin/bash -c '((BASH_VERSINFO[0] > 4 || (BASH_VERSINFO[0] == 4 && BASH_VERSINFO[1] >= 3)))'; then
+		skip "there is no Bash older than 4.3 on this machine"
+	fi
+
+	# shellcheck disable=SC2016
+	run /bin/bash -c 'source "$GAUDI_BASH/gaudi_bash.sh"; echo "status: $?"; type gbash'
+	assert_line --partial "gaudi-bash needs Bash 4.3 or newer and was not loaded"
+	assert_line "status: 1"
+	refute_output --partial "gbash is a function"
+
+	run /bin/bash "$GAUDI_BASH/setup.sh" --silent
+	assert_failure
+	assert_output --partial "gaudi-bash needs Bash 4.3 or newer"
 }

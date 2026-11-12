@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # shellcheck shell=bash
-# shellcheck disable=SC1090,SC2034,SC2001
+# shellcheck disable=SC1090
 
 export GAUDI_BASH_LOAD_PRIORITY_SEPARATOR="___"
 
@@ -20,11 +20,7 @@ _gaudi-bash-version() {
 
 	local GAUDI_BASH_GIT_REMOTE GAUDI_BASH_GIT_URL GAUDI_BASH_GIT_VERSION_INFO GAUDI_BASH_GIT_SHA
 
-	if [[ -z $GAUDI_BASH_REMOTE ]]; then
-		GAUDI_BASH_REMOTE="origin"
-	fi
-
-	GAUDI_BASH_GIT_REMOTE=$(git -C "${GAUDI_BASH}" remote get-url "$GAUDI_BASH_REMOTE")
+	GAUDI_BASH_GIT_REMOTE=$(git -C "${GAUDI_BASH}" remote get-url "${GAUDI_BASH_REMOTE:-origin}")
 	GAUDI_BASH_GIT_URL=${GAUDI_BASH_GIT_REMOTE%.git}
 
 	local GAUDI_BASH_GIT_TAG
@@ -47,10 +43,6 @@ _gaudi-bash-version() {
 _gaudi-bash-reload() {
 	about "reloads the bash profile that corresponds to the correct OS type (.bashrc, .bash_profile)"
 	group "gaudi-bash:core"
-
-	if [[ -n $GAUDI_TEST_RUNNER ]]; then
-		return 0
-	fi
 
 	local profile="${HOME?}/${GAUDI_BASH_PROFILE}"
 	if [[ -f "$profile" ]]; then
@@ -111,7 +103,7 @@ function _gaudi-bash-restart() {
 _gaudi-bash-help() {
 	! __check-function-parameters "$1" && reference gbash && return 0
 
-	local type component
+	local type
 
 	type="$(_gaudi-bash-pluralize-component "$1")"
 	_command_exists _help-"${type}" && _help-"${type}" "$2"
@@ -131,6 +123,10 @@ _gaudi-bash-show() {
 	local file_type
 
 	if [[ -n "$1" ]]; then
+		if ! __check-function-parameters "$1"; then
+			printf "${RED}%s${NC}\n" "Please enter a valid component type to show: aliases, plugins or completions"
+			return 1
+		fi
 		_gaudi-bash-describe "$1" "$2"
 	else
 		for file_type in "aliases" "plugins" "completions"; do
@@ -195,21 +191,25 @@ unset -f gaudi-bash 2> /dev/null || true
 
 gbash() {
 	about 'provides a solid framework for using, developing and maintaining shell scripts and custom commands for your daily work'
-	param '1: verb [one of: version | help | doctor | reload | restart | search | update | backup | restore | profile | disable | enable | show ]] '
-	param '2: component type [one of: alias(es) | completion(s) | plugin(s) ]] or search term(s) or update mode [stable | dev]'
+	param '1: verb [one of: version | help | doctor | reload | restart | search | update | backup | restore | profile | migrate | disable | enable | show]'
+	param '2: component type [one of: alias(es) | completion(s) | plugin(s)] or search term(s) or update mode [stable | dev]'
 	param '3: specific component [optional]'
 
 	example '$ gbash show plugins'
-	example '$ gbash help aliases'
+	example '$ gbash show plugins enabled'
+	example '$ gbash help aliases [name]'
 	example '$ gbash enable plugin git [tmux]...'
 	example '$ gbash disable alias hg [tmux]...'
 	example '$ gbash update'
 	example '$ gbash update dev'
 	example '$ gbash backup'
-	example '$ gbash help plugins'
+	example '$ gbash restore'
+	example '$ gbash help plugins [name | all]'
 	example '$ gbash search [-|@]term1 [-|@]term2 ... [[ --enable ]] [[ --disable ]] [[ -r/--refresh ]] [[ -x/--no-color ]] [[ -a/--alias | -p/--plugin | -c/--completion ]]'
 	example '$ gbash version'
 	example '$ gbash reload'
+	example '$ gbash restart'
+	example '$ gbash migrate'
 	example '$ gbash doctor errors|warnings|all'
 	example '$ gbash profile save mysetup'
 	example '$ gbash profile load mysetup'
@@ -277,6 +277,10 @@ _gaudi-bash-dispatch() {
 		restore)
 			func=_gaudi-bash-restore
 			;;
+		migrate)
+			_gaudi-bash-migrate-enabled-links
+			return
+			;;
 		profile)
 			_gaudi-bash-profile "$component" "$@"
 			return
@@ -291,18 +295,26 @@ _gaudi-bash-dispatch() {
 			_gaudi-bash-search "$component" "$@"
 			return
 			;;
-		*)
+		"")
 			reference gbash
 			return
 			;;
+		*)
+			printf "${RED:-}%s${NC:-}\n\n" "Unknown gbash command: $verb" >&2
+			reference gbash
+			return 1
+			;;
 	esac
 
-	if [[ "$verb" == "enable" || "$verb" == "disable" ]] && [[ ${#@} != 0 ]]; then
+	if [[ "$verb" == "enable" || "$verb" == "disable" ]] && [[ $# -gt 0 ]]; then
+		local failed=""
+
+		# Every component is handled, the status tells if one of them failed
 		for arg in "$@"; do
-			$func "$(_gaudi-bash-pluralize-component "$component")" "$arg"
+			$func "$(_gaudi-bash-pluralize-component "$component")" "$arg" || failed=true
 		done
+		[[ -z "$failed" ]]
 	else
 		$func "$(_gaudi-bash-pluralize-component "$component")" "$@"
 	fi
-
 }

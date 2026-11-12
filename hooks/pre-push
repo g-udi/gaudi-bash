@@ -4,7 +4,9 @@
 
 set -e
 
-GAUDI_BASH_DIR="$(cd "$(dirname "$0")/../.." && pwd)"
+# The repository being pushed, wherever this hook is started from (the link in .git/hooks or this file)
+GAUDI_BASH_DIR="$(git rev-parse --show-toplevel)"
+cd "$GAUDI_BASH_DIR"
 
 echo "Running pre-push checks..."
 
@@ -16,11 +18,19 @@ if command -v pre-commit &>/dev/null; then
     exit 1
   }
 else
-  # Fallback: run shellcheck and shfmt directly
+  # Fallback: run shellcheck and shfmt directly, on the shell files git tracks (the same set pre-commit lints)
+  shell_files=()
+  while IFS= read -r file; do
+    case "$file" in
+    test/fixtures/* | template/*) ;;
+    *.bats) ;;
+    *.sh | *.bash | test/run | hooks/*) shell_files+=("$file") ;;
+    esac
+  done < <(git ls-files)
+
   if command -v shellcheck &>/dev/null; then
     echo "[pre-push] Running shellcheck..."
-    find "$GAUDI_BASH_DIR" -name '*.bash' -not -path '*/bin/*' -not -path '*/components/*' -print0 |
-      xargs -0 shellcheck --shell=bash || {
+    shellcheck --shell=bash "${shell_files[@]}" || {
       echo "[pre-push] shellcheck failed."
       exit 1
     }
@@ -28,7 +38,7 @@ else
 
   if command -v shfmt &>/dev/null; then
     echo "[pre-push] Running shfmt..."
-    shfmt -d "$GAUDI_BASH_DIR/lib" "$GAUDI_BASH_DIR/scripts" "$GAUDI_BASH_DIR/gaudi_bash.sh" "$GAUDI_BASH_DIR/setup.sh" || {
+    shfmt -d "${shell_files[@]}" || {
       echo "[pre-push] shfmt found formatting issues."
       exit 1
     }
