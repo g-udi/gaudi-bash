@@ -1,6 +1,6 @@
 #!/usr/bin/env bats
 # shellcheck shell=bats
-# shellcheck disable=SC2030,SC2031,SC2329
+# shellcheck disable=SC2030,SC2031,SC2329,SC2317
 
 load "$GAUDI_TEST_DIRECTORY"/helper.bash
 
