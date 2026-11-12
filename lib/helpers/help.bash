@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # shellcheck shell=bash
-# shellcheck disable=SC2002,SC2013
+# shellcheck disable=SC2013
 
 # @function     _help-completions
 # @description  summarize all completions available in gaudi-bash
@@ -29,8 +29,7 @@ _help-aliases() {
 		# A specific alias group: prefer the enabled copy, fall back to the available one
 		__file="$(_gaudi-bash-component-enabled-file aliases "$1")" || __file="${GAUDI_BASH}/components/aliases/lib/${1}.aliases.bash"
 		if [[ ! -e "$__file" ]]; then
-			printf '%b
-' "${RED:-}No aliases named '${1}' were found${NC:-}" >&2
+			printf '%b\n' "${RED:-}No aliases named '${1}' were found${NC:-}" >&2
 			return 1
 		fi
 		__help-list-aliases "$__file"
@@ -117,7 +116,7 @@ __help-list-aliases() {
 	file=$(basename "$1" | sed -e 's/[0-9]*[___]*\(.*\)\.aliases\.bash/\1/g')
 	printf '\n\n%b\n' "${GREEN}${file}${NC}"
 	printf '%*s\n' "${COLUMNS:-$(tput cols 2> /dev/null || echo 80)}" '' | tr ' ' -
-	cat "$1" | metafor alias | sed "s/$/'/"
+	metafor alias < "$1" | sed "s/$/'/"
 }
 
 # Helper function to list the functions a single plugin defines, with their composure about text

@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 # shellcheck shell=bash
 #
 # Functions for measuring and reporting how long a command takes to run.
@@ -15,7 +16,8 @@ function _command_duration_current_time() {
 	echo "$current_time"
 }
 
-: "${COMMAND_DURATION_START_SECONDS:=$(_command_duration_current_time)}"
+# No command is being timed until the first one starts (the time gaudi-bash takes to load is not a command)
+: "${COMMAND_DURATION_START_SECONDS:=}"
 : "${COMMAND_DURATION_ICON:=🕘}"
 : "${COMMAND_DURATION_MIN_SECONDS:=1}"
 : "${COMMAND_DURATION_PRECISION:=1}"

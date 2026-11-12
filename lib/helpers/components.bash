@@ -83,6 +83,59 @@ _gaudi-bash-component-enabled-file() {
 	return 1
 }
 
+# @function     _gaudi-bash-component-link-target
+# @description  prints what the link of an enabled component points to: a path relative to components/enabled,
+#               so that the link keeps working when the installation is moved or renamed
+# @param $1     type: the component type in its plural form (plugins, aliases, completions)
+# @param $2     file: the file name of the component, e.g., git.plugins.bash
+# @return       the link target, e.g., ../plugins/lib/git.plugins.bash
+# @example      ❯ _gaudi-bash-component-link-target plugins git.plugins.bash
+_gaudi-bash-component-link-target() {
+	printf '%s' "../${1}/lib/${2}"
+}
+
+# @function     _gaudi-bash-migrate-enabled-links
+# @description  rewrites the links in components/enabled that older versions made with an absolute path, and the
+#               ones that point to a missing file, as relative links to the component of the same name
+#               links that point somewhere else on purpose (an existing file outside this installation) are left alone
+# @return       a line per rewritten link, and a line per link that has no component to point to
+# @example      ❯ _gaudi-bash-migrate-enabled-links
+_gaudi-bash-migrate-enabled-links() {
+	about "rewrites absolute and broken links of enabled components as relative links"
+	group "gaudi-bash:core:components"
+
+	local separator="${GAUDI_BASH_LOAD_PRIORITY_SEPARATOR:-___}"
+	local link file type component target count=0
+
+	for link in "${GAUDI_BASH}"/components/enabled/*.bash; do
+		[[ -L "$link" ]] || continue
+
+		file="${link##*/}"
+		file="${file#*"${separator}"}"
+		type="${file%.bash}"
+		type="${type##*.}"
+		component="${GAUDI_BASH}/components/${type}/lib/${file}"
+		target="$(readlink "$link")"
+
+		if [[ -e "$link" ]]; then
+			# A working link is only rewritten when it is an absolute path to this installation's own component
+			[[ "$target" == /* && "$link" -ef "$component" ]] || continue
+		elif [[ ! -e "$component" ]]; then
+			printf '%s\n' "${link##*/} points to a missing file and there is no such component, remove it with: gbash disable $(_gaudi-bash-singularize-component "$type") ${file%%.*}"
+			continue
+		fi
+
+		target="$(_gaudi-bash-component-link-target "$type" "$file")"
+		rm -f "$link"
+		ln -s "$target" "$link" || continue
+		printf '%s\n' "migrated ${link##*/} -> ${target}"
+		count=$((count + 1))
+	done
+
+	[[ $count -gt 0 ]] || printf '%s\n' "Nothing to migrate, every enabled component is linked with a relative path"
+	return 0
+}
+
 # @function     _gaudi-bash-component-descriptions
 # @description  lists every item of a component type with its composure about description, one "<name><tab><description>" per line
 #               the list is read from the component files (components/<type>/lib/*.bash) and cached, since reading the

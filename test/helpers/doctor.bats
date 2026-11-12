@@ -10,23 +10,26 @@ local_setup() {
 	load "$GAUDI_BASH"/gaudi_bash.sh
 }
 
-@test "gaudi-bash helpers: doctor: _gaudi-bash-doctor should show all logs by default" {
+@test "gaudi-bash helpers: doctor: _gaudi-bash-doctor should reload the profile showing all logs by default" {
 
 	run gbash doctor
 	assert_success
+	assert_output --partial "[ DEBUG ]"
+	assert_output --partial "Loading"
+	assert_output --partial "gaudi-bash reloaded from $HOME/$GAUDI_BASH_PROFILE"
 }
 
-@test "gaudi-bash helpers: doctor: _gaudi-bash-doctor should show only warning logs" {
+@test "gaudi-bash helpers: doctor: _gaudi-bash-doctor should leave the debug logs out for warnings and errors" {
 
-	run _gaudi-bash-doctor warning
+	run _gaudi-bash-doctor warnings
 	assert_success
-}
-
-@test "gaudi-bash helpers: doctor: _gaudi-bash-doctor should only error logs" {
+	refute_output --partial "[ DEBUG ]"
+	assert_output --partial "gaudi-bash reloaded from"
 
 	run _gaudi-bash-doctor errors
 	assert_success
-	refute_output
+	refute_output --partial "[ DEBUG ]"
+	assert_output --partial "gaudi-bash reloaded from"
 }
 
 @test "gaudi-bash helpers: doctor: _gaudi-bash-doctor should reject an unknown log level" {

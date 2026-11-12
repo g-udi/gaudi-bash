@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 # shellcheck shell=bash
-# shellcheck disable=SC2034
 
 # @function     _gaudi-bash-doctor
 # @description  reloads a profile file with a GAUDI_BASH_LOG_LEVEL set

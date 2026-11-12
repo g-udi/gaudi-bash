@@ -1,19 +1,8 @@
 #!/usr/bin/env bash
 # shellcheck shell=bash
-# shellcheck disable=SC2143,SC2154,SC2016
+# shellcheck disable=SC2016
 
 # A collection of reusable functions
-
-# @function     _is_function
-# @description  check if the passed parameter is a function
-#               sets $? to true if parameter is the name of a function
-# @return       status code success (0) if the function is found or fails otherwise
-_is_function() {
-	about "check if the passed parameter is a function"
-	group "gaudi-bash:core:utils"
-
-	declare -F "$1" &> /dev/null
-}
 
 # @function     _command_exists
 # @description  check if the command passed as the argument exists
@@ -47,38 +36,27 @@ _binary_exists() {
 	fi
 }
 
-# @function     _completion_exists
-# @description  check if the a completion passed as the argument exists
-# @param $1     command: the command to check
-# @param $2     message (optional) for a log message to include when the command not found
-# @return       status code success (0) if the function is found or fails otherwise
-# @example      ❯ _completion_exists gh && echo exists'
-function _completion_exists() {
-	local msg="${2:-Completion for '$1' already exists}"
-	if complete -p "$1" &> /dev/null; then
-		_log_debug "$msg"
-		return 0
-	else
-		return 1
-	fi
-}
-
 # @function     _read_input
 # @description  reads input from the prompt for a yes/no (one character) input
 #               ensure no empty response will be passed by looping the read prompt until a valid non empty response is entered
 #               will enter a new line as a cosmetic only if there an entry that is not empty
+#               the answer is read from the terminal: when there is none (a script, a build) nothing can be answered,
+#               so REPLY is left empty and the function fails instead of asking forever
 # @param $1     message: the input prompt message to display
-# @return       REPLY entered by the user
+# @return       REPLY entered by the user, fail status (1) when no answer could be read
 # @example      ❯ _read_input "would you like to update gaudi-bash?"
 _read_input() {
-	about "reads input from the prompt for a yes/no (one character) input"
-	group "gaudi-bash:core:utils"
+	REPLY=""
+	{ : < /dev/tty; } 2> /dev/null || return 1
 
-	unset REPLY
-	while ! [[ $REPLY =~ ^[yY]$ ]] && ! [[ $REPLY =~ ^[nN]$ ]]; do
-		read -rp "${1} " -n 1 < /dev/tty
+	while ! [[ $REPLY =~ ^[yYnN]$ ]]; do
+		if ! read -rp "${1} " -n 1 < /dev/tty; then
+			REPLY=""
+			return 1
+		fi
 		[[ -n $REPLY ]] && echo ""
 	done
+	return 0
 }
 
 # @function     _array-contains
@@ -197,7 +175,8 @@ function _homebrew-check() {
 #   cite, about, about-alias, about-plugin, about-completion, group, param, example, priority (lib/composure.bash)
 #   _log_debug, _log_warning, _log_error (lib/log.bash)
 #   pathmunge (lib/helpers/generic.bash)
-#   _command_exists, _binary_exists, _homebrew-check (this file)
+#   _command_exists, _binary_exists, _homebrew-check, _read_input, _array-contains (this file)
+#   the color names: NC, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, ... (lib/colors.bash)
 #
 #   GAUDI_HOST_NAME              the framework's name, for messages and cache folders
 #   GAUDI_HOST_COMMAND           the command its users type
@@ -205,6 +184,12 @@ function _homebrew-check() {
 #   GAUDI_HOST_SED_I_PARAMETERS  array: the arguments that make sed edit in place on this OS
 #   GAUDI_HOST_HOMEBREW_PREFIX   the Homebrew prefix; empty until _homebrew-check (or the brew plugin) has found it
 #   _gaudi_host_setting NAME     prints the user's setting NAME (HTTP_PROXY, THEME, ...)
+#
+# Reserved: the gaudi theme's host segment owns GAUDI_HOST_SHOW, GAUDI_HOST_PREFIX, GAUDI_HOST_SUFFIX, GAUDI_HOST_COLOR
+# and GAUDI_HOST_COLOR_SSH, so the contract never takes these names
+#
+# Host-specific: the two components named after a framework (gaudi-bash.aliases.bash, gaudi-bash.completions.bash) are
+# not shared and may use this framework's own names, GAUDI_BASH and GAUDI_BASH_LOAD_PRIORITY_SEPARATOR
 # shellcheck disable=SC2034
 GAUDI_HOST_NAME="gaudi-bash"
 # shellcheck disable=SC2034

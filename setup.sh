@@ -1,21 +1,24 @@
 #!/usr/bin/env bash
 # shellcheck shell=bash
-# shellcheck disable=SC1090,SC1091,SC2034,SC2003,SC2317
+# shellcheck disable=SC1091
 
+# gaudi-bash needs Bash 4.3 or newer (macOS ships Bash 3.2 as /bin/bash)
+if [[ -z "${BASH_VERSINFO[0]:-}" ]] || ((BASH_VERSINFO[0] < 4 || (BASH_VERSINFO[0] == 4 && BASH_VERSINFO[1] < 3))); then
+	printf '%s\n' "Error: gaudi-bash needs Bash 4.3 or newer, this is Bash ${BASH_VERSION:-unknown}. Install a newer Bash (e.g., brew install bash) and run this script with it." >&2
+	if [[ "${BASH_SOURCE[0]}" != "$0" ]]; then
+		return 1
+	fi
+	exit 1
+fi
+
+# The installation that is set up is the one this script is part of, whatever GAUDI_BASH says in the
+# shell it is started from (a shell that loaded another gaudi-bash installation exports it)
 GAUDI_SETUP_SOURCE="${BASH_SOURCE[0]:-$0}"
 GAUDI_SETUP_DIRECTORY="$(cd "$(dirname "$GAUDI_SETUP_SOURCE")" && pwd)"
-: "${GAUDI_BASH:=$GAUDI_SETUP_DIRECTORY}"
+GAUDI_BASH="$GAUDI_SETUP_DIRECTORY"
 export GAUDI_BASH
 
 source "$GAUDI_SETUP_DIRECTORY/lib/colors.bash"
-
-_read_input() {
-	unset REPLY
-	while ! [[ $REPLY =~ ^[yY]$ ]] && ! [[ $REPLY =~ ^[nN]$ ]]; do
-		read -rp "${1} " -n 1 < /dev/tty
-		[[ -n $REPLY ]] && echo ""
-	done
-}
 
 case $OSTYPE in
 	darwin*)
@@ -51,7 +54,7 @@ show_usage() {
 Usage:\n${GREEN}$0 [arguments] \n${NC}
 Arguments:
   ${YELLOW}--help (-h)${NC}: Display this help message
-  ${YELLOW}--silent (-s)${NC}: Install default settings without prompting for input
+  ${YELLOW}--silent (-s)${NC}: Install default settings without prompting for input (replaces your config file with the gaudi-bash template, after backing it up)
   ${YELLOW}--basic (-b)${NC}: Do not enable default gaudi-bash components
   ${YELLOW}--no-modify-config (-n)${NC}: Do not modify existing config file"
 }
@@ -156,9 +159,11 @@ _backup_profile() {
 		cmp -s "$profile" "$backup" && return 0
 		cmp -s "$profile" <(_render_profile_template false) && return 0
 
+		REPLY=""
 		if ! [[ $silent == true ]]; then
 			echo -e "${GREEN}Backup file already exists!${NC}"
-			_read_input "Would you like to overwrite the existing backup? This will delete your existing backup file ($backup) [Yy/Nn]"
+			# Without an answer (no terminal) the existing backup is kept
+			_read_input "Would you like to overwrite the existing backup? This will delete your existing backup file ($backup) [Yy/Nn]" || true
 		fi
 
 		if ! [[ $silent == true ]] && [[ $REPLY =~ ^[yY]$ ]]; then
@@ -195,6 +200,16 @@ _setup_gaudi_bash() {
 	_init_submodules || return 1
 	_validate_install_paths || return 1
 
+	# Load dependencies for enabling components
+	source "$GAUDI_BASH/lib/composure.bash"
+	# Allow access for composure specific syntax to other functions
+	cite about param example group priority
+
+	source "$GAUDI_BASH/lib/gaudi-bash.bash"
+
+	# A shell that already runs gaudi-bash exports this: the profile must not be reloaded inside this script
+	unset GAUDI_BASH_AUTOMATIC_RELOAD_AFTER_CONFIG_CHANGE
+
 	! [[ $silent == true ]] && __print-gaudi-bash && bash --version
 
 	if ! [[ $no_modify_config == true ]]; then
@@ -203,7 +218,10 @@ _setup_gaudi_bash() {
 
 		_backup_profile || _die "Could not back up $HOME/$CONFIG_FILE, leaving it untouched" || return 1
 
-		! [[ $silent == true ]] && _read_input "Would you like to keep your $CONFIG_FILE and append gaudi-bash templates at the end? [Yy/Nn]"
+		if ! [[ $silent == true ]]; then
+			_read_input "Would you like to keep your $CONFIG_FILE and append gaudi-bash templates at the end? [Yy/Nn]" \
+				|| _die "No answer could be read (there is no terminal), run this script with --silent or --no-modify-config" || return 1
+		fi
 
 		if ! [[ $silent == true ]] && [[ $REPLY =~ ^[yY]$ ]]; then
 			_write_profile_template append
@@ -213,12 +231,8 @@ _setup_gaudi_bash() {
 		fi
 	fi
 
-	# Load dependencies for enabling components
-	source "$GAUDI_BASH/lib/composure.bash"
-	# Allow access for composure specific syntax to other functions
-	cite about param example group priority
-
-	source "$GAUDI_BASH/lib/gaudi-bash.bash"
+	# Links made by older versions hold an absolute path, they are rewritten as relative ones
+	_gaudi-bash-migrate-enabled-links > /dev/null
 
 	if [[ "$no_default_components" != "true" ]]; then
 		local enable_failed=false

@@ -30,21 +30,49 @@ local_setup() {
 	assert_output --partial "does not appear to be an enabled"
 }
 
-@test "gaudi-bash helpers: _gaudi-bash-disable: should successfully disable a component" {
+@test "gaudi-bash helpers: _gaudi-bash-disable: should display appropriate message when trying to disable a component that is not enabled" {
 
 	run _gaudi-bash-disable plugin go
 	assert_failure
 	assert_output --partial "does not appear to be an enabled"
-	assert_file_not_exist "$GAUDI_BASH/components/enabled/250___base.plugins.bash"
 }
 
-@test "gaudi-bash helpers: _gaudi-bash-disable: should display appropriate message when trying to disable an already disabled component" {
+@test "gaudi-bash helpers: _gaudi-bash-disable: should successfully disable a component" {
 	run _gaudi-bash-enable plugin node
 	assert_success
 	assert_file_exist "$GAUDI_BASH/components/enabled/250___node.plugins.bash"
 
 	run _gaudi-bash-disable plugin node
+	assert_success
 	assert_output --partial "disabled"
+	assert_file_not_exist "$GAUDI_BASH/components/enabled/250___node.plugins.bash"
+}
+
+@test "gaudi-bash helpers: _gaudi-bash-disable: should print a name as it was typed" {
+
+	run _gaudi-bash-disable plugin "100%s"
+	assert_failure
+	assert_output --partial "100%s"
+}
+
+@test "gaudi-bash helpers: _gaudi-bash-disable: disabling all plugins should run the disable function of every plugin" {
+
+	# shellcheck disable=SC2329
+	git_on_disable() { echo "callback git"; }
+	# shellcheck disable=SC2329
+	node_on_disable() { echo "callback node"; }
+	# shellcheck disable=SC2329
+	all_on_disable() { echo "callback all"; }
+
+	run gbash enable plugin git node
+	assert_success
+
+	run _gaudi-bash-disable plugins all
+	assert_success
+	assert_line "callback git"
+	assert_line "callback node"
+	refute_output --partial "callback all"
+	assert_file_not_exist "$GAUDI_BASH/components/enabled/250___git.plugins.bash"
 	assert_file_not_exist "$GAUDI_BASH/components/enabled/250___node.plugins.bash"
 }
 
@@ -118,11 +146,12 @@ local_setup() {
 	assert_file_exist "$GAUDI_BASH/components/enabled/150___ag.aliases.bash"
 }
 
-@test "gaudi-bash helpers: _gaudi-bash-enable: should handle properly disabling a set of mixed existing and non-existing components" {
+@test "gaudi-bash helpers: _gaudi-bash-disable: should handle properly disabling a set of mixed existing and non-existing components" {
 	run gbash enable plugin "node"
 	assert_line --index 0 -p "enabled with priority"
 
 	run gbash disable plugin node INVALID nvm
+	assert_failure
 	assert_line --index 0 -p "disabled"
 	assert_line --index 1 -p "does not appear to be an enabled"
 	assert_line --index 2 -p "does not appear to be an enabled"

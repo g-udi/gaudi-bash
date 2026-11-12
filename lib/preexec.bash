@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # shellcheck shell=bash
-# shellcheck disable=SC1090,1091
+# shellcheck disable=SC1091
 
 : "${GAUDI_BASH_ORIGIN:="$GAUDI_BASH"}"
 

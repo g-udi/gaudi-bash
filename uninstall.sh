@@ -3,6 +3,10 @@
 
 : "${GAUDI_BASH:=$HOME/.gaudi_bash}"
 
+# The colors of the messages come from the installation that is about to be removed
+# shellcheck disable=SC1091
+[[ -s "$GAUDI_BASH/lib/colors.bash" ]] && source "$GAUDI_BASH/lib/colors.bash"
+
 # Removes the gaudi-bash lines from a profile, keeping a copy of the profile as it was in <profile>.uninstall
 # $1: path of the profile
 _gaudi_bash_uninstall_clean_profile() {
@@ -16,19 +20,21 @@ _gaudi_bash_uninstall_clean_profile() {
 	elif grep -qE "$load_line" "$profile"; then
 		# Profiles written by older versions have no markers: only drop the line that loads gaudi-bash
 		grep -vE "$load_line" "$profile" > "$cleaned"
-		echo -e "${YELLOW}Removed the line that loads gaudi-bash from $profile, the gaudi-bash settings (GAUDI_BASH*) around it can be deleted by hand.${NC}"
+		echo -e "${YELLOW:-}Removed the line that loads gaudi-bash from $profile, the gaudi-bash settings (GAUDI_BASH*) around it can be deleted by hand.${NC:-}"
 	else
-		echo -e "${YELLOW}$profile does not load gaudi-bash, it was left as is.${NC}"
+		echo -e "${YELLOW:-}$profile does not load gaudi-bash, it was left as is.${NC:-}"
 		return 0
 	fi
 
 	# Write through the profile (it might be a symlink) and keep its previous content aside
 	cp -aL "$profile" "$profile.uninstall" && cat "$cleaned" > "$profile" && rm -f "$cleaned" || return 1
-	echo -e "${GREEN}Removed gaudi-bash from $profile (the previous version was saved to $profile.uninstall).${NC}"
+	echo -e "${GREEN:-}Removed gaudi-bash from $profile (the previous version was saved to $profile.uninstall).${NC:-}"
 }
 
 _gaudi_bash_uninstall() {
 	local arg profile_name profile backup restore_backup=false REPLY=""
+	local cache="${XDG_CACHE_HOME:-${HOME:-}/.cache}/gaudi-bash"
+	local history_file="${XDG_STATE_HOME:-${HOME:-}/.local/state}/bash/history"
 
 	for arg in "$@"; do
 		case "$arg" in
@@ -58,13 +64,13 @@ _gaudi_bash_uninstall() {
 	fi
 
 	if [[ -z "${HOME:-}" || -z "$profile_name" ]]; then
-		echo -e "${RED}Could not determine which Bash profile loads gaudi-bash, nothing was changed.${NC}" >&2
+		echo -e "${RED:-}Could not determine which Bash profile loads gaudi-bash, nothing was changed.${NC:-}" >&2
 		echo "Set GAUDI_BASH_PROFILE to its name (e.g., GAUDI_BASH_PROFILE=.bash_profile) and run this script again." >&2
 		return 1
 	fi
 
 	if [[ ! -f "$GAUDI_BASH/gaudi_bash.sh" ]]; then
-		echo -e "${RED}$GAUDI_BASH does not look like a gaudi-bash installation, nothing was changed.${NC}" >&2
+		echo -e "${RED:-}$GAUDI_BASH does not look like a gaudi-bash installation, nothing was changed.${NC:-}" >&2
 		return 1
 	fi
 
@@ -72,7 +78,7 @@ _gaudi_bash_uninstall() {
 	backup="$profile.bak"
 
 	if [[ -e "$profile" && ! -w "$profile" ]]; then
-		echo -e "${RED}$profile is not writable, nothing was changed.${NC}" >&2
+		echo -e "${RED:-}$profile is not writable, nothing was changed.${NC:-}" >&2
 		return 1
 	fi
 
@@ -85,28 +91,35 @@ _gaudi_bash_uninstall() {
 
 	if [[ "$restore_backup" == true ]]; then
 		if [[ ! -e "$backup" ]]; then
-			echo -e "${RED}Backup file $backup not found, nothing was changed.${NC}" >&2
+			echo -e "${RED:-}Backup file $backup not found, nothing was changed.${NC:-}" >&2
 			return 1
 		fi
 		cp -a "$backup" "$profile" && rm "$backup" || return 1
-		echo -e "${GREEN}Your original $profile_name has been restored.${NC}"
+		echo -e "${GREEN:-}Your original $profile_name has been restored.${NC:-}"
 	elif [[ -e "$profile" ]]; then
 		if ! _gaudi_bash_uninstall_clean_profile "$profile"; then
-			echo -e "${RED}Could not update $profile, nothing was removed.${NC}" >&2
+			echo -e "${RED:-}Could not update $profile, nothing was removed.${NC:-}" >&2
 			return 1
 		fi
 		[[ -e "$backup" ]] && echo "The backup taken at installation was kept: $backup"
 	else
-		echo -e "${YELLOW}$profile not found, there is no profile to clean.${NC}"
+		echo -e "${YELLOW:-}$profile not found, there is no profile to clean.${NC:-}"
 	fi
 
 	rm -rf "$GAUDI_BASH"
 
+	# The cached component descriptions are of no use without the installation
+	[[ -d "$cache" ]] && rm -rf "$cache"
+
 	echo ""
-	echo -e "${GREEN}un-installation finished successfully! Sorry to see you go!${NC}"
+	echo -e "${GREEN:-}un-installation finished successfully! Sorry to see you go!${NC:-}"
 	echo ""
 	echo "Final steps to complete the un-installation:"
 	echo "  -> Open a new shell/tab/terminal"
+	if [[ -f "$history_file" ]]; then
+		echo "  -> gaudi-bash kept your command history in $history_file, which was left in place."
+		echo "     Bash goes back to ~/.bash_history: copy the file over it if you want to keep that history."
+	fi
 }
 
 _gaudi_bash_uninstall "$@"

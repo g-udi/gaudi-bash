@@ -151,3 +151,5 @@ else
 	export BACKGROUND_INTENSE_WHITE=""
 
 fi
+
+unset ncolors

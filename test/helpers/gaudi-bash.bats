@@ -96,7 +96,7 @@ _check-results-count() {
 	run _check-results-count alias all
 	assert_success
 
-	run gbash disable all
+	run gbash disable aliases all
 	run _check-results-count aliases
 	assert_success
 }
@@ -108,7 +108,7 @@ _check-results-count() {
 	run _check-results-count completions all
 	assert_success
 
-	run gbash disable all
+	run gbash disable completions all
 	run _check-results-count completions
 	assert_success
 }

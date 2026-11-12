@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # shellcheck shell=bash
-# shellcheck disable=SC2034,SC1090,SC2091,SC2207,SC2059,SC2128
+# shellcheck disable=SC2207
 
 # @function _gaudi-bash-search
 # @description  returns list of aliases, plugins and completions in gaudi-bash
@@ -36,7 +36,7 @@
 #
 #    ❯ gbash search ruby
 #          aliases:  bundler
-#          plugins:  chruby chruby-auto ruby
+#          plugins:  chruby ruby
 #
 #    ❯ gbash search ruby -chruby --enable
 #          aliases:  bundler
@@ -54,8 +54,8 @@ _gaudi-bash-search() {
 	about "searches for given terms amongst gaudi-bash plugins, aliases and completions"
 	group "gaudi-bash:search"
 
-	local GAUDI_BASH_SEARCH_USE_COLOR="${GAUDI_BASH_SEARCH_USE_COLOR:=true}"
-	local COMPONENT component word
+	local GAUDI_BASH_SEARCH_USE_COLOR="${GAUDI_BASH_SEARCH_USE_COLOR:-true}"
+	local COMPONENT component word found=""
 	local -a GAUDI_BASH_COMPONENTS=(aliases plugins completions)
 
 	if [[ -z "$*" ]]; then
@@ -91,15 +91,22 @@ _gaudi-bash-search() {
 		esac
 	done
 
-	if [[ ${#args[@]} -gt 0 ]]; then
-		if [[ -n $COMPONENT ]]; then
-			_gaudi-bash-search-component "${COMPONENT}" "${args[@]}"
-		else
-			for component in "${GAUDI_BASH_COMPONENTS[@]}"; do
-				_gaudi-bash-search-component "${component}" "${args[@]}"
-			done
-		fi
+	[[ ${#args[@]} -gt 0 ]] || return 0
+
+	# The search succeeds when one of the component types has a match
+	if [[ -n $COMPONENT ]]; then
+		_gaudi-bash-search-component "${COMPONENT}" "${args[@]}" && found=true
+	else
+		for component in "${GAUDI_BASH_COMPONENTS[@]}"; do
+			_gaudi-bash-search-component "${component}" "${args[@]}" && found=true
+		done
 	fi
+
+	if [[ -z "$found" ]]; then
+		printf "%s\n" "No components match your search"
+		return 1
+	fi
+	return 0
 }
 
 # @function     _gaudi-bash-component-term-matches-negation
@@ -264,7 +271,7 @@ ${YELLOW}DESCRIPTION${NC}
 
    Use ${GREEN}search${NC} gbash command to search for a list of terms or term negations
    across all components: aliases, completions and plugins. Components that are
-   enabled are shown in green (or with a check box if --no-color option is used).
+   enabled are marked with a check mark (and shown in green unless --no-color is used).
 
    In addition to simply finding the right component, you can use the results
    of the search to enable or disable all components that the search returns.
@@ -299,7 +306,7 @@ ${YELLOW}EXAMPLES${NC}
          ${GREEN}❯ gbash search git${NC}
                ${YELLOW}aliases:  ${GREEN}git ${NC}gitsvn
                ${YELLOW}plugins:  ${NC}autojump ${GREEN}git ${NC}git-subrepo jgitflow jump
-           ${YELLOW}completions:  ${GREEN}git ${NC}git_flow git_flow_avh${NC}
+           ${YELLOW}completions:  ${GREEN}git ${NC}git_flow github-cli${NC}
 
    You can exclude some terms by prefixing a term with a minus, eg:
 

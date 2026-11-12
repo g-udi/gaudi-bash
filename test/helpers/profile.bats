@@ -130,11 +130,10 @@ local_setup() {
 	assert_line --partial "(2 component(s))"
 }
 
-@test "gaudi-bash helpers: profile: rm should remove a profile but not the default one" {
+@test "gaudi-bash helpers: profile: rm should remove a profile" {
 
 	mkdir -p "$GAUDI_BASH/profiles"
 	printf "%s\n" "plugin base" > "$GAUDI_BASH/profiles/test-setup.gaudi-bash"
-	printf "%s\n" "plugin base" > "$GAUDI_BASH/profiles/default.gaudi-bash"
 
 	run gbash profile rm test-setup
 	assert_success
@@ -143,11 +142,68 @@ local_setup() {
 	run gbash profile rm test-setup
 	assert_failure
 	assert_output --partial "not found"
+}
 
-	run gbash profile rm default
+@test "gaudi-bash helpers: profile: a profile name can not leave the profiles folder" {
+
+	local name
+
+	for name in "../escaped" "sub/dir" "with space"; do
+		run gbash profile save "$name"
+		assert_failure
+		assert_output --partial "A profile name can only hold letters, digits, '_' and '-'"
+
+		run gbash profile load "$name"
+		assert_failure
+		run gbash profile rm "$name"
+		assert_failure
+	done
+
+	assert_file_not_exist "$GAUDI_BASH/escaped.gaudi-bash"
+}
+
+@test "gaudi-bash helpers: profile: load should change nothing when the profile names a component that does not exist" {
+
+	mkdir -p "$GAUDI_BASH/profiles"
+	printf "%s\n" "plugin base" "plugin this-plugin-does-not-exist" > "$GAUDI_BASH/profiles/test-missing-component.gaudi-bash"
+
+	run _gaudi-bash-enable plugin git
+
+	run gbash profile load test-missing-component
 	assert_failure
-	assert_output --partial "protected"
-	assert_file_exist "$GAUDI_BASH/profiles/default.gaudi-bash"
+	assert_output --partial "Unknown component"
+	assert_output --partial "line 2"
+	refute_output --partial "loaded successfully"
+
+	assert_file_exist "$GAUDI_BASH/components/enabled/250___git.plugins.bash"
+	assert_file_not_exist "$GAUDI_BASH/components/enabled/250___base.plugins.bash"
+}
+
+@test "gaudi-bash helpers: profile: load should accept any whitespace between the type and the name" {
+
+	mkdir -p "$GAUDI_BASH/profiles"
+	printf "%s\n" "plugin  base" "alias	general" > "$GAUDI_BASH/profiles/test-spaces.gaudi-bash"
+
+	run gbash profile load test-spaces
+	assert_success
+	assert_output --partial "loaded successfully"
+
+	assert_file_exist "$GAUDI_BASH/components/enabled/250___base.plugins.bash"
+	assert_file_exist "$GAUDI_BASH/components/enabled/150___general.aliases.bash"
+}
+
+@test "gaudi-bash helpers: profile: load should fail when a component could not be enabled" {
+
+	mkdir -p "$GAUDI_BASH/profiles"
+	printf "%s\n" "plugin base" > "$GAUDI_BASH/profiles/test-setup.gaudi-bash"
+
+	# shellcheck disable=SC2329
+	ln() { return 1; }
+
+	run gbash profile load test-setup
+	assert_failure
+	assert_output --partial "loaded only in part"
+	refute_output --partial "loaded successfully"
 }
 
 @test "gaudi-bash helpers: profile: an unknown action should fail with the usage" {

@@ -149,9 +149,9 @@ EOF
 			&& git checkout -b feature > /dev/null \
 			&& printf 'feature\n' > conflict.txt \
 			&& git commit -am 'feature change' > /dev/null \
-			&& git checkout master > /dev/null \
-			&& printf 'master\n' > conflict.txt \
-			&& git commit -am 'master change' > /dev/null \
+			&& git checkout main > /dev/null \
+			&& printf 'main\n' > conflict.txt \
+			&& git commit -am 'main change' > /dev/null \
 			&& ! git merge feature > /dev/null 2>&1
 	)
 
@@ -217,16 +217,14 @@ EOF
 	}
 
 	PROMPT_COMMAND="existing_prompt_command"
-	# bash-preexec may not be available in the test worktree (bin/ is excluded)
-	if [[ ! -s "$GAUDI_BASH/bin/preexec/bash-preexec.sh" ]]; then
-		skip "bash-preexec not available in test worktree"
-	fi
-	source "$GAUDI_BASH/bin/preexec/bash-preexec.sh"
+	# The vendored dependencies are not copied into the test installation, they are loaded from the checkout
+	source "$GAUDI_BASH_ORIGIN/bin/preexec/bash-preexec.sh"
 
 	source_gaudi_theme
 	source_gaudi_theme
 
-	[[ "$PROMPT_COMMAND" == *"__bp_precmd_invoke_cmd"* ]]
+	# bash-preexec keeps its place in PROMPT_COMMAND: its installer until the first prompt, its hook after that
+	[[ "$PROMPT_COMMAND" =~ __bp_(install|precmd_invoke_cmd) ]]
 	[[ "$PROMPT_COMMAND" == *"existing_prompt_command"* ]]
 	[[ "$PROMPT_COMMAND" != "gaudi::prompt" ]]
 	assert_equal "$(count_array_entries "gaudi::prompt" "${precmd_functions[@]}")" "1"

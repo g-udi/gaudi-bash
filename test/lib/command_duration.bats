@@ -1,6 +1,6 @@
 #!/usr/bin/env bats
 # shellcheck shell=bats
-# shellcheck disable=SC2034
+# shellcheck disable=SC2034,SC2030,SC2031
 
 load "$GAUDI_TEST_DIRECTORY"/helper.bash
 
@@ -96,4 +96,19 @@ local_setup() {
 	assert_equal "$pre_exec" 1
 	assert_equal "$pre_cmd" 1
 	assert_equal "${#preexec_functions[@]}" 2
+}
+
+@test "gaudi-bash lib: command_duration: nothing is timed before the first command starts" {
+
+	GAUDI_BASH_COMMAND_DURATION=true
+	COMMAND_DURATION_MIN_SECONDS=0
+
+	# Loading the library is not a command: the first prompt has no duration to show
+	assert_equal "${COMMAND_DURATION_START_SECONDS}" ""
+	run _command_duration
+	assert_output ""
+
+	_command_duration_pre_exec
+	run _command_duration
+	assert_output --partial "s"
 }

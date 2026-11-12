@@ -214,3 +214,145 @@ _install_head() {
 	assert_file_exist "$UPDATER_ROOT/fresh/components/changes.txt"
 	assert_file_not_exist "$UPDATER_ROOT/fresh/bin/bats-core/changes.txt"
 }
+
+# Makes the installation a shallow clone, the way install.sh clones it
+# $1: the tag or branch to clone
+_shallow_install() {
+	rm -rf "$UPDATER_INSTALL"
+	git clone -q --depth=1 --branch "$1" "file://$UPDATER_ROOT/origin" "$UPDATER_INSTALL" 2> /dev/null
+	git -C "$UPDATER_INSTALL" remote set-branches origin '*'
+	run git -C "$UPDATER_INSTALL" rev-parse --is-shallow-repository
+	assert_output "true"
+}
+
+# Runs the update on the shallow installation; git only fetches a submodule from a local path when it is told to
+_update_shallow_install() {
+	GAUDI_BASH="$UPDATER_INSTALL" GIT_CONFIG_COUNT=1 GIT_CONFIG_KEY_0=protocol.file.allow GIT_CONFIG_VALUE_0=always run _gaudi-bash-update "$@"
+}
+
+@test "gaudi-bash helpers: updater: a shallow clone of a release should update to the next release" {
+
+	_shallow_install v1.0.0
+	_release v2.0.0
+
+	_update_shallow_install --silent
+	assert_success
+	assert_output --partial "core v2.0.0"
+	refute_output --partial "more recent development version"
+	assert_output --partial "Updating to v2.0.0"
+	assert_output --partial "RESTARTED"
+	assert_equal "$(_install_head)" "$(git -C "$UPDATER_ROOT/origin" rev-parse "v2.0.0^{commit}")"
+}
+
+@test "gaudi-bash helpers: updater: a shallow clone ahead of the latest release is not offered that release as an update" {
+
+	_release v2.0.0
+	_commit origin "core unreleased"
+	_shallow_install main
+
+	# The history is completed first, so the release is known to lie behind: nothing of it is listed as incoming
+	GAUDI_BASH="$UPDATER_INSTALL" run _gaudi-bash-update <<< "n"
+	assert_success
+	assert_output --partial "Your version is a more recent development version"
+	assert_output --partial "core unreleased"
+	refute_output --partial "core 1"
+	refute_output --partial "core v2.0.0"
+	assert_output --partial "Not updating"
+	assert_equal "$(_install_head)" "$(git -C "$UPDATER_ROOT/origin" rev-parse main)"
+
+	run git -C "$UPDATER_INSTALL" rev-parse --is-shallow-repository
+	assert_output "false"
+
+	# The development branch has nothing newer
+	GAUDI_BASH="$UPDATER_INSTALL" run _gaudi-bash-update dev --silent
+	assert_success
+	assert_output --partial "gaudi-bash is up to date"
+}
+
+@test "gaudi-bash helpers: updater: a shallow clone of a release should update to the development branch" {
+
+	_shallow_install v1.0.0
+	_commit origin "core unreleased"
+
+	_update_shallow_install dev --silent
+	assert_success
+	assert_output --partial "core unreleased"
+	assert_output --partial "Updating to origin/main"
+	assert_output --partial "RESTARTED"
+	assert_equal "$(_install_head)" "$(git -C "$UPDATER_ROOT/origin" rev-parse main)"
+}
+
+@test "gaudi-bash helpers: updater: a development version ahead of the release can go back to it" {
+
+	_commit origin "core unreleased"
+	git -C "$UPDATER_INSTALL" fetch -q origin
+	git -C "$UPDATER_INSTALL" checkout -q origin/main
+
+	GAUDI_BASH="$UPDATER_INSTALL" run _gaudi-bash-update stable --silent
+	assert_success
+	assert_output --partial "Your version is a more recent development version"
+	assert_output --partial "Updating to v1.0.0"
+	assert_output --partial "RESTARTED"
+	assert_equal "$(_install_head)" "$(git -C "$UPDATER_ROOT/origin" rev-parse "v1.0.0^{commit}")"
+
+	# The development mode never goes back
+	git -C "$UPDATER_INSTALL" checkout -q origin/main
+	git -C "$UPDATER_ROOT/origin" reset -q --hard v1.0.0
+	git -C "$UPDATER_INSTALL" fetch -q origin "+refs/heads/main:refs/remotes/origin/main"
+	GAUDI_BASH="$UPDATER_INSTALL" run _gaudi-bash-update dev --silent
+	assert_success
+	assert_output --partial "gaudi-bash is up to date"
+	refute_output --partial "RESTARTED"
+}
+
+@test "gaudi-bash helpers: updater: the question is asked unless --silent is passed" {
+
+	local head
+
+	_release v2.0.0
+	head="$(_install_head)"
+
+	GAUDI_BASH="$UPDATER_INSTALL" run _gaudi-bash-update <<< "n"
+	assert_success
+	assert_output --partial "Not updating"
+	refute_output --partial "RESTARTED"
+	assert_equal "$(_install_head)" "$head"
+
+	GAUDI_BASH="$UPDATER_INSTALL" run _gaudi-bash-update <<< "x"
+	assert_failure
+	assert_output --partial "Please choose y or n."
+	assert_equal "$(_install_head)" "$head"
+
+	GAUDI_BASH="$UPDATER_INSTALL" run _gaudi-bash-update <<< "y"
+	assert_success
+	assert_output --partial "RESTARTED"
+	assert_equal "$(_install_head)" "$(git -C "$UPDATER_ROOT/origin" rev-parse "v2.0.0^{commit}")"
+}
+
+@test "gaudi-bash helpers: updater: should fail when there is no release to update to" {
+
+	git -C "$UPDATER_ROOT/origin" tag -d v1.0.0 > /dev/null
+	git -C "$UPDATER_INSTALL" tag -d v1.0.0 > /dev/null
+
+	GAUDI_BASH="$UPDATER_INSTALL" run _gaudi-bash-update --silent
+	assert_failure
+	assert_output --partial "Can not find tags"
+}
+
+@test "gaudi-bash helpers: updater: an update rewrites the absolute links of enabled components as relative ones" {
+
+	_gaudi-bash-migrate-enabled-links() {
+		echo "MIGRATED"
+		touch "$BATS_TEST_TMPDIR/migrated"
+	}
+
+	_release v2.0.0
+
+	GAUDI_BASH="$UPDATER_INSTALL" run _gaudi-bash-update --silent
+	assert_success
+	assert_output --partial "RESTARTED"
+
+	# What the migration prints is kept out of the update's own output
+	assert_file_exist "$BATS_TEST_TMPDIR/migrated"
+	refute_output --partial "MIGRATED"
+}

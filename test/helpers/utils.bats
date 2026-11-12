@@ -7,22 +7,6 @@ local_setup() {
 	load_gaudi_libs log utils
 }
 
-@test "gaudi-bash helpers: utils: _is_function: should return a success status if the passed argument is a function" {
-
-	test_function() {
-		echo "I am a test!"
-	}
-
-	run _is_function test_function
-	assert_success
-}
-
-@test "gaudi-bash helpers: utils: _is_function: should return a fail status if the passed argument is not a function" {
-
-	run _is_function "I am a test!"
-	assert_failure
-}
-
 @test "gaudi-bash helpers: utils: _command_exists function exists" {
 
 	run type -a _command_exists &> /dev/null
